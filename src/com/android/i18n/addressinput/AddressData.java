@@ -1,0 +1,421 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.i18n.addressinput;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * A simple data structure for international postal addresses.
+ * 
+ * Addresses may seem simple, but even within the US there are many quirks
+ * (hyphenated street addresses, etc.), and internationally addresses
+ * vary a great deal. The most sane and complete in many ways is the OASIS
+ * "extensible Address Language", xAL, which is a published and documented
+ * XML schema:
+ *   
+ * http://www.oasis-open.org/committees/ciq/download.shtml
+ * 
+ * We have not represented all the fields, but the intent is that if you need 
+ * to add something, you should follow the OASIS standard.
+ *  
+ * An example address: 
+ * <p>postalCountry: US</p>
+ * <p>addressLine1: 1098 Alta Ave</p>
+ * <p>addressLine1:</p>
+ * <p>addressLine3:</p>
+ * <p>adminstrativeArea: CA</p>
+ * <p>locality: Mountain View</p>
+ * <p>dependentLocality:</p>
+ * <p>postalCode: 94043</p>
+ * <p>sortingCode:</p>
+ * <p>organization: Google</p>
+ * <p>recipient: Chen-Kang Yang</p>
+ * <p>language code: en</p>
+ * 
+ * Note that sub-administrative area is NOT used in Address Widget.
+ * Sub-administrative Area is second-level administrative subdivision of 
+ * this country. For examples: US county, IT province, UK county. This level
+ * of geo information is not required to fill out address form, therefore is
+ * neglected.
+ * 
+ * All values stored in this class are trimmed. Also, if you try to set a field
+ * with an empty string or a string consists of only spaces, it will not be set.
+ * 
+ */
+public class AddressData {
+  // ISO 3166-1-alpha-2 country code (two letter codes, as used in DNS)
+  // For example, "US" for United States.
+  // (Note: Use "GB", not "UK", for Great Britain)
+  private final String postalCountry;
+  
+  // street street, line 1
+  private final String addressLine1;
+
+  // street street, line 2
+  private final String addressLine2;
+  
+  // Top-level administrative subdivision of this country.
+  // Examples: US state, IT region, UK constituent nation, JP prefecture.
+  private final String administrativeArea;
+  
+  // Locality. A fuzzy term, but it generally refers to
+  // the city/town portion of an address.  In regions of the world where
+  // localities are not well defined or do not fit into this structure well
+  // (for example, Japan and China), leave locality_name empty and use
+  // address_line.
+  // Examples: US city, IT comune, UK post town.
+  private final String locality;
+  
+  // Dependent locality or sublocality.  Used for UK dependent localities,
+  // or neighborhoods or boroughs in other locations.  If trying to
+  // represent a UK double-dependent locality, include both the
+  // double-dependent locality and the dependent locality in this field,
+  // e.g. "Whaley, Langwith".
+  private final String dependentLocality;
+  
+  // Postal Code. values are frequently alphanumeric.
+  // Examples: "94043", "94043-1351", "SW1W", "SW1W 9TQ".
+  private final String postalCode;
+  
+  // Sorting code - use is very country-specific.
+  // This corresponds to the SortingCode sub-element of the xAL
+  // PostalServiceElements element.
+  // Examples: FR CEDEX.
+  private final String sortingCode;
+  
+  // The firm or organization.  This goes at a finer granularity than
+  // address_lines in the address.  Omit if not needed.
+  private final String organization;
+  
+  // The recipient.  This goes at a finer granularity than address_lines
+  // in the address.  Not present in xAL.  Omit if not needed.
+  private final String recipient;
+  
+  // Language code of the address. Can be set to null. See its getter and setter
+  // for more information.
+  private final String languageCode;
+
+  /**
+   * Use {@link Builder} to create instances.
+   */
+  private AddressData(Builder builder) {
+    postalCountry = builder.values.get(AddressField.COUNTRY);
+    administrativeArea = builder.values.get(AddressField.ADMIN_AREA);
+    locality = builder.values.get(AddressField.LOCALITY);
+    dependentLocality = builder.values.get(AddressField.DEPENDENT_LOCALITY);
+    postalCode = builder.values.get(AddressField.POSTAL_CODE);
+    sortingCode = builder.values.get(AddressField.SORTING_CODE);
+    organization = builder.values.get(AddressField.ORGANIZATION);
+    recipient = builder.values.get(AddressField.RECIPIENT);
+    String line1 = builder.values.get(AddressField.ADDRESS_LINE_1);
+    String line2 = builder.values.get(AddressField.ADDRESS_LINE_2);
+    languageCode =  builder.languageCode;
+
+    // normalize address lines
+    if (line1 == null && line2 != null) {
+      line1 = line2;
+      line2 = null;
+    }
+    addressLine1 = line1;
+    addressLine2 = line2;
+  }
+  
+  /**
+   * Returns the postal country.
+   *
+   * <p>The returned value is not user-presentable. For example,
+   * {@code getPostalCountry()} may return {@code "GB"}, while
+   * addresses in Great Britain should be displayed using "UK".
+   */
+  public String getPostalCountry() {
+    return postalCountry;
+  }
+  
+  public String getAddressLine1() {
+    return addressLine1;
+  }
+  
+  public String getAddressLine2() {
+    return addressLine2;
+  }
+
+  /**
+   * Returns the top-level administrative subdivision of this country.
+   * Different postal countries use different names to refer to their
+   * administrative areas. For example, this is called "state" in the United
+   * States, "region" in Italy, "constituent nation" in Great Britain, or
+   * "prefecture" in Japan.
+   */
+  public String getAdministrativeArea() {
+    return administrativeArea;
+  }
+  
+  /**
+   * Returns the locality. The usage of this field varies by region, but it
+   * generally refers to the "city" or "town" of the address. Some regions do
+   * not use this field; their address lines are sufficient to locate an address 
+   * within a sub-administrative area.
+   * For example, this is called "city" in the United States, "comune" in
+   * Italy, or "post town" in Great Britain.
+   */
+  public String getLocality() {
+    return locality;
+  }
+
+  /**
+   * Returns the dependent locality.
+   *
+   * <p>This is used for Great Britain dependent localities, or neighborhoods
+   * or boroughs in other locations.
+   *
+   * <p>In cases such as Great Britain, this field may contain a
+   * double-dependent locality, such as "Whaley, Langwith".
+   */
+  public String getDependentLocality() {
+    return dependentLocality;
+  }
+  
+  /**
+   * Returns the firm or organization.
+   */
+  public String getOrganization() {
+    return organization;
+  }
+
+  /**
+   * Returns the recipient. Examples: "Jesse Wilson" or
+   * "Jesse Wilson c/o Apurva Mathad".
+   */
+  public String getRecipient() {
+    return recipient;
+  }
+
+  /**
+   * Returns the country-specific postal code. Examples: "94043", "94043-1351",
+   * "SW1W", "SW1W 9TQ".
+   */
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+  /**
+   * Returns the country-specific sorting code. For example, the
+   * <a href="http://en.wikipedia.org/wiki/List_of_postal_codes_in_France">
+   * French CEDEX</a>
+   */
+  public String getSortingCode() {
+    return sortingCode;
+  }
+
+  public String getFieldValue(AddressField field) {
+    switch (field) {
+      case COUNTRY:
+        return postalCountry;
+      case ADMIN_AREA:
+        return administrativeArea;
+      case LOCALITY:
+        return locality;
+      case DEPENDENT_LOCALITY:
+        return dependentLocality;
+      case POSTAL_CODE:
+        return postalCode;
+      case SORTING_CODE:
+        return sortingCode;
+      case ADDRESS_LINE_1:
+        return addressLine1;
+      case ADDRESS_LINE_2:
+        return addressLine2;
+      case ORGANIZATION:
+        return organization;
+      case RECIPIENT:
+        return recipient;
+      default:
+        throw new IllegalArgumentException("unrecognized key: " + field);
+    }
+  }
+
+  /**
+   * Returns the language of the text of this address. Languages are used to
+   * guide how the address is
+   * <a href="http://en.wikipedia.org/wiki/Mailing_address_format_by_country">
+   * formatted for display</a>. The same address may have different
+   * {@link AddressData} representations in different languages. For
+   * example, the French name of "New Mexico" is "Nouveau-Mexique".
+   */
+  public String getLanguageCode() {
+    return languageCode;
+  }
+
+  /**
+   * Builder for AddressData
+   */
+  public static class Builder {
+    private final Map<AddressField, String> values;
+
+    private String languageCode = null;
+    
+    public Builder() {
+      values = new HashMap<AddressField, String>();
+    }
+   
+    /**
+     * A constructor that sets address field with input data. Street fields will be 
+     * normalized in the process. I.e., after copy, there will not be any empty
+     * street line in front of non-empty ones. For example, if input data's
+     * street line 1 is null but street line 2 has value,
+     * this method will copy street line 2's value and set it to street line 1.
+     */
+    public Builder(AddressData addr) {
+      values = new HashMap<AddressField, String>();
+      set(addr);
+    }
+
+    public Builder setCountry(String value) {
+      return set(AddressField.COUNTRY, value);
+    }
+
+    public Builder setAdminArea(String value) {
+      return set(AddressField.ADMIN_AREA, value);
+    }
+
+    public Builder setLocality(String value) {
+      return set(AddressField.LOCALITY, value);
+    }
+
+    public Builder setDependentLocality(String value) {
+      return set(AddressField.DEPENDENT_LOCALITY, value);
+    }
+
+    public Builder setPostalCode(String value) {
+      return set(AddressField.POSTAL_CODE, value);
+    }
+
+    public Builder setSortingCode(String value) {
+      return set(AddressField.SORTING_CODE, value);
+    }
+
+    /**
+     * Sets the language code.
+     *
+     * @param languageCode the language to use, or {@code null} for no specified
+     *        language.
+     */
+    public Builder setLanguageCode(String languageCode) {
+      this.languageCode = languageCode;
+      return this;
+    }
+
+    /**
+     * Sets three street lines from a single street string. The input street
+     * string can contain new lines. Street string will be trimmed so that
+     * the it always set line 1's value first, and then follow by line 2. 
+     * If the input string contains more than two lines, extra new
+     * lines will be discarded.
+     * 
+     * <p>
+     * Example: Input "  \n   \n1600 Amphitheatre Ave\n\nRoom 122" will set the
+     * following values:<br/>
+     * line 1: 1600 Amphitheatre Ave<br/>
+     * line 2: Room 122<br/>
+     * </p>
+     * @param value a street string
+     */
+    public Builder setAddress(String value) {
+      if (value == null || value.length() == 0) {
+        return this;
+      }
+      String line1;
+      String line2;      
+      int n = 1;
+      for (String v : value.split("\n")) {
+        v = v.trim();
+        if (v.length() > 0 && n == 1) {
+          setAddressLine1(v);
+          n++;
+        } else if (v.length() > 0 && n == 2) {
+          setAddressLine2(v);
+          break;
+        }
+        // There should never be more than 2 addresslines, if a third or more line
+        // occurs, it will be dropped.
+      }
+      return this;
+    }
+
+    /**
+     * Sets address by copying from input address data. Street fields will be 
+     * normalized in the process. I.e., after copy, there will not be any empty
+     * street line in front of non-empty ones. For example, if input data's
+     * street line 1 is null but street line 2 has value,
+     * this method will copy street line 2's value and set it to street line 1.
+     */
+    public Builder set(AddressData data) {
+      values.clear();
+      boolean emptyAddLine1 = false;
+      if (data.getFieldValue(AddressField.ADDRESS_LINE_1) == null || 
+          data.getFieldValue(AddressField.ADDRESS_LINE_1).trim().length() == 0) {
+        setAddress(data.getFieldValue(AddressField.ADDRESS_LINE_2));
+        emptyAddLine1 = true;
+      }
+      for (AddressField addressField : AddressField.values()) {
+        if (addressField == AddressField.STREET_ADDRESS || 
+            (emptyAddLine1 && addressField.getAttributeName().startsWith("ADDRESS_LINE"))) {
+          continue;  // Do nothing.
+        } else {
+          set(addressField, data.getFieldValue(addressField));
+        }
+        setLanguageCode(data.getLanguageCode());
+      }
+      return this;
+    }
+    
+    public Builder setAddressLine1(String value) {
+      return set(AddressField.ADDRESS_LINE_1, value);
+    }
+
+    public Builder setAddressLine2(String value) {
+      return set(AddressField.ADDRESS_LINE_2, value);
+    }
+
+    public Builder setOrganization(String value) {
+      return set(AddressField.ORGANIZATION, value);
+    }
+    
+    public Builder setRecipient(String value) {
+      return set(AddressField.RECIPIENT, value);
+    }
+
+    /**
+     * Sets an address field with the specified value. If the value is empty
+     * (a null string, empty string, or a string that contains only spaces), the
+     * original value associated with the field will be removed. 
+     */
+    public Builder set(AddressField field, String value) {
+      if (value == null || value.length() == 0) {
+        values.remove(field);
+      } else {
+        values.put(field, value.trim());
+      }
+      return this;
+    }
+
+    public AddressData build() {
+      return new AddressData(this);
+    }
+  }
+}
