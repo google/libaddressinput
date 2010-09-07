@@ -19,33 +19,40 @@ package com.android.i18n.addressinput;
 import junit.framework.TestCase;
 
 /**
- * @author Lara Rennie
+ * Tests for util functions.
  */
 public class UtilTest extends TestCase {
 
-  public void testGetScriptCodeLatinScript() throws Exception {
+  public void testIsExplicitLatinScript() throws Exception {
     // Should recognise latin script in a variety of forms.
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("en"));
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("EN"));
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("zh-Latn"));
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("ja_LATN"));
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("ja_LATN-JP"));
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("ko-latn_JP"));
-    // Other non-CJK scripts are also labelled as Latin.
-    assertEquals(Util.LATIN_SCRIPT, Util.getScriptCode("ru"));
+    assertTrue(Util.isExplicitLatinScript("zh-Latn"));
+    assertTrue(Util.isExplicitLatinScript("ja_LATN"));
+    assertTrue(Util.isExplicitLatinScript("ja_LATN-JP"));
+    assertTrue(Util.isExplicitLatinScript("ko-latn_JP"));
   }
 
-  public void testGetScriptCodeCjkScript() throws Exception {
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("ko")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("KO")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("ja")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("ja-JP")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("zh-Hans")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("zh-Hans-CN")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("zh-Hant")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("zh-TW")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("zh_TW")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("ko")));
-    assertFalse(Util.LATIN_SCRIPT.equals(Util.getScriptCode("ko_KR")));
+  public void testIsExplicitLatinScriptNonLatin() throws Exception {
+    assertFalse(Util.isExplicitLatinScript("ko"));
+    assertFalse(Util.isExplicitLatinScript("KO"));
+    assertFalse(Util.isExplicitLatinScript("ja"));
+    assertFalse(Util.isExplicitLatinScript("ja-JP"));
+    assertFalse(Util.isExplicitLatinScript("zh-Hans"));
+    assertFalse(Util.isExplicitLatinScript("zh-Hans-CN"));
+    assertFalse(Util.isExplicitLatinScript("zh-Hant"));
+    assertFalse(Util.isExplicitLatinScript("zh-TW"));
+    assertFalse(Util.isExplicitLatinScript("zh_TW"));
+    assertFalse(Util.isExplicitLatinScript("ko"));
+    assertFalse(Util.isExplicitLatinScript("ko_KR"));
+    assertFalse(Util.isExplicitLatinScript("en"));
+    assertFalse(Util.isExplicitLatinScript("EN"));
+    assertFalse(Util.isExplicitLatinScript("ru"));
+  }
+
+  public void testTrimToNull() throws Exception {
+    assertEquals("Trimmed String", Util.trimToNull("  Trimmed String   "));
+    assertEquals("Trimmed String", Util.trimToNull("  Trimmed String"));
+    assertEquals("Trimmed String", Util.trimToNull("Trimmed String"));
+    assertEquals(null, Util.trimToNull("  "));
+    assertEquals(null, Util.trimToNull(null));
   }
 }

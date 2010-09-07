@@ -23,8 +23,12 @@
 
   <target name="compile" description="Compile Java source.">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
-    <javac srcdir="${test.dir}" destdir="${classes.dir}" classpathref="test.classpath"/>
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"
+      debug="on">
+      <compilerarg value="-Xlint"/>
+    </javac>
+    <javac srcdir="${test.dir}" destdir="${classes.dir}" classpathref="test.classpath"
+      debug="on"/>
   </target>
 
   <target name="jar" depends="compile">

@@ -21,34 +21,19 @@ import java.util.regex.Pattern;
 
 /**
  * Utility functions used by the address widget.
- *
- * @author Lara Rennie
  */
 public class Util {
-  public static final String LATIN_SCRIPT = "Latn";
-
-  // Only used internally.
-  private static final String CHINESE_SCRIPT = "Hans";
-  private static final String KOREAN_SCRIPT = "Kore";
-  private static final String JAPANESE_SCRIPT = "Jpan";
-  // These are in upper-case, since we convert the language code to upper case before doing
-  // string comparison.
-  private static final String CHINESE_LANGUAGE = "ZH";
-  private static final String JAPANESE_LANGUAGE = "JA";
-  private static final String KOREAN_LANGUAGE = "KO";
+  // In upper-case, since we convert the language code to upper case before doing string comparison.
+  private static final String LATIN_SCRIPT = "LATN";
 
   // Cannot instantiate this class - private constructor.
   private Util() {}
 
   /**
-   * Gets the script code for a particular language. This is a somewhat hacky replacement for ICU's
-   * class that does this properly. For our purposes, we only want to know if the address is in a
-   * CJK script or not, since that affects address formatting. We assume that the languageCode is
-   * well-formed and first search to see if there is a script code specified. If not, then we assume
-   * Chinese, Japanese and Korean are in their default scripts, and other languages are in Latin
-   * script.
+   * Returns true if the language code is explicitly marked to be in the latin script. For example,
+   * "zh-Latn" would return true, but "zh-TW", "en" and "zh" would all return false.
    */
-  public static String getScriptCode(String languageCode) {
+  public static boolean isExplicitLatinScript(String languageCode) {
     // Convert to upper-case for easier comparison.
     languageCode = languageCode.toUpperCase();
     // Check to see if the language code contains a script modifier.
@@ -56,23 +41,22 @@ public class Util {
     Matcher m = languageCodePattern.matcher(languageCode);
     if (m.lookingAt()) {
       String script = m.group(1);
-      if (script.equals(LATIN_SCRIPT.toUpperCase())) {
-        return LATIN_SCRIPT;
+      if (script.equals(LATIN_SCRIPT)) {
+        return true;
       }
     }
-    // If the script was not explicitly specified as Latn, we ignore the script information and read
-    // the language tag instead. This would break for cases such as zh-Cyrl, but this is rare enough
-    // that we are not going to worry about it for now.
-    if (languageCode.startsWith(CHINESE_LANGUAGE)) {
-      // We don't distinguish between simplified and traditional Chinese here.
-      return CHINESE_SCRIPT;
-    } else if (languageCode.startsWith(JAPANESE_LANGUAGE)) {
-      return JAPANESE_SCRIPT;
-    } else if (languageCode.startsWith(KOREAN_LANGUAGE)) {
-      return KOREAN_SCRIPT;
+    return false;
+  }
+
+  /**
+   * Trims the string. If the field is empty after trimming, returns null instead. Note that this
+   * only trims ASCII white-space.
+   */
+  public static String trimToNull(String originalStr) {
+    if (originalStr == null) {
+      return null;
     }
-    // All Indic, Arabic and other scripts will be mislabelled by this function, but since we only
-    // want to distinguish between CJK and non-CJK, this is ok.
-    return LATIN_SCRIPT;
+    String trimmedString = originalStr.trim();
+    return (trimmedString.length() == 0) ? null : trimmedString;
   }
 }
