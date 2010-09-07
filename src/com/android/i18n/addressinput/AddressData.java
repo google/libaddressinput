@@ -21,19 +21,19 @@ import java.util.Map;
 
 /**
  * A simple data structure for international postal addresses.
- * 
+ *
  * Addresses may seem simple, but even within the US there are many quirks
  * (hyphenated street addresses, etc.), and internationally addresses
  * vary a great deal. The most sane and complete in many ways is the OASIS
  * "extensible Address Language", xAL, which is a published and documented
  * XML schema:
- *   
+ *
  * http://www.oasis-open.org/committees/ciq/download.shtml
- * 
- * We have not represented all the fields, but the intent is that if you need 
+ *
+ * We have not represented all the fields, but the intent is that if you need
  * to add something, you should follow the OASIS standard.
- *  
- * An example address: 
+ *
+ * An example address:
  * <p>postalCountry: US</p>
  * <p>addressLine1: 1098 Alta Ave</p>
  * <p>addressLine1:</p>
@@ -46,33 +46,32 @@ import java.util.Map;
  * <p>organization: Google</p>
  * <p>recipient: Chen-Kang Yang</p>
  * <p>language code: en</p>
- * 
+ *
  * Note that sub-administrative area is NOT used in Address Widget.
- * Sub-administrative Area is second-level administrative subdivision of 
+ * Sub-administrative Area is second-level administrative subdivision of
  * this country. For examples: US county, IT province, UK county. This level
  * of geo information is not required to fill out address form, therefore is
  * neglected.
- * 
+ *
  * All values stored in this class are trimmed. Also, if you try to set a field
  * with an empty string or a string consists of only spaces, it will not be set.
- * 
  */
 public class AddressData {
   // ISO 3166-1-alpha-2 country code (two letter codes, as used in DNS)
   // For example, "US" for United States.
   // (Note: Use "GB", not "UK", for Great Britain)
   private final String postalCountry;
-  
+
   // street street, line 1
   private final String addressLine1;
 
   // street street, line 2
   private final String addressLine2;
-  
+
   // Top-level administrative subdivision of this country.
   // Examples: US state, IT region, UK constituent nation, JP prefecture.
   private final String administrativeArea;
-  
+
   // Locality. A fuzzy term, but it generally refers to
   // the city/town portion of an address.  In regions of the world where
   // localities are not well defined or do not fit into this structure well
@@ -80,32 +79,32 @@ public class AddressData {
   // address_line.
   // Examples: US city, IT comune, UK post town.
   private final String locality;
-  
+
   // Dependent locality or sublocality.  Used for UK dependent localities,
   // or neighborhoods or boroughs in other locations.  If trying to
   // represent a UK double-dependent locality, include both the
   // double-dependent locality and the dependent locality in this field,
   // e.g. "Whaley, Langwith".
   private final String dependentLocality;
-  
+
   // Postal Code. values are frequently alphanumeric.
   // Examples: "94043", "94043-1351", "SW1W", "SW1W 9TQ".
   private final String postalCode;
-  
+
   // Sorting code - use is very country-specific.
   // This corresponds to the SortingCode sub-element of the xAL
   // PostalServiceElements element.
   // Examples: FR CEDEX.
   private final String sortingCode;
-  
+
   // The firm or organization.  This goes at a finer granularity than
   // address_lines in the address.  Omit if not needed.
   private final String organization;
-  
+
   // The recipient.  This goes at a finer granularity than address_lines
   // in the address.  Not present in xAL.  Omit if not needed.
   private final String recipient;
-  
+
   // Language code of the address. Can be set to null. See its getter and setter
   // for more information.
   private final String languageCode;
@@ -126,7 +125,7 @@ public class AddressData {
     String line2 = builder.values.get(AddressField.ADDRESS_LINE_2);
     languageCode =  builder.languageCode;
 
-    // normalize address lines
+    // Normalize address lines.
     if (line1 == null && line2 != null) {
       line1 = line2;
       line2 = null;
@@ -134,7 +133,7 @@ public class AddressData {
     addressLine1 = line1;
     addressLine2 = line2;
   }
-  
+
   /**
    * Returns the postal country.
    *
@@ -145,11 +144,11 @@ public class AddressData {
   public String getPostalCountry() {
     return postalCountry;
   }
-  
+
   public String getAddressLine1() {
     return addressLine1;
   }
-  
+
   public String getAddressLine2() {
     return addressLine2;
   }
@@ -164,11 +163,11 @@ public class AddressData {
   public String getAdministrativeArea() {
     return administrativeArea;
   }
-  
+
   /**
    * Returns the locality. The usage of this field varies by region, but it
    * generally refers to the "city" or "town" of the address. Some regions do
-   * not use this field; their address lines are sufficient to locate an address 
+   * not use this field; their address lines are sufficient to locate an address
    * within a sub-administrative area.
    * For example, this is called "city" in the United States, "comune" in
    * Italy, or "post town" in Great Britain.
@@ -189,7 +188,7 @@ public class AddressData {
   public String getDependentLocality() {
     return dependentLocality;
   }
-  
+
   /**
    * Returns the firm or organization.
    */
@@ -268,17 +267,16 @@ public class AddressData {
     private final Map<AddressField, String> values;
 
     private String languageCode = null;
-    
+
     public Builder() {
       values = new HashMap<AddressField, String>();
     }
-   
+
     /**
-     * A constructor that sets address field with input data. Street fields will be 
-     * normalized in the process. I.e., after copy, there will not be any empty
-     * street line in front of non-empty ones. For example, if input data's
-     * street line 1 is null but street line 2 has value,
-     * this method will copy street line 2's value and set it to street line 1.
+     * A constructor that sets address field with input data. Street fields will be normalized in
+     * the process. I.e., after copy, there will not be any empty street line in front of non-empty
+     * ones. For example, if input data's street line 1 is null but street line 2 has a value, this
+     * method will copy street line 2's value and set it to street line 1.
      */
     public Builder(AddressData addr) {
       values = new HashMap<AddressField, String>();
@@ -321,12 +319,11 @@ public class AddressData {
     }
 
     /**
-     * Sets three street lines from a single street string. The input street
-     * string can contain new lines. Street string will be trimmed so that
-     * the it always set line 1's value first, and then follow by line 2. 
-     * If the input string contains more than two lines, extra new
-     * lines will be discarded.
-     * 
+     * Sets three street lines from a single street string. The input street string can contain new
+     * lines. Street string will be trimmed so that the it always set line 1's value first, and then
+     * follow by line 2.  If the input string contains more than two lines, extra new lines will be
+     * discarded.
+     *
      * <p>
      * Example: Input "  \n   \n1600 Amphitheatre Ave\n\nRoom 122" will set the
      * following values:<br/>
@@ -340,7 +337,7 @@ public class AddressData {
         return this;
       }
       String line1;
-      String line2;      
+      String line2;
       int n = 1;
       for (String v : value.split("\n")) {
         v = v.trim();
@@ -358,32 +355,33 @@ public class AddressData {
     }
 
     /**
-     * Sets address by copying from input address data. Street fields will be 
-     * normalized in the process. I.e., after copy, there will not be any empty
-     * street line in front of non-empty ones. For example, if input data's
-     * street line 1 is null but street line 2 has value,
-     * this method will copy street line 2's value and set it to street line 1.
+     * Sets address by copying from input address data. Street fields will be normalized in the
+     * process. I.e., after copy, there will not be any empty street line in front of non-empty
+     * ones. For example, if input data's street line 1 is null but street line 2 has a value, this
+     * method will copy street line 2's value and set it to street line 1.
      */
     public Builder set(AddressData data) {
       values.clear();
-      boolean emptyAddLine1 = false;
-      if (data.getFieldValue(AddressField.ADDRESS_LINE_1) == null || 
-          data.getFieldValue(AddressField.ADDRESS_LINE_1).trim().length() == 0) {
-        setAddress(data.getFieldValue(AddressField.ADDRESS_LINE_2));
-        emptyAddLine1 = true;
+      StringBuilder addressLines = new StringBuilder();
+      if (data.getFieldValue(AddressField.ADDRESS_LINE_1) != null) {
+        addressLines.append(data.getFieldValue(AddressField.ADDRESS_LINE_1));
       }
+      if (data.getFieldValue(AddressField.ADDRESS_LINE_2) != null) {
+        addressLines.append(data.getFieldValue(AddressField.ADDRESS_LINE_2));
+      }
+      setAddress(addressLines.toString());
       for (AddressField addressField : AddressField.values()) {
-        if (addressField == AddressField.STREET_ADDRESS || 
-            (emptyAddLine1 && addressField.getAttributeName().startsWith("ADDRESS_LINE"))) {
+        if (addressField == AddressField.STREET_ADDRESS ||
+            (addressField.toString().startsWith("ADDRESS_LINE"))) {
           continue;  // Do nothing.
         } else {
           set(addressField, data.getFieldValue(addressField));
         }
-        setLanguageCode(data.getLanguageCode());
       }
+      setLanguageCode(data.getLanguageCode());
       return this;
     }
-    
+
     public Builder setAddressLine1(String value) {
       return set(AddressField.ADDRESS_LINE_1, value);
     }
@@ -395,7 +393,7 @@ public class AddressData {
     public Builder setOrganization(String value) {
       return set(AddressField.ORGANIZATION, value);
     }
-    
+
     public Builder setRecipient(String value) {
       return set(AddressField.RECIPIENT, value);
     }
@@ -403,7 +401,7 @@ public class AddressData {
     /**
      * Sets an address field with the specified value. If the value is empty
      * (a null string, empty string, or a string that contains only spaces), the
-     * original value associated with the field will be removed. 
+     * original value associated with the field will be removed.
      */
     public Builder set(AddressField field, String value) {
       if (value == null || value.length() == 0) {

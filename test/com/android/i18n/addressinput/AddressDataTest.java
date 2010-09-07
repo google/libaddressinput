@@ -19,15 +19,44 @@ package com.android.i18n.addressinput;
 import junit.framework.TestCase;
 
 /**
- * @author Jeanine Lilleng
+ * Tests for the AddressData class.
  */
 public class AddressDataTest extends TestCase {
+  private static final String ADDRESS_LINE = "First address line";
 
-  public void testEmptyAddress() {
+  public void testSetAddressLine() {
     AddressData.Builder builder = new AddressData.Builder();
-    builder = builder.setAddress("\n First address line");
+    builder = builder.setAddress("\n " + ADDRESS_LINE);
     AddressData ad = builder.build();
-    assertEquals(ad.getAddressLine1(), "First address line");
-    assertEquals(ad.getAddressLine2(), null);
+    assertEquals(ADDRESS_LINE, ad.getAddressLine1());
+    assertEquals(null, ad.getAddressLine2());
+  }
+
+  public void testAddressLineNormalisation() {
+    AddressData address = new AddressData.Builder()
+        .setAddressLine1(null)
+        .setAddressLine2(ADDRESS_LINE)
+        .build();
+    AddressData copiedAddress = new AddressData.Builder(address).build();
+    assertEquals(ADDRESS_LINE, copiedAddress.getAddressLine1());
+    assertEquals(null, copiedAddress.getAddressLine2());
+  }
+
+  public void testAddressLineNormalisationWithNewLineCharacters() {
+    AddressData address = new AddressData.Builder()
+        .setAddressLine1(ADDRESS_LINE + "\n" + ADDRESS_LINE)
+        .build();
+    AddressData copiedAddress = new AddressData.Builder(address).build();
+    assertEquals(ADDRESS_LINE, copiedAddress.getAddressLine1());
+    assertEquals(ADDRESS_LINE, copiedAddress.getAddressLine2());
+  }
+
+  public void testSetLanguageCode() throws Exception {
+    AddressData address = new AddressData.Builder().setCountry("TW")
+        .setAdminArea("\u53F0\u5317\u5E02")  // Taipei city
+        .setLocality("\u5927\u5B89\u5340")  // Da-an district
+        .build();
+    address = new AddressData.Builder(address).setLanguageCode("zh-latn").build();
+    assertEquals("zh-latn", address.getLanguageCode());
   }
 }
