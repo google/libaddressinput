@@ -10,6 +10,7 @@
   <property name="report.dir" value="${build.dir}/junitreport"/>
 
   <path id="classpath">
+    <pathelement location="lib/json/json.jar"/>
     <fileset dir="${src.dir}" includes="src/com/android/i18n/**"/>
   </path>
   <path id="test.classpath">

@@ -55,4 +55,21 @@ public class UtilTest extends TestCase {
     assertEquals(null, Util.trimToNull("  "));
     assertEquals(null, Util.trimToNull(null));
   }
+
+  public void testJoinAndSkipNulls() throws Exception {
+    String first = "String 1";
+    String second = "String 2";
+    String expectedString = "String 1-String 2";
+    String nullString = null;
+    assertEquals(expectedString, Util.joinAndSkipNulls("-", first, second));
+    assertEquals(expectedString, Util.joinAndSkipNulls("-", first, second, nullString));
+    assertEquals(expectedString, Util.joinAndSkipNulls("-", first, nullString, second));
+    assertEquals(expectedString, Util.joinAndSkipNulls("-", first, nullString, " ", second));
+    assertEquals(first, Util.joinAndSkipNulls("-", first, nullString));
+    assertEquals(first, Util.joinAndSkipNulls("-", nullString, first));
+
+    assertEquals(null, Util.joinAndSkipNulls("-", nullString));
+    assertEquals(null, Util.joinAndSkipNulls("-", nullString, nullString));
+    assertEquals(null, Util.joinAndSkipNulls("-", nullString, "", nullString));
+  }
 }

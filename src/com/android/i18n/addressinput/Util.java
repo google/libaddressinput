@@ -59,4 +59,41 @@ public class Util {
     String trimmedString = originalStr.trim();
     return (trimmedString.length() == 0) ? null : trimmedString;
   }
+
+  /**
+   * Throws an exception if the object is null, with a generic error message.
+   */
+  public static void checkNotNull(Object o) throws NullPointerException {
+    checkNotNull(o, "This object should not be null.");
+  }
+
+  /**
+   * Throws an exception if the object is null, with the error message supplied.
+   */
+  public static void checkNotNull(Object o, String message) throws NullPointerException {
+    if (o == null) {
+      throw new NullPointerException(message);
+    }
+  }
+
+  /**
+   * Joins input string with the given separator. If an input string is null,
+   * it will be skipped.
+   */
+  public static String joinAndSkipNulls(String separator, String... strings) {
+    StringBuilder sb = null;
+    for (String s : strings) {
+      if (s != null) {
+        s = s.trim();
+        if (s.length() > 0) {
+          if (sb == null) {
+            sb = new StringBuilder(s);
+          } else {
+            sb.append(separator).append(s);
+          }
+        }
+      }
+    }
+    return sb == null ? null : sb.toString();
+  }
 }
