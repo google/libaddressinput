@@ -10,7 +10,7 @@
   <property name="report.dir" value="${build.dir}/junitreport"/>
 
   <path id="classpath">
-    <fileset dir="${src.dir}"/>
+    <fileset dir="${src.dir}" includes="src/com/android/i18n/**"/>
   </path>
   <path id="test.classpath">
     <pathelement location="${classes.dir}"/>
@@ -23,8 +23,8 @@
 
   <target name="compile" description="Compile Java source.">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}"
-           includes="src, src/com, src/com/android, src/com/android/i18n, src/com/android/i18n/**"
+    <javac srcdir="${src.dir}/" 
+           includes="com/android/i18n/**"
            destdir="${classes.dir}" 
            classpathref="classpath"
            debug="on">
@@ -33,7 +33,6 @@
     <javac srcdir="${test.dir}" 
            destdir="${classes.dir}" 
            classpathref="test.classpath"
-           includes="src, src/com, src/com/android, src/com/android/i18n, src/com/android/i18n/**"
            debug="on"/>
   </target>
 
