@@ -16,6 +16,8 @@
 
 package com.android.i18n.addressinput;
 
+import static com.android.i18n.addressinput.Util.checkNotNull;
+
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -346,18 +348,6 @@ public final class CacheData {
       }
       huc.disconnect();
       return sb.toString();
-    }
-  }
-
-  private static void checkNotNull(Object o) throws NullPointerException {
-    if (o == null) {
-      throw new NullPointerException();
-    }
-  }
-
-  private static void checkNotNull(Object o, String msg) throws NullPointerException {
-    if (o == null) {
-      throw new NullPointerException(msg);
     }
   }
 }
