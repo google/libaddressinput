@@ -317,11 +317,6 @@ public final class CacheData {
     public void onSuccess(T result);
   }
 
-  private interface DataLoadListener {
-    void dataLoadingBegin();
-    void dataLoadingEnd();
-  }
-
   private static class JsonpRequestBuilder {
     // This method doesn't do anything.
     // TODO: Rewrite to actually set the timeout.
