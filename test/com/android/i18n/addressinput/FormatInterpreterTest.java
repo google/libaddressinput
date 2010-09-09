@@ -73,6 +73,27 @@ public class FormatInterpreterTest extends TestCase {
     }
   }
 
+  /**
+   * Tests that this works for the case of Vanuatu, since we have no country-specific formatting
+   * data for that country. Should fall back to the default region.
+   */
+  public void testIterateVuAddressFields() {
+    AddressField[] format = {
+        AddressField.RECIPIENT,
+        AddressField.ORGANIZATION,
+        AddressField.ADDRESS_LINE_1,
+        AddressField.ADDRESS_LINE_2,
+        AddressField.LOCALITY,
+    };
+
+    int currIndex = 0;
+    for (AddressField field : formatInterpreter.getAddressFieldOrder(ScriptType.LOCAL, "VU")) {
+      assertEquals("index " + currIndex + " should have matched",
+          format[currIndex].getChar(), field.getChar());
+      currIndex++;
+    }
+  }
+
   public void testOverrideFieldOrder() {
     AddressField[] expectedOrder = {
         AddressField.ADMIN_AREA,

@@ -271,6 +271,10 @@ public class FormatInterpreter {
       if (jsonObj == null) {
         return null;
       }
+      if (!jsonObj.has(key.name().toLowerCase())) {
+        // Key not found. Return null.
+        return null;
+      }
       // Gets the string for this key.
       String parsedJsonString = jsonObj.getString(key.name().toLowerCase());
       return parsedJsonString;
