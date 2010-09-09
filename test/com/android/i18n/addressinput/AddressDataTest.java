@@ -51,6 +51,11 @@ public class AddressDataTest extends TestCase {
     assertEquals(ADDRESS_LINE, copiedAddress.getAddressLine2());
   }
 
+  public void testNoAdminArea() {
+    AddressData address = new AddressData.Builder().build();
+    assertEquals(null, address.getAdministrativeArea());
+  }
+
   public void testSetLanguageCode() throws Exception {
     AddressData address = new AddressData.Builder().setCountry("TW")
         .setAdminArea("\u53F0\u5317\u5E02")  // Taipei city
