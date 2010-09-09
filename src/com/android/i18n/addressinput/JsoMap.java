@@ -21,6 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Compatibility methods on top of the JSON data.
  *
@@ -113,10 +116,21 @@ public class JsoMap extends JSONObject {
    * @param key key name.
    * @return JsoMap object.
    */
+  @SuppressWarnings("unchecked")  // JSONObject.keys() has no type information.
   public JsoMap getObj(String key) {
-    String[] names = { key };
     try {
-      return new JsoMap(this, names);
+      Object o = super.get(key);
+      if (o instanceof JSONObject) {
+        JSONObject value = (JSONObject)o;
+        ArrayList<String> keys = new ArrayList<String>(value.length());
+        for (Iterator<String> it = value.keys(); it.hasNext(); ) {
+          keys.add(it.next());
+        }
+        String[] names = new String[keys.size()];
+        return new JsoMap(value, keys.toArray(names));        
+      } else {
+        return null;
+      }
     } catch (JSONException e) {
       return null;
     }

@@ -25,8 +25,10 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -249,7 +251,13 @@ public final class CacheData {
     jsonp.setTimeout(TIMEOUT);
     final JsonHandler handler = new JsonHandler(key.toString(),
         existingJso, listener);
-    jsonp.requestObject(serviceUrl + "/" + key.toString(),
+    String keyString;
+    try {
+      keyString = URLEncoder.encode(key.toString(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+    jsonp.requestObject(serviceUrl + "/" + keyString,
         new AsyncCallback<JsoMap>() {
           public void onFailure(Throwable caught) {
             Log.w(TAG, "Request for key " + key + " failed");
