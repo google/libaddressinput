@@ -12,6 +12,10 @@
   <path id="classpath">
     <pathelement location="lib/json/json.jar"/>
     <fileset dir="${src.dir}" includes="src/com/android/i18n/**"/>
+    <fileset dir=".">
+        <include name="android.jar"/>
+    </fileset>
+
   </path>
   <path id="test.classpath">
     <pathelement location="${classes.dir}"/>
@@ -24,7 +28,8 @@
 
   <target name="compile" description="Compile Java source.">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}/" 
+    <javac srcdir="${src.dir}/"
+           encoding="utf-8"
            includes="com/android/i18n/**"
            destdir="${classes.dir}" 
            classpathref="classpath"
@@ -34,6 +39,7 @@
     <javac srcdir="${test.dir}" 
            destdir="${classes.dir}" 
            classpathref="test.classpath"
+           encoding="utf-8"
            debug="on"/>
   </target>
 
