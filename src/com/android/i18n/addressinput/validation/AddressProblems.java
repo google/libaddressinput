@@ -17,25 +17,25 @@
 package com.android.i18n.addressinput.validation;
 
 import com.android.i18n.addressinput.AddressField;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This structure keeps track of any errors found when validating the AddressData.
  */
 public class AddressProblems {
   private Map<AddressField, AddressProblemType> problems;
-  
+
   public AddressProblems() {
     problems = new HashMap<AddressField, AddressProblemType>();
   } 
-  
+
  /**
-  * Only one address problem type is saved per addressField. Address
-  * field as used here refers to the different data parts in the 
-  * AddressData class. 
+  * Only one address problem is saved per addressField. Address field as used here refers to the
+  * different data parts in the AddressData class. 
   */
-  public void add(AddressField addressField, AddressProblemType problem){
+  public void add(AddressField addressField, AddressProblemType problem) {
     problems.put(addressField, problem);
   }
 
@@ -49,18 +49,18 @@ public class AddressProblems {
   public String toString() {
     return problems.toString();
   }
-  
+
   /**
-   * Returns null if no problems exists.  
+   * Returns null if no problem exists.  
    */
-  public AddressProblemType getProblem(AddressField addressField){
+  public AddressProblemType getProblem(AddressField addressField) {
     return problems.get(addressField);
   }
-  
+
   /**
    * This will return an empty map if there are no problems.
    */
-  public Map<AddressField, AddressProblemType> getProblems(){
+  public Map<AddressField, AddressProblemType> getProblems() {
     return problems;
   }
 }
