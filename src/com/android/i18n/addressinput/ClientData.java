@@ -143,7 +143,12 @@ public class ClientData {
     for (String countryCode : regionDataConstants.getCountryFormatMap().keySet()) {
       countries.append(countryCode + "~");
       String json = regionDataConstants.getCountryFormatMap().get(countryCode);
-      JsoMap jso = JsoMap.buildJsoMap(json);
+      JsoMap jso = null;
+      try {
+        jso = JsoMap.buildJsoMap(json);
+      } catch (JSONException e) {
+        // Ignore.
+      }
 
       AddressData data = new AddressData.Builder().setCountry(countryCode).build();
       LookupKey key = new LookupKey.Builder(KeyType.DATA).setAddressData(data).build();
@@ -158,7 +163,12 @@ public class ClientData {
     String str = "{\"id\":\"data\",\"" +
         AddressDataKey.COUNTRIES.toString().toLowerCase() +
         "\": \"" + countries.toString() + "\"}";
-    JsoMap jsoData = JsoMap.buildJsoMap(str);
+    JsoMap jsoData = null;
+    try {
+      jsoData = JsoMap.buildJsoMap(str);
+    } catch (JSONException e) {
+      // Ignore.
+    }
     bootstrapMap.put("data", jsoData);
   }
 

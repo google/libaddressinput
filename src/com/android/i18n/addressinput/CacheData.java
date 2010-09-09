@@ -18,6 +18,7 @@ package com.android.i18n.addressinput;
 
 import static com.android.i18n.addressinput.Util.checkNotNull;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -340,6 +341,8 @@ public final class CacheData {
         String response = getHttp(url);
         callback.onSuccess(JsoMap.buildJsoMap(response));
       } catch (IOException e) {
+        callback.onFailure(e);
+      } catch (JSONException e) {
         callback.onFailure(e);
       }
     }

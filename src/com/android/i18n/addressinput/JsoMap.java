@@ -26,7 +26,6 @@ import java.util.Iterator;
 
 /**
  * Compatibility methods on top of the JSON data.
- *
  */
 public class JsoMap extends JSONObject {
   /**
@@ -37,13 +36,10 @@ public class JsoMap extends JSONObject {
    *
    * @param json JSON text describing an address format
    * @return a JsoMap object made from the supplied JSON.
+   * @throws JSONException 
    */
-  public static JsoMap buildJsoMap(String json) {
-    try {
-      return new JsoMap(new JSONTokener(json));
-    } catch (JSONException e) {
-      return null;
-    }
+  public static JsoMap buildJsoMap(String json) throws JSONException {
+    return new JsoMap(new JSONTokener(json));
   }
 
   /**
@@ -79,25 +75,46 @@ public class JsoMap extends JSONObject {
    * Retrieve the string value for specified key.
    * @param key key name.
    * @return string value.
+   * @throws ClassCastException, IllegalArgumentException.
    */
-  public String get(String key) {
+  public String get(String key) {  // throws ClassCastException, IllegalArgumentException
     try {
-      // Copied from JSONObject.java:
-      return super.get(key).toString();
+      Object o = super.get(key);
+      if (o instanceof String) {
+        return (String)o;
+      } else if (o instanceof Integer) {
+        throw new IllegalArgumentException();
+      } else {
+        throw new ClassCastException();
+      }
     } catch (JSONException e) {
-      return "";
+      return null;
     }
   }
 
+  /**
+   * Access JSONObject.get(String) which is shadowed by JsoMap.get(String).
+   *
+   * @param key A key string.
+   * @return The object associated with the key.
+   * @throws JSONException if the key is not found.
+   */
+  private Object getObject(String name) throws JSONException {
+    return super.get(name);
+  }
+  
   /**
    * Retrieves the integer value for specified key.
    * @return integer value or -1 if value is undefined.
    */
   public int getInt(String key) {
     try {
-      // Copied from JSONObject.java:
       Object o = super.get(key);
-      return o instanceof Number ? ((Number)o).intValue() : Double.valueOf((String)o).intValue();
+      if (o instanceof Integer) {
+        return ((Integer)o).intValue();
+      } else {
+        throw new RuntimeException("Something other than an int was returned");
+      }
     } catch (JSONException e) {
       return -1;
     }
@@ -115,9 +132,11 @@ public class JsoMap extends JSONObject {
    * Retrieve the JsoMap object for specified key.
    * @param key key name.
    * @return JsoMap object.
+   * @throws ClassCastException, IllegalArgumentException.
    */
   @SuppressWarnings("unchecked")  // JSONObject.keys() has no type information.
-  public JsoMap getObj(String key) {
+  public JsoMap getObj(String key)
+  throws ClassCastException, IllegalArgumentException {
     try {
       Object o = super.get(key);
       if (o instanceof JSONObject) {
@@ -128,8 +147,10 @@ public class JsoMap extends JSONObject {
         }
         String[] names = new String[keys.size()];
         return new JsoMap(value, keys.toArray(names));        
+      } else if (o instanceof Integer) {
+        throw new IllegalArgumentException();
       } else {
-        return null;
+        throw new ClassCastException();
       }
     } catch (JSONException e) {
       return null;
@@ -150,10 +171,9 @@ public class JsoMap extends JSONObject {
    * @param obj The other object to be merged.
    */
   public void mergeData(JsoMap obj) {
-    JSONObject other = (JSONObject)obj;
-    if (other == null) return;
+    if (obj == null) return;
 
-    JSONArray names = other.names();
+    JSONArray names = obj.names();
     if (names == null) return;
 
     for (int i = 0; i < names.length(); i++) {
@@ -161,7 +181,7 @@ public class JsoMap extends JSONObject {
         String name = names.getString(i);
         try {
           if (!super.has(name)) {
-            super.put(name, other.get(name));
+            super.put(name, obj.getObject(name));
           }
         } catch (JSONException e) {
           throw new RuntimeException(e);
@@ -211,7 +231,7 @@ public class JsoMap extends JSONObject {
     }
   }
 
-  public String string() {
+  public String string() throws ClassCastException, IllegalArgumentException {
     StringBuilder sb = new StringBuilder("JsoMap[\n");
     JSONArray keys = getKeys();
     for (int i = 0; i < keys.length(); i++) {
@@ -227,7 +247,7 @@ public class JsoMap extends JSONObject {
     return sb.toString();
   }
 
-  public String map() {
+  public String map() throws ClassCastException, IllegalArgumentException {
     StringBuilder sb = new StringBuilder("JsoMap[\n");
     JSONArray keys = getKeys();
     for (int i = 0; i < keys.length(); i++) {
