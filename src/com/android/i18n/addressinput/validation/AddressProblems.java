@@ -56,4 +56,11 @@ public class AddressProblems {
   public AddressProblemType getProblem(AddressField addressField){
     return problems.get(addressField);
   }
+  
+  /**
+   * This will return an empty map if there are no problems.
+   */
+  public Map<AddressField, AddressProblemType> getProblems(){
+    return problems;
+  }
 }
