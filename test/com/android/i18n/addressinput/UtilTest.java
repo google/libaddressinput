@@ -27,6 +27,7 @@ public class UtilTest extends TestCase {
     // Should recognise latin script in a variety of forms.
     assertTrue(Util.isExplicitLatinScript("zh-Latn"));
     assertTrue(Util.isExplicitLatinScript("ja_LATN"));
+    assertTrue(Util.isExplicitLatinScript("und_LATN"));
     assertTrue(Util.isExplicitLatinScript("ja_LATN-JP"));
     assertTrue(Util.isExplicitLatinScript("ko-latn_JP"));
   }
@@ -46,6 +47,18 @@ public class UtilTest extends TestCase {
     assertFalse(Util.isExplicitLatinScript("en"));
     assertFalse(Util.isExplicitLatinScript("EN"));
     assertFalse(Util.isExplicitLatinScript("ru"));
+  }
+
+  public void testGetLanguageSubtag() throws Exception {
+    assertEquals("zh", Util.getLanguageSubtag("zh-Latn"));
+    assertEquals("ja", Util.getLanguageSubtag("ja_LATN"));
+    assertEquals("und", Util.getLanguageSubtag("und_LATN"));
+    assertEquals("ja", Util.getLanguageSubtag("ja_LATN-JP"));
+    assertEquals("ko", Util.getLanguageSubtag("ko"));
+    assertEquals("ko", Util.getLanguageSubtag("KO"));
+    assertEquals("ko", Util.getLanguageSubtag("ko-KR"));
+    assertEquals("ko", Util.getLanguageSubtag("ko_kr"));
+    assertEquals("und", Util.getLanguageSubtag("Not a language"));
   }
 
   public void testTrimToNull() throws Exception {

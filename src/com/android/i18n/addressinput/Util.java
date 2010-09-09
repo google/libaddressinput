@@ -37,7 +37,7 @@ public class Util {
     // Convert to upper-case for easier comparison.
     languageCode = languageCode.toUpperCase();
     // Check to see if the language code contains a script modifier.
-    final Pattern languageCodePattern = Pattern.compile("\\w{2}[-_](\\w{4})");
+    final Pattern languageCodePattern = Pattern.compile("\\w{2,3}[-_](\\w{4})");
     Matcher m = languageCodePattern.matcher(languageCode);
     if (m.lookingAt()) {
       String script = m.group(1);
@@ -46,6 +46,20 @@ public class Util {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns the language subtag of a language code. For example, returns "zh" if given "zh-Hans",
+   * "zh-CN" or other "zh" variants. If no language subtag can be found or the language tag is
+   * malformed, returns "und".
+   */
+  public static String getLanguageSubtag(String languageCode) {
+    final Pattern languageCodePattern = Pattern.compile("(\\w{2,3})(?:[-_]\\w{4})?(?:[-_]\\w{2})?");
+    Matcher m = languageCodePattern.matcher(languageCode);
+    if (m.matches()) {
+      return m.group(1).toLowerCase();
+    }
+    return "und";
   }
 
   /**

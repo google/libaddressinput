@@ -19,8 +19,12 @@ package com.android.i18n.addressinput;
 import com.android.i18n.addressinput.LookupKey.KeyType;
 import com.android.i18n.addressinput.LookupKey.ScriptType;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Controller for an Address Display and is responsible for:
@@ -49,22 +53,40 @@ import java.util.List;
  * </ul>
  */
 public class FormController {
+  // Used to identify the source of a log message.
+  private static final String TAG = "FormController";
   // For address hierarchy in lookup key.
   private static final String SLASH_DELIM = "/";
   // For joined values.
   private static final String TILDA_DELIM = "~";
   // For language code info in lookup key (E.g., data/CA--fr).
   private static final String DASH_DELIM = "--";
+  // Current user language.
+  private final String LANGUAGE_CODE;
 
   private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
   private static final String DEFAULT_REGION_CODE = "ZZ";
   private final AddressVerificationNodeData DEFAULT_COUNTRY_DATA;
 
-  private ClientData integratedData;
+  private static final AddressField[] ADDRESS_HIERARCHY = {
+      AddressField.COUNTRY,
+      AddressField.ADMIN_AREA,
+      AddressField.LOCALITY,
+      AddressField.DEPENDENT_LOCALITY
+  };
 
-  // Constructor that populates this with data.
-  public FormController(ClientData integratedData) {
+  private ClientData integratedData;
+  private String currentCountry;
+
+  /**
+   * Constructor that populates this with data. languageCode should be a BCP language code (such as
+   * "en" or "zh-Hant") and currentCountry should be an ISO 2-letter region code (such as "GB" or
+   * "US").
+   */
+  public FormController(ClientData integratedData, String languageCode, String currentCountry) {
     Util.checkNotNull(integratedData, "null data not allowed");
+    LANGUAGE_CODE = languageCode;
+    this.currentCountry = currentCountry;
 
     AddressData address = new AddressData.Builder().setCountry(DEFAULT_REGION_CODE).build();
     LookupKey defaultCountryKey = getDataKeyFor(address);
@@ -75,11 +97,12 @@ public class FormController {
     this.integratedData = integratedData;
   }
 
+  void setCurrentCountry(String currentCountry) {
+    this.currentCountry = currentCountry;
+  }
+
   private ScriptType getScriptType() {
-    // TODO: Get the language code from somewhere. Ideally, we need a method to interpret a sensible
-    // language code based on things like input method, locale.
-    String languageCode = "en";
-    if (languageCode != null && Util.isExplicitLatinScript(languageCode)) {
+    if (LANGUAGE_CODE != null && Util.isExplicitLatinScript(LANGUAGE_CODE)) {
       return ScriptType.LATIN;
     }
     return ScriptType.LOCAL;
@@ -92,6 +115,122 @@ public class FormController {
 
   private LookupKey getDataKeyFor(AddressData address) {
     return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
+  }
+
+  /**
+   * Requests data for the input address. This method chains multiple requests
+   * together. For example, an address for Mt View, California needs data from
+   * "data/US", "data/US/CA", and "data/US/CA/Mt View" to support it.
+   * This method will request them one by one (from top level key down to the
+   * most granular) and evokes {@link DataLoadListener#dataLoadingEnd} method
+   * when all data is collected. If the address is invalid, it will request
+   * the first valid child key instead. For example, a request for "data/US/Foo"
+   * will end up requesting data for "data/US", "data/US/AL".
+   *
+   * @param address the current address.
+   * @param listener triggered when requested data for the address is returned.
+   */
+  public void requestDataForAddress(AddressData address, DataLoadListener listener) {
+    Util.checkNotNull(address.getPostalCountry(), "null country not allowed");
+
+    // Gets the key for deepest available node.
+    Queue<String> subkeys = new LinkedList<String>();
+
+    for (AddressField field : ADDRESS_HIERARCHY) {
+      String value = address.getFieldValue(field);
+      if (value == null) {
+        break;
+      }
+      subkeys.add(value);
+    }
+    if (subkeys.size() == 0) {
+      throw new RuntimeException("Need at least country level info");
+    }
+
+    if (listener != null) {
+      listener.dataLoadingBegin();
+    }
+    requestDataRecursively(ROOT_KEY, subkeys, listener);
+  }
+
+  private void requestDataRecursively(final LookupKey key,
+      final Queue<String> subkeys, final DataLoadListener listener) {
+    Util.checkNotNull(key, "Null key not allowed");
+    Util.checkNotNull(subkeys, "Null subkeys not allowed");
+
+    integratedData.requestData(key, new DataLoadListener() {
+
+      // Override
+      public void dataLoadingBegin() {
+        Log.w(TAG, "requesting data for key " + key);
+      }
+
+      // Override
+      public void dataLoadingEnd() {
+        List<RegionData> subregions = getRegionData(key);
+        if (subregions.isEmpty()) {
+          Log.w(TAG, "recursion ends with key " + key);
+          if (listener != null) {
+            listener.dataLoadingEnd();
+          }
+          // TODO: Should update the selectors here.
+          return;
+        } else if (subkeys.size() > 0) {
+          String subkey = subkeys.remove();
+          for (RegionData subregion: subregions) {
+            if (subregion.isValidName(subkey)) {
+              LookupKey nextKey = buildDataLookupKey(key, subregion.getKey());
+              requestDataRecursively(nextKey, subkeys, listener);
+              return;
+            }
+          }
+        }
+
+        // Current value in the field is not valid, use the first valid subkey
+        // to request more data instead.
+        String firstSubkey = subregions.get(0).getKey();
+        LookupKey nextKey = buildDataLookupKey(key, firstSubkey);
+        Queue<String> emptyList = new LinkedList<String>();
+        requestDataRecursively(nextKey, emptyList, listener);
+      }
+    });
+  }
+
+  private LookupKey buildDataLookupKey(LookupKey lookupKey, String subKey) {
+    String[] subKeys = lookupKey.toString().split(SLASH_DELIM);
+    String languageCodeSubTag =
+        (LANGUAGE_CODE == null) ? null : Util.getLanguageSubtag(LANGUAGE_CODE);
+    String key = lookupKey.toString() + SLASH_DELIM + subKey;
+
+    // Country level key
+    if (subKeys.length == 1 &&
+        languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
+      key += DASH_DELIM + languageCodeSubTag.toString();
+    }
+    return new LookupKey.Builder(key).build();
+  }
+
+  /** 
+   * Compares the language subtags of input {@code languageCode} and
+   * default language code. For example, "zh-Hant" and "zh" are viewed as
+   * identical.
+   */
+  private boolean isDefaultLanguage(String languageCode) {
+    if (languageCode == null) {
+      return true;
+    }
+    AddressData addr = new AddressData.Builder().setCountry(currentCountry).build();
+    LookupKey lookupKey = getDataKeyFor(addr);
+    AddressVerificationNodeData data =
+        integratedData.getDefaultData(lookupKey.toString());
+    String defaultLanguage = data.get(AddressDataKey.LANG);
+
+    // Current language is not the default language for the country.
+    if (Util.trimToNull(defaultLanguage) != null &&
+        Util.getLanguageSubtag(languageCode) != Util.getLanguageSubtag(languageCode)) {
+      return false;
+    }
+    return true;
   }
 
   /**
