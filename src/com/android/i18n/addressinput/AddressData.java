@@ -336,8 +336,6 @@ public class AddressData {
       if (value == null || value.length() == 0) {
         return this;
       }
-      String line1;
-      String line2;
       int n = 1;
       for (String v : value.split("\n")) {
         v = v.trim();

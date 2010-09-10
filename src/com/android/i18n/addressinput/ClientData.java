@@ -140,9 +140,9 @@ public class ClientData {
   private void buildRegionalData() {
     StringBuilder countries = new StringBuilder();
 
-    for (String countryCode : regionDataConstants.getCountryFormatMap().keySet()) {
+    for (String countryCode : RegionDataConstants.getCountryFormatMap().keySet()) {
       countries.append(countryCode + "~");
-      String json = regionDataConstants.getCountryFormatMap().get(countryCode);
+      String json = RegionDataConstants.getCountryFormatMap().get(countryCode);
       JsoMap jso = null;
       try {
         jso = JsoMap.buildJsoMap(json);

@@ -50,7 +50,7 @@ public class LookupKeyTest extends TestCase {
     assertEquals(ROOT_KEY, key.toString());
 
     LookupKey key2 = new LookupKey.Builder(key.toString()).build();
-    assertEquals(ROOT_KEY, key.toString());
+    assertEquals(ROOT_KEY, key2.toString());
   }
 
   public void testDataKeys() {
