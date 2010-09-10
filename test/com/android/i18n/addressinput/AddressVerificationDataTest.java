@@ -1,0 +1,105 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.i18n.addressinput;
+
+import com.android.i18n.addressinput.testing.AddressDataMapLoader;
+
+import junit.framework.TestCase;
+
+/**
+ * Tests to ensure that {@code AddressVerificationData} can parse all the default data.
+ */
+public class AddressVerificationDataTest extends TestCase {
+
+  private static final AddressVerificationData addressData =
+      new AddressVerificationData(AddressDataMapLoader.DATA);
+
+  public void testParseAllData() {
+    for (String key : addressData.keys()) {
+      AddressVerificationNodeData nodeData = addressData.get(key);
+      assertNotNull(key + " maps to null value.", nodeData);
+      assertNotNull("Id is required", nodeData.get(AddressDataKey.ID));
+    }
+  }
+
+  public void testUsData() {
+    AddressVerificationNodeData nodeData = addressData.get("data/US");
+    assertEquals("data/US", nodeData.get(AddressDataKey.ID));
+    assertNotNull(nodeData.get(AddressDataKey.SUB_KEYS));
+    assertNotNull(nodeData.get(AddressDataKey.SUB_NAMES));
+    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
+    assertEquals("en", nodeData.get(AddressDataKey.LANG));
+    assertEquals("en", nodeData.get(AddressDataKey.LANGUAGES));
+  }
+
+  public void testCaData() {
+    AddressVerificationNodeData nodeData = addressData.get("data/CA");
+    String names = nodeData.get(AddressDataKey.SUB_NAMES);
+    String keys = nodeData.get(AddressDataKey.SUB_KEYS);
+
+    assertEquals("data/CA", nodeData.get(AddressDataKey.ID));
+    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
+    assertEquals("en", nodeData.get(AddressDataKey.LANG));
+    assertEquals("en~fr", nodeData.get(AddressDataKey.LANGUAGES));
+
+    assertEquals("AB~BC~MB~NB~NL~NS~NU~NT~ON~PE~QC~SK~YT", keys);
+    assertEquals("Alberta~British Columbia~Manitoba~New Brunswick"
+        + "~Newfoundland and Labrador~Nova Scotia~Nunavut~Northwest Territories"
+        + "~Ontario~Prince Edward Island~Quebec~Saskatchewan~Yukon", names);
+  }
+
+  public void testCaFrenchData() {
+    AddressVerificationNodeData nodeData = addressData.get("data/CA--fr");
+    String names = nodeData.get(AddressDataKey.SUB_NAMES);
+    String keys = nodeData.get(AddressDataKey.SUB_KEYS);
+
+    assertEquals("data/CA--fr", nodeData.get(AddressDataKey.ID));
+    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
+    assertEquals("fr", nodeData.get(AddressDataKey.LANG));
+    assertEquals("AB~BC~PE~MB~NB~NS~NU~ON~QC~SK~NL~NT~YT", keys);
+    assertTrue(names.contains("Colombie"));
+  }
+
+  public void testBackSlashUnEscaped() {
+    for (String lookupKey : addressData.keys()) {
+      AddressVerificationNodeData nodeData = addressData.get(lookupKey);
+      for (AddressDataKey dataKey : AddressDataKey.values()) {
+        String val = nodeData.get(dataKey);
+        if (val != null) {
+          assertFalse(
+              "Backlashes need to be unescaped: " + val, val.contains("\\\\"));
+        }
+      }
+    }
+
+    // Spot check.
+    assertEquals("Kazhakstan's postal code pattern mismatched",
+        "\\d{6}", addressData.get("data/KZ").get(AddressDataKey.ZIP));
+  }
+
+  public void testExampleData() {
+    assertNotNull("Expects example data.",
+        AddressDataMapLoader.DATA.get("examples"));
+    assertNotNull("Expects example US address.",
+        AddressDataMapLoader.DATA.get("examples/US/local/en"));
+    assertEquals(
+        "'examples/TW/local/zh_Hant' and 'examples/TW/local/_default' should "
+        + "return same value.",
+        AddressDataMapLoader.DATA.get("examples/TW/local/zh_Hant"),
+        AddressDataMapLoader.DATA.get("examples/TW/local/_default"));
+  }
+}

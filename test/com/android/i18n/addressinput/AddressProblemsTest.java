@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.android.i18n.addressinput.validation;
+package com.android.i18n.addressinput;
 
-import com.android.i18n.addressinput.AddressField;
 import junit.framework.TestCase;
 
 /**
@@ -26,7 +25,8 @@ public class AddressProblemsTest extends TestCase {
   public void testAddError() {
     AddressProblems ap = new AddressProblems();
     ap.add(AddressField.POSTAL_CODE, AddressProblemType.MISSING_REQUIRED_FIELD);
-    assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD, ap.getProblem(AddressField.POSTAL_CODE));
+    assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
+                 ap.getProblem(AddressField.POSTAL_CODE));
   }
 
   public void testEmptyErrorList() {

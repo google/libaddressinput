@@ -6,24 +6,19 @@
   <property name="build.dir" value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir" value="${build.dir}/jar"/>
+  <property name="data.dir" value="data"/>
   <property name="lib.dir" value="lib"/>
   <property name="report.dir" value="${build.dir}/junitreport"/>
 
   <path id="classpath">
-    <pathelement location="lib/json/json.jar"/>
+    <pathelement location="${lib.dir}/json/json.jar"/>
     <fileset dir="${src.dir}" includes="src/com/android/i18n/**"/>
-    <fileset dir=".">
-        <include name="android.jar"/>
-    </fileset>
-
+    <fileset dir="." includes="android.jar"/>
   </path>
   <path id="test.classpath">
     <pathelement location="${classes.dir}"/>
-    <pathelement location="lib/junit/junit-4.8.2.jar"/>
     <pathelement location="${jar.dir}/${ant.project.name}-test.jar"/>
-    <fileset dir="${lib.dir}">
-      <include name="**/*.jar"/>
-    </fileset>
+    <fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
   <target name="compile" description="Compile Java source.">
@@ -60,6 +55,7 @@
         <include name="**/*.class"/>
         <exclude name="**/*Test*"/>
       </fileset>
+      <fileset dir="${data.dir}" />
     </jar>
   </target>
 

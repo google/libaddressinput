@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.i18n.addressinput.validation;
+package com.android.i18n.addressinput;
 
-import com.android.i18n.addressinput.AddressField;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This structure keeps track of any errors found when validating the AddressData.

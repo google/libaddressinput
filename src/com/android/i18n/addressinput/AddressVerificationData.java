@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.i18n.addressinput.validation;
-
-import com.android.i18n.addressinput.AddressDataKey;
-import com.android.i18n.addressinput.AddressVerificationNodeData;
+package com.android.i18n.addressinput;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -82,14 +79,8 @@ public class AddressVerificationData {
    * Returns the contents of the JSON-format string as a map.
    */
   protected AddressVerificationNodeData createNodeData(String json) {
-    // TODO: Figure out if this is needed
-    // It is currently unknown whether this is needed or not.
-    // No tests to see, and no time to write any.
-    if (json.startsWith("\"") && json.endsWith("\"")){
-      json = json.substring(1, json.length() - 1);
-    }
-
-
+    // Remove leading and trailing { and }.
+    json = json.substring(1, json.length() - 1);
     Map<AddressDataKey, String> map =
         new EnumMap<AddressDataKey, String>(AddressDataKey.class);
 
