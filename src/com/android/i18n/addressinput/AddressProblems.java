@@ -49,6 +49,10 @@ public class AddressProblems {
     return problems.toString();
   }
   
+  public void clear(){
+    problems = new HashMap<AddressField, AddressProblemType>();
+  }
+  
   /**
    * Returns null if no problems exists.  
    */
