@@ -41,6 +41,10 @@ public class AddressVerificationNodeData {
     return map.keySet().iterator();
   }
 
+  public boolean containsKey(AddressDataKey key){
+    return map.containsKey(key);
+  }
+
   /**
    * Gets the value for a particular key in the map.
    */

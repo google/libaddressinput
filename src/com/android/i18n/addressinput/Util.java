@@ -16,6 +16,8 @@
 
 package com.android.i18n.addressinput;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,5 +111,39 @@ public class Util {
       }
     }
     return sb == null ? null : sb.toString();
+  }
+
+  protected static Map<String, String> buildNameToKeyMap(String[] keys,
+                                                         String[] names, String[] lnames) {
+    if (keys == null) {
+      return null;
+    }
+
+    Map<String, String> nameToKeyMap = new HashMap<String, String>();
+
+    int len = keys.length;
+    for (String k : keys) {
+      nameToKeyMap.put(k.toLowerCase(), k);
+    }
+    if (names != null) {
+      if (names.length != len) {
+        throw new IllegalStateException("names (" + names.toString() + ") length"
+            + " does not match keys (" + keys.toString() + ") length");
+      }
+      for (int i = 0; i < len; ++i) {
+        nameToKeyMap.put(names[i].toLowerCase(), keys[i]);
+      }
+    }
+    if (lnames != null) {
+      if (lnames.length != len) {
+        throw new IllegalStateException("lnames (" + lnames.toString() + ") length"
+            + " does not match keys (" + keys.toString() + ") length");
+      }
+      for (int i = 0; i < len; ++i) {
+        nameToKeyMap.put(lnames[i].toLowerCase(), keys[i]);
+      }
+    }
+
+    return nameToKeyMap;
   }
 }
