@@ -16,11 +16,7 @@
 
 package com.android.i18n.addressinput;
 
-import java.util.concurrent.TimeoutException;
-
-import junit.framework.TestCase;
-
-public class CacheDataTest extends TestCase {
+public class CacheDataTest extends AsyncTestCase {
   private CacheData cache;
 
   private static final String DELIM = "~";
@@ -307,59 +303,5 @@ public class CacheDataTest extends TestCase {
         finishTest();
       }
     });
-  }
-
-  //
-  // Temporary implementation of GWT asynchronous test cases.
-  //
-  // TODO: Replace with something more sophisticated.
-  //
-
-  /**
-   * Tracks whether this test is completely done.
-   */
-  private boolean testIsFinished;
-
-  /**
-   * The system time in milliseconds when the test should time out.
-   */
-  private long testTimeoutMillis;
-
-  /**
-   * Put the current test in asynchronous mode.
-   *
-   * @param timeoutMillis Wait this long before failing the test for time out.
-   */
-  private void delayTestFinish(int timeoutMillis) {
-    testTimeoutMillis = System.currentTimeMillis() + timeoutMillis;
-  }
-
-  /**
-   * Cause this test to succeed during asynchronous mode.
-   */
-  private void finishTest() {
-    testIsFinished = true;
-    synchronized (this) {
-      notify();
-    }
-  }
-
-  @Override
-  protected void runTest() throws Throwable {
-    testIsFinished = false;
-    testTimeoutMillis = 0;
-    super.runTest();
-
-    if (testTimeoutMillis > 0) {
-      long timeoutMillis = testTimeoutMillis - System.currentTimeMillis();
-      if (timeoutMillis > 0) {
-        synchronized (this) {
-          wait(timeoutMillis);
-        }
-      }
-      if (!testIsFinished) {
-        throw new TimeoutException("Waited " + timeoutMillis + " ms!");
-      }
-    }
   }
 }
