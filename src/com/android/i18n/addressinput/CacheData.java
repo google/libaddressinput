@@ -18,18 +18,15 @@ package com.android.i18n.addressinput;
 
 import static com.android.i18n.addressinput.Util.checkNotNull;
 
-import org.json.JSONException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -252,13 +249,7 @@ public final class CacheData {
     jsonp.setTimeout(TIMEOUT);
     final JsonHandler handler = new JsonHandler(key.toString(),
         existingJso, listener);
-    String keyString;
-    try {
-      keyString = URLEncoder.encode(key.toString(), "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-    jsonp.requestObject(serviceUrl + "/" + keyString,
+    jsonp.requestObject(serviceUrl + "/" + key.toString(),
         new AsyncCallback<JsoMap>() {
           public void onFailure(Throwable caught) {
             Log.w(TAG, "Request for key " + key + " failed");
@@ -334,31 +325,35 @@ public final class CacheData {
     public void setTimeout(int timeout) {
     }
 
-    // Despite taking an AsyncCallback<> parameter, this method does a plain old synchronous call.
-    // TODO: Rewrite to actually do an asynchronous call.
     public void requestObject(String url, AsyncCallback<JsoMap> callback) {
-      try {
-        String response = getHttp(url);
-        callback.onSuccess(JsoMap.buildJsoMap(response));
-      } catch (IOException e) {
-        callback.onFailure(e);
-      } catch (JSONException e) {
-        callback.onFailure(e);
-      }
+      HttpUriRequest request = new HttpGet(url);
+      (new AsyncHttp(request, callback)).start();
     }
 
-    // Simple implementation of HTTP GET.
+    // Simple implementation of asynchronous HTTP GET.
     // TODO: Replace with something more sophisticated.
-    private static String getHttp(String url) throws IOException {
-      HttpURLConnection huc = (HttpURLConnection)(new URL(url)).openConnection();
-      huc.connect();
-      StringBuffer sb = new StringBuffer();
-      BufferedReader rd = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-      for (String line; (line = rd.readLine()) != null; ) {
-        sb.append(line);
+    private static class AsyncHttp extends Thread {
+      private static final HttpClient client = new DefaultHttpClient();
+
+      private HttpUriRequest request;
+      private AsyncCallback<JsoMap> callback;
+
+      protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
+        this.request = request;
+        this.callback = callback;
       }
-      huc.disconnect();
-      return sb.toString();
+
+      public void run() {
+        try {
+          final String response;
+          synchronized (client) {
+            response = client.execute(request, new BasicResponseHandler());
+          }
+          callback.onSuccess(JsoMap.buildJsoMap(response));
+        } catch (Exception e) {
+          callback.onFailure(e);
+        }
+      }
     }
   }
 }
