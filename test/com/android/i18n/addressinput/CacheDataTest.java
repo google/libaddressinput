@@ -16,6 +16,8 @@
 
 package com.android.i18n.addressinput;
 
+import java.util.concurrent.TimeoutException;
+
 import junit.framework.TestCase;
 
 public class CacheDataTest extends TestCase {
@@ -199,12 +201,10 @@ public class CacheDataTest extends TestCase {
               "Expect to see key " + key + " cached when CounterListener's "
               + " dataLoadingEnd is invoked",
               cache.containsKey(key.toString()));
-          /* TODO: Un-comment when CacheData is updated to be asynchronous.
           assertTrue(
               "Expect CounterListener's dataLoadingEnd to be triggered "
               + maxCount + " times in total",
               reachedMaxCount);
-          */
           finishTest();
         }
       }
@@ -233,10 +233,8 @@ public class CacheDataTest extends TestCase {
       boolean beginCalled = false;
 
       public void dataLoadingBegin() {
-        /* TODO: Un-comment when CacheData is updated to be asynchronous.
         assertFalse("data for key " + key + " should not be fetched yet",
             cache.containsKey(key.toString()));
-        */
         beginCalled = true;
       }
 
@@ -312,16 +310,56 @@ public class CacheDataTest extends TestCase {
   }
 
   //
-  // Temporary implementations of things that the GWT implementation depends on.
+  // Temporary implementation of GWT asynchronous test cases.
   //
-  // TODO: Write real implementations and remove these.
+  // TODO: Replace with something more sophisticated.
   //
 
-  // To be used when CacheData is updated to be asynchronous.
-  private static void delayTestFinish(int timeoutMillis) {
+  /**
+   * Tracks whether this test is completely done.
+   */
+  private boolean testIsFinished;
+
+  /**
+   * The system time in milliseconds when the test should time out.
+   */
+  private long testTimeoutMillis;
+
+  /**
+   * Put the current test in asynchronous mode.
+   *
+   * @param timeoutMillis Wait this long before failing the test for time out.
+   */
+  private void delayTestFinish(int timeoutMillis) {
+    testTimeoutMillis = System.currentTimeMillis() + timeoutMillis;
   }
 
-  // To be used when CacheData is updated to be asynchronous.
-  private static void finishTest() {
+  /**
+   * Cause this test to succeed during asynchronous mode.
+   */
+  private void finishTest() {
+    testIsFinished = true;
+    synchronized (this) {
+      notify();
+    }
+  }
+
+  @Override
+  protected void runTest() throws Throwable {
+    testIsFinished = false;
+    testTimeoutMillis = 0;
+    super.runTest();
+
+    if (testTimeoutMillis > 0) {
+      long timeoutMillis = testTimeoutMillis - System.currentTimeMillis();
+      if (timeoutMillis > 0) {
+        synchronized (this) {
+          wait(timeoutMillis);
+        }
+      }
+      if (!testIsFinished) {
+        throw new TimeoutException("Waited " + timeoutMillis + " ms!");
+      }
+    }
   }
 }
