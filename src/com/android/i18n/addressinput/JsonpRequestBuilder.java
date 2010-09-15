@@ -21,6 +21,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 /**
  * Android implementation of those parts of the com.google.gwt.jsonp.client.JsonpRequestBuilder
@@ -35,18 +37,26 @@ public class JsonpRequestBuilder {
     public void onSuccess(T result);
   }
 
-  // This method doesn't do anything.
-  // TODO: Rewrite to actually set the timeout.
+  /**
+   * @param timeout The expected timeout (ms) for this request.
+   */
   public void setTimeout(int timeout) {
+    HttpParams params = AsyncHttp.client.getParams();
+    HttpConnectionParams.setConnectionTimeout(params, timeout);
+    HttpConnectionParams.setSoTimeout(params, timeout);
   }
 
+  /**
+   * Sends a JSONP request and expects a JsoMap object as a result.
+   */
   public void requestObject(String url, AsyncCallback<JsoMap> callback) {
     HttpUriRequest request = new HttpGet(url);
     (new AsyncHttp(request, callback)).start();
   }
 
-  // Simple implementation of asynchronous HTTP GET.
-  // TODO: Replace with something more sophisticated.
+  /**
+   *  Simple implementation of asynchronous HTTP GET.
+   */
   private static class AsyncHttp extends Thread {
     private static final HttpClient client = new DefaultHttpClient();
 
