@@ -18,11 +18,8 @@ package com.android.i18n.addressinput;
 
 import static com.android.i18n.addressinput.Util.checkNotNull;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.android.i18n.addressinput.JsonpRequestBuilder.AsyncCallback;
+
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -302,58 +299,9 @@ public final class CacheData {
     checkNotNull(listener);
     HashSet<MyCacheListener> listeners = temporaryListenerStore.get(key);
     if (listeners == null) {
-      listeners = new HashSet<MyCacheListener>();      
+      listeners = new HashSet<MyCacheListener>();
       temporaryListenerStore.put(key, listeners);
     }
     listeners.add(listener);
-  }
-
-  //
-  // Temporary implementations of things that the GWT implementation depends on.
-  //
-  // TODO: Write real implementations and remove these.
-  //
-
-  private interface AsyncCallback<T> {
-    public void onFailure(Throwable caught);
-    public void onSuccess(T result);
-  }
-
-  private static class JsonpRequestBuilder {
-    // This method doesn't do anything.
-    // TODO: Rewrite to actually set the timeout.
-    public void setTimeout(int timeout) {
-    }
-
-    public void requestObject(String url, AsyncCallback<JsoMap> callback) {
-      HttpUriRequest request = new HttpGet(url);
-      (new AsyncHttp(request, callback)).start();
-    }
-
-    // Simple implementation of asynchronous HTTP GET.
-    // TODO: Replace with something more sophisticated.
-    private static class AsyncHttp extends Thread {
-      private static final HttpClient client = new DefaultHttpClient();
-
-      private HttpUriRequest request;
-      private AsyncCallback<JsoMap> callback;
-
-      protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
-        this.request = request;
-        this.callback = callback;
-      }
-
-      public void run() {
-        try {
-          final String response;
-          synchronized (client) {
-            response = client.execute(request, new BasicResponseHandler());
-          }
-          callback.onSuccess(JsoMap.buildJsoMap(response));
-        } catch (Exception e) {
-          callback.onFailure(e);
-        }
-      }
-    }
   }
 }
