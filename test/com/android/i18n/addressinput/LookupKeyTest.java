@@ -80,7 +80,7 @@ public class LookupKeyTest extends TestCase {
   public void testKeyWithWrongScriptType() {
     String wrongScript = "examples/US/asdfasdfasdf/_default";
     try {
-      LookupKey key = new LookupKey.Builder(wrongScript).build();
+      new LookupKey.Builder(wrongScript).build();
       fail("should fail since the script type is wrong");
     } catch (RuntimeException e) {
       // Expected.
@@ -153,7 +153,7 @@ public class LookupKeyTest extends TestCase {
     LookupKey key = new LookupKey.Builder("examples/US/latin/_default").build();
 
     try {
-      LookupKey newKey = key.getKeyForUpperLevelField(AddressField.COUNTRY);
+      key.getKeyForUpperLevelField(AddressField.COUNTRY);
       fail("should fail if you try to get parent key for an example key.");
     } catch (RuntimeException e) {
       // Expected.
