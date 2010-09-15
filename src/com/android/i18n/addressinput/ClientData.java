@@ -31,8 +31,6 @@ import java.util.Map;
  */
 public class ClientData {
 
-  private RegionDataConstants regionDataConstants;
-
   /* Data to bootstrap the process. The data are all regional (country level)
    * data. Keys are like "data/US/CA"
    */
@@ -41,7 +39,6 @@ public class ClientData {
   private CacheData cacheData;
 
   public ClientData(RegionDataConstants regionDataConstants, CacheData cacheData) {
-    this.regionDataConstants = regionDataConstants;
     this.cacheData = cacheData;
     buildRegionalData();
   }
