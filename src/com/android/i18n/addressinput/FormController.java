@@ -113,7 +113,7 @@ public class FormController {
     return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
   }
 
-  private LookupKey getDataKeyFor(AddressData address) {
+  LookupKey getDataKeyFor(AddressData address) {
     return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
   }
 
@@ -215,7 +215,7 @@ public class FormController {
    * default language code. For example, "zh-Hant" and "zh" are viewed as
    * identical.
    */
-  private boolean isDefaultLanguage(String languageCode) {
+  boolean isDefaultLanguage(String languageCode) {
     if (languageCode == null) {
       return true;
     }
