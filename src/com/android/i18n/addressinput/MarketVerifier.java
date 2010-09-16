@@ -26,7 +26,6 @@ import com.android.i18n.addressinput.testing.AddressDataMapLoader;
 public class MarketVerifier extends StandardAddressVerifier {
 
   public MarketVerifier() {
-    super(new FieldVerifierFactory(new AddressVerificationData(
-                                   AddressDataMapLoader.DATA)).rootVerifier());
+    super(new FieldVerifier(new AddressVerificationData(AddressDataMapLoader.DATA)));
   }
 }
