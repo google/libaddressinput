@@ -70,6 +70,26 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
     });
   }
 
+  public void testUrlEncoding() throws Exception {
+    delayTestFinish(4000);
+    builder.setTimeout(2000);
+
+    String urlBase = HttpServer.execute(1000, "{\"id\": \"data\"}");
+    String url = urlBase + "address/data/VN/B\u1EAFc K\u1EA1n";
+
+    builder.requestObject(url, new AsyncCallback<JsoMap>() {
+      public void onFailure(Throwable caught) {
+        fail(caught.toString());
+      }
+
+      public void onSuccess(JsoMap result) {
+        assertNotNull(result);
+        assertEquals("data", result.get("id"));
+        finishTest();
+      }
+    });
+  }
+
   /**
    *  Simple implementation of an HTTP server.
    */
@@ -101,8 +121,7 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
         InputStream inputStream = clientSocket.getInputStream();
         inputStream.skip(1024);
         OutputStream outputStream = clientSocket.getOutputStream();
-        outputStream.write(header.getBytes());
-        outputStream.write(response.getBytes());
+        outputStream.write(response);
         outputStream.close();
         inputStream.close();
         clientSocket.close();
@@ -114,12 +133,12 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
 
     private HttpServer(long waitMillis, String response) throws IOException {
       this.waitMillis = waitMillis;
-      this.response = response;
+      this.response = (header + response).getBytes();
       serverSocket = new ServerSocket(0);
     }
 
     private long waitMillis;
-    private String response;
+    private byte[] response;
     private ServerSocket serverSocket;
 
     private static final String header = "HTTP/1.0 200 OK\nContent-Type: text/plain\n\n";

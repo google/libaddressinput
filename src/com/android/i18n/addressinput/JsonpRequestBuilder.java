@@ -24,6 +24,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Android implementation of those parts of the com.google.gwt.jsonp.client.JsonpRequestBuilder
  * class that the CacheData class uses.
@@ -50,7 +53,7 @@ public class JsonpRequestBuilder {
    * Sends a JSONP request and expects a JsoMap object as a result.
    */
   public void requestObject(String url, AsyncCallback<JsoMap> callback) {
-    HttpUriRequest request = new HttpGet(url);
+    HttpUriRequest request = new HttpGet(encodeUrl(url));
     (new AsyncHttp(request, callback)).start();
   }
 
@@ -79,5 +82,41 @@ public class JsonpRequestBuilder {
         callback.onFailure(e);
       }
     }
+  }
+
+  /**
+   * A quick hack to transform a string into an RFC 3986 compliant URL.
+   * 
+   * TODO: Refactor the code to stop passing URLs around as strings,
+   *       to eliminate the need for this hack.  
+   */
+  private static String encodeUrl(String url) {
+    int length = url.length();
+    StringBuilder tmp = new StringBuilder(length);
+
+    try {
+      for (int i = 0; i < length; i++) {
+        int j = i;
+        char c = '\0';
+        for (; j < length; j++) {
+          c = url.charAt(j);
+          if (c == ':' || c == '/') break;
+        }
+        if (j == length) {
+          tmp.append(URLEncoder.encode(url.substring(i), "UTF-8"));
+          break;
+        } else if (j > i) {
+          tmp.append(URLEncoder.encode(url.substring(i, j), "UTF-8"));
+          tmp.append(c);
+          i = j;
+        } else {
+          tmp.append(c);
+        }
+      }
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);  // Impossible.
+    }
+    
+    return tmp.toString();
   }
 }
