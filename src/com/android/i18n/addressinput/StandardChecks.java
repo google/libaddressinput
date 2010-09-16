@@ -35,12 +35,12 @@ public class StandardChecks {
   static {
     Map<AddressField, List<AddressProblemType>> map = new HashMap<AddressField, List<AddressProblemType>>();
     
-    addToMap(map, AddressField.COUNTRY, AddressProblemType.UNUSED_FIELD, 
-             AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
+    addToMap(map, AddressField.COUNTRY,
+             AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNUSED_FIELD, AddressProblemType.UNKNOWN_VALUE);
     addToMap(map, AddressField.ADMIN_AREA, AddressProblemType.UNUSED_FIELD, 
              AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
     addToMap(map, AddressField.LOCALITY, AddressProblemType.UNUSED_FIELD, 
-             AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
+             AddressProblemType.MISSING_REQUIRED_FIELD);
     addToMap(map, AddressField.DEPENDENT_LOCALITY, AddressProblemType.UNUSED_FIELD, 
              AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
     addToMap(map, AddressField.POSTAL_CODE, AddressProblemType.UNUSED_FIELD, 

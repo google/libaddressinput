@@ -36,6 +36,12 @@ public class AddressVerificationDataTest extends TestCase {
     }
   }
 
+  public void testLoadingCountries() {
+    AddressVerificationNodeData nodeData = addressData.get("data");
+    String[] countries = nodeData.get(AddressDataKey.COUNTRIES).split("~");
+    assertTrue(countries.length > 0);
+  }
+
   public void testUsData() {
     AddressVerificationNodeData nodeData = addressData.get("data/US");
     assertEquals("data/US", nodeData.get(AddressDataKey.ID));

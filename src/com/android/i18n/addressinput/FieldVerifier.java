@@ -16,8 +16,10 @@
 
 package com.android.i18n.addressinput;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -33,43 +35,139 @@ import java.util.regex.Pattern;
  * field.
  */
 public class FieldVerifier {
-  // TODO: remove initialisers. Here to silence compile errors.
-  private final Set<AddressField> used = new HashSet<AddressField>();
-  private final Set<AddressField> required = new HashSet<AddressField>();
-  // Known values. Can be either a key, a name in Latin, or a name in native script.
-  private final Map<String, String> known = new HashMap<String, String>();
-  private final String[] keys = {};
-  // Names in Latin.
-  private final String[] lnames = {};
-  // Names in native script.
-  private final String[] names = {};
-  private final Pattern format = Pattern.compile("");
-  private final Pattern match = Pattern.compile("");
-  // TODO: Partial port only. This is only added so code compiles. The check() function below should
-  // work.
+  // Assumes root, will be reset to false when initializing with parent.
+  private boolean isRoot = true;
+  private String id;
+  private AddressVerificationData data;
 
-  FieldVerifier refineVerifier(String sublevel) {
-    // TODO: Replace with real implemenation.
-    return new FieldVerifier();
+  private Set<AddressField> used;
+  private Set<AddressField> required;
+
+  // Known values. Can be either a key, a name in Latin, or a name in native script.
+  private Map<String, String> known;
+  private String[] keys = {};
+
+  // Names in Latin.
+  private String[] lnames;
+  // Names in native script.
+  private String[] names;
+
+  private Pattern format;
+  private Pattern match;
+
+  public FieldVerifier(AddressVerificationData data) {
+    used = new HashSet<AddressField>();
+    required = new HashSet<AddressField>();
+    id = "data";
+    this.data = data;
+
+    AddressVerificationNodeData rootNode = data.getDefaultData("data");
+    populate(rootNode);
+    known = Util.buildNameToKeyMap(keys, null, null);
   }
 
-  public void report(AddressProblemType problem, AddressField field, String value,
+  public FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
+    isRoot = false;
+    used = parent.used;
+    required = parent.required;
+    data = parent.data;
+    format = parent.format;
+    match = parent.match;
+    known = parent.known;
+    populate(nodeData);
+    if (known == null) {
+      known = new HashMap<String, String>();
+    }
+    known.putAll(Util.buildNameToKeyMap(keys, names, lnames));
+  }
+
+  private void populate(AddressVerificationNodeData nodeData) {
+    if (nodeData.containsKey(AddressDataKey.ID)) {
+      id = nodeData.get(AddressDataKey.ID);
+    }
+    if (nodeData.containsKey(AddressDataKey.COUNTRIES)) {
+      keys = nodeData.get(AddressDataKey.COUNTRIES).split("~");
+    }
+    if (nodeData.containsKey(AddressDataKey.XZIP)) {
+      format = Pattern.compile(nodeData.get(AddressDataKey.XZIP));
+    }
+    if (nodeData.containsKey(AddressDataKey.SUB_KEYS)) {
+      keys = nodeData.get(AddressDataKey.SUB_KEYS).split("~");
+    }
+    if (nodeData.containsKey(AddressDataKey.SUB_LNAMES)) {
+      lnames = nodeData.get(AddressDataKey.SUB_LNAMES).split("~");
+    }
+    if (nodeData.containsKey(AddressDataKey.SUB_NAMES)) {
+      names = nodeData.get(AddressDataKey.SUB_NAMES).split("~");
+    }
+    if (nodeData.containsKey(AddressDataKey.FMT)) {
+      used = parseAddressFields(nodeData.get(AddressDataKey.FMT));
+    }
+    if (nodeData.containsKey(AddressDataKey.REQUIRE)) {
+      required = parseRequireString(nodeData.get(AddressDataKey.REQUIRE));
+    }
+    if (nodeData.containsKey(AddressDataKey.ZIP)) {
+      if (isCountryKey()) {
+        format = Pattern.compile(nodeData.get(AddressDataKey.ZIP));
+      } else {
+        match = Pattern.compile(nodeData.get(AddressDataKey.ZIP));
+      }
+    }
+    if (keys != null && names == null && lnames != null && keys.length == lnames.length) {
+        names = keys;        
+    }
+  }
+  FieldVerifier refineVerifier(String sublevel) {
+    String subLevelName = id + "/" + sublevel;
+    AddressVerificationNodeData nodeData = data.get(subLevelName);
+    if (nodeData == null) {
+      if (lnames != null)  {
+        int n = 0;
+        boolean found = false;
+        while (n < lnames.length) {
+          if (lnames[n].equalsIgnoreCase(sublevel)) {
+            found = true;
+            break;
+          }
+          n++;
+        }
+        if (!found) {
+          return this;
+        }
+        subLevelName = id + "/" + names[n];
+        nodeData = data.get(subLevelName);
+        if (nodeData == null) {
+          return this;
+        } else {
+          return new FieldVerifier(this, nodeData);
+        }
+      }
+      return this;
+    }
+    return new FieldVerifier(this, nodeData);
+  }
+
+  private void report(AddressProblemType problem, AddressField field, String value,
                      AddressProblems problems) {
     problems.add(field, problem);
   }
 
-  public boolean check(LookupKey.ScriptType script, AddressProblemType problem, AddressField field,
-                       String value, AddressProblems problems) {
-    // Assume success.
-    boolean result = true;
+  protected boolean check(LookupKey.ScriptType script, AddressProblemType problem,
+                          AddressField field, String value, AddressProblems problems) {
+    // Assumes no problem found
+    boolean problemFound = false;
 
     String trimmedValue = Util.trimToNull(value);
     switch (problem) {
       case UNUSED_FIELD:
-        result = (trimmedValue == null) || used.contains(field);
+        if (trimmedValue != null && !used.contains(field)) {
+          problemFound = true;
+        }
         break;
       case MISSING_REQUIRED_FIELD:
-        result = !((trimmedValue == null) && required.contains(field));
+        if (required.contains(field) && trimmedValue == null) {
+          problemFound = true;
+        }
         break;
       case UNKNOWN_VALUE:
         // An empty string will never be an UNKNOWN_VALUE. It is invalid
@@ -78,30 +176,34 @@ public class FieldVerifier {
         if (trimmedValue == null) {
           break;
         }
-        result = isKnownInScript(script, value);
+        // Hack will be fixed later
+        // problemFound = !isKnownInScript(script, value);
         break;
       case UNRECOGNIZED_FORMAT:
-        result = (trimmedValue == null) || (format == null)
-            || format.matcher(value == null ? "" : value).matches();
+        if (trimmedValue != null && format != null &&
+            !format.matcher(value == null ? "" : value).matches()) {
+          problemFound = true;
+        }
         break;
       case MISMATCHING_VALUE:
-        result = (trimmedValue == null) || (match == null)
-            || match.matcher(value == null ? "" : value).lookingAt();
+        if (trimmedValue != null && match != null &&
+            !match.matcher(value == null ? "" : value).lookingAt()) {
+          problemFound = true;
+        }
         break;
       default:
         throw new RuntimeException("unknown problem: " + problem);
     }
-    if (!result) {
-      report(problem, field, value, problems);
+    if (problemFound) {
+      problems.add(field,problem);
     }
-    return result;
+    return !problemFound;
   }
 
   private boolean isKnownInScript(LookupKey.ScriptType script, String value) {
     String trimmedValue = Util.trimToNull(value);
     Util.checkNotNull(trimmedValue);
-    // If script is null, checks against all known values.
-    if (script == null) {
+    if (script == null)  {
       return known == null || known.containsKey(trimmedValue.toLowerCase());
     }
     String[] currNames =
@@ -126,7 +228,62 @@ public class FieldVerifier {
   }
 
   public String toString() {
-    // TODO: Replace with real implementation
-    return "";
+    return id;
+  }
+
+  // Util methods for parsing node content.
+  private static Set<AddressField> parseAddressFields(String value) {
+    EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
+    boolean escaped = false;
+    for (char c : value.toCharArray()) {
+      if (escaped) {
+        escaped = false;
+        if (c == 'n') {
+          continue;
+        }
+        AddressField f = AddressField.of(c);
+        if (f == null) {
+          throw new RuntimeException("Unrecognized character '" + c + "' in format pattern: "
+              + value);
+        }
+        result.add(f);
+      } else if (c == '%') {
+        escaped = true;
+      }
+    }
+    // TODO: Investigate this.
+    // For some reason Address 1 & 2 is removed if they are specified as fields.
+    // I assume this is due to errors in data, but I don't know.
+    result.remove(AddressField.ADDRESS_LINE_1);
+    result.remove(AddressField.ADDRESS_LINE_2);
+
+    return result;
+  }
+
+  private static Set<AddressField> parseRequireString(String value) {
+    // country is always required
+    EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
+
+    for (char c : value.toCharArray()) {
+      AddressField f = AddressField.of(c);
+      if (f == null) {
+        throw new RuntimeException("Unrecognized character '" + c + "' in require pattern: "
+            + value);
+      }
+      result.add(f);
+    }
+
+    // TODO: Investigate this.
+    // For some reason Address 1 & 2 is removed if they are specified as required.
+    // I assume this is due to errors in data, but I don't know.
+    result.remove(AddressField.ADDRESS_LINE_1);
+    result.remove(AddressField.ADDRESS_LINE_2);
+
+    return result;
+  }
+
+  private boolean isCountryKey() {
+    Util.checkNotNull(id, "cannot use null as key");
+    return id.split("/").length == 2;
   }
 }

@@ -84,9 +84,12 @@ public class StandardAddressVerifier {
   }
 
   public void verify(AddressData address, AddressProblems problems) {
-    FieldVerifier v = rootVerifier;
+    FieldVerifier v = rootVerifier.refineVerifier(address.getPostalCountry());
     VerifierRefiner r = refiner.newInstance();
+
     ScriptType script = null;
+    //TODO: Remove this hack.
+    // Hack for now making all Script types LOCAL
     if (address.getLanguageCode() != null) {
       if (Util.isExplicitLatinScript(address.getLanguageCode())) {
         script = ScriptType.LATIN;
@@ -98,24 +101,15 @@ public class StandardAddressVerifier {
     // The first four calls refine the verifier, so must come first, and in this
     // order.
     verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
-    if (problems.isEmpty()) {
-      v = r.refineVerifier(v, COUNTRY, address.getPostalCountry());
-      verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
-      if (problems.isEmpty()) {
-        v = r.refineVerifier(v, ADMIN_AREA, address.getAdministrativeArea());
-        verifyField(script, v, LOCALITY, address.getLocality(), problems);
-        if (problems.isEmpty()) {
-          v = r.refineVerifier(v, LOCALITY, address.getLocality());
-          verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
-          if (problems.isEmpty()) {
-            v = r.refineVerifier(v, DEPENDENT_LOCALITY, address.getDependentLocality());
-          }
-        }
-      }
-    }
+    verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
+    verifyField(script, v, LOCALITY, address.getLocality(), problems);
+    verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
 
     String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
         address.getAddressLine2());
+    if (address.getAdministrativeArea() != null) {
+        v = v.refineVerifier(address.getAdministrativeArea());    
+    }
 
     // remaining calls don't change the field verifier
     verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
@@ -139,12 +133,12 @@ public class StandardAddressVerifier {
    * provide pre- or post-checks for all fields.
    */
   protected boolean verifyField(LookupKey.ScriptType script,
-      FieldVerifier verifier, AddressField field, String datum,
+      FieldVerifier verifier, AddressField field, String value,
       AddressProblems problems) {
     Iterator<AddressProblemType> iter = getProblemIterator(field);
     while (iter.hasNext()) {
       AddressProblemType prob = iter.next();
-      if (!verifyProblemField(script, verifier, prob, field, datum, problems)) {
+      if (!verifyProblemField(script, verifier, prob, field, value, problems)) {
         return false;
       }
     }
