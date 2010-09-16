@@ -27,17 +27,17 @@ import junit.framework.TestSuite;
  * not an exhaustive test.
  *
  */
-public class FieldVerifierFactoryTest extends TestCase {
+public class FieldVerifierTest extends TestCase {
 
   public static Test suite() {
-    return new TestSuite(FieldVerifierFactoryTest.class);
+    return new TestSuite(FieldVerifierTest.class);
   }
 
   private static StandardAddressVerifier verifier =
       new StandardAddressVerifier(
-          new FieldVerifierFactory(
+          new FieldVerifier(
           new AddressVerificationData(
-          AddressDataMapLoader.DATA)).rootVerifier());
+          AddressDataMapLoader.DATA)));
 
   private AddressProblems problems = new AddressProblems();
 
@@ -240,7 +240,7 @@ public class FieldVerifierFactoryTest extends TestCase {
                  problems.getProblem(AddressField.STREET_ADDRESS));
   }
 
-  // Tests The Bahamas' address (Bug #2048083)
+  // Tests The Bahamas' address
   public void failingtestBahamas() {
     final AddressData address = new AddressData.Builder()
         .setAddress("Abaco Beach Resort & Boat Habour")
@@ -252,7 +252,7 @@ public class FieldVerifierFactoryTest extends TestCase {
     assertTrue(problems.isEmpty());
   }
 
-  // japan test data copied from j/c/g/location/testing/TestPostalAddresses.java
+  // japan test data copied from 
   public void testJapan() {
     // added AdminArea since address verification can't infer it from Kyoto City
     // commented out dependent locality since address verification doesn't use it
