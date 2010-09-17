@@ -23,7 +23,9 @@ import org.json.JSONException;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Access point for the cached address verification data. The data contained here will mainly be
@@ -188,5 +190,81 @@ public class ClientData {
     Util.checkNotNull(key, "Null lookup key not allowed");
     JsoMap regionalData = bootstrapMap.get(key.toString());
     cacheData.fetchDynamicData(key, regionalData, listener);
+  }
+
+  /**
+   * Fetches all data for the specified country from the remote server.
+   */
+  public void prefetchCountry(String country, DataLoadListener listener) {
+    String key = "data/" + country;
+    Set<RecursiveLoader> loaders = new HashSet<RecursiveLoader>();
+    listener.dataLoadingBegin();
+    cacheData.fetchDynamicData(
+        new LookupKey.Builder(key).build(),
+        null,
+        new RecursiveLoader(key, loaders, listener));
+  }
+  
+  /**
+   * A helper class to recursively load all sub keys using fetchDynamicData().
+   */
+  private class RecursiveLoader implements DataLoadListener {
+    private final String key;
+    private final Set<RecursiveLoader> loaders;
+    private final DataLoadListener listener;
+    
+    public RecursiveLoader(String key, Set<RecursiveLoader> loaders, DataLoadListener listener) {
+      this.key = key;
+      this.loaders = loaders;
+      this.listener = listener;
+      
+      synchronized (loaders) {
+        loaders.add(this);
+      }
+    }
+    
+    public void dataLoadingBegin() {
+    }
+
+    public void dataLoadingEnd() {
+      final String sub_keys = AddressDataKey.SUB_KEYS.name().toLowerCase();
+      final String sub_mores = AddressDataKey.SUB_MORES.name().toLowerCase();
+
+      JsoMap map = cacheData.getObj(key);
+      
+      if (map.containsKey(sub_mores)) {
+        // This key could have sub keys.
+        String[] mores = {};
+        String[] keys = {};
+        
+        mores = map.get(sub_mores).split("~");
+
+        if (map.containsKey(sub_keys)) {
+          keys = map.get(sub_keys).split("~");
+        }
+        
+        if (mores.length != keys.length) {  // This should never happen.
+          throw new IndexOutOfBoundsException("mores.length != keys.length");
+        }
+        
+        for (int i = 0; i < mores.length; i++) {
+          if (mores[i].equalsIgnoreCase("true")) {
+            // This key should have sub keys.
+            String subKey = key + "/" + keys[i];
+            cacheData.fetchDynamicData(
+                new LookupKey.Builder(subKey).build(),
+                null,
+                new RecursiveLoader(subKey, loaders, listener));
+          }
+        }
+      }
+      
+      synchronized (loaders) {
+        loaders.remove(this);
+        if (loaders.isEmpty()) {
+          listener.dataLoadingEnd();
+        }
+      }
+    }
   }
 }
