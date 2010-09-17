@@ -26,26 +26,31 @@ import java.util.Map;
  * Helper class to load json data for testing.
  */
 public class AddressDataMapLoader {
-  private static final String dataPath = "/countryinfo.txt";
-  private AddressDataMapLoader() {}
-  public static final Map<String, String> DATA;
-  static {
-    DATA = new HashMap<String, String>();
-    try {
-      BufferedReader br = new BufferedReader(
-          new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(dataPath),
-                                "utf-8"));
-      String line = null;
-      while (null != (line = br.readLine())) {
-        line = line.trim();
-        if (line.length() == 0 || line.charAt(0) == '#') {
-          continue;
-        }
-        int x = line.indexOf('=');
-        DATA.put(line.substring(0, x), line.substring(x + 1));
-      }
-    } catch (IOException e) {
-      System.err.println("unable to create map: " + e.getMessage());
+
+    private static final String dataPath = "/countryinfo.txt";
+
+    private AddressDataMapLoader() {
     }
-  }
+
+    public static final Map<String, String> DATA;
+
+    static {
+        DATA = new HashMap<String, String>();
+        try {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(dataPath),
+                            "utf-8"));
+            String line = null;
+            while (null != (line = br.readLine())) {
+                line = line.trim();
+                if (line.length() == 0 || line.charAt(0) == '#') {
+                    continue;
+                }
+                int x = line.indexOf('=');
+                DATA.put(line.substring(0, x), line.substring(x + 1));
+            }
+        } catch (IOException e) {
+            System.err.println("unable to create map: " + e.getMessage());
+        }
+    }
 }

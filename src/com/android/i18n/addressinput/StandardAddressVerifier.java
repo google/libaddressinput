@@ -34,164 +34,166 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Performs various consistency checks on an AddressData. This uses a
- * {@link FieldVerifier} to check each field in the address.
+ * Performs various consistency checks on an AddressData. This uses a {@link FieldVerifier} to check
+ * each field in the address.
  */
 public class StandardAddressVerifier {
-  protected final FieldVerifier rootVerifier;
-  protected final VerifierRefiner refiner;
-  protected final Map<AddressField, List<AddressProblemType>> problemMap;
 
-  /**
-   * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the standard
-   * checks on the address fields, as defined in {@link StandardChecks}.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier) {
-    this(rootVerifier, DEFAULT_REFINER, StandardChecks.PROBLEM_MAP);
-  }
+    protected final FieldVerifier rootVerifier;
 
-  /**
-   * Uses the rootVerifier and the refiner to perform the standard
-   * checks on the address fields, as defined in {@link StandardChecks}.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner) {
-    this(rootVerifier, refiner, StandardChecks.PROBLEM_MAP);
-  }
+    protected final VerifierRefiner refiner;
 
-  /**
-   * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the given
-   * checks on the address fields. A reference to problemMap is maintained. It
-   * is not modified by this class, and should not be modified subsequent to
-   * this call.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier,
-      Map<AddressField, List<AddressProblemType>> problemMap) {
-    this(rootVerifier, DEFAULT_REFINER, problemMap);
-  }
+    protected final Map<AddressField, List<AddressProblemType>> problemMap;
 
-  /**
-   * Uses the rootVerifier and the refiner to perform the given
-   * checks on the address fields. A reference to problemMap is maintained. It
-   * is not modified by this class, and should not be modified subsequent to
-   * this call.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner,
-      Map<AddressField, List<AddressProblemType>> problemMap) {
-
-    this.rootVerifier = rootVerifier;
-    this.refiner = refiner;
-    this.problemMap = StandardChecks.PROBLEM_MAP;
-  }
-
-  public void verify(AddressData address, AddressProblems problems) {
-    FieldVerifier v = rootVerifier.refineVerifier(address.getPostalCountry());
-    VerifierRefiner r = refiner.newInstance();
-
-    ScriptType script = null;
-    //TODO: Remove this hack.
-    // Hack for now making all Script types LOCAL
-    if (address.getLanguageCode() != null) {
-      if (Util.isExplicitLatinScript(address.getLanguageCode())) {
-        script = ScriptType.LATIN;
-      } else {
-        script = ScriptType.LOCAL;
-      }
-    }
-
-    // The first four calls refine the verifier, so must come first, and in this
-    // order.
-    verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
-    verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
-    verifyField(script, v, LOCALITY, address.getLocality(), problems);
-    verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
-
-    String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
-        address.getAddressLine2());
-    if (address.getAdministrativeArea() != null) {
-        v = v.refineVerifier(address.getAdministrativeArea());    
-    }
-
-    // remaining calls don't change the field verifier
-    verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
-    verifyField(script, v, STREET_ADDRESS, street, problems);
-    verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
-    verifyField(script, v, ORGANIZATION, address.getOrganization(), problems);
-    verifyField(script, v, RECIPIENT, address.getRecipient(), problems);
-
-    postVerify(v, address, problems);
-  }
-
-  /**
-   * Hook to perform any final processing using the final verifier.  Default does
-   * no additional verification.
-   */
-  protected void postVerify(FieldVerifier verifier, AddressData address, AddressProblems problems) {
-  }
-
-  /**
-   * Hook called by verify with each verifiable field, in order.  Override to
-   * provide pre- or post-checks for all fields.
-   */
-  protected boolean verifyField(LookupKey.ScriptType script,
-      FieldVerifier verifier, AddressField field, String value,
-      AddressProblems problems) {
-    Iterator<AddressProblemType> iter = getProblemIterator(field);
-    while (iter.hasNext()) {
-      AddressProblemType prob = iter.next();
-      if (!verifyProblemField(script, verifier, prob, field, value, problems)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Hook for on-the-fly modification of the problem list.  Override to change
-   * the problems to check for a particular field.  Generally, changing the
-   * problemMap passed to the constructor is a better approach.
-   */
-  protected Iterator<AddressProblemType> getProblemIterator(AddressField field) {
-    List<AddressProblemType> list = problemMap.get(field);
-    if (list == null) {
-      list = Collections.emptyList();
-    }
-    return list.iterator();
-  }
-
-  /**
-   * Hook for adding special checks for particular problems and/or fields.
-   */
-  protected boolean verifyProblemField(LookupKey.ScriptType script,
-      FieldVerifier verifier, AddressProblemType problem, AddressField field,
-      String datum, AddressProblems problems) {
-    return verifier.check(script, problem, field, datum, problems);
-  }
-
-  /**
-   * This gets called with the hierarchical fields COUNTRY, ADMIN_AREA, LOCALITY,
-   * DEPENDENT_LOCALITY in order, returning the refined verifier at each step.
-   *
-   * <p>The default implementation is stateless, and delegates to the verifier
-   * to do the refinement.
-   *
-   */
-  public static class VerifierRefiner {
     /**
-     * Refines the verifier.  This delegates to the verifier to perform the refinement.
+     * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the standard checks on the
+     * address fields, as defined in {@link StandardChecks}.
      */
-    public FieldVerifier refineVerifier(FieldVerifier v, AddressField field,
-        String subkey) {
-      return v.refineVerifier(subkey);
+    public StandardAddressVerifier(FieldVerifier rootVerifier) {
+        this(rootVerifier, DEFAULT_REFINER, StandardChecks.PROBLEM_MAP);
     }
 
     /**
-     * Returns a clean version of the refiner.  Since this implementation is
-     * stateless, returns this.
+     * Uses the rootVerifier and the refiner to perform the standard checks on the address fields,
+     * as defined in {@link StandardChecks}.
      */
-    public VerifierRefiner newInstance() {
-      return this;
+    public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner) {
+        this(rootVerifier, refiner, StandardChecks.PROBLEM_MAP);
     }
-  }
 
-  private static final VerifierRefiner DEFAULT_REFINER = new VerifierRefiner();
+    /**
+     * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the given checks on the address
+     * fields. A reference to problemMap is maintained. It is not modified by this class, and should
+     * not be modified subsequent to this call.
+     */
+    public StandardAddressVerifier(FieldVerifier rootVerifier,
+            Map<AddressField, List<AddressProblemType>> problemMap) {
+        this(rootVerifier, DEFAULT_REFINER, problemMap);
+    }
+
+    /**
+     * Uses the rootVerifier and the refiner to perform the given checks on the address fields. A
+     * reference to problemMap is maintained. It is not modified by this class, and should not be
+     * modified subsequent to this call.
+     */
+    public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner,
+            Map<AddressField, List<AddressProblemType>> problemMap) {
+
+        this.rootVerifier = rootVerifier;
+        this.refiner = refiner;
+        this.problemMap = StandardChecks.PROBLEM_MAP;
+    }
+
+    public void verify(AddressData address, AddressProblems problems) {
+        FieldVerifier v = rootVerifier.refineVerifier(address.getPostalCountry());
+        VerifierRefiner r = refiner.newInstance();
+
+        ScriptType script = null;
+        //TODO: Remove this hack.
+        // Hack for now making all Script types LOCAL
+        if (address.getLanguageCode() != null) {
+            if (Util.isExplicitLatinScript(address.getLanguageCode())) {
+                script = ScriptType.LATIN;
+            } else {
+                script = ScriptType.LOCAL;
+            }
+        }
+
+        // The first four calls refine the verifier, so must come first, and in this
+        // order.
+        verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
+        verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
+        verifyField(script, v, LOCALITY, address.getLocality(), problems);
+        verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
+
+        String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
+                address.getAddressLine2());
+        if (address.getAdministrativeArea() != null) {
+            v = v.refineVerifier(address.getAdministrativeArea());
+        }
+
+        // remaining calls don't change the field verifier
+        verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
+        verifyField(script, v, STREET_ADDRESS, street, problems);
+        verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
+        verifyField(script, v, ORGANIZATION, address.getOrganization(), problems);
+        verifyField(script, v, RECIPIENT, address.getRecipient(), problems);
+
+        postVerify(v, address, problems);
+    }
+
+    /**
+     * Hook to perform any final processing using the final verifier.  Default does no additional
+     * verification.
+     */
+    protected void postVerify(FieldVerifier verifier, AddressData address,
+            AddressProblems problems) {
+    }
+
+    /**
+     * Hook called by verify with each verifiable field, in order.  Override to provide pre- or
+     * post-checks for all fields.
+     */
+    protected boolean verifyField(LookupKey.ScriptType script,
+            FieldVerifier verifier, AddressField field, String value,
+            AddressProblems problems) {
+        Iterator<AddressProblemType> iter = getProblemIterator(field);
+        while (iter.hasNext()) {
+            AddressProblemType prob = iter.next();
+            if (!verifyProblemField(script, verifier, prob, field, value, problems)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Hook for on-the-fly modification of the problem list.  Override to change the problems to
+     * check for a particular field.  Generally, changing the problemMap passed to the constructor
+     * is a better approach.
+     */
+    protected Iterator<AddressProblemType> getProblemIterator(AddressField field) {
+        List<AddressProblemType> list = problemMap.get(field);
+        if (list == null) {
+            list = Collections.emptyList();
+        }
+        return list.iterator();
+    }
+
+    /**
+     * Hook for adding special checks for particular problems and/or fields.
+     */
+    protected boolean verifyProblemField(LookupKey.ScriptType script,
+            FieldVerifier verifier, AddressProblemType problem, AddressField field,
+            String datum, AddressProblems problems) {
+        return verifier.check(script, problem, field, datum, problems);
+    }
+
+    /**
+     * This gets called with the hierarchical fields COUNTRY, ADMIN_AREA, LOCALITY,
+     * DEPENDENT_LOCALITY in order, returning the refined verifier at each step.
+     *
+     * <p>The default implementation is stateless, and delegates to the verifier to do the
+     * refinement.
+     */
+    public static class VerifierRefiner {
+
+        /**
+         * Refines the verifier.  This delegates to the verifier to perform the refinement.
+         */
+        public FieldVerifier refineVerifier(FieldVerifier v, AddressField field,
+                String subkey) {
+            return v.refineVerifier(subkey);
+        }
+
+        /**
+         * Returns a clean version of the refiner.  Since this implementation is stateless, returns
+         * this.
+         */
+        public VerifierRefiner newInstance() {
+            return this;
+        }
+    }
+
+    private static final VerifierRefiner DEFAULT_REFINER = new VerifierRefiner();
 }

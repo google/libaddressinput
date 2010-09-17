@@ -32,91 +32,98 @@ import java.net.URLEncoder;
  * class that the CacheData class uses.
  */
 public class JsonpRequestBuilder {
-  /**
-   * Re-implementation of the com.google.gwt.user.client.rpc.AsyncCallback interface.
-   */
-  public interface AsyncCallback<T> {
-    public void onFailure(Throwable caught);
-    public void onSuccess(T result);
-  }
 
-  /**
-   * @param timeout The expected timeout (ms) for this request.
-   */
-  public void setTimeout(int timeout) {
-    HttpParams params = AsyncHttp.client.getParams();
-    HttpConnectionParams.setConnectionTimeout(params, timeout);
-    HttpConnectionParams.setSoTimeout(params, timeout);
-  }
+    /**
+     * Re-implementation of the com.google.gwt.user.client.rpc.AsyncCallback interface.
+     */
+    public interface AsyncCallback<T> {
 
-  /**
-   * Sends a JSONP request and expects a JsoMap object as a result.
-   */
-  public void requestObject(String url, AsyncCallback<JsoMap> callback) {
-    HttpUriRequest request = new HttpGet(encodeUrl(url));
-    (new AsyncHttp(request, callback)).start();
-  }
+        public void onFailure(Throwable caught);
 
-  /**
-   *  Simple implementation of asynchronous HTTP GET.
-   */
-  private static class AsyncHttp extends Thread {
-    private static final HttpClient client = new DefaultHttpClient();
-
-    private HttpUriRequest request;
-    private AsyncCallback<JsoMap> callback;
-
-    protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
-      this.request = request;
-      this.callback = callback;
+        public void onSuccess(T result);
     }
 
-    public void run() {
-      try {
-        final String response;
-        synchronized (client) {
-          response = client.execute(request, new BasicResponseHandler());
-        }
-        callback.onSuccess(JsoMap.buildJsoMap(response));
-      } catch (Exception e) {
-        callback.onFailure(e);
-      }
+    /**
+     * @param timeout The expected timeout (ms) for this request.
+     */
+    public void setTimeout(int timeout) {
+        HttpParams params = AsyncHttp.client.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, timeout);
+        HttpConnectionParams.setSoTimeout(params, timeout);
     }
-  }
 
-  /**
-   * A quick hack to transform a string into an RFC 3986 compliant URL.
-   * 
-   * TODO: Refactor the code to stop passing URLs around as strings,
-   *       to eliminate the need for this hack.  
-   */
-  private static String encodeUrl(String url) {
-    int length = url.length();
-    StringBuilder tmp = new StringBuilder(length);
-
-    try {
-      for (int i = 0; i < length; i++) {
-        int j = i;
-        char c = '\0';
-        for (; j < length; j++) {
-          c = url.charAt(j);
-          if (c == ':' || c == '/') break;
-        }
-        if (j == length) {
-          tmp.append(URLEncoder.encode(url.substring(i), "UTF-8"));
-          break;
-        } else if (j > i) {
-          tmp.append(URLEncoder.encode(url.substring(i, j), "UTF-8"));
-          tmp.append(c);
-          i = j;
-        } else {
-          tmp.append(c);
-        }
-      }
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);  // Impossible.
+    /**
+     * Sends a JSONP request and expects a JsoMap object as a result.
+     */
+    public void requestObject(String url, AsyncCallback<JsoMap> callback) {
+        HttpUriRequest request = new HttpGet(encodeUrl(url));
+        (new AsyncHttp(request, callback)).start();
     }
-    
-    return tmp.toString();
-  }
+
+    /**
+     * Simple implementation of asynchronous HTTP GET.
+     */
+    private static class AsyncHttp extends Thread {
+
+        private static final HttpClient client = new DefaultHttpClient();
+
+        private HttpUriRequest request;
+
+        private AsyncCallback<JsoMap> callback;
+
+        protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
+            this.request = request;
+            this.callback = callback;
+        }
+
+        public void run() {
+            try {
+                final String response;
+                synchronized (client) {
+                    response = client.execute(request, new BasicResponseHandler());
+                }
+                callback.onSuccess(JsoMap.buildJsoMap(response));
+            } catch (Exception e) {
+                callback.onFailure(e);
+            }
+        }
+    }
+
+    /**
+     * A quick hack to transform a string into an RFC 3986 compliant URL.
+     *
+     * TODO: Refactor the code to stop passing URLs around as strings, to eliminate the need for
+     * this hack.
+     */
+    private static String encodeUrl(String url) {
+        int length = url.length();
+        StringBuilder tmp = new StringBuilder(length);
+
+        try {
+            for (int i = 0; i < length; i++) {
+                int j = i;
+                char c = '\0';
+                for (; j < length; j++) {
+                    c = url.charAt(j);
+                    if (c == ':' || c == '/') {
+                        break;
+                    }
+                }
+                if (j == length) {
+                    tmp.append(URLEncoder.encode(url.substring(i), "UTF-8"));
+                    break;
+                } else if (j > i) {
+                    tmp.append(URLEncoder.encode(url.substring(i, j), "UTF-8"));
+                    tmp.append(c);
+                    i = j;
+                } else {
+                    tmp.append(c);
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);  // Impossible.
+        }
+
+        return tmp.toString();
+    }
 }

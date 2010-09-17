@@ -23,47 +23,47 @@ import java.util.Map;
  * This structure keeps track of any errors found when validating the AddressData.
  */
 public class AddressProblems {
-  private Map<AddressField, AddressProblemType> problems;
 
-  public AddressProblems() {
-    problems = new HashMap<AddressField, AddressProblemType>();
-  }
+    private Map<AddressField, AddressProblemType> problems;
 
- /**
-  * Only one address problem type is saved per addressField. Address
-  * field as used here refers to the different data parts in the
-  * AddressData class.
-  */
-  public void add(AddressField addressField, AddressProblemType problem){
-    problems.put(addressField, problem);
-  }
+    public AddressProblems() {
+        problems = new HashMap<AddressField, AddressProblemType>();
+    }
 
-  /**
-   * Returns true if no problems have been added.
-   */
-  public boolean isEmpty() {
-    return problems.isEmpty();
-  }
+    /**
+     * Only one address problem type is saved per addressField. Address field as used here refers to
+     * the different data parts in the AddressData class.
+     */
+    public void add(AddressField addressField, AddressProblemType problem) {
+        problems.put(addressField, problem);
+    }
 
-  public String toString() {
-    return problems.toString();
-  }
+    /**
+     * Returns true if no problems have been added.
+     */
+    public boolean isEmpty() {
+        return problems.isEmpty();
+    }
 
-  public void clear(){
-    problems.clear();
-  }
+    public String toString() {
+        return problems.toString();
+    }
 
-  /**
-   * Returns null if no problems exists.
-   */
-  public AddressProblemType getProblem(AddressField addressField){
-    return problems.get(addressField);
-  }
+    public void clear() {
+        problems.clear();
+    }
 
-  /**
-   * This will return an empty map if there are no problems.
-   */
-  public Map<AddressField, AddressProblemType> getProblems(){
-    return problems;
-  }
+    /**
+     * Returns null if no problems exists.
+     */
+    public AddressProblemType getProblem(AddressField addressField) {
+        return problems.get(addressField);
+    }
+
+    /**
+     * This will return an empty map if there are no problems.
+     */
+    public Map<AddressField, AddressProblemType> getProblems() {
+        return problems;
+    }
 }

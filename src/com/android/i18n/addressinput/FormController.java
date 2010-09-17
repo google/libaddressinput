@@ -29,337 +29,324 @@ import java.util.Queue;
 /**
  * Controller for an Address Display and is responsible for:
  *
- * <ul>
- * <li>Providing a way to iterate over {@link AddressField}s in a country
- *     dependent way.
- * <li>Fetches new address data from the server as needed (based on hierarchy
- *     rules of international addresses).
- * <li>Provides {@link FormField} for an {@link AddressField}. A
- *     {@link FormField} provides Country specific data for that field. For
- *     example, returning the correct label for Administrative Area.
- * </ul>
+ * <ul> <li>Providing a way to iterate over {@link AddressField}s in a country dependent way.
+ * <li>Fetches new address data from the server as needed (based on hierarchy rules of international
+ * addresses). <li>Provides {@link FormField} for an {@link AddressField}. A {@link FormField}
+ * provides Country specific data for that field. For example, returning the correct label for
+ * Administrative Area. </ul>
  *
- * <p>
- * In order for FormController to work properly, it requires two things:
- * <ul>
- * <li>An implementation of {@link AddressDisplayHandler}, which can be set
- *     using {@link #initDisplayHandler(AddressDisplayHandler)}.
- * <li>Registering UI widgets which can change using
- *     {@link #registerField(AddressField, HasChangeHandlers)}. The registration
- *     should happen in constructor of the display. This registration is
- *     necessary so the controller can monitor changes and react to them
- *     appropriately. For example, a change in Country can cause additional
- *     data to be fetched and may cause a change in layout.
- * </ul>
+ * <p> In order for FormController to work properly, it requires two things: <ul> <li>An
+ * implementation of {@link AddressDisplayHandler}, which can be set using {@link
+ * #initDisplayHandler(AddressDisplayHandler)}. <li>Registering UI widgets which can change using
+ * {@link #registerField(AddressField, HasChangeHandlers)}. The registration should happen in
+ * constructor of the display. This registration is necessary so the controller can monitor changes
+ * and react to them appropriately. For example, a change in Country can cause additional data to be
+ * fetched and may cause a change in layout. </ul>
  */
 public class FormController {
-  // Used to identify the source of a log message.
-  private static final String TAG = "FormController";
-  // For address hierarchy in lookup key.
-  private static final String SLASH_DELIM = "/";
-  // For joined values.
-  private static final String TILDA_DELIM = "~";
-  // For language code info in lookup key (E.g., data/CA--fr).
-  private static final String DASH_DELIM = "--";
-  // Current user language.
-  private final String LANGUAGE_CODE;
+    // Used to identify the source of a log message.
+    private static final String TAG = "FormController";
+    // For address hierarchy in lookup key.
+    private static final String SLASH_DELIM = "/";
+    // For joined values.
+    private static final String TILDA_DELIM = "~";
+    // For language code info in lookup key (E.g., data/CA--fr).
+    private static final String DASH_DELIM = "--";
+    // Current user language.
 
-  private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
-  private static final String DEFAULT_REGION_CODE = "ZZ";
-  private final AddressVerificationNodeData DEFAULT_COUNTRY_DATA;
+    private final String LANGUAGE_CODE;
+    private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
+    private static final String DEFAULT_REGION_CODE = "ZZ";
+    private final AddressVerificationNodeData DEFAULT_COUNTRY_DATA;
 
-  private static final AddressField[] ADDRESS_HIERARCHY = {
-      AddressField.COUNTRY,
-      AddressField.ADMIN_AREA,
-      AddressField.LOCALITY,
-      AddressField.DEPENDENT_LOCALITY
-  };
+    private static final AddressField[] ADDRESS_HIERARCHY = {
+            AddressField.COUNTRY,
+            AddressField.ADMIN_AREA,
+            AddressField.LOCALITY,
+            AddressField.DEPENDENT_LOCALITY
+    };
 
-  private ClientData integratedData;
-  private String currentCountry;
+    private ClientData integratedData;
+    private String currentCountry;
 
-  /**
-   * Constructor that populates this with data. languageCode should be a BCP language code (such as
-   * "en" or "zh-Hant") and currentCountry should be an ISO 2-letter region code (such as "GB" or
-   * "US").
-   */
-  public FormController(ClientData integratedData, String languageCode, String currentCountry) {
-    Util.checkNotNull(integratedData, "null data not allowed");
-    LANGUAGE_CODE = languageCode;
-    this.currentCountry = currentCountry;
+    /**
+     * Constructor that populates this with data. languageCode should be a BCP language code (such
+     * as "en" or "zh-Hant") and currentCountry should be an ISO 2-letter region code (such as "GB"
+     * or "US").
+     */
+    public FormController(ClientData integratedData, String languageCode, String currentCountry) {
+        Util.checkNotNull(integratedData, "null data not allowed");
+        LANGUAGE_CODE = languageCode;
+        this.currentCountry = currentCountry;
 
-    AddressData address = new AddressData.Builder().setCountry(DEFAULT_REGION_CODE).build();
-    LookupKey defaultCountryKey = getDataKeyFor(address);
+        AddressData address = new AddressData.Builder().setCountry(DEFAULT_REGION_CODE).build();
+        LookupKey defaultCountryKey = getDataKeyFor(address);
 
-    DEFAULT_COUNTRY_DATA = integratedData.getDefaultData(defaultCountryKey.toString());
-    Util.checkNotNull(DEFAULT_COUNTRY_DATA,
-                      "require data for default country key: " + defaultCountryKey);
-    this.integratedData = integratedData;
-  }
-
-  void setCurrentCountry(String currentCountry) {
-    this.currentCountry = currentCountry;
-  }
-
-  private ScriptType getScriptType() {
-    if (LANGUAGE_CODE != null && Util.isExplicitLatinScript(LANGUAGE_CODE)) {
-      return ScriptType.LATIN;
-    }
-    return ScriptType.LOCAL;
-  }
-
-  private static LookupKey getDataKeyForRoot() {
-    AddressData address = new AddressData.Builder().build();
-    return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
-  }
-
-  LookupKey getDataKeyFor(AddressData address) {
-    return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
-  }
-
-  /**
-   * Requests data for the input address. This method chains multiple requests
-   * together. For example, an address for Mt View, California needs data from
-   * "data/US", "data/US/CA", and "data/US/CA/Mt View" to support it.
-   * This method will request them one by one (from top level key down to the
-   * most granular) and evokes {@link DataLoadListener#dataLoadingEnd} method
-   * when all data is collected. If the address is invalid, it will request
-   * the first valid child key instead. For example, a request for "data/US/Foo"
-   * will end up requesting data for "data/US", "data/US/AL".
-   *
-   * @param address the current address.
-   * @param listener triggered when requested data for the address is returned.
-   */
-  public void requestDataForAddress(AddressData address, DataLoadListener listener) {
-    Util.checkNotNull(address.getPostalCountry(), "null country not allowed");
-
-    // Gets the key for deepest available node.
-    Queue<String> subkeys = new LinkedList<String>();
-
-    for (AddressField field : ADDRESS_HIERARCHY) {
-      String value = address.getFieldValue(field);
-      if (value == null) {
-        break;
-      }
-      subkeys.add(value);
-    }
-    if (subkeys.size() == 0) {
-      throw new RuntimeException("Need at least country level info");
+        DEFAULT_COUNTRY_DATA = integratedData.getDefaultData(defaultCountryKey.toString());
+        Util.checkNotNull(DEFAULT_COUNTRY_DATA,
+                "require data for default country key: " + defaultCountryKey);
+        this.integratedData = integratedData;
     }
 
-    if (listener != null) {
-      listener.dataLoadingBegin();
+    void setCurrentCountry(String currentCountry) {
+        this.currentCountry = currentCountry;
     }
-    requestDataRecursively(ROOT_KEY, subkeys, listener);
-  }
 
-  private void requestDataRecursively(final LookupKey key,
-      final Queue<String> subkeys, final DataLoadListener listener) {
-    Util.checkNotNull(key, "Null key not allowed");
-    Util.checkNotNull(subkeys, "Null subkeys not allowed");
+    private ScriptType getScriptType() {
+        if (LANGUAGE_CODE != null && Util.isExplicitLatinScript(LANGUAGE_CODE)) {
+            return ScriptType.LATIN;
+        }
+        return ScriptType.LOCAL;
+    }
 
-    integratedData.requestData(key, new DataLoadListener() {
+    private static LookupKey getDataKeyForRoot() {
+        AddressData address = new AddressData.Builder().build();
+        return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
+    }
 
-      // Override
-      public void dataLoadingBegin() {
-        Log.w(TAG, "requesting data for key " + key);
-      }
+    LookupKey getDataKeyFor(AddressData address) {
+        return new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
+    }
 
-      // Override
-      public void dataLoadingEnd() {
-        List<RegionData> subregions = getRegionData(key);
-        if (subregions.isEmpty()) {
-          Log.w(TAG, "recursion ends with key " + key);
-          if (listener != null) {
-            listener.dataLoadingEnd();
-          }
-          // TODO: Should update the selectors here.
-          return;
-        } else if (subkeys.size() > 0) {
-          String subkey = subkeys.remove();
-          for (RegionData subregion: subregions) {
-            if (subregion.isValidName(subkey)) {
-              LookupKey nextKey = buildDataLookupKey(key, subregion.getKey());
-              requestDataRecursively(nextKey, subkeys, listener);
-              return;
+    /**
+     * Requests data for the input address. This method chains multiple requests together. For
+     * example, an address for Mt View, California needs data from "data/US", "data/US/CA", and
+     * "data/US/CA/Mt View" to support it. This method will request them one by one (from top level
+     * key down to the most granular) and evokes {@link DataLoadListener#dataLoadingEnd} method when
+     * all data is collected. If the address is invalid, it will request the first valid child key
+     * instead. For example, a request for "data/US/Foo" will end up requesting data for "data/US",
+     * "data/US/AL".
+     *
+     * @param address  the current address.
+     * @param listener triggered when requested data for the address is returned.
+     */
+    public void requestDataForAddress(AddressData address, DataLoadListener listener) {
+        Util.checkNotNull(address.getPostalCountry(), "null country not allowed");
+
+        // Gets the key for deepest available node.
+        Queue<String> subkeys = new LinkedList<String>();
+
+        for (AddressField field : ADDRESS_HIERARCHY) {
+            String value = address.getFieldValue(field);
+            if (value == null) {
+                break;
             }
-          }
+            subkeys.add(value);
+        }
+        if (subkeys.size() == 0) {
+            throw new RuntimeException("Need at least country level info");
         }
 
-        // Current value in the field is not valid, use the first valid subkey
-        // to request more data instead.
-        String firstSubkey = subregions.get(0).getKey();
-        LookupKey nextKey = buildDataLookupKey(key, firstSubkey);
-        Queue<String> emptyList = new LinkedList<String>();
-        requestDataRecursively(nextKey, emptyList, listener);
-      }
-    });
-  }
-
-  private LookupKey buildDataLookupKey(LookupKey lookupKey, String subKey) {
-    String[] subKeys = lookupKey.toString().split(SLASH_DELIM);
-    String languageCodeSubTag =
-        (LANGUAGE_CODE == null) ? null : Util.getLanguageSubtag(LANGUAGE_CODE);
-    String key = lookupKey.toString() + SLASH_DELIM + subKey;
-
-    // Country level key
-    if (subKeys.length == 1 &&
-        languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
-      key += DASH_DELIM + languageCodeSubTag.toString();
-    }
-    return new LookupKey.Builder(key).build();
-  }
-
-  /** 
-   * Compares the language subtags of input {@code languageCode} and
-   * default language code. For example, "zh-Hant" and "zh" are viewed as
-   * identical.
-   */
-  boolean isDefaultLanguage(String languageCode) {
-    if (languageCode == null) {
-      return true;
-    }
-    AddressData addr = new AddressData.Builder().setCountry(currentCountry).build();
-    LookupKey lookupKey = getDataKeyFor(addr);
-    AddressVerificationNodeData data =
-        integratedData.getDefaultData(lookupKey.toString());
-    String defaultLanguage = data.get(AddressDataKey.LANG);
-
-    // Current language is not the default language for the country.
-    if (Util.trimToNull(defaultLanguage) != null &&
-        Util.getLanguageSubtag(languageCode) != Util.getLanguageSubtag(languageCode)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Gets a list of {@link RegionData} for sub-regions for a given key. For
-   * example, sub regions for "data/US" are AL/Alabama, AK/Alaska, etc.
-   *
-   * <p>
-   * TODO: It seems more straight forward to return a list of pairs
-   * instead of RegionData. Actually, we can remove RegionData since it does
-   * not contain anything more than key/value pairs now.
-   *
-   * @return A list of sub-regions, each sub-region represented by a
-   *         {@link RegionData}.
-   */
-  List<RegionData> getRegionData(LookupKey key) {
-    if (key.getKeyType() == KeyType.EXAMPLES) {
-      throw new RuntimeException("example key not allowed for getting region data");
-    }
-    Util.checkNotNull(key, "null regionKey not allowed");
-    LookupKey normalizedKey = normalizeLookupKey(key);
-    List<RegionData> results = new ArrayList<RegionData>();
-
-    // Root key.
-    if (normalizedKey.equals(ROOT_KEY)) {
-      AddressVerificationNodeData data =
-          integratedData.getDefaultData(normalizedKey.toString());
-      String[] countries = splitData(data.get(AddressDataKey.COUNTRIES));
-      for (int i = 0; i < countries.length; i++) {
-        RegionData rd = new RegionData.Builder()
-            .setKey(countries[i])
-            .setName(countries[i])
-            .build();
-        results.add(rd);
-      }
-      return results;
-    }
-
-    AddressVerificationNodeData data =
-        integratedData.get(normalizedKey.toString());
-    if (data != null) {
-      String[] keys = splitData(data.get(AddressDataKey.SUB_KEYS));
-      String[] names = (getScriptType() == ScriptType.LOCAL)
-          ? splitData(data.get(AddressDataKey.SUB_NAMES))
-          : splitData(data.get(AddressDataKey.SUB_LNAMES));
-
-      for (int i = 0; i < keys.length; i++) {
-        RegionData rd =
-            new RegionData.Builder()
-            .setKey(keys[i])
-            .setName((i < names.length) ? names[i] : keys[i])
-            .build();
-        results.add(rd);
-      }
-    }
-    return results;
-  }
-
-  /**
-   * Split a '~' delimited string into an array of strings. This method is null
-   * tolerant and considers an empty string to contain no elements.
-   *
-   * @param raw The data to split
-   * @return an array of strings
-   */
-  private String[] splitData(String raw) {
-    if (raw == null || raw.length() == 0) {
-      return new String[] {};
-    }
-    return raw.split(TILDA_DELIM);
-  }
-
-  private String getSubKey(LookupKey parentKey, String name) {
-    for (RegionData subRegion : getRegionData(parentKey)) {
-      if (subRegion.isValidName(name)) {
-        return subRegion.getKey();
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Normalizes {@code key} by replacing field values with sub-keys. For
-   * example, California is replaced with CA. The normalization goes from top
-   * (country) to bottom (dependent locality) and if any field value is empty,
-   * unknown, or invalid, it will stop and return whatever it gets. For example,
-   * a key "data/US/California/foobar/kar" will be normalized into
-   * "data/US/CA/foobar/kar" since "foobar" is unknown. This method supports
-   * only key of {@link KeyType#DATA} type.
-   *
-   * @return normalized {@link LookupKey}.
-   */
-  private LookupKey normalizeLookupKey(LookupKey key) {
-    Util.checkNotNull(key);
-    if (key.getKeyType() != KeyType.DATA) {
-      throw new RuntimeException("Only DATA keyType is supported");
-    }
-
-    String subStr[] = key.toString().split(SLASH_DELIM);
-
-    // Root key does not need to be normalized.
-    if (subStr.length < 2) {
-      return key;
-    }
-
-    StringBuilder sb = new StringBuilder(subStr[0]);
-    for (int i = 1; i < subStr.length; ++i) {
-      // Strips the language code if contained.
-      String languageCode = null;
-      if (i == 1 && subStr[i].contains(DASH_DELIM)) {
-        String[] s = subStr[i].split(DASH_DELIM);
-        subStr[i] = s[0];
-        languageCode = s[1];
-      }
-
-      String normalizedSubKey = getSubKey(new LookupKey.Builder(sb.toString()).build(), subStr[i]);
-
-      // Can't find normalized sub-key; assembles the lookup key with the
-      // remaining sub-keys and returns it.
-      if (normalizedSubKey == null) {
-        for (; i < subStr.length; ++i) {
-          sb.append(SLASH_DELIM).append(subStr[i]);
+        if (listener != null) {
+            listener.dataLoadingBegin();
         }
-        break;
-      }
-      sb.append(SLASH_DELIM).append(normalizedSubKey);
-      if (languageCode != null) {
-        sb.append(DASH_DELIM).append(languageCode);
-      }
+        requestDataRecursively(ROOT_KEY, subkeys, listener);
     }
-    return new LookupKey.Builder(sb.toString()).build();
-  }
+
+    private void requestDataRecursively(final LookupKey key,
+            final Queue<String> subkeys, final DataLoadListener listener) {
+        Util.checkNotNull(key, "Null key not allowed");
+        Util.checkNotNull(subkeys, "Null subkeys not allowed");
+
+        integratedData.requestData(key, new DataLoadListener() {
+
+            // Override
+            public void dataLoadingBegin() {
+                Log.w(TAG, "requesting data for key " + key);
+            }
+
+            // Override
+            public void dataLoadingEnd() {
+                List<RegionData> subregions = getRegionData(key);
+                if (subregions.isEmpty()) {
+                    Log.w(TAG, "recursion ends with key " + key);
+                    if (listener != null) {
+                        listener.dataLoadingEnd();
+                    }
+                    // TODO: Should update the selectors here.
+                    return;
+                } else if (subkeys.size() > 0) {
+                    String subkey = subkeys.remove();
+                    for (RegionData subregion : subregions) {
+                        if (subregion.isValidName(subkey)) {
+                            LookupKey nextKey = buildDataLookupKey(key, subregion.getKey());
+                            requestDataRecursively(nextKey, subkeys, listener);
+                            return;
+                        }
+                    }
+                }
+
+                // Current value in the field is not valid, use the first valid subkey
+                // to request more data instead.
+                String firstSubkey = subregions.get(0).getKey();
+                LookupKey nextKey = buildDataLookupKey(key, firstSubkey);
+                Queue<String> emptyList = new LinkedList<String>();
+                requestDataRecursively(nextKey, emptyList, listener);
+            }
+        });
+    }
+
+    private LookupKey buildDataLookupKey(LookupKey lookupKey, String subKey) {
+        String[] subKeys = lookupKey.toString().split(SLASH_DELIM);
+        String languageCodeSubTag =
+                (LANGUAGE_CODE == null) ? null : Util.getLanguageSubtag(LANGUAGE_CODE);
+        String key = lookupKey.toString() + SLASH_DELIM + subKey;
+
+        // Country level key
+        if (subKeys.length == 1 &&
+                languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
+            key += DASH_DELIM + languageCodeSubTag.toString();
+        }
+        return new LookupKey.Builder(key).build();
+    }
+
+    /**
+     * Compares the language subtags of input {@code languageCode} and default language code. For
+     * example, "zh-Hant" and "zh" are viewed as identical.
+     */
+    boolean isDefaultLanguage(String languageCode) {
+        if (languageCode == null) {
+            return true;
+        }
+        AddressData addr = new AddressData.Builder().setCountry(currentCountry).build();
+        LookupKey lookupKey = getDataKeyFor(addr);
+        AddressVerificationNodeData data =
+                integratedData.getDefaultData(lookupKey.toString());
+        String defaultLanguage = data.get(AddressDataKey.LANG);
+
+        // Current language is not the default language for the country.
+        if (Util.trimToNull(defaultLanguage) != null &&
+                Util.getLanguageSubtag(languageCode) != Util.getLanguageSubtag(languageCode)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Gets a list of {@link RegionData} for sub-regions for a given key. For example, sub regions
+     * for "data/US" are AL/Alabama, AK/Alaska, etc.
+     *
+     * <p> TODO: It seems more straight forward to return a list of pairs instead of RegionData.
+     * Actually, we can remove RegionData since it does not contain anything more than key/value
+     * pairs now.
+     *
+     * @return A list of sub-regions, each sub-region represented by a {@link RegionData}.
+     */
+    List<RegionData> getRegionData(LookupKey key) {
+        if (key.getKeyType() == KeyType.EXAMPLES) {
+            throw new RuntimeException("example key not allowed for getting region data");
+        }
+        Util.checkNotNull(key, "null regionKey not allowed");
+        LookupKey normalizedKey = normalizeLookupKey(key);
+        List<RegionData> results = new ArrayList<RegionData>();
+
+        // Root key.
+        if (normalizedKey.equals(ROOT_KEY)) {
+            AddressVerificationNodeData data =
+                    integratedData.getDefaultData(normalizedKey.toString());
+            String[] countries = splitData(data.get(AddressDataKey.COUNTRIES));
+            for (int i = 0; i < countries.length; i++) {
+                RegionData rd = new RegionData.Builder()
+                        .setKey(countries[i])
+                        .setName(countries[i])
+                        .build();
+                results.add(rd);
+            }
+            return results;
+        }
+
+        AddressVerificationNodeData data =
+                integratedData.get(normalizedKey.toString());
+        if (data != null) {
+            String[] keys = splitData(data.get(AddressDataKey.SUB_KEYS));
+            String[] names = (getScriptType() == ScriptType.LOCAL)
+                    ? splitData(data.get(AddressDataKey.SUB_NAMES))
+                    : splitData(data.get(AddressDataKey.SUB_LNAMES));
+
+            for (int i = 0; i < keys.length; i++) {
+                RegionData rd =
+                        new RegionData.Builder()
+                                .setKey(keys[i])
+                                .setName((i < names.length) ? names[i] : keys[i])
+                                .build();
+                results.add(rd);
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Split a '~' delimited string into an array of strings. This method is null tolerant and
+     * considers an empty string to contain no elements.
+     *
+     * @param raw The data to split
+     * @return an array of strings
+     */
+    private String[] splitData(String raw) {
+        if (raw == null || raw.length() == 0) {
+            return new String[]{};
+        }
+        return raw.split(TILDA_DELIM);
+    }
+
+    private String getSubKey(LookupKey parentKey, String name) {
+        for (RegionData subRegion : getRegionData(parentKey)) {
+            if (subRegion.isValidName(name)) {
+                return subRegion.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Normalizes {@code key} by replacing field values with sub-keys. For example, California is
+     * replaced with CA. The normalization goes from top (country) to bottom (dependent locality)
+     * and if any field value is empty, unknown, or invalid, it will stop and return whatever it
+     * gets. For example, a key "data/US/California/foobar/kar" will be normalized into
+     * "data/US/CA/foobar/kar" since "foobar" is unknown. This method supports only key of
+     * {@link KeyType#DATA} type.
+     *
+     * @return normalized {@link LookupKey}.
+     */
+    private LookupKey normalizeLookupKey(LookupKey key) {
+        Util.checkNotNull(key);
+        if (key.getKeyType() != KeyType.DATA) {
+            throw new RuntimeException("Only DATA keyType is supported");
+        }
+
+        String subStr[] = key.toString().split(SLASH_DELIM);
+
+        // Root key does not need to be normalized.
+        if (subStr.length < 2) {
+            return key;
+        }
+
+        StringBuilder sb = new StringBuilder(subStr[0]);
+        for (int i = 1; i < subStr.length; ++i) {
+            // Strips the language code if contained.
+            String languageCode = null;
+            if (i == 1 && subStr[i].contains(DASH_DELIM)) {
+                String[] s = subStr[i].split(DASH_DELIM);
+                subStr[i] = s[0];
+                languageCode = s[1];
+            }
+
+            String normalizedSubKey = getSubKey(new LookupKey.Builder(sb.toString()).build(),
+                    subStr[i]);
+
+            // Can't find normalized sub-key; assembles the lookup key with the
+            // remaining sub-keys and returns it.
+            if (normalizedSubKey == null) {
+                for (; i < subStr.length; ++i) {
+                    sb.append(SLASH_DELIM).append(subStr[i]);
+                }
+                break;
+            }
+            sb.append(SLASH_DELIM).append(normalizedSubKey);
+            if (languageCode != null) {
+                sb.append(DASH_DELIM).append(languageCode);
+            }
+        }
+        return new LookupKey.Builder(sb.toString()).build();
+    }
 }

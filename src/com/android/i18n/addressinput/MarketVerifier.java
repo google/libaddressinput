@@ -19,13 +19,13 @@ package com.android.i18n.addressinput;
 import com.android.i18n.addressinput.testing.AddressDataMapLoader;
 
 /**
- * Wrapping for used with android market. Use the method
- * verify(AddressData address, AddressProblems problems) to validate
- * AddressData.
+ * Wrapping for used with android market. Use the method verify(AddressData address, AddressProblems
+ * problems) to validate AddressData.
  */
 public class MarketVerifier extends StandardAddressVerifier {
 
-  public MarketVerifier() {
-    super(new FieldVerifier(new AddressVerificationData(AddressDataMapLoader.DATA)), MarketChecks.PROBLEM_MAP);
-  }
+    public MarketVerifier() {
+        super(new FieldVerifier(new AddressVerificationData(AddressDataMapLoader.DATA)),
+                MarketChecks.PROBLEM_MAP);
+    }
 }

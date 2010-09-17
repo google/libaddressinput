@@ -20,103 +20,101 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents all the known field name types, mapping each to its corresponding 
- * AddressField.
- * 
- * <p>The field name type provides a category for the name of a field as used in 
- * a particular region. For example, in the U.S. POSTAL_CODE is a "zip code" 
- * while in the U.K. it is a "postcode".  Note that these are are not 
- * translations of "postal code", they are different names for the same address 
- * data field as used in different countries/regions. It is these FieldNameTypes
- * that get translated, not the AddressFields.
- * 
- * <p>Since the number of FieldNameTypes is far less than the number of
- * countries and address fields, this greatly reduces the number of terms to be
- * translated. For example, instead of translating POSTCODE_AS_USED_IN_UK, 
- * POSTCODE_AS_USED_IN_DE, POSTCODE_AS_USED_IN_FR, POSTCODE_AS_USED_IN_US...  
- * and so on for all 240 countries, only "postcode" and "zipcode" need to be
- * translated.
+ * Represents all the known field name types, mapping each to its corresponding AddressField.
+ *
+ * <p>The field name type provides a category for the name of a field as used in a particular
+ * region. For example, in the U.S. POSTAL_CODE is a "zip code" while in the U.K. it is a
+ * "postcode".  Note that these are are not translations of "postal code", they are different names
+ * for the same address data field as used in different countries/regions. It is these
+ * FieldNameTypes that get translated, not the AddressFields.
+ *
+ * <p>Since the number of FieldNameTypes is far less than the number of countries and address
+ * fields, this greatly reduces the number of terms to be translated. For example, instead of
+ * translating POSTCODE_AS_USED_IN_UK, POSTCODE_AS_USED_IN_DE, POSTCODE_AS_USED_IN_FR,
+ * POSTCODE_AS_USED_IN_US... and so on for all 240 countries, only "postcode" and "zipcode" need to
+ * be translated.
  */
 public enum FieldNameType {
-  // COUNTRY
-  C_COUNTRY(AddressField.COUNTRY),
+    // COUNTRY
+    C_COUNTRY(AddressField.COUNTRY),
 
-  // ADMIN_AREA
-  AA_AREA(AddressField.ADMIN_AREA),
-  AA_COUNTY(AddressField.ADMIN_AREA), 
-  AA_DEPARTMENT(AddressField.ADMIN_AREA), 
-  AA_DISTRICT(AddressField.ADMIN_AREA), 
-  AA_DO_SI(AddressField.ADMIN_AREA),
-  AA_EMIRATE(AddressField.ADMIN_AREA), 
-  AA_ISLAND(AddressField.ADMIN_AREA), 
-  AA_PARISH(AddressField.ADMIN_AREA),
-  AA_PREFECTURE(AddressField.ADMIN_AREA), 
-  AA_PROVINCE(AddressField.ADMIN_AREA), 
-  AA_STATE(AddressField.ADMIN_AREA), 
+    // ADMIN_AREA
+    AA_AREA(AddressField.ADMIN_AREA),
+    AA_COUNTY(AddressField.ADMIN_AREA),
+    AA_DEPARTMENT(AddressField.ADMIN_AREA),
+    AA_DISTRICT(AddressField.ADMIN_AREA),
+    AA_DO_SI(AddressField.ADMIN_AREA),
+    AA_EMIRATE(AddressField.ADMIN_AREA),
+    AA_ISLAND(AddressField.ADMIN_AREA),
+    AA_PARISH(AddressField.ADMIN_AREA),
+    AA_PREFECTURE(AddressField.ADMIN_AREA),
+    AA_PROVINCE(AddressField.ADMIN_AREA),
+    AA_STATE(AddressField.ADMIN_AREA),
 
-  // LOCALITY
-  L_CITY(AddressField.LOCALITY),
+    // LOCALITY
+    L_CITY(AddressField.LOCALITY),
 
-  // DEPENDENT_LOCALITY
-  DL_DISTRICT(AddressField.DEPENDENT_LOCALITY),
+    // DEPENDENT_LOCALITY
+    DL_DISTRICT(AddressField.DEPENDENT_LOCALITY),
 
-  // ADDRESS
-  A_ADDRESS(AddressField.STREET_ADDRESS),
+    // ADDRESS
+    A_ADDRESS(AddressField.STREET_ADDRESS),
 
-  // POSTCODE
-  PC_POSTCODE(AddressField.POSTAL_CODE, "postal"), 
-  PC_ZIPCODE(AddressField.POSTAL_CODE, "zip"),
+    // POSTCODE
+    PC_POSTCODE(AddressField.POSTAL_CODE, "postal"),
+    PC_ZIPCODE(AddressField.POSTAL_CODE, "zip"),
 
-  // SORTING_CODE
-  SC_CEDEX(AddressField.SORTING_CODE),
+    // SORTING_CODE
+    SC_CEDEX(AddressField.SORTING_CODE),
 
-  // RECIPIENT
-  R_RECIPIENT(AddressField.RECIPIENT),
+    // RECIPIENT
+    R_RECIPIENT(AddressField.RECIPIENT),
 
-  // ORGANIZATION
-  O_ORGANIZATION(AddressField.ORGANIZATION);
+    // ORGANIZATION
+    O_ORGANIZATION(AddressField.ORGANIZATION);
 
-  /**
-   * Given a keyname (as used in the JSON data), returns the field name type, or 
-   * null.
-   */
-  public static FieldNameType get(String keyname) {
-    return map.get(keyname.toLowerCase());
-  }
-
-  /**
-   * Returns the field associated with this field name type.
-   */
-  public AddressField field() {
-    return field;
-  }
-
-  /**
-   * Returns the keyname of this field name type.
-   */
-  public String keyname() {
-    return keyname;
-  }
-
-  private final AddressField field;
-  private final String keyname;
-
-  private FieldNameType(AddressField field) {
-    this.field = field;
-
-    String name = this.name();
-    this.keyname = name.substring(name.indexOf('_') + 1).toLowerCase();
-  }
-
-  private FieldNameType(AddressField field, String keyname) {
-    this.field = field;
-    this.keyname = keyname;
-  }
-
-  private static final Map<String, FieldNameType> map = new HashMap<String, FieldNameType>();
-  static {
-    for (FieldNameType fc : values()) {
-      map.put(fc.keyname, fc);
+    /**
+     * Given a keyname (as used in the JSON data), returns the field name type, or null.
+     */
+    public static FieldNameType get(String keyname) {
+        return map.get(keyname.toLowerCase());
     }
-  }
+
+    /**
+     * Returns the field associated with this field name type.
+     */
+    public AddressField field() {
+        return field;
+    }
+
+    /**
+     * Returns the keyname of this field name type.
+     */
+    public String keyname() {
+        return keyname;
+    }
+
+    private final AddressField field;
+
+    private final String keyname;
+
+    private FieldNameType(AddressField field) {
+        this.field = field;
+
+        String name = this.name();
+        this.keyname = name.substring(name.indexOf('_') + 1).toLowerCase();
+    }
+
+    private FieldNameType(AddressField field, String keyname) {
+        this.field = field;
+        this.keyname = keyname;
+    }
+
+    private static final Map<String, FieldNameType> map = new HashMap<String, FieldNameType>();
+
+    static {
+        for (FieldNameType fc : values()) {
+            map.put(fc.keyname, fc);
+        }
+    }
 }

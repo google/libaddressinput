@@ -27,28 +27,29 @@ import java.util.Map;
  * AddressDataKey.
  */
 public class AddressVerificationNodeData {
-  private final Map<AddressDataKey, String> map;
 
-  public AddressVerificationNodeData(Map<AddressDataKey, String> map) {
-    Util.checkNotNull("Cannot construct StandardNodeData with null map");
-    this.map = map;
-  }
+    private final Map<AddressDataKey, String> map;
 
-  /**
-   * Iterates through the map.
-   */
-  public Iterator<AddressDataKey> iterator() {
-    return map.keySet().iterator();
-  }
+    public AddressVerificationNodeData(Map<AddressDataKey, String> map) {
+        Util.checkNotNull("Cannot construct StandardNodeData with null map");
+        this.map = map;
+    }
 
-  public boolean containsKey(AddressDataKey key){
-    return map.containsKey(key);
-  }
+    /**
+     * Iterates through the map.
+     */
+    public Iterator<AddressDataKey> iterator() {
+        return map.keySet().iterator();
+    }
 
-  /**
-   * Gets the value for a particular key in the map.
-   */
-  public String get(AddressDataKey key) {
-    return map.get(key);
-  }
+    public boolean containsKey(AddressDataKey key) {
+        return map.containsKey(key);
+    }
+
+    /**
+     * Gets the value for a particular key in the map.
+     */
+    public String get(AddressDataKey key) {
+        return map.get(key);
+    }
 }
