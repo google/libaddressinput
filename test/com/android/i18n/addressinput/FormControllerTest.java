@@ -26,6 +26,7 @@ import java.util.List;
 public class FormControllerTest extends AsyncTestCase {
 
   private static final AddressData US_CA_ADDRESS;
+  private static final AddressData US_ADDRESS;
   private ClientData clientData;
 
   static {
@@ -34,6 +35,8 @@ public class FormControllerTest extends AsyncTestCase {
         .setLocality("Mt View")
         .setAddressLine1("1098 Alta Ave")
         .setPostalCode("94043")
+        .build();
+    US_ADDRESS = new AddressData.Builder().setCountry("US")
         .build();
   }
 
@@ -107,6 +110,36 @@ public class FormControllerTest extends AsyncTestCase {
         assertNotNull(clientData.get(usKey.toString()));
         assertNotNull(clientData.get(usFirstStateKey.toString()));
         assertNull(clientData.get(badKey.toString()));
+        finishTest();
+      }
+    });
+  }
+
+  public void testRequestDataForCountry() {
+    final FormController controller = new FormController(clientData, "en", "US");
+
+    delayTestFinish(15000);
+
+    controller.requestDataForAddress(US_ADDRESS, new DataLoadListener() {
+      boolean beginCalled = false;
+      public void dataLoadingBegin() {
+        beginCalled = true;
+      }
+
+      public void dataLoadingEnd() {
+        assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
+            beginCalled);
+        LookupKey usKey = new LookupKey.Builder(KeyType.DATA)
+            .setAddressData(US_ADDRESS).build();
+        assertNotNull("key should be data/US", usKey);
+        List<RegionData> rdata = controller.getRegionData(usKey);
+        assertTrue(rdata.size() > 0);
+        String subkey = rdata.get(0).getKey();
+        assertNotNull("Should be the first US state", subkey);
+        LookupKey usFirstStateKey = new LookupKey.Builder(usKey.toString()
+            + "/" + subkey).build();
+        assertNotNull(clientData.get(usKey.toString()));
+        assertNotNull(clientData.get(usFirstStateKey.toString()));
         finishTest();
       }
     });
