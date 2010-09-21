@@ -33,12 +33,20 @@ import java.util.HashSet;
  */
 public final class CacheData {
 
-    private static final String TAG = "CacheData";  // Used to identify the source of a log message.
+    /**
+     * Used to identify the source of a log message.
+     */
+    private static final String TAG = "CacheData";
 
     /**
      * Time out value for the server to respond in millisecond.
      */
     private final int TIMEOUT = 5000;
+
+    /**
+     * CacheData singleton.
+     */
+    private static final CacheData instance = new CacheData();
 
     /**
      * URL to get public address data.
@@ -68,18 +76,24 @@ public final class CacheData {
     private final HashSet<String> badKeys = new HashSet<String>();
 
     /**
-     * Temporary store for {@code MyCacheListener}s. When a key is requested and still waiting for
+     * Temporary store for {@code CacheListener}s. When a key is requested and still waiting for
      * server's response, the listeners for the same key will be temporary stored here. When the
      * server responded, these listeners will be triggered and then removed.
      */
-    private final HashMap<LookupKey, HashSet<MyCacheListener>> temporaryListenerStore =
-            new HashMap<LookupKey, HashSet<MyCacheListener>>();
+    private final HashMap<LookupKey, HashSet<CacheListener>> temporaryListenerStore =
+            new HashMap<LookupKey, HashSet<CacheListener>>();
+
+    /**
+     * Private constructor - singleton class.
+     */
+    private CacheData() {
+    }
 
     /**
      * Interface for all listeners to {@link CacheData} change. This is only used when multiple
      * requests of the same key is dispatched and server has not responded yet.
      */
-    private static interface MyCacheListener extends EventListener {
+    private static interface CacheListener extends EventListener {
 
         /**
          * The function that will be called when valid data is about to be put in the cache.
@@ -224,7 +238,7 @@ public final class CacheData {
         // Already requested the key, and is still waiting for server's response.
         if (!requestedKeys.add(key.toString())) {
             Log.w(TAG, "data for key " + key + " requested but not cached yet");
-            addListenerToTempStore(key, new MyCacheListener() {
+            addListenerToTempStore(key, new CacheListener() {
                 public void onAdd(String myKey) {
                     triggerDataLoadingEndIfNotNull(listener);
                 }
@@ -253,6 +267,13 @@ public final class CacheData {
     }
 
     /**
+     * Gets the instance of CacheData.
+     */
+    public static CacheData getInstance() {
+        return instance;
+    }
+
+    /**
      * Retrieves string data identified by key.
      *
      * @param key Non-null key. E.g., "data/US/CA".
@@ -276,21 +297,21 @@ public final class CacheData {
 
     private void notifyListenersAfterJobDone(String key) {
         LookupKey lookupKey = new LookupKey.Builder(key).build();
-        HashSet<MyCacheListener> listeners = temporaryListenerStore.get(lookupKey);
+        HashSet<CacheListener> listeners = temporaryListenerStore.get(lookupKey);
         if (listeners != null) {
-            for (MyCacheListener listener : listeners) {
+            for (CacheListener listener : listeners) {
                 listener.onAdd(key.toString());
             }
             listeners.clear();
         }
     }
 
-    private void addListenerToTempStore(LookupKey key, MyCacheListener listener) {
+    private void addListenerToTempStore(LookupKey key, CacheListener listener) {
         checkNotNull(key);
         checkNotNull(listener);
-        HashSet<MyCacheListener> listeners = temporaryListenerStore.get(key);
+        HashSet<CacheListener> listeners = temporaryListenerStore.get(key);
         if (listeners == null) {
-            listeners = new HashSet<MyCacheListener>();
+            listeners = new HashSet<CacheListener>();
             temporaryListenerStore.put(key, listeners);
         }
         listeners.add(listener);

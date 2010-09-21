@@ -43,7 +43,7 @@ public class CacheDataTest extends AsyncTestCase {
   private static boolean reachedMaxCount = false;
 
   public void setUp() {
-    cache = new CacheData();
+    cache = CacheData.getInstance();
   }
 
   public void testSimpleFetching() {
