@@ -19,7 +19,6 @@ package com.android.i18n.addressinput;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -33,8 +32,6 @@ import java.util.regex.Pattern;
  */
 public class FieldVerifier {
 
-    // Assumes root, will be reset to false when initializing with parent.
-    private boolean isRoot = true;
     private String id;
     private DataSource data;
 
@@ -64,7 +61,6 @@ public class FieldVerifier {
     }
 
     public FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
-        isRoot = false;
         used = parent.used;
         required = parent.required;
         data = parent.data;
@@ -145,11 +141,6 @@ public class FieldVerifier {
         return new FieldVerifier(this, nodeData);
     }
 
-    private void report(AddressProblemType problem, AddressField field, String value,
-            AddressProblems problems) {
-        problems.add(field, problem);
-    }
-
     protected boolean check(LookupKey.ScriptType script, AddressProblemType problem,
             AddressField field, String value, AddressProblems problems) {
         // Assumes no problem found
@@ -198,6 +189,7 @@ public class FieldVerifier {
         return !problemFound;
     }
 
+    /* TODO: Uncomment when needed, see comment in check() above.
     private boolean isKnownInScript(LookupKey.ScriptType script, String value) {
         String trimmedValue = Util.trimToNull(value);
         Util.checkNotNull(trimmedValue);
@@ -224,6 +216,7 @@ public class FieldVerifier {
 
         return candidates.contains(value.toLowerCase());
     }
+    */
 
     public String toString() {
         return id;

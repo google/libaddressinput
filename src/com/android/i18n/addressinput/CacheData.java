@@ -152,7 +152,7 @@ public final class CacheData {
                 return;
             }
 
-            JSONObject json = (JSONObject) map;
+            JSONObject json = map;
             String idKey = AddressDataKey.ID.name().toLowerCase();
             if (!json.has(idKey)) {
                 Log.w(TAG, "invalid or empty data returned for key: " + key);
