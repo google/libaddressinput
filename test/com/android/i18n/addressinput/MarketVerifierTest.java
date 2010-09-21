@@ -16,11 +16,7 @@
 
 package com.android.i18n.addressinput;
 
-import com.android.i18n.addressinput.testing.AddressDataMapLoader;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Spot check the standard data set for various cases of interest. This is
