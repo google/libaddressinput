@@ -16,6 +16,8 @@
 
 package com.android.i18n.addressinput;
 
+import java.util.Locale;
+
 import junit.framework.TestCase;
 
 /**
@@ -84,5 +86,36 @@ public class UtilTest extends TestCase {
     assertEquals(null, Util.joinAndSkipNulls("-", nullString));
     assertEquals(null, Util.joinAndSkipNulls("-", nullString, nullString));
     assertEquals(null, Util.joinAndSkipNulls("-", nullString, "", nullString));
+  }
+
+  public void testGetWidgetCompatibleLanguageCodeCjkCountry() throws Exception {
+    Locale canadianFrench = new Locale("fr", "CA");
+    // Latin language, CJK country. Need explicit latin tag, and country should be retained.
+    assertEquals("fr_latn_CA", Util.getWidgetCompatibleLanguageCode(canadianFrench, "CN"));
+    Locale canadianFrenchUpper = new Locale("FR", "CA");
+    // Test that the locale returns the same language code, regardless of the case of the initial
+    // input.
+    assertEquals("fr_latn_CA", Util.getWidgetCompatibleLanguageCode(canadianFrenchUpper, "CN"));
+    // No country in the Locale language.
+    assertEquals("fr_latn", Util.getWidgetCompatibleLanguageCode(Locale.FRENCH, "CN"));
+    // CJK language - should be unaltered.
+    assertEquals(Locale.KOREAN.toString(),
+                 Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "CN"));
+    Locale chineseChina = new Locale("zh", "CN");
+    assertEquals("zh_CN",
+                 Util.getWidgetCompatibleLanguageCode(chineseChina, "CN"));
+  }
+
+  public void testGetWidgetCompatibleLanguageCodeNonCjkCountry() throws Exception {
+    // Nothing should be changed for non-CJK countries, since their form layout is the same
+    // regardless of language.
+    Locale canadianFrench = new Locale("fr", "CA");
+    assertEquals("fr_CA", Util.getWidgetCompatibleLanguageCode(canadianFrench, "US"));
+    // No country in the Locale language.
+    assertEquals(Locale.FRENCH.toString(),
+                 Util.getWidgetCompatibleLanguageCode(Locale.FRENCH, "US"));
+    // CJK language - should be unaltered too.
+    assertEquals(Locale.KOREAN.toString(),
+                 Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "US"));
   }
 }

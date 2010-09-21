@@ -17,6 +17,7 @@
 package com.android.i18n.addressinput;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,13 +26,15 @@ import java.util.regex.Pattern;
  * Utility functions used by the address widget.
  */
 public class Util {
-    // In upper-case, since we convert the language code to upper case before doing string
-    // comparison.
-
+    /**
+     * This variable is in upper-case, since we convert the language code to upper case before doing
+     * string comparison.
+     */
     private static final String LATIN_SCRIPT = "LATN";
 
-    // Cannot instantiate this class - private constructor.
-
+    /**
+     * Cannot instantiate this class - private constructor.
+     */
     private Util() {
     }
 
@@ -147,7 +150,40 @@ public class Util {
                 nameToKeyMap.put(lnames[i].toLowerCase(), keys[i]);
             }
         }
-
         return nameToKeyMap;
+    }
+
+    /**
+     * Returns a language code that the widget can use when fetching data, based on a {@link
+     * java.util.Locale} language and the current selected country in the address widget. This
+     * method is necessary since we have to determine later whether a language is "local" or "latin"
+     * for certain countries.
+     *
+     * @param language the current user language
+     * @param currentCountry the current selected country
+     * @return a language code string in BCP-47 format (e.g. "en", "zh-Latn", "zh-Hans" or
+     * "en-US").
+     */
+    public static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
+        String country = currentCountry.toUpperCase();
+        // Only do something if the country is China, Taiwan, Japan, or South or North Korea.
+        if (country.equals("CN") || country.equals("TW") || country.equals("JP") ||
+            country.equals("KR") || country.equals("KP")) {
+            String languageTag = language.getLanguage();
+            // Only do something if the language tag is _not_ Chinese, Japanese or Korean.
+            if (!languageTag.equals("zh") && !languageTag.equals("ja") &&
+                !languageTag.equals("ko")) {
+                // Build up the language tag with the country and language specified, and add in the
+                // script-tag of "Latn" explicitly, since this is _not_ a local language.
+                StringBuilder languageTagBuilder = new StringBuilder(languageTag);
+                languageTagBuilder.append("_latn");
+                if (language.getCountry().length() > 0) {
+                    languageTagBuilder.append("_");
+                    languageTagBuilder.append(language.getCountry());
+                }
+                return languageTagBuilder.toString();
+            }
+        }
+        return language.toString();
     }
 }
