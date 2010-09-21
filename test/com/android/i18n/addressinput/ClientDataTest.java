@@ -20,7 +20,7 @@ public class ClientDataTest extends AsyncTestCase {
   private ClientData client;
 
   public void setUp() {
-    client = new ClientData(new RegionDataConstants(), CacheData.getInstance());
+    client = new ClientData(CacheData.getInstance());
   }
 
   public void testPrefetchCountry() {

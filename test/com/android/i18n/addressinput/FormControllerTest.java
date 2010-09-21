@@ -43,7 +43,7 @@ public class FormControllerTest extends AsyncTestCase {
   @Override
   public void setUp() {
     RegionDataConstants regionDataConstants = new RegionDataConstants();
-    clientData = new ClientData(regionDataConstants, CacheData.getInstance());
+    clientData = new ClientData(CacheData.getInstance());
   }
 
   public void testRequestDataForAddress() {

@@ -16,14 +16,10 @@
 
 package com.android.i18n.addressinput;
 
-/**
- * Wrapper for use with android market. Use the method verify(AddressData address, AddressProblems
- * problems) to validate AddressData.
- */
-public class MarketVerifier extends StandardAddressVerifier {
-
-    public MarketVerifier() {
-        super(new FieldVerifier(new ClientData(CacheData.getInstance())),
-                MarketChecks.PROBLEM_MAP);
-    }
+// TODO: This interface and AddressVerificationData will be
+// removed when we have created code for static loading of data without using the
+// AddressVerificationData class.
+public interface DataSource {
+    AddressVerificationNodeData getDefaultData(String key);
+    AddressVerificationNodeData get(String key);
 }

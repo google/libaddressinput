@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Wraps a Map of address property data to provide the AddressVerificationData API.
  */
-public class AddressVerificationData {
+public class AddressVerificationData implements DataSource{
 
     private final Map<String, String> propertiesMap;
 

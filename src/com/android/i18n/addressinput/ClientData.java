@@ -31,7 +31,7 @@ import java.util.Set;
  * Access point for the cached address verification data. The data contained here will mainly be
  * used to build {@link FieldVerifier}'s. This class is implemented as a singleton.
  */
-public class ClientData {
+public class ClientData implements DataSource {
 
     /* Data to bootstrap the process. The data are all regional (country level)
      * data. Keys are like "data/US/CA"
@@ -40,7 +40,7 @@ public class ClientData {
 
     private CacheData cacheData;
 
-    public ClientData(RegionDataConstants regionDataConstants, CacheData cacheData) {
+    public ClientData(CacheData cacheData) {
         this.cacheData = cacheData;
         buildRegionalData();
     }

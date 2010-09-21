@@ -32,36 +32,27 @@ import java.util.regex.Pattern;
  * provides format and match verification for the postal code field.
  */
 public class FieldVerifier {
+
     // Assumes root, will be reset to false when initializing with parent.
-
     private boolean isRoot = true;
-
     private String id;
-
-    private AddressVerificationData data;
+    private DataSource data;
 
     private Set<AddressField> used;
-
     private Set<AddressField> required;
-
     // Known values. Can be either a key, a name in Latin, or a name in native script.
-
     private Map<String, String> known;
 
     private String[] keys = {};
-
     // Names in Latin.
-
     private String[] lnames;
     // Names in native script.
-
     private String[] names;
 
     private Pattern format;
-
     private Pattern match;
 
-    public FieldVerifier(AddressVerificationData data) {
+    public FieldVerifier(DataSource data) {
         used = new HashSet<AddressField>();
         required = new HashSet<AddressField>();
         id = "data";
@@ -239,7 +230,6 @@ public class FieldVerifier {
     }
 
     // Util methods for parsing node content.
-
     private static Set<AddressField> parseAddressFields(String value) {
         EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
         boolean escaped = false;
