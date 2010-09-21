@@ -32,10 +32,18 @@ import java.util.Map;
  * We have not represented all the fields, but the intent is that if you need to add something, you
  * should follow the OASIS standard.
  *
- * An example address: <p>postalCountry: US</p> <p>addressLine1: 1098 Alta Ave</p>
- * <p>addressLine1:</p> <p>addressLine3:</p> <p>adminstrativeArea: CA</p> <p>locality: Mountain
- * View</p> <p>dependentLocality:</p> <p>postalCode: 94043</p> <p>sortingCode:</p> <p>organization:
- * Google</p> <p>recipient: Chen-Kang Yang</p> <p>language code: en</p>
+ * An example address:
+ * <p>postalCountry: US</p>
+ * <p>addressLine1: 1098 Alta Ave</p>
+ * <p>addressLine2:</p>
+ * <p>adminstrativeArea: CA</p>
+ * <p>locality: Mountain View</p>
+ * <p>dependentLocality:</p>
+ * <p>postalCode: 94043</p>
+ * <p>sortingCode:</p>
+ * <p>organization: Google</p>
+ * <p>recipient: Chen-Kang Yang</p>
+ * <p>language code: en</p>
  *
  * Note that sub-administrative area is NOT used in Address Widget. Sub-administrative Area is
  * second-level administrative subdivision of this country. For examples: US county, IT province, UK
@@ -49,20 +57,16 @@ public class AddressData {
     // ISO 3166-1-alpha-2 country code (two letter codes, as used in DNS)
     // For example, "US" for United States.
     // (Note: Use "GB", not "UK", for Great Britain)
-
     private final String postalCountry;
 
     // street street, line 1
-
     private final String addressLine1;
 
     // street street, line 2
-
     private final String addressLine2;
 
     // Top-level administrative subdivision of this country.
     // Examples: US state, IT region, UK constituent nation, JP prefecture.
-
     private final String administrativeArea;
 
     // Locality. A fuzzy term, but it generally refers to
@@ -71,7 +75,6 @@ public class AddressData {
     // (for example, Japan and China), leave locality_name empty and use
     // address_line.
     // Examples: US city, IT comune, UK post town.
-
     private final String locality;
 
     // Dependent locality or sublocality.  Used for UK dependent localities,
@@ -79,34 +82,28 @@ public class AddressData {
     // represent a UK double-dependent locality, include both the
     // double-dependent locality and the dependent locality in this field,
     // e.g. "Whaley, Langwith".
-
     private final String dependentLocality;
 
     // Postal Code. values are frequently alphanumeric.
     // Examples: "94043", "94043-1351", "SW1W", "SW1W 9TQ".
-
     private final String postalCode;
 
     // Sorting code - use is very country-specific.
     // This corresponds to the SortingCode sub-element of the xAL
     // PostalServiceElements element.
     // Examples: FR CEDEX.
-
     private final String sortingCode;
 
     // The firm or organization.  This goes at a finer granularity than
     // address_lines in the address.  Omit if not needed.
-
     private final String organization;
 
     // The recipient.  This goes at a finer granularity than address_lines
     // in the address.  Not present in xAL.  Omit if not needed.
-
     private final String recipient;
 
     // Language code of the address. Can be set to null. See its getter and setter
     // for more information.
-
     private final String languageCode;
 
     /**
@@ -121,17 +118,9 @@ public class AddressData {
         sortingCode = builder.values.get(AddressField.SORTING_CODE);
         organization = builder.values.get(AddressField.ORGANIZATION);
         recipient = builder.values.get(AddressField.RECIPIENT);
-        String line1 = builder.values.get(AddressField.ADDRESS_LINE_1);
-        String line2 = builder.values.get(AddressField.ADDRESS_LINE_2);
+        addressLine1 = builder.values.get(AddressField.ADDRESS_LINE_1);
+        addressLine2 = builder.values.get(AddressField.ADDRESS_LINE_2);
         languageCode = builder.languageCode;
-
-        // Normalize address lines.
-        if (line1 == null && line2 != null) {
-            line1 = line2;
-            line2 = null;
-        }
-        addressLine1 = line1;
-        addressLine2 = line2;
     }
 
     /**
@@ -311,10 +300,7 @@ public class AddressData {
         }
 
         /**
-         * Sets three street lines from a single street string. The input street string can contain
-         * new lines. Street string will be trimmed so that the it always set line 1's value first,
-         * and then follow by line 2.  If the input string contains more than two lines, extra new
-         * lines will be discarded.
+         * Sets address lines 1 and 2 (if necessary) from a string that may contain multiple lines.
          *
          * <p> Example: Input "  \n   \n1600 Amphitheatre Ave\n\nRoom 122" will set the following
          * values:<br/> line 1: 1600 Amphitheatre Ave<br/> line 2: Room 122<br/> </p>
@@ -322,22 +308,7 @@ public class AddressData {
          * @param value a street string
          */
         public Builder setAddress(String value) {
-            if (value == null || value.length() == 0) {
-                return this;
-            }
-            int n = 1;
-            for (String v : value.split("\n")) {
-                v = v.trim();
-                if (v.length() > 0 && n == 1) {
-                    setAddressLine1(v);
-                    n++;
-                } else if (v.length() > 0 && n == 2) {
-                    setAddressLine2(v);
-                    break;
-                }
-                // There should never be more than 2 addresslines, if a third or more line
-                // occurs, it will be dropped.
-            }
+            setAddressLine1(value);
             return this;
         }
 
@@ -349,22 +320,14 @@ public class AddressData {
          */
         public Builder set(AddressData data) {
             values.clear();
-            StringBuilder addressLines = new StringBuilder();
-            if (data.getFieldValue(AddressField.ADDRESS_LINE_1) != null) {
-                addressLines.append(data.getFieldValue(AddressField.ADDRESS_LINE_1));
-            }
-            if (data.getFieldValue(AddressField.ADDRESS_LINE_2) != null) {
-                addressLines.append(data.getFieldValue(AddressField.ADDRESS_LINE_2));
-            }
-            setAddress(addressLines.toString());
             for (AddressField addressField : AddressField.values()) {
-                if (addressField == AddressField.STREET_ADDRESS ||
-                        (addressField.toString().startsWith("ADDRESS_LINE"))) {
+                if (addressField == AddressField.STREET_ADDRESS) {
                     continue;  // Do nothing.
                 } else {
                     set(addressField, data.getFieldValue(addressField));
                 }
             }
+            normalizeAddresses();
             setLanguageCode(data.getLanguageCode());
             return this;
         }
@@ -396,11 +359,38 @@ public class AddressData {
             } else {
                 values.put(field, value.trim());
             }
+            normalizeAddresses();
             return this;
         }
 
         public AddressData build() {
             return new AddressData(this);
+        }
+
+        /**
+         * Parses content of address fields.
+         * If address_line_1 is empty, address_line_2 will be used to
+         * populate address_line_1 if possible.
+         * If address_line_1 contains new line, content after newline will be
+         * saved in address_line_2.
+         *
+         */
+        private void normalizeAddresses() {
+            String address_1 = values.get(AddressField.ADDRESS_LINE_1);
+            String address_2 = values.get(AddressField.ADDRESS_LINE_2);
+            if (address_1 == null || address_1.trim().length() == 0) {
+                address_1 = address_2;
+                address_2 = null;
+            }
+            if (address_1 != null) {
+                String[] address_lines = address_1.split("\n");
+                if (address_lines.length > 1) {
+                    address_1 = address_lines[0];
+                    address_2 = address_lines[1];
+                }
+            }
+            values.put(AddressField.ADDRESS_LINE_1, address_1);
+            values.put(AddressField.ADDRESS_LINE_2, address_2);
         }
     }
 }
