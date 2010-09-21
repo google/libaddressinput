@@ -216,7 +216,7 @@ public class FormController {
 
         // Current language is not the default language for the country.
         if (Util.trimToNull(defaultLanguage) != null &&
-                Util.getLanguageSubtag(languageCode) != Util.getLanguageSubtag(languageCode)) {
+                !Util.getLanguageSubtag(languageCode).equals(Util.getLanguageSubtag(languageCode))) {
             return false;
         }
         return true;
