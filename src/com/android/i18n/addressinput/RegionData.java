@@ -22,7 +22,6 @@ package com.android.i18n.addressinput;
 public class RegionData {
 
     private String key;
-
     private String name;
 
     /**
