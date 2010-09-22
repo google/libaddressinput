@@ -31,16 +31,15 @@ import java.util.regex.Pattern;
  * provides format and match verification for the postal code field.
  */
 public class FieldVerifier {
-
     private String id;
-    private DataSource data;
+    private DataSource dataSource;
 
     private Set<AddressField> used;
     private Set<AddressField> required;
     // Known values. Can be either a key, a name in Latin, or a name in native script.
     private Map<String, String> known;
 
-    private String[] keys = {};
+    private String[] keys;
     // Names in Latin.
     private String[] lnames;
     // Names in native script.
@@ -49,32 +48,62 @@ public class FieldVerifier {
     private Pattern format;
     private Pattern match;
 
-    public FieldVerifier(DataSource data) {
-        used = new HashSet<AddressField>();
-        required = new HashSet<AddressField>();
+    /**
+     * Creates the root field verifier for a particular data source.
+     */
+    public FieldVerifier(DataSource dataSource) {
         id = "data";
-        this.data = data;
-
-        AddressVerificationNodeData rootNode = data.getDefaultData("data");
-        populate(rootNode);
-        known = Util.buildNameToKeyMap(keys, null, null);
+        this.dataSource = dataSource;
+        populateRootVerifier();
     }
 
-    public FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
+    /**
+     * Creates a field verifier based on its parent and on the new data for this node supplied by
+     * nodeData (which may be null).
+     */
+    private FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
+        // Most information is inherited from the parent.
         used = parent.used;
         required = parent.required;
-        data = parent.data;
+        dataSource = parent.dataSource;
         format = parent.format;
         match = parent.match;
-        known = parent.known;
+        // Here we add in any overrides from this particular node as well as information such as
+        // names, lnames and keys.
         populate(nodeData);
-        if (known == null) {
-            known = new HashMap<String, String>();
+        // known should never be inherited from the parent, but built up from the names in this node.
+        known = Util.buildNameToKeyMap(keys, names, lnames);
+    }
+
+    /**
+     * Sets used, required, keys and known for the root field verifier. This is a little messy at
+     * the moment since not all the appropriate information is actually under the root "data" node
+     * in the metadata. For example, "used" and "required" are not present there.
+     */
+    private void populateRootVerifier() {
+        // Keys come from the information under "data".
+        AddressVerificationNodeData rootNode = dataSource.getDefaultData("data");
+        populate(rootNode);
+        // "Known" is just the set of keys.
+        known = Util.buildNameToKeyMap(keys, null, null);
+
+        // Copy "used" and "required" from the defaults here for bootstrapping. TODO: Investigate
+        // putting this information under data itself so this is not needed.
+        AddressVerificationNodeData defaultZZ = dataSource.getDefaultData("data/ZZ");
+        used = new HashSet<AddressField>();
+        if (defaultZZ.containsKey(AddressDataKey.FMT)) {
+            used = parseAddressFields(defaultZZ.get(AddressDataKey.FMT));
         }
-        known.putAll(Util.buildNameToKeyMap(keys, names, lnames));
+        required = new HashSet<AddressField>();
+        if (defaultZZ.containsKey(AddressDataKey.REQUIRE)) {
+            required = parseRequireString(defaultZZ.get(AddressDataKey.REQUIRE));
+        }
     }
 
     private void populate(AddressVerificationNodeData nodeData) {
+        if (nodeData == null) {
+            return;
+        }
         if (nodeData.containsKey(AddressDataKey.ID)) {
             id = nodeData.get(AddressDataKey.ID);
         }
@@ -112,38 +141,37 @@ public class FieldVerifier {
     }
 
     FieldVerifier refineVerifier(String sublevel) {
+        if (Util.trimToNull(sublevel) == null) {
+            return new FieldVerifier(this, null);
+        }
         String subLevelName = id + "/" + sublevel;
-        AddressVerificationNodeData nodeData = data.get(subLevelName);
-        if (nodeData == null) {
-            if (lnames != null) {
-                int n = 0;
-                boolean found = false;
-                while (n < lnames.length) {
-                    if (lnames[n].equalsIgnoreCase(sublevel)) {
-                        found = true;
-                        break;
-                    }
-                    n++;
-                }
-                if (!found) {
-                    return this;
-                }
+        // For names with no latin equivalent, we can look up the sublevel name directly.
+        AddressVerificationNodeData nodeData = dataSource.get(subLevelName);
+        if (nodeData != null) {
+            return new FieldVerifier(this, nodeData);
+        }
+        // If that failed, then we try to look up the local name equivalent of this latin name.
+        // First check these exist.
+        if (lnames == null) {
+            return new FieldVerifier(this, null);
+        }
+        for (int n = 0; n < lnames.length; n++) {
+            if (lnames[n].equalsIgnoreCase(sublevel)) {
+                // We found a match - we should try looking up a key with the local name at the same
+                // index.
                 subLevelName = id + "/" + names[n];
-                nodeData = data.get(subLevelName);
-                if (nodeData == null) {
-                    return this;
-                } else {
+                nodeData = dataSource.get(subLevelName);
+                if (nodeData != null) {
                     return new FieldVerifier(this, nodeData);
                 }
             }
-            return this;
         }
-        return new FieldVerifier(this, nodeData);
+        // No sub-verifiers were found.
+        return new FieldVerifier(this, null);
     }
 
     protected boolean check(LookupKey.ScriptType script, AddressProblemType problem,
             AddressField field, String value, AddressProblems problems) {
-        // Assumes no problem found
         boolean problemFound = false;
 
         String trimmedValue = Util.trimToNull(value);
@@ -165,18 +193,17 @@ public class FieldVerifier {
                 if (trimmedValue == null) {
                     break;
                 }
-                // Hack will be fixed later
-                // problemFound = !isKnownInScript(script, value);
+                problemFound = !isKnownInScript(script, trimmedValue);
                 break;
             case UNRECOGNIZED_FORMAT:
                 if (trimmedValue != null && format != null &&
-                        !format.matcher(value == null ? "" : value).matches()) {
+                        !format.matcher(trimmedValue).matches()) {
                     problemFound = true;
                 }
                 break;
             case MISMATCHING_VALUE:
                 if (trimmedValue != null && match != null &&
-                        !match.matcher(value == null ? "" : value).lookingAt()) {
+                        !match.matcher(trimmedValue).lookingAt()) {
                     problemFound = true;
                 }
                 break;
@@ -189,7 +216,6 @@ public class FieldVerifier {
         return !problemFound;
     }
 
-    /* TODO: Uncomment when needed, see comment in check() above.
     private boolean isKnownInScript(LookupKey.ScriptType script, String value) {
         String trimmedValue = Util.trimToNull(value);
         Util.checkNotNull(trimmedValue);
@@ -216,7 +242,6 @@ public class FieldVerifier {
 
         return candidates.contains(value.toLowerCase());
     }
-    */
 
     public String toString() {
         return id;
@@ -253,7 +278,7 @@ public class FieldVerifier {
     }
 
     private static Set<AddressField> parseRequireString(String value) {
-        // country is always required
+        // Country is always required
         EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
 
         for (char c : value.toCharArray()) {

@@ -33,11 +33,10 @@ public class FieldVerifierTest extends TestCase {
     return new TestSuite(FieldVerifierTest.class);
   }
 
-  private static StandardAddressVerifier verifier =
+  private static final StandardAddressVerifier VERIFIER =
       new StandardAddressVerifier(
           new FieldVerifier(
-          new AddressVerificationData(
-          AddressDataMapLoader.DATA)));
+          new AddressVerificationData(AddressDataMapLoader.DATA)));
 
   private AddressProblems problems = new AddressProblems();
 
@@ -54,7 +53,7 @@ public class FieldVerifierTest extends TestCase {
         .setAddress("1234 Somewhere")
         .setPostalCode("94025")
         .build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
     assertTrue(problems.toString(), problems.isEmpty()); // no mismatch
   }
 
@@ -66,7 +65,7 @@ public class FieldVerifierTest extends TestCase {
         .setLocality("Mountain View")
         .setPostalCode("12345")
         .build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
     assertEquals(AddressProblemType.MISMATCHING_VALUE,
                  problems.getProblem(AddressField.POSTAL_CODE));
@@ -80,7 +79,7 @@ public class FieldVerifierTest extends TestCase {
             .setLocality(null)
             .setDependentLocality("Foo Bar")
             .setPostalCode("12345").build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
     assertEquals(AddressProblemType.MISMATCHING_VALUE,
                  problems.getProblem(AddressField.POSTAL_CODE));
@@ -97,7 +96,7 @@ public class FieldVerifierTest extends TestCase {
         .setAddress("Yitiao Lu")
         .setPostalCode("123456")
         .build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
     assertTrue(problems.isEmpty());
   }
 
@@ -111,7 +110,7 @@ public class FieldVerifierTest extends TestCase {
         .setRecipient("Herr Diefendorf")
         .build();
 
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
     assertTrue(problems.isEmpty());
 
     // Clones address but leave city empty.
@@ -120,7 +119,7 @@ public class FieldVerifierTest extends TestCase {
         .setLocality(null)
         .build();
 
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
                  problems.getProblem(AddressField.LOCALITY));
   }
@@ -134,8 +133,8 @@ public class FieldVerifierTest extends TestCase {
         .setRecipient("Conan O'Brien")
         .build();
 
-    verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    VERIFIER.verify(addr, problems);
+    assertTrue(problems.toString(), problems.isEmpty());
 
     // Clones address but leave county empty. This address should be valid
     // since county is not required.
@@ -144,8 +143,8 @@ public class FieldVerifierTest extends TestCase {
         .setAdminArea(null)
         .build();
 
-    verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    VERIFIER.verify(addr, problems);
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
   public void testChinaPostalCodeBadFormat() {
@@ -156,9 +155,8 @@ public class FieldVerifierTest extends TestCase {
         .setLocality("Xicheng Qu")
         .setPostalCode("12345")
         .build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
-    // ensure problem is unrecognized format and problem is in POSTAL_CODE
     assertEquals(AddressProblemType.UNRECOGNIZED_FORMAT,
                  problems.getProblem(AddressField.POSTAL_CODE));
   }
@@ -178,20 +176,20 @@ public class FieldVerifierTest extends TestCase {
           .setLocality("San Pedro")
           .setPostalCode("")
           .build();
-    verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    VERIFIER.verify(addr, problems);
+    assertTrue(problems.toString(), problems.isEmpty());
 
     problems.clear();
 
-    // Now checks for US addresses, which requires postal code. The following
-    // address's postal code is wrong because it misses required field, not
-    // because it mismatches expected postal code pattern.
+    // Now check for US addresses, which require a postal code. The following
+    // address's postal code is wrong because it is missing a required field, not
+    // because it doesn't match the expected postal code pattern.
     addr = new AddressData.Builder()
           .setCountry("US")
           .setPostalCode("")
           .build();
     problems.clear();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
                  problems.getProblem(AddressField.POSTAL_CODE));
@@ -207,22 +205,22 @@ public class FieldVerifierTest extends TestCase {
           .setAddress("12345 Yitiao Lu")
           .setPostalCode("407")
           .build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
     assertTrue(problems.isEmpty());
   }
 
-  public void failingtestChinaTaiwanUnknownDistrict() {
+  public void testChinaTaiwanUnknownDistrict() {
     AddressData addr =
       new AddressData.Builder().setCountry("CN").setAdminArea("Taiwan").setLocality(
           "Taichung City").setDependentLocality("Foo Bar").setPostalCode("400").build();
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
      assertEquals(AddressProblemType.UNKNOWN_VALUE,
                   problems.getProblem(AddressField.DEPENDENT_LOCALITY));
   }
 
   public void testStreetVerification() {
-    // missing street address
+    // Missing street address
     AddressData addr =
         new AddressData.Builder()
         .setCountry("US")
@@ -234,7 +232,7 @@ public class FieldVerifierTest extends TestCase {
     assertNull(addr.getAddressLine1());
     assertNull(addr.getAddressLine2());
 
-    verifier.verify(addr, problems);
+    VERIFIER.verify(addr, problems);
 
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
                  problems.getProblem(AddressField.STREET_ADDRESS));
@@ -248,16 +246,15 @@ public class FieldVerifierTest extends TestCase {
         .setAdminArea("Abaco")
         .setCountry("BS")
         .build();
-    verifier.verify(address, problems);
+    VERIFIER.verify(address, problems);
     assertTrue(problems.isEmpty());
   }
 
-  // japan test data copied from 
   public void testJapan() {
-    // added AdminArea since address verification can't infer it from Kyoto City
-    // commented out dependent locality since address verification doesn't use it
+    // Added AdminArea since address verification can't infer it from Kyoto City
+    // Commented out dependent locality since we don't have the data for this and in fact say that
+    // it shouldn't be used for Japan.
     // TODO: support inference of higher levels from lower ones
-    // TODO: add dependent locality support for japan addresses
     final AddressData address = new AddressData.Builder() // SHIGERU_MIYAMOTO
         .setRecipient("\u5BAE\u672C \u8302")
         .setAddress("\u4E0A\u9CE5\u7FBD\u927E\u7ACB\u753A11\u756A\u5730")
@@ -267,26 +264,40 @@ public class FieldVerifierTest extends TestCase {
         .setCountry("JP")
         .setPostalCode("601-8501")
         .build();
-    verifier.verify(address, problems);
-    assertTrue(problems.isEmpty());
+    VERIFIER.verify(address, problems);
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
   public void testJapanLatin() {
     // added AdminArea since address verification can't infer it from Kyoto City
     // commented out dependent locality since address verification doesn't use it
-    // commented out language since address doesn't use it yet
-    // TODO: support language
    final AddressData address = new AddressData.Builder() // SHIGERU_MIYAMOTO_ENGLISH
         .setRecipient("Shigeru Miyamoto")
         .setAddress("11-1 Kamitoba-hokotate-cho")
         .setAdminArea("KYOTO") // added
         .setLocality("Kyoto")
         // .setDependentLocality("Minami-ku")
-        // .setLanguage(LanguageCode.forString("ja_Latn"))
+        .setLanguageCode("ja_Latn")
         .setCountry("JP")
         .setPostalCode("601-8501")
         .build();
-    verifier.verify(address, problems);
+    VERIFIER.verify(address, problems);
     assertTrue(problems.isEmpty());
+  }
+
+  public void testJapanLatinInvalidAdmin() {
+    final AddressData address = new AddressData.Builder() // SHIGERU_MIYAMOTO_ENGLISH
+         .setRecipient("Shigeru Miyamoto")
+         .setAddress("11-1 Kamitoba-hokotate-cho")
+         .setAdminArea("Fake Admin")
+         .setLocality("Kyoto")
+         .setLanguageCode("ja_Latn")
+         .setCountry("JP")
+         .setPostalCode("601-8501")
+         .build();
+     VERIFIER.verify(address, problems);
+     assertFalse(problems.isEmpty());
+     assertEquals(AddressProblemType.UNKNOWN_VALUE,
+                  problems.getProblem(AddressField.ADMIN_AREA));
   }
 }

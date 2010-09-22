@@ -85,12 +85,10 @@ public class StandardAddressVerifier {
     }
 
     public void verify(AddressData address, AddressProblems problems) {
-        FieldVerifier v = rootVerifier.refineVerifier(address.getPostalCountry());
+        FieldVerifier v = rootVerifier;
         VerifierRefiner r = refiner.newInstance();
 
         ScriptType script = null;
-        //TODO: Remove this hack.
-        // Hack for now making all Script types LOCAL
         if (address.getLanguageCode() != null) {
             if (Util.isExplicitLatinScript(address.getLanguageCode())) {
                 script = ScriptType.LATIN;
@@ -102,15 +100,25 @@ public class StandardAddressVerifier {
         // The first four calls refine the verifier, so must come first, and in this
         // order.
         verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
-        verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
-        verifyField(script, v, LOCALITY, address.getLocality(), problems);
-        verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
+        if (problems.isEmpty()) {
+            v = v.refineVerifier(address.getPostalCountry());
+            verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
+            if (problems.isEmpty()) {
+                v = v.refineVerifier(address.getAdministrativeArea());
+                verifyField(script, v, LOCALITY, address.getLocality(), problems);
+                if (problems.isEmpty()) {
+                    v = v.refineVerifier(address.getLocality());
+                    verifyField(script, v, DEPENDENT_LOCALITY,
+                                address.getDependentLocality(), problems);
+                    if (problems.isEmpty()) {
+                        v = v.refineVerifier(address.getDependentLocality());
+                    }
+                }
+            }
+        }
 
         String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
                 address.getAddressLine2());
-        if (address.getAdministrativeArea() != null) {
-            v = v.refineVerifier(address.getAdministrativeArea());
-        }
 
         // remaining calls don't change the field verifier
         verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
