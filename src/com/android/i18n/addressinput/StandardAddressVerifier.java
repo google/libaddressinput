@@ -84,50 +84,86 @@ public class StandardAddressVerifier {
         this.mProblemMap = StandardChecks.PROBLEM_MAP;
     }
 
+    /**
+     * @deprecated Replaced by {@link #verifyAsync()}
+     */
+    @Deprecated
     public void verify(AddressData address, AddressProblems problems) {
-        FieldVerifier v = mRootVerifier;
-        VerifierRefiner r = mRefiner.newInstance();
+        NotifyingListener listener = new NotifyingListener(this);
+        verifyAsync(address, problems, listener);
+        try {
+            listener.waitLoadingEnd();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        ScriptType script = null;
-        if (address.getLanguageCode() != null) {
-            if (Util.isExplicitLatinScript(address.getLanguageCode())) {
-                script = ScriptType.LATIN;
-            } else {
-                script = ScriptType.LOCAL;
-            }
+    public void verifyAsync(AddressData address, AddressProblems problems,
+            DataLoadListener listener) {
+        Thread verifier = new Thread(new Verifier(address, problems, listener));
+        verifier.start();
+    }
+
+    private class Verifier implements Runnable {
+        private AddressData address;
+        private AddressProblems problems;
+        private DataLoadListener listener;
+
+        Verifier(AddressData address, AddressProblems problems, DataLoadListener listener) {
+            this.address = address;
+            this.problems = problems;
+            this.listener = listener;
         }
 
-        // The first four calls refine the verifier, so must come first, and in this
-        // order.
-        verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
-        if (problems.isEmpty()) {
-            v = v.refineVerifier(address.getPostalCountry());
-            verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
+        public void run() {
+            listener.dataLoadingBegin();
+
+            FieldVerifier v = mRootVerifier;
+            VerifierRefiner r = mRefiner.newInstance();
+
+            ScriptType script = null;
+            if (address.getLanguageCode() != null) {
+                if (Util.isExplicitLatinScript(address.getLanguageCode())) {
+                    script = ScriptType.LATIN;
+                } else {
+                    script = ScriptType.LOCAL;
+                }
+            }
+
+            // The first four calls refine the verifier, so must come first, and in this
+            // order.
+            verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
             if (problems.isEmpty()) {
-                v = v.refineVerifier(address.getAdministrativeArea());
-                verifyField(script, v, LOCALITY, address.getLocality(), problems);
+                v = v.refineVerifier(address.getPostalCountry());
+                verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
                 if (problems.isEmpty()) {
-                    v = v.refineVerifier(address.getLocality());
-                    verifyField(script, v, DEPENDENT_LOCALITY,
-                                address.getDependentLocality(), problems);
+                    v = v.refineVerifier(address.getAdministrativeArea());
+                    verifyField(script, v, LOCALITY, address.getLocality(), problems);
                     if (problems.isEmpty()) {
-                        v = v.refineVerifier(address.getDependentLocality());
+                        v = v.refineVerifier(address.getLocality());
+                        verifyField(script, v, DEPENDENT_LOCALITY,
+                                address.getDependentLocality(), problems);
+                        if (problems.isEmpty()) {
+                            v = v.refineVerifier(address.getDependentLocality());
+                        }
                     }
                 }
             }
+
+            String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
+                    address.getAddressLine2());
+
+            // remaining calls don't change the field verifier
+            verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
+            verifyField(script, v, STREET_ADDRESS, street, problems);
+            verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
+            verifyField(script, v, ORGANIZATION, address.getOrganization(), problems);
+            verifyField(script, v, RECIPIENT, address.getRecipient(), problems);
+
+            postVerify(v, address, problems);
+
+            listener.dataLoadingEnd();
         }
-
-        String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
-                address.getAddressLine2());
-
-        // remaining calls don't change the field verifier
-        verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
-        verifyField(script, v, STREET_ADDRESS, street, problems);
-        verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
-        verifyField(script, v, ORGANIZATION, address.getOrganization(), problems);
-        verifyField(script, v, RECIPIENT, address.getRecipient(), problems);
-
-        postVerify(v, address, problems);
     }
 
     /**
