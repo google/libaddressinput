@@ -212,7 +212,6 @@ public final class CacheData {
      * @param existingJso Pre-existing data for this key or null if none.
      * @param listener    An optional listener to call when done.
      */
-    public  // TODO: Remove this "public" when it's no longer used for testing.
     void fetchDynamicData(final LookupKey key,
             JSONObject existingJso,
             final DataLoadListener listener) {
