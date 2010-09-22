@@ -39,7 +39,7 @@ public class FieldVerifier {
     private String id;
     private DataSource dataSource;
 
-    private Set<AddressField> shouldBeEmpty;
+    private Set<AddressField> possibleFields;
     private Set<AddressField> required;
     // Known values. Can be either a key, a name in Latin, or a name in native script.
     private Map<String, String> candidateValues;
@@ -74,7 +74,7 @@ public class FieldVerifier {
      */
     private FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
         // Most information is inherited from the parent.
-        shouldBeEmpty = parent.shouldBeEmpty;
+        possibleFields = parent.possibleFields;
         required = parent.required;
         dataSource = parent.dataSource;
         format = parent.format;
@@ -88,9 +88,9 @@ public class FieldVerifier {
     }
 
     /**
-     * Sets shouldBeEmpty, required, keys and candidateValues for the root field verifier. This is a
+     * Sets possibleFieldsUsed, required, keys and candidateValues for the root field verifier. This is a
      * little messy at the moment since not all the appropriate information is actually under the
-     * root "data" node in the metadata. For example, "shouldBeEmpty" and "required" are not present
+     * root "data" node in the metadata. For example, "possibleFields" and "required" are not present
      * there.
      */
     private void populateRootVerifier() {
@@ -103,13 +103,13 @@ public class FieldVerifier {
         // candidateValues is just the set of keys.
         candidateValues = Util.buildNameToKeyMap(keys, null, null);
 
-        // Copy "shouldBeEmpty" and "required" from the defaults here for bootstrapping.
+        // Copy "possibleFieldsUsed" and "required" from the defaults here for bootstrapping.
         // TODO: Investigate a cleaner way of doing this - maybe we should populate "data" with this
         // information instead.
         AddressVerificationNodeData defaultZZ = dataSource.getDefaultData("data/ZZ");
-        shouldBeEmpty = new HashSet<AddressField>();
+        possibleFields = new HashSet<AddressField>();
         if (defaultZZ.containsKey(AddressDataKey.FMT)) {
-            shouldBeEmpty = parseAddressFields(defaultZZ.get(AddressDataKey.FMT));
+            possibleFields = parseAddressFields(defaultZZ.get(AddressDataKey.FMT));
         }
         required = new HashSet<AddressField>();
         if (defaultZZ.containsKey(AddressDataKey.REQUIRE)) {
@@ -137,7 +137,7 @@ public class FieldVerifier {
             localNames = nodeData.get(AddressDataKey.SUB_NAMES).split(DATA_DELIMITER);
         }
         if (nodeData.containsKey(AddressDataKey.FMT)) {
-            shouldBeEmpty = parseAddressFields(nodeData.get(AddressDataKey.FMT));
+            possibleFields = parseAddressFields(nodeData.get(AddressDataKey.FMT));
         }
         if (nodeData.containsKey(AddressDataKey.REQUIRE)) {
             required = parseRequireString(nodeData.get(AddressDataKey.REQUIRE));
@@ -211,7 +211,7 @@ public class FieldVerifier {
         String trimmedValue = Util.trimToNull(value);
         switch (problem) {
             case UNUSED_FIELD:
-                if (trimmedValue != null && !shouldBeEmpty.contains(field)) {
+                if (trimmedValue != null && !possibleFields.contains(field)) {
                     problemFound = true;
                 }
                 break;
