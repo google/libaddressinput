@@ -21,7 +21,6 @@ import junit.framework.TestCase;
 /**
  * Spot check the standard data set for various cases of interest. This is
  * not an exhaustive test.
- *
  */
 public class MarketVerifierTest extends TestCase {
 
@@ -86,7 +85,7 @@ public class MarketVerifierTest extends TestCase {
         .setPostalCode("123456")
         .build();
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
   public void testGermanAddress() {
@@ -100,7 +99,7 @@ public class MarketVerifierTest extends TestCase {
         .build();
 
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
 
     // Clones address but leave city empty.
     addr = new AddressData.Builder()
@@ -123,7 +122,7 @@ public class MarketVerifierTest extends TestCase {
         .build();
 
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
 
     // Clones address but leave county empty. This address should be valid
     // since county is not required.
@@ -133,7 +132,7 @@ public class MarketVerifierTest extends TestCase {
         .build();
 
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
   public void testChinaPostalCodeBadFormat() {
@@ -167,7 +166,7 @@ public class MarketVerifierTest extends TestCase {
           .setPostalCode("")
           .build();
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
 
     problems.clear();
 
@@ -196,10 +195,10 @@ public class MarketVerifierTest extends TestCase {
           .setPostalCode("407")
           .build();
     verifier.verify(addr, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
-  public void failingtestChinaTaiwanUnknownDistrict() {
+  public void testChinaTaiwanUnknownDistrict() {
     AddressData addr =
       new AddressData.Builder().setCountry("CN").setAdminArea("Taiwan").setLocality(
           "Taichung City").setDependentLocality("Foo Bar").setPostalCode("400").build();
@@ -237,10 +236,9 @@ public class MarketVerifierTest extends TestCase {
         .setCountry("BS")
         .build();
     verifier.verify(address, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
-
-  // japan test data copied from 
+ 
   public void testJapan() {
     // added AdminArea since address verification can't infer it from Kyoto City
     // commented out dependent locality since address verification doesn't use it
@@ -256,25 +254,23 @@ public class MarketVerifierTest extends TestCase {
         .setPostalCode("601-8501")
         .build();
     verifier.verify(address, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 
   public void testJapanLatin() {
     // added AdminArea since address verification can't infer it from Kyoto City
     // commented out dependent locality since address verification doesn't use it
-    // commented out language since address doesn't use it yet
-    // TODO: support language
    final AddressData address = new AddressData.Builder() // SHIGERU_MIYAMOTO_ENGLISH
         .setRecipient("Shigeru Miyamoto")
         .setAddress("11-1 Kamitoba-hokotate-cho")
         .setAdminArea("KYOTO") // added
         .setLocality("Kyoto")
         // .setDependentLocality("Minami-ku")
-        // .setLanguage(LanguageCode.forString("ja_Latn"))
+        .setLanguageCode("ja_Latn")
         .setCountry("JP")
         .setPostalCode("601-8501")
         .build();
     verifier.verify(address, problems);
-    assertTrue(problems.isEmpty());
+    assertTrue(problems.toString(), problems.isEmpty());
   }
 }
