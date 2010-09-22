@@ -27,21 +27,8 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * Controller for an Address Display and is responsible for:
- *
- * <ul> <li>Providing a way to iterate over {@link AddressField}s in a country dependent way.
- * <li>Fetches new address data from the server as needed (based on hierarchy rules of international
- * addresses). <li>Provides {@link FormField} for an {@link AddressField}. A {@link FormField}
- * provides Country specific data for that field. For example, returning the correct label for
- * Administrative Area. </ul>
- *
- * <p> In order for FormController to work properly, it requires two things: <ul> <li>An
- * implementation of {@link AddressDisplayHandler}, which can be set using {@link
- * #initDisplayHandler(AddressDisplayHandler)}. <li>Registering UI widgets which can change using
- * {@link #registerField(AddressField, HasChangeHandlers)}. The registration should happen in
- * constructor of the display. This registration is necessary so the controller can monitor changes
- * and react to them appropriately. For example, a change in Country can cause additional data to be
- * fetched and may cause a change in layout. </ul>
+ * Responsible for looking up data for address fields. This fetches possible
+ * values for the next level down in the address hierarchy, if these are known.
  */
 public class FormController {
     // Used to identify the source of a log message.
@@ -53,12 +40,10 @@ public class FormController {
     // For language code info in lookup key (E.g., data/CA--fr).
     private static final String sDashDelim = "--";
     // Current user language.
-
     private final String mLanguageCode;
     private static final LookupKey sRootKey = FormController.getDataKeyForRoot();
     private static final String sDefaultRegionCode = "ZZ";
-    private final AddressVerificationNodeData mDefaultCountryData;
-
+    
     private static final AddressField[] sAddressHierarchy = {
             AddressField.COUNTRY,
             AddressField.ADMIN_AREA,
@@ -82,8 +67,9 @@ public class FormController {
         AddressData address = new AddressData.Builder().setCountry(sDefaultRegionCode).build();
         LookupKey defaultCountryKey = getDataKeyFor(address);
 
-        mDefaultCountryData = integratedData.getDefaultData(defaultCountryKey.toString());
-        Util.checkNotNull(mDefaultCountryData,
+        AddressVerificationNodeData defaultCountryData =
+            integratedData.getDefaultData(defaultCountryKey.toString());
+        Util.checkNotNull(defaultCountryData,
                 "require data for default country key: " + defaultCountryKey);
         this.mIntegratedData = integratedData;
     }
@@ -216,7 +202,7 @@ public class FormController {
 
         // Current language is not the default language for the country.
         if (Util.trimToNull(defaultLanguage) != null &&
-                !Util.getLanguageSubtag(languageCode).equals(Util.getLanguageSubtag(languageCode))) {
+            !Util.getLanguageSubtag(languageCode).equals(Util.getLanguageSubtag(languageCode))) {
             return false;
         }
         return true;
