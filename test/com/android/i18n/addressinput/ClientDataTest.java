@@ -23,6 +23,21 @@ public class ClientDataTest extends AsyncTestCase {
     client = new ClientData(CacheData.getInstance());
   }
 
+  public void testGet() {
+      AddressVerificationNodeData data = client.get("data");
+      assertNotNull(data);
+  }
+  
+  public void testGet2() {
+      AddressVerificationNodeData data;
+      
+      data = client.get("data");
+      assertNotNull(data);
+      
+      data = client.get("data");
+      assertNotNull(data);
+  }
+  
   public void testPrefetchCountry() {
     delayTestFinish(60000);
 

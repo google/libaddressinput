@@ -47,10 +47,12 @@ public class ClientData implements DataSource {
 
     public AddressVerificationNodeData get(String key) {
         JsoMap jso = mCacheData.getObj(key);
+        if (jso == null) {  // Not cached.
+            fetchDataIfNotAvailable(key);
+            jso = mCacheData.getObj(key);
+        }
         if (jso != null && isValidDataKey(key)) {
             return createNodeData(jso);
-        } else {
-            fetchDataIfNotAvailable(key);
         }
         return null;
     }
@@ -181,7 +183,13 @@ public class ClientData implements DataSource {
         if (jso == null) {
             // If there is bootstrap data for the key, pass the data to fetchDynamicData
             JsoMap regionalData = mBootstrapMap.get(key);
-            mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData, null);
+            NotifyingListener listener = new NotifyingListener(this);
+            mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData, listener);
+            try {
+                listener.waitLoadingEnd();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -267,6 +275,40 @@ public class ClientData implements DataSource {
                 if (loaders.isEmpty()) {
                     listener.dataLoadingEnd();
                 }
+            }
+        }
+    }
+    
+    /**
+     * A helper class to let the calling thread wait until loading has finished.
+     */
+    private class NotifyingListener implements DataLoadListener {
+        private Object sleeper;
+        private boolean done;
+
+        public NotifyingListener(Object sleeper) {
+            this.sleeper = sleeper;
+            done = false;
+        }
+
+        public void dataLoadingBegin() {
+        }
+
+        public void dataLoadingEnd() {
+            synchronized (this) {
+                done = true;
+            }
+            synchronized (sleeper) {
+                sleeper.notify();
+            }
+        }
+        
+        public void waitLoadingEnd() throws InterruptedException {
+            synchronized (this) {
+                if (done) return;
+            }
+            synchronized (sleeper) {
+                sleeper.wait();
             }
         }
     }
