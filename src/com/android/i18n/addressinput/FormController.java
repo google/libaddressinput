@@ -40,7 +40,7 @@ public class FormController {
     // For language code info in lookup key (E.g., data/CA--fr).
     private static final String sDashDelim = "--";
     // Current user language.
-    private final String mLanguageCode;
+    private String mLanguageCode;
     private static final LookupKey sRootKey = FormController.getDataKeyForRoot();
     private static final String sDefaultRegionCode = "ZZ";
     
@@ -74,8 +74,12 @@ public class FormController {
         this.mIntegratedData = integratedData;
     }
 
+    public void setLanguageCode(String languageCode) {
+        mLanguageCode = languageCode;
+    }
+
     void setCurrentCountry(String currentCountry) {
-        this.mCurrentCountry = currentCountry;
+        mCurrentCountry = currentCountry;
     }
 
     private ScriptType getScriptType() {
