@@ -30,7 +30,7 @@ public class Util {
      * This variable is in upper-case, since we convert the language code to upper case before doing
      * string comparison.
      */
-    private static final String LATIN_SCRIPT = "LATN";
+    private static final String sLatinScript = "LATN";
 
     /**
      * Cannot instantiate this class - private constructor.
@@ -50,7 +50,7 @@ public class Util {
         Matcher m = languageCodePattern.matcher(languageCode);
         if (m.lookingAt()) {
             String script = m.group(1);
-            if (script.equals(LATIN_SCRIPT)) {
+            if (script.equals(sLatinScript)) {
                 return true;
             }
         }

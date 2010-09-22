@@ -99,15 +99,15 @@ public enum AddressDataKey {
      * matches.
      */
     public static AddressDataKey get(String keyname) {
-        return map.get(keyname.toLowerCase());
+        return sMap.get(keyname.toLowerCase());
     }
 
-    private static final Map<String, AddressDataKey> map = new HashMap<String, AddressDataKey>();
+    private static final Map<String, AddressDataKey> sMap = new HashMap<String, AddressDataKey>();
 
     static {
         // Populates the map of enums against their lower-cased string values for easy look-up.
         for (AddressDataKey field : values()) {
-            map.put(field.toString().toLowerCase(), field);
+            sMap.put(field.toString().toLowerCase(), field);
         }
     }
 }

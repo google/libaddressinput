@@ -36,17 +36,17 @@ public class ClientData implements DataSource {
     /* Data to bootstrap the process. The data are all regional (country level)
      * data. Keys are like "data/US/CA"
      */
-    private final Map<String, JsoMap> bootstrapMap = new HashMap<String, JsoMap>();
+    private final Map<String, JsoMap> mBootstrapMap = new HashMap<String, JsoMap>();
 
-    private CacheData cacheData;
+    private CacheData mCacheData;
 
     public ClientData(CacheData cacheData) {
-        this.cacheData = cacheData;
+        this.mCacheData = cacheData;
         buildRegionalData();
     }
 
     public AddressVerificationNodeData get(String key) {
-        JsoMap jso = cacheData.getObj(key);
+        JsoMap jso = mCacheData.getObj(key);
         if (jso != null && isValidDataKey(key)) {
             return createNodeData(jso);
         } else {
@@ -58,7 +58,7 @@ public class ClientData implements DataSource {
     public AddressVerificationNodeData getDefaultData(String key) {
         // root data
         if (key.split("/").length == 1) {
-            JsoMap jso = bootstrapMap.get(key);
+            JsoMap jso = mBootstrapMap.get(key);
             if (jso == null || !isValidDataKey(key)) {
                 throw new RuntimeException("key " + key + " does not have bootstrap data");
             }
@@ -66,7 +66,7 @@ public class ClientData implements DataSource {
         }
 
         key = getCountryKey(key);
-        JsoMap jso = bootstrapMap.get(key);
+        JsoMap jso = mBootstrapMap.get(key);
         if (jso == null || !isValidDataKey(key)) {
             throw new RuntimeException("key " + key + " does not have bootstrap data");
         }
@@ -150,7 +150,7 @@ public class ClientData implements DataSource {
 
             AddressData data = new AddressData.Builder().setCountry(countryCode).build();
             LookupKey key = new LookupKey.Builder(KeyType.DATA).setAddressData(data).build();
-            bootstrapMap.put(key.toString(), jso);
+            mBootstrapMap.put(key.toString(), jso);
         }
         countries.setLength(countries.length() - 1);
 
@@ -167,7 +167,7 @@ public class ClientData implements DataSource {
         } catch (JSONException e) {
             // Ignore.
         }
-        bootstrapMap.put("data", jsoData);
+        mBootstrapMap.put("data", jsoData);
     }
 
     /**
@@ -177,18 +177,18 @@ public class ClientData implements DataSource {
      *            "data") or example key (starts with "examples")
      */
     private void fetchDataIfNotAvailable(String key) {
-        JsoMap jso = cacheData.getObj(key);
+        JsoMap jso = mCacheData.getObj(key);
         if (jso == null) {
             // If there is bootstrap data for the key, pass the data to fetchDynamicData
-            JsoMap regionalData = bootstrapMap.get(key);
-            cacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData, null);
+            JsoMap regionalData = mBootstrapMap.get(key);
+            mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData, null);
         }
     }
 
     public void requestData(LookupKey key, DataLoadListener listener) {
         Util.checkNotNull(key, "Null lookup key not allowed");
-        JsoMap regionalData = bootstrapMap.get(key.toString());
-        cacheData.fetchDynamicData(key, regionalData, listener);
+        JsoMap regionalData = mBootstrapMap.get(key.toString());
+        mCacheData.fetchDynamicData(key, regionalData, listener);
     }
 
     /**
@@ -198,7 +198,7 @@ public class ClientData implements DataSource {
         String key = "data/" + country;
         Set<RecursiveLoader> loaders = new HashSet<RecursiveLoader>();
         listener.dataLoadingBegin();
-        cacheData.fetchDynamicData(
+        mCacheData.fetchDynamicData(
                 new LookupKey.Builder(key).build(),
                 null,
                 new RecursiveLoader(key, loaders, listener));
@@ -233,7 +233,7 @@ public class ClientData implements DataSource {
             final String sub_keys = AddressDataKey.SUB_KEYS.name().toLowerCase();
             final String sub_mores = AddressDataKey.SUB_MORES.name().toLowerCase();
 
-            JsoMap map = cacheData.getObj(key);
+            JsoMap map = mCacheData.getObj(key);
 
             if (map.containsKey(sub_mores)) {
                 // This key could have sub keys.
@@ -254,7 +254,7 @@ public class ClientData implements DataSource {
                     if (mores[i].equalsIgnoreCase("true")) {
                         // This key should have sub keys.
                         String subKey = key + "/" + keys[i];
-                        cacheData.fetchDynamicData(
+                        mCacheData.fetchDynamicData(
                                 new LookupKey.Builder(subKey).build(),
                                 null,
                                 new RecursiveLoader(subKey, loaders, listener));

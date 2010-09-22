@@ -36,51 +36,51 @@ public final class CacheData {
     /**
      * Used to identify the source of a log message.
      */
-    private static final String TAG = "CacheData";
+    private static final String sTag = "CacheData";
 
     /**
      * Time out value for the server to respond in millisecond.
      */
-    private final int TIMEOUT = 5000;
+    private final int mTimeout = 5000;
 
     /**
      * CacheData singleton.
      */
-    private static final CacheData instance = new CacheData();
+    private static final CacheData sInstance = new CacheData();
 
     /**
      * URL to get public address data.
      */
-    private final String PUBLIC_ADDRESS_DATA_SERVER =
+    private static final String sPublicAddressDataServer =
             "http://i18napis.appspot.com/address";
 
     /**
-     * Url to get address data. You can also reset it by calling {@link #setUrl(String)}.
+     * URL to get address data. You can also reset it by calling {@link #setUrl(String)}.
      */
-    private String serviceUrl = PUBLIC_ADDRESS_DATA_SERVER;
+    private String mServiceUrl = sPublicAddressDataServer;
 
     /**
      * Storage for all dynamically retrieved data.
      */
-    private final JsoMap theCache = JsoMap.createEmptyJsoMap();
+    private final JsoMap mCache = JsoMap.createEmptyJsoMap();
 
     /**
      * All requests that have been sent.
      */
-    private final HashSet<String> requestedKeys = new HashSet<String>();
+    private final HashSet<String> mRequestedKeys = new HashSet<String>();
 
     /**
      * All invalid requested keys. For example, if we request a random string "asdfsdf9o", and the
      * server responds by saying this key is invalid, it will be stored here.
      */
-    private final HashSet<String> badKeys = new HashSet<String>();
+    private final HashSet<String> mBadKeys = new HashSet<String>();
 
     /**
      * Temporary store for {@code CacheListener}s. When a key is requested and still waiting for
      * server's response, the listeners for the same key will be temporary stored here. When the
      * server responded, these listeners will be triggered and then removed.
      */
-    private final HashMap<LookupKey, HashSet<CacheListener>> temporaryListenerStore =
+    private final HashMap<LookupKey, HashSet<CacheListener>> mTemporaryListenerStore =
             new HashMap<LookupKey, HashSet<CacheListener>>();
 
     /**
@@ -145,8 +145,8 @@ public final class CacheData {
         private void handleJson(JsoMap map) {
             // Can this ever happen?
             if (map == null) {
-                Log.w(TAG, "server returns null for key:" + key);
-                badKeys.add(key);
+                Log.w(sTag, "server returns null for key:" + key);
+                mBadKeys.add(key);
                 notifyListenersAfterJobDone(key);
                 triggerDataLoadingEndIfNotNull(listener);
                 return;
@@ -155,8 +155,8 @@ public final class CacheData {
             JSONObject json = map;
             String idKey = AddressDataKey.ID.name().toLowerCase();
             if (!json.has(idKey)) {
-                Log.w(TAG, "invalid or empty data returned for key: " + key);
-                badKeys.add(key);
+                Log.w(sTag, "invalid or empty data returned for key: " + key);
+                mBadKeys.add(key);
                 notifyListenersAfterJobDone(key);
                 triggerDataLoadingEndIfNotNull(listener);
                 return;
@@ -166,9 +166,9 @@ public final class CacheData {
                 map.mergeData((JsoMap) existingJso);
             }
 
-            Log.w(TAG, "put the following key/value pair into cache. key:" + key
+            Log.w(sTag, "put the following key/value pair into cache. key:" + key
                     + ", value:" + map.string());
-            theCache.putObj(key, map);
+            mCache.putObj(key, map);
             notifyListenersAfterJobDone(key);
             triggerDataLoadingEndIfNotNull(listener);
         }
@@ -181,21 +181,21 @@ public final class CacheData {
      */
     public void setUrl(String url) {
         checkNotNull(url, "Cannot set URL of address data server to null.");
-        serviceUrl = url;
+        mServiceUrl = url;
     }
 
     /**
      * Gets address data server URL.
      */
     public String getUrl() {
-        return serviceUrl;
+        return mServiceUrl;
     }
 
     /**
      * Checks if key and its value is cached (Note that only valid ones are cached).
      */
     public boolean containsKey(String key) {
-        return theCache.containsKey(key);
+        return mCache.containsKey(key);
     }
 
     private void triggerDataLoadingEndIfNotNull(DataLoadListener listener) {
@@ -222,21 +222,21 @@ public final class CacheData {
         }
 
         // Key is valid and cached.
-        if (theCache.containsKey(key.toString())) {
-            Log.w(TAG, "returning data for key " + key + " from the cache");
+        if (mCache.containsKey(key.toString())) {
+            Log.w(sTag, "returning data for key " + key + " from the cache");
             triggerDataLoadingEndIfNotNull(listener);
             return;
         }
 
         // Key is invalid and cached.
-        if (badKeys.contains(key.toString())) {
+        if (mBadKeys.contains(key.toString())) {
             triggerDataLoadingEndIfNotNull(listener);
             return;
         }
 
         // Already requested the key, and is still waiting for server's response.
-        if (!requestedKeys.add(key.toString())) {
-            Log.w(TAG, "data for key " + key + " requested but not cached yet");
+        if (!mRequestedKeys.add(key.toString())) {
+            Log.w(sTag, "data for key " + key + " requested but not cached yet");
             addListenerToTempStore(key, new CacheListener() {
                 public void onAdd(String myKey) {
                     triggerDataLoadingEndIfNotNull(listener);
@@ -247,14 +247,14 @@ public final class CacheData {
 
         // Key is not cached yet, now sending the request to the server.
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        jsonp.setTimeout(TIMEOUT);
+        jsonp.setTimeout(mTimeout);
         final JsonHandler handler = new JsonHandler(key.toString(),
                 existingJso, listener);
-        jsonp.requestObject(serviceUrl + "/" + key.toString(),
+        jsonp.requestObject(mServiceUrl + "/" + key.toString(),
                 new AsyncCallback<JsoMap>() {
                     public void onFailure(Throwable caught) {
-                        Log.w(TAG, "Request for key " + key + " failed");
-                        requestedKeys.remove(key.toString());
+                        Log.w(sTag, "Request for key " + key + " failed");
+                        mRequestedKeys.remove(key.toString());
                         notifyListenersAfterJobDone(key.toString());
                         triggerDataLoadingEndIfNotNull(listener);
                     }
@@ -269,7 +269,7 @@ public final class CacheData {
      * Gets the instance of CacheData.
      */
     public static CacheData getInstance() {
-        return instance;
+        return sInstance;
     }
 
     /**
@@ -280,7 +280,7 @@ public final class CacheData {
      */
     public String get(String key) {
         checkNotNull(key, "null key not allowed");
-        return theCache.get(key);
+        return mCache.get(key);
     }
 
     /**
@@ -291,12 +291,12 @@ public final class CacheData {
      */
     public JsoMap getObj(String key) {
         checkNotNull(key, "null key not allowed");
-        return theCache.getObj(key);
+        return mCache.getObj(key);
     }
 
     private void notifyListenersAfterJobDone(String key) {
         LookupKey lookupKey = new LookupKey.Builder(key).build();
-        HashSet<CacheListener> listeners = temporaryListenerStore.get(lookupKey);
+        HashSet<CacheListener> listeners = mTemporaryListenerStore.get(lookupKey);
         if (listeners != null) {
             for (CacheListener listener : listeners) {
                 listener.onAdd(key.toString());
@@ -308,10 +308,10 @@ public final class CacheData {
     private void addListenerToTempStore(LookupKey key, CacheListener listener) {
         checkNotNull(key);
         checkNotNull(listener);
-        HashSet<CacheListener> listeners = temporaryListenerStore.get(key);
+        HashSet<CacheListener> listeners = mTemporaryListenerStore.get(key);
         if (listeners == null) {
             listeners = new HashSet<CacheListener>();
-            temporaryListenerStore.put(key, listeners);
+            mTemporaryListenerStore.put(key, listeners);
         }
         listeners.add(listener);
     }

@@ -22,10 +22,8 @@ import java.util.Map;
 /**
  * Defines the character codes used in the metadata to specify the types of fields used in address
  * formatting. Note that the metadata also has a character for newlines, which is not defined here.
- *
  */
 public enum AddressField {
-
     ADMIN_AREA('S', "state"),
     LOCALITY('C', "city"),
     RECIPIENT('N', "name"),
@@ -44,22 +42,22 @@ public enum AddressField {
 
     COUNTRY('R');
 
-    private static Map<Character, AddressField> fieldMapping
+    private static Map<Character, AddressField> sFieldMapping
             = new HashMap<Character, AddressField>();
 
     static {
-        for (AddressField val : values()) {
-            fieldMapping.put(val.getChar(), val);
+        for (AddressField value : values()) {
+            sFieldMapping.put(value.getChar(), value);
         }
     }
 
-    private final char field;
+    private final char mField;
 
-    private final String attributeName;
+    private final String mAttributeName;
 
     private AddressField(char field, String attributeName) {
-        this.field = field;
-        this.attributeName = attributeName;
+        mField = field;
+        mAttributeName = attributeName;
     }
 
     private AddressField(char field) {
@@ -71,7 +69,7 @@ public enum AddressField {
      * not recognized.
      */
     public static AddressField of(char field) {
-        return fieldMapping.get(field);
+        return sFieldMapping.get(field);
     }
 
     /**
@@ -82,7 +80,7 @@ public enum AddressField {
      * code, or street address do not have attribute names.
      */
     public String getAttributeName() {
-        return attributeName;
+        return mAttributeName;
     }
 
     /**
@@ -91,6 +89,6 @@ public enum AddressField {
      * @return identification char.
      */
     public char getChar() {
-        return field;
+        return mField;
     }
 }

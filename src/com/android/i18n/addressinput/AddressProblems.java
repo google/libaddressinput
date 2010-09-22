@@ -24,10 +24,10 @@ import java.util.Map;
  */
 public class AddressProblems {
 
-    private Map<AddressField, AddressProblemType> problems;
+    private Map<AddressField, AddressProblemType> mProblems;
 
     public AddressProblems() {
-        problems = new HashMap<AddressField, AddressProblemType>();
+        mProblems = new HashMap<AddressField, AddressProblemType>();
     }
 
     /**
@@ -35,35 +35,35 @@ public class AddressProblems {
      * the different data parts in the AddressData class.
      */
     public void add(AddressField addressField, AddressProblemType problem) {
-        problems.put(addressField, problem);
+        mProblems.put(addressField, problem);
     }
 
     /**
      * Returns true if no problems have been added.
      */
     public boolean isEmpty() {
-        return problems.isEmpty();
+        return mProblems.isEmpty();
     }
 
     public String toString() {
-        return problems.toString();
+        return mProblems.toString();
     }
 
     public void clear() {
-        problems.clear();
+        mProblems.clear();
     }
 
     /**
      * Returns null if no problems exists.
      */
     public AddressProblemType getProblem(AddressField addressField) {
-        return problems.get(addressField);
+        return mProblems.get(addressField);
     }
 
     /**
      * This will return an empty map if there are no problems.
      */
     public Map<AddressField, AddressProblemType> getProblems() {
-        return problems;
+        return mProblems;
     }
 }

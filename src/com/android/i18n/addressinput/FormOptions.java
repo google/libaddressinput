@@ -31,72 +31,72 @@ import java.util.Map;
  */
 public class FormOptions {
 
-    private final String baseId;
+    private final String mBaseId;
 
-    private final EnumSet<AddressField> hiddenFields;
+    private final EnumSet<AddressField> mHiddenFields;
 
-    private final EnumSet<AddressField> readonlyFields;
+    private final EnumSet<AddressField> mReadonlyFields;
 
-    private final EnumSet<AddressField> requiredFields;
+    private final EnumSet<AddressField> mRequiredFields;
 
-    private final EnumMap<AddressField, String> customLabels =
+    private final EnumMap<AddressField, String> mCustomLabels =
             new EnumMap<AddressField, String>(AddressField.class);
 
-    private final Map<String, AddressField[]> overrideFieldOrder =
+    private final Map<String, AddressField[]> mOverrideFieldOrder =
             new HashMap<String, AddressField[]>();
 
-    private final EnumMap<AddressField, Integer> maxLengths =
+    private final EnumMap<AddressField, Integer> mMaxLengths =
             new EnumMap<AddressField, Integer>(AddressField.class);
 
-    private final String serverUrl;
+    private final String mServerUrl;
 
     private FormOptions(Builder builder) {
         // copy values from builder
-        this.baseId = builder.baseId;
-        this.hiddenFields = EnumSet.copyOf(builder.hiddenFields);
-        this.readonlyFields = EnumSet.copyOf(builder.readonlyFields);
-        this.requiredFields = EnumSet.copyOf(builder.requiredFields);
-        this.customLabels.putAll(builder.customLabels);
-        this.overrideFieldOrder.putAll(builder.overrideFieldOrder);
-        this.maxLengths.putAll(builder.maxLengths);
-        this.serverUrl = builder.serverUrl;
+        this.mBaseId = builder.baseId;
+        this.mHiddenFields = EnumSet.copyOf(builder.hiddenFields);
+        this.mReadonlyFields = EnumSet.copyOf(builder.readonlyFields);
+        this.mRequiredFields = EnumSet.copyOf(builder.requiredFields);
+        this.mCustomLabels.putAll(builder.customLabels);
+        this.mOverrideFieldOrder.putAll(builder.overrideFieldOrder);
+        this.mMaxLengths.putAll(builder.maxLengths);
+        this.mServerUrl = builder.serverUrl;
     }
 
     /**
      * Gets base ID of the address form. Default is "addressform".
      */
     public String getBaseId() {
-        return baseId;
+        return mBaseId;
     }
 
     public boolean isHidden(AddressField field) {
-        return hiddenFields.contains(field);
+        return mHiddenFields.contains(field);
     }
 
     public boolean isReadonly(AddressField field) {
-        return readonlyFields.contains(field);
+        return mReadonlyFields.contains(field);
     }
 
     public boolean isRequired(AddressField field) {
-        return requiredFields.contains(field);
+        return mRequiredFields.contains(field);
     }
 
     public EnumSet<AddressField> getRequiredFields() {
-        return requiredFields;
+        return mRequiredFields;
     }
 
     /**
      * Gets the customized label for the {@code field}, or returns null if none.
      */
     public String getCustomLabel(AddressField field) {
-        return customLabels.get(field);
+        return mCustomLabels.get(field);
     }
 
     /**
      * Gets the URL of the Address Data Server.
      */
     public String getUrl() {
-        return serverUrl;
+        return mServerUrl;
     }
 
     /**
@@ -107,14 +107,14 @@ public class FormOptions {
         if (regionCode == null) {
             throw new RuntimeException("regionCode cannot be null.");
         }
-        return overrideFieldOrder.get(regionCode);
+        return mOverrideFieldOrder.get(regionCode);
     }
 
     /**
      * Gets the customized max length for the {@code field}, or null if none.
      */
     public Integer getCustomMaxLength(AddressField field) {
-        return maxLengths.get(field);
+        return mMaxLengths.get(field);
     }
 
     /**

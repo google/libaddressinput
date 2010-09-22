@@ -29,22 +29,22 @@ import java.util.regex.Pattern;
  */
 public class AddressVerificationData implements DataSource{
 
-    private final Map<String, String> propertiesMap;
+    private final Map<String, String> mPropertiesMap;
 
-    private static final Pattern KV_PAT = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
+    private static final Pattern sKeyValuesPattern = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
 
-    private static final Pattern SEP_PAT = Pattern.compile("\",\"");
+    private static final Pattern sSeparatorPattern = Pattern.compile("\",\"");
 
     /**
      * Constructs from a map of address property data.  This keeps a reference to the map.  This
      * does not mutate the map. The map should not be mutated subsequent to this call.
      */
     public AddressVerificationData(Map<String, String> propertiesMap) {
-        this.propertiesMap = propertiesMap;
+        mPropertiesMap = propertiesMap;
     }
 
     public AddressVerificationNodeData get(String key) {
-        String json = propertiesMap.get(key);
+        String json = mPropertiesMap.get(key);
         if (json != null && isValidKey(key)) {
             return createNodeData(json);
         }
@@ -57,7 +57,7 @@ public class AddressVerificationData implements DataSource{
      */
     public Set<String> keys() {
         Set<String> result = new HashSet<String>();
-        for (String key : propertiesMap.keySet()) {
+        for (String key : mPropertiesMap.keySet()) {
             if (isValidKey(key)) {
                 result.add(key);
             }
@@ -86,7 +86,7 @@ public class AddressVerificationData implements DataSource{
         // - no double quotes within strings
         // - no extra spaces
         // can't use split "," since some data has commas in it.
-        Matcher sm = SEP_PAT.matcher(json);
+        Matcher sm = sSeparatorPattern.matcher(json);
         int pos = 0;
         while (pos < json.length()) {
             String pair;
@@ -98,7 +98,7 @@ public class AddressVerificationData implements DataSource{
                 pos = json.length();
             }
 
-            Matcher m = KV_PAT.matcher(pair);
+            Matcher m = sKeyValuesPattern.matcher(pair);
             if (m.matches()) {
                 String value = m.group(2);
 

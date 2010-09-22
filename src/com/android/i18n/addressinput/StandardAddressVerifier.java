@@ -39,11 +39,11 @@ import java.util.Map;
  */
 public class StandardAddressVerifier {
 
-    protected final FieldVerifier rootVerifier;
+    protected final FieldVerifier mRootVerifier;
 
-    protected final VerifierRefiner refiner;
+    protected final VerifierRefiner mRefiner;
 
-    protected final Map<AddressField, List<AddressProblemType>> problemMap;
+    protected final Map<AddressField, List<AddressProblemType>> mProblemMap;
 
     /**
      * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the standard checks on the
@@ -79,14 +79,14 @@ public class StandardAddressVerifier {
     public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner,
             Map<AddressField, List<AddressProblemType>> problemMap) {
 
-        this.rootVerifier = rootVerifier;
-        this.refiner = refiner;
-        this.problemMap = StandardChecks.PROBLEM_MAP;
+        this.mRootVerifier = rootVerifier;
+        this.mRefiner = refiner;
+        this.mProblemMap = StandardChecks.PROBLEM_MAP;
     }
 
     public void verify(AddressData address, AddressProblems problems) {
-        FieldVerifier v = rootVerifier;
-        VerifierRefiner r = refiner.newInstance();
+        FieldVerifier v = mRootVerifier;
+        VerifierRefiner r = mRefiner.newInstance();
 
         ScriptType script = null;
         if (address.getLanguageCode() != null) {
@@ -161,7 +161,7 @@ public class StandardAddressVerifier {
      * is a better approach.
      */
     protected Iterator<AddressProblemType> getProblemIterator(AddressField field) {
-        List<AddressProblemType> list = problemMap.get(field);
+        List<AddressProblemType> list = mProblemMap.get(field);
         if (list == null) {
             list = Collections.emptyList();
         }

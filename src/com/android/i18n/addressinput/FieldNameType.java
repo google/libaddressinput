@@ -84,37 +84,37 @@ public enum FieldNameType {
      * Returns the field associated with this field name type.
      */
     public AddressField field() {
-        return field;
+        return mField;
     }
 
     /**
      * Returns the keyname of this field name type.
      */
     public String keyname() {
-        return keyname;
+        return mKeyname;
     }
 
-    private final AddressField field;
+    private final AddressField mField;
 
-    private final String keyname;
+    private final String mKeyname;
 
     private FieldNameType(AddressField field) {
-        this.field = field;
+        this.mField = field;
 
         String name = this.name();
-        this.keyname = name.substring(name.indexOf('_') + 1).toLowerCase();
+        this.mKeyname = name.substring(name.indexOf('_') + 1).toLowerCase();
     }
 
     private FieldNameType(AddressField field, String keyname) {
-        this.field = field;
-        this.keyname = keyname;
+        this.mField = field;
+        this.mKeyname = keyname;
     }
 
     private static final Map<String, FieldNameType> map = new HashMap<String, FieldNameType>();
 
     static {
         for (FieldNameType fc : values()) {
-            map.put(fc.keyname, fc);
+            map.put(fc.mKeyname, fc);
         }
     }
 }

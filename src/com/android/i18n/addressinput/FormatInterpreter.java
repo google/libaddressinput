@@ -34,11 +34,11 @@ import org.json.JSONTokener;
  */
 public class FormatInterpreter {
 
-    private static final String NEW_LINE = "%n";
+    private static final String sNewLine = "%n";
 
-    private final String DEFAULT_FORMAT;
+    private final String mDefaultFormat;
 
-    private final FormOptions FORM_OPTIONS;
+    private final FormOptions mFormOptions;
 
     /**
      * Creates a new instance of {@link FormatInterpreter}.
@@ -47,9 +47,9 @@ public class FormatInterpreter {
         Util.checkNotNull(RegionDataConstants.getCountryFormatMap(),
                 "null country name map not allowed");
         Util.checkNotNull(options);
-        this.FORM_OPTIONS = options;
-        DEFAULT_FORMAT = getJsonValue("ZZ", AddressDataKey.FMT);
-        Util.checkNotNull(DEFAULT_FORMAT, "null default format not allowed");
+        this.mFormOptions = options;
+        mDefaultFormat = getJsonValue("ZZ", AddressDataKey.FMT);
+        Util.checkNotNull(mDefaultFormat, "null default format not allowed");
     }
 
     /**
@@ -64,7 +64,7 @@ public class FormatInterpreter {
         List<AddressField> fieldOrder = new ArrayList<AddressField>();
         for (String substring : getFormatSubStrings(scriptType, regionCode)) {
             // Skips un-escaped characters and new lines.
-            if (!substring.matches("%.") || substring.equals(NEW_LINE)) {
+            if (!substring.matches("%.") || substring.equals(sNewLine)) {
                 continue;
             }
 
@@ -97,14 +97,14 @@ public class FormatInterpreter {
     }
 
     private void overrideFieldOrder(String regionCode, List<AddressField> fieldOrder) {
-        if (FORM_OPTIONS.getCustomFieldOrder(regionCode) == null) {
+        if (mFormOptions.getCustomFieldOrder(regionCode) == null) {
             return;
         }
 
         // Constructs a hash for overridden field order.
         final Map<AddressField, Integer> fieldPriority = new HashMap<AddressField, Integer>();
         int i = 0;
-        for (AddressField field : FORM_OPTIONS.getCustomFieldOrder(regionCode)) {
+        for (AddressField field : mFormOptions.getCustomFieldOrder(regionCode)) {
             fieldPriority.put(field, i);
             i++;
         }
@@ -155,7 +155,7 @@ public class FormatInterpreter {
         List<String> lines = new ArrayList<String>();
         StringBuilder currentLine = new StringBuilder();
         for (String substr : getFormatSubStrings(scriptType, regionCode)) {
-            if (substr.equals(NEW_LINE)) {
+            if (substr.equals(sNewLine)) {
                 String normalizedStr = removeAllRedundantSpaces(currentLine.toString());
                 if (normalizedStr.length() > 0) {
                     lines.add(normalizedStr);
@@ -225,8 +225,8 @@ public class FormatInterpreter {
         for (char c : formatString.toCharArray()) {
             if (escaped) {
                 escaped = false;
-                if (NEW_LINE.equals("%" + c)) {
-                    parts.add(NEW_LINE);
+                if (sNewLine.equals("%" + c)) {
+                    parts.add(sNewLine);
                 } else {
                     Util.checkNotNull(AddressField.of(c), "Unrecognized character '" + c
                             + "' in format pattern: " + formatString);

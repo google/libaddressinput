@@ -21,8 +21,8 @@ package com.android.i18n.addressinput;
  */
 public class RegionData {
 
-    private String key;
-    private String name;
+    private String mKey;
+    private String mName;
 
     /**
      * Create a new RegionData object.
@@ -37,22 +37,22 @@ public class RegionData {
      */
     private RegionData(RegionData data) {
         Util.checkNotNull(data);
-        this.key = data.key;
-        this.name = data.name;
+        this.mKey = data.mKey;
+        this.mName = data.mName;
     }
 
     /**
      * Gets the key of the region. For example, California's key is "CA".
      */
     public String getKey() {
-        return key;
+        return mKey;
     }
 
     /**
      * Gets the name. Returns null if not specified.
      */
     public String getName() {
-        return name;
+        return mName;
     }
 
     /**
@@ -66,7 +66,7 @@ public class RegionData {
         if (subkey == null) {
             return false;
         }
-        if (subkey.equalsIgnoreCase(key) || subkey.equalsIgnoreCase(name)) {
+        if (subkey.equalsIgnoreCase(mKey) || subkey.equalsIgnoreCase(mName)) {
             return true;
         }
         return false;
@@ -85,7 +85,7 @@ public class RegionData {
 
         public Builder setKey(String key) {
             Util.checkNotNull(key, "Key should not be null.");
-            data.key = key;
+            data.mKey = key;
             return this;
         }
 
@@ -93,7 +93,7 @@ public class RegionData {
          * Sets name of the region. For example, "California".
          */
         public Builder setName(String name) {
-            data.name = name;
+            data.mName = name;
             return this;
         }
     }
