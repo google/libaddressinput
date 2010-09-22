@@ -16,7 +16,11 @@
 
 package com.android.i18n.addressinput;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Loader for a map defining the checks to perform on AddressData in Android Market.

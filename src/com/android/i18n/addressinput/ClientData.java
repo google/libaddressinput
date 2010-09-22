@@ -230,20 +230,20 @@ public class ClientData implements DataSource {
         }
 
         public void dataLoadingEnd() {
-            final String sub_keys = AddressDataKey.SUB_KEYS.name().toLowerCase();
-            final String sub_mores = AddressDataKey.SUB_MORES.name().toLowerCase();
+            final String subKeys = AddressDataKey.SUB_KEYS.name().toLowerCase();
+            final String subMores = AddressDataKey.SUB_MORES.name().toLowerCase();
 
             JsoMap map = mCacheData.getObj(key);
 
-            if (map.containsKey(sub_mores)) {
+            if (map.containsKey(subMores)) {
                 // This key could have sub keys.
                 String[] mores = {};
                 String[] keys = {};
 
-                mores = map.get(sub_mores).split("~");
+                mores = map.get(subMores).split("~");
 
-                if (map.containsKey(sub_keys)) {
-                    keys = map.get(sub_keys).split("~");
+                if (map.containsKey(subKeys)) {
+                    keys = map.get(subKeys).split("~");
                 }
 
                 if (mores.length != keys.length) {  // This should never happen.

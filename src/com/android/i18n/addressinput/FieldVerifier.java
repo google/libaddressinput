@@ -88,10 +88,10 @@ public class FieldVerifier {
     }
 
     /**
-     * Sets possibleFieldsUsed, required, keys and candidateValues for the root field verifier. This is a
-     * little messy at the moment since not all the appropriate information is actually under the
-     * root "data" node in the metadata. For example, "possibleFields" and "required" are not present
-     * there.
+     * Sets possibleFieldsUsed, required, keys and candidateValues for the root field verifier. This
+     * is a little messy at the moment since not all the appropriate information is actually under
+     * the root "data" node in the metadata. For example, "possibleFields" and "required" are not
+     * present there.
      */
     private void populateRootVerifier() {
         mId = "data";

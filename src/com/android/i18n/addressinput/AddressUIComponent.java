@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a component in the address widget UI. It could be either a text
- * box (when there is no candidate) or a select box.
+ * Represents a component in the address widget UI. It could be either a text box (when there is no
+ * candidate) or a select box.
  */
 public class AddressUIComponent {
     // The label for the UI component
@@ -33,6 +33,9 @@ public class AddressUIComponent {
     // The View representing the UI component
     private View mView;
 
+    /**
+     * Type of UI component. There are only EDIT (text-box) and SPINNER (drop-down) components.
+     */
     public enum UIComponent {
         EDIT, SPINNER,
     }
@@ -45,7 +48,7 @@ public class AddressUIComponent {
     }
 
     /**
-     * Initialize the candidatesList, and set the uiType and parentId
+     * Initializes the candidatesList, and set the uiType and parentId.
      * @param candidatesList
      */
     public void initializeCandidatesList(List<RegionData> candidatesList) {
@@ -67,7 +70,7 @@ public class AddressUIComponent {
     }
 
     /**
-     * Get the value entered in the UI component
+     * Gets the value entered in the UI component.
      */
     public String getValue() {
         if (mView == null) {

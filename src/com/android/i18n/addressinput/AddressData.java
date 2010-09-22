@@ -72,8 +72,8 @@ public class AddressData {
     // Locality. A fuzzy term, but it generally refers to
     // the city/town portion of an address.  In regions of the world where
     // localities are not well defined or do not fit into this structure well
-    // (for example, Japan and China), leave locality_name empty and use
-    // address_line.
+    // (for example, Japan and China), leave locality empty and use
+    // addressLine1.
     // Examples: US city, IT comune, UK post town.
     private final String locality;
 
@@ -94,12 +94,12 @@ public class AddressData {
     // Examples: FR CEDEX.
     private final String sortingCode;
 
-    // The firm or organization.  This goes at a finer granularity than
-    // address_lines in the address.  Omit if not needed.
+    // The firm or organization. This goes at a finer granularity than
+    // address lines in the address. Omit if not needed.
     private final String organization;
 
-    // The recipient.  This goes at a finer granularity than address_lines
-    // in the address.  Not present in xAL.  Omit if not needed.
+    // The recipient. This goes at a finer granularity than address lines
+    // in the address. Not present in xAL. Omit if not needed.
     private final String recipient;
 
     // Language code of the address. Can be set to null. See its getter and setter
@@ -314,7 +314,7 @@ public class AddressData {
 
         /**
          * Sets address by copying from input address data. Street fields will be normalized in the
-         * process. I.e., after copy, there will not be any empty street line in front of non-empty
+         * process. I.e., after copy, there will not be any empty street lines in front of non-empty
          * ones. For example, if input data's street line 1 is null but street line 2 has a value,
          * this method will copy street line 2's value and set it to street line 1.
          */
@@ -368,29 +368,27 @@ public class AddressData {
         }
 
         /**
-         * Parses content of address fields.
-         * If address_line_1 is empty, address_line_2 will be used to
-         * populate address_line_1 if possible.
-         * If address_line_1 contains new line, content after newline will be
+         * Parses content of address line fields.
+         * If address_line_1 is empty, address_line_2 will be used to populate address_line_1 if
+         * possible. If address_line_1 contains a new line, content after the new line will be
          * saved in address_line_2.
-         *
          */
         private void normalizeAddresses() {
-            String address_1 = values.get(AddressField.ADDRESS_LINE_1);
-            String address_2 = values.get(AddressField.ADDRESS_LINE_2);
-            if (address_1 == null || address_1.trim().length() == 0) {
-                address_1 = address_2;
-                address_2 = null;
+            String address1 = values.get(AddressField.ADDRESS_LINE_1);
+            String address2 = values.get(AddressField.ADDRESS_LINE_2);
+            if (address1 == null || address1.trim().length() == 0) {
+                address1 = address2;
+                address2 = null;
             }
-            if (address_1 != null) {
-                String[] address_lines = address_1.split("\n");
-                if (address_lines.length > 1) {
-                    address_1 = address_lines[0];
-                    address_2 = address_lines[1];
+            if (address1 != null) {
+                String[] addressLines = address1.split("\n");
+                if (addressLines.length > 1) {
+                    address1 = addressLines[0];
+                    address2 = addressLines[1];
                 }
             }
-            values.put(AddressField.ADDRESS_LINE_1, address_1);
-            values.put(AddressField.ADDRESS_LINE_2, address_2);
+            values.put(AddressField.ADDRESS_LINE_1, address1);
+            values.put(AddressField.ADDRESS_LINE_2, address2);
         }
     }
 }

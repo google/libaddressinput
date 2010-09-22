@@ -20,9 +20,9 @@ import static com.android.i18n.addressinput.Util.checkNotNull;
 
 import com.android.i18n.addressinput.JsonpRequestBuilder.AsyncCallback;
 
-import org.json.JSONObject;
-
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.util.EventListener;
 import java.util.HashMap;
