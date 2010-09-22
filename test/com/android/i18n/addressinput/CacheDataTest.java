@@ -64,29 +64,17 @@ public class CacheDataTest extends AsyncTestCase {
 
         assertTrue(map.containsKey(AddressDataKey.ID.name()
             .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.NAME.name()
-            .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.LANG.name()
-            .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.UPPER.name()
-            .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.ZIPEX.name()
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.ZIP.name()
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.FMT.name()
-            .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.LANGUAGES.name()
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.SUB_KEYS.name()
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.SUB_NAMES.name()
             .toLowerCase()));
         assertFalse(map.containsKey(AddressDataKey.SUB_LNAMES.name()
-            .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.SUB_ZIPS.name()
-            .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.POSTURL.name()
             .toLowerCase()));
 
         int namesSize = map.get(AddressDataKey.SUB_NAMES.name()
@@ -122,8 +110,6 @@ public class CacheDataTest extends AsyncTestCase {
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.KEY.name()
             .toLowerCase()));
-        assertTrue(map.containsKey(AddressDataKey.LNAME.name()
-            .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.LANG.name()
             .toLowerCase()));
         assertTrue(map.containsKey(AddressDataKey.ZIP.name()
@@ -135,8 +121,6 @@ public class CacheDataTest extends AsyncTestCase {
         assertFalse(map.containsKey(AddressDataKey.SUB_NAMES.name()
             .toLowerCase()));
         assertFalse(map.containsKey(AddressDataKey.SUB_LNAMES.name()
-            .toLowerCase()));
-        assertFalse(map.containsKey(AddressDataKey.SUB_ZIPS.name()
             .toLowerCase()));
 
         // Da-an district.
@@ -167,7 +151,7 @@ public class CacheDataTest extends AsyncTestCase {
         assertTrue("dataLoadingBegin should be called", beginCalled);
 
         JsoMap map = cache.getObj(EXAMPLE_LOCAL_US_KEY);
-        assertTrue(map.containsKey(AddressDataKey.NAME.name().toLowerCase()));
+        assertTrue(map.containsKey("name"));
         finishTest();
       }
     });

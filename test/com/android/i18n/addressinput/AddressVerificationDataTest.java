@@ -47,9 +47,7 @@ public class AddressVerificationDataTest extends TestCase {
     assertEquals("data/US", nodeData.get(AddressDataKey.ID));
     assertNotNull(nodeData.get(AddressDataKey.SUB_KEYS));
     assertNotNull(nodeData.get(AddressDataKey.SUB_NAMES));
-    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
     assertEquals("en", nodeData.get(AddressDataKey.LANG));
-    assertEquals("en", nodeData.get(AddressDataKey.LANGUAGES));
   }
 
   public void testCaData() {
@@ -58,10 +56,8 @@ public class AddressVerificationDataTest extends TestCase {
     String keys = nodeData.get(AddressDataKey.SUB_KEYS);
 
     assertEquals("data/CA", nodeData.get(AddressDataKey.ID));
-    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
     assertEquals("en", nodeData.get(AddressDataKey.LANG));
-    assertEquals("en~fr", nodeData.get(AddressDataKey.LANGUAGES));
-
+    
     assertEquals("AB~BC~MB~NB~NL~NS~NU~NT~ON~PE~QC~SK~YT", keys);
     assertEquals("Alberta~British Columbia~Manitoba~New Brunswick"
         + "~Newfoundland and Labrador~Nova Scotia~Nunavut~Northwest Territories"
@@ -74,7 +70,6 @@ public class AddressVerificationDataTest extends TestCase {
     String keys = nodeData.get(AddressDataKey.SUB_KEYS);
 
     assertEquals("data/CA--fr", nodeData.get(AddressDataKey.ID));
-    assertNotNull(nodeData.get(AddressDataKey.SUB_ZIPS));
     assertEquals("fr", nodeData.get(AddressDataKey.LANG));
     assertEquals("AB~BC~PE~MB~NB~NS~NU~ON~QC~SK~NL~NT~YT", keys);
     assertTrue(names.contains("Colombie"));

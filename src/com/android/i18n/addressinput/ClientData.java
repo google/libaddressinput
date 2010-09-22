@@ -107,11 +107,11 @@ public class ClientData implements DataSource {
             try {
                 AddressDataKey key = AddressDataKey.get(arr.getString(i));
 
-                /* This is a runtime data sanity check.  The data should be
-                * checked when the data is built. There should be no key
-                * that does not match an AddressDataKey.
-                */
-                Util.checkNotNull(key, "Unknown field for key '" + arr.getString(i) + "'");
+                if (key == null) {
+                    // Not all keys are supported by Android, so we continue if we encounter one
+                    // that is not used.
+                    continue;
+                }
 
                 String value = jso.get(key.toString().toLowerCase());
                 map.put(key, value);

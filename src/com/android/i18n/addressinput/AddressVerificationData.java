@@ -124,12 +124,10 @@ public class AddressVerificationData implements DataSource{
 
                 AddressDataKey df = AddressDataKey.get(m.group(1));
                 if (df == null) {
-                    // This is a runtime data sanity check.  The data should be
-                    // checked when the data is built.  There should be no key
-                    // that does not match an AddressDataField.
-                    throw new RuntimeException("unknown field for key '" + m.group(1) + "'");
+                    // Skip this data - it isn't used in the Android version.
+                } else {
+                    map.put(df, value);
                 }
-                map.put(df, value);
             } else {
                 // This is a runtime data sanity check.  The data should be
                 // checked when the data is built.  The JSON data string should
