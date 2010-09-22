@@ -278,38 +278,4 @@ public class ClientData implements DataSource {
             }
         }
     }
-    
-    /**
-     * A helper class to let the calling thread wait until loading has finished.
-     */
-    private class NotifyingListener implements DataLoadListener {
-        private Object sleeper;
-        private boolean done;
-
-        public NotifyingListener(Object sleeper) {
-            this.sleeper = sleeper;
-            done = false;
-        }
-
-        public void dataLoadingBegin() {
-        }
-
-        public void dataLoadingEnd() {
-            synchronized (this) {
-                done = true;
-            }
-            synchronized (sleeper) {
-                sleeper.notify();
-            }
-        }
-        
-        public void waitLoadingEnd() throws InterruptedException {
-            synchronized (this) {
-                if (done) return;
-            }
-            synchronized (sleeper) {
-                sleeper.wait();
-            }
-        }
-    }
 }
