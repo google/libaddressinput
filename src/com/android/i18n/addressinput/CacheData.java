@@ -218,6 +218,10 @@ public final class CacheData {
             final DataLoadListener listener) {
         checkNotNull(key, "null key not allowed.");
 
+        if (listener != null) {
+            listener.dataLoadingBegin();
+        }
+
         // Key is valid and cached.
         if (mCache.containsKey(key.toString())) {
             Log.w(sTag, "returning data for key " + key + " from the cache");

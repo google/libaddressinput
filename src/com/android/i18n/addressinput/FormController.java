@@ -126,6 +126,9 @@ public class FormController {
             throw new RuntimeException("Need at least country level info");
         }
 
+        if (listener != null) {
+            listener.dataLoadingBegin();
+        }
         requestDataRecursively(ROOT_KEY, subkeys, listener);
     }
 
@@ -135,6 +138,11 @@ public class FormController {
         Util.checkNotNull(subkeys, "Null subkeys not allowed");
 
         mIntegratedData.requestData(key, new DataLoadListener() {
+            // Override
+            public void dataLoadingBegin() {
+                Log.w(TAG, "requesting data for key " + key);
+            }
+
             // Override
             public void dataLoadingEnd() {
                 List<RegionData> subregions = getRegionData(key);
