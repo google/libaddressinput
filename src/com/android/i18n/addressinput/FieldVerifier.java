@@ -64,7 +64,7 @@ public class FieldVerifier {
      * Creates the root field verifier for a particular data source.
      */
     public FieldVerifier(DataSource dataSource) {
-        this.mDataSource = dataSource;
+        mDataSource = dataSource;
         populateRootVerifier();
     }
 

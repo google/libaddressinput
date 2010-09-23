@@ -52,14 +52,14 @@ public class FormOptions {
 
     private FormOptions(Builder builder) {
         // copy values from builder
-        this.mBaseId = builder.baseId;
-        this.mHiddenFields = EnumSet.copyOf(builder.hiddenFields);
-        this.mReadonlyFields = EnumSet.copyOf(builder.readonlyFields);
-        this.mRequiredFields = EnumSet.copyOf(builder.requiredFields);
-        this.mCustomLabels.putAll(builder.customLabels);
-        this.mOverrideFieldOrder.putAll(builder.overrideFieldOrder);
-        this.mMaxLengths.putAll(builder.maxLengths);
-        this.mServerUrl = builder.serverUrl;
+        mBaseId = builder.mBaseId;
+        mHiddenFields = EnumSet.copyOf(builder.mHiddenFields);
+        mReadonlyFields = EnumSet.copyOf(builder.mReadonlyFields);
+        mRequiredFields = EnumSet.copyOf(builder.mRequiredFields);
+        mCustomLabels.putAll(builder.mCustomLabels);
+        mOverrideFieldOrder.putAll(builder.mOverrideFieldOrder);
+        mMaxLengths.putAll(builder.mMaxLengths);
+        mServerUrl = builder.mServerUrl;
     }
 
     /**
@@ -122,29 +122,27 @@ public class FormOptions {
      */
     public static class Builder {
 
-        private String baseId = "addressform";
+        private String mBaseId = "addressform";
 
-        private final EnumSet<AddressField> requiredFields =
+        private final EnumSet<AddressField> mRequiredFields =
                 EnumSet.noneOf(AddressField.class);
 
-        private final EnumSet<AddressField> hiddenFields =
+        private final EnumSet<AddressField> mHiddenFields =
                 EnumSet.noneOf(AddressField.class);
 
-        private final EnumSet<AddressField> readonlyFields =
+        private final EnumSet<AddressField> mReadonlyFields =
                 EnumSet.noneOf(AddressField.class);
 
-        private final EnumMap<AddressField, String> customLabels =
+        private final EnumMap<AddressField, String> mCustomLabels =
                 new EnumMap<AddressField, String>(AddressField.class);
 
-        private final Map<String, AddressField[]> overrideFieldOrder =
+        private final Map<String, AddressField[]> mOverrideFieldOrder =
                 new HashMap<String, AddressField[]>();
 
-        private final EnumMap<AddressField, Integer> maxLengths =
+        private final EnumMap<AddressField, Integer> mMaxLengths =
                 new EnumMap<AddressField, Integer>(AddressField.class);
-        // TODO: When CacheData is ported, need to update this.
 
-        private String serverUrl = "";
-        // private String serverUrl = CacheData.INSTANCE.getUrl();
+        private String mServerUrl = CacheData.getInstance().getUrl();
 
         /**
          * Sets the base ID of the address form.
@@ -153,7 +151,7 @@ public class FormOptions {
             if (baseId == null) {
                 throw new RuntimeException("baseId cannot be null.");
             }
-            this.baseId = baseId;
+            mBaseId = baseId;
             return this;
         }
 
@@ -161,7 +159,7 @@ public class FormOptions {
             if (field == null) {
                 throw new RuntimeException("AddressField field cannot be null.");
             }
-            hiddenFields.add(field);
+            mHiddenFields.add(field);
             return this;
         }
 
@@ -172,7 +170,7 @@ public class FormOptions {
             if (field == null) {
                 throw new RuntimeException("AddressField field cannot be null.");
             }
-            readonlyFields.add(field);
+            mReadonlyFields.add(field);
             return this;
         }
 
@@ -183,7 +181,7 @@ public class FormOptions {
             if (field == null) {
                 throw new RuntimeException("AddressField field cannot be null.");
             }
-            requiredFields.add(field);
+            mRequiredFields.add(field);
             return this;
         }
 
@@ -197,7 +195,7 @@ public class FormOptions {
             if (label == null) {
                 throw new RuntimeException("Label cannot be null.");
             }
-            customLabels.put(field, label);
+            mCustomLabels.put(field, label);
             return this;
         }
 
@@ -230,8 +228,7 @@ public class FormOptions {
          *
          * @param fields the overridden field order.
          */
-        public Builder customizeFieldOrder(String regionCode,
-                AddressField... fields) {
+        public Builder customizeFieldOrder(String regionCode, AddressField... fields) {
             if (regionCode == null) {
                 throw new RuntimeException("regionCode cannot be null.");
             }
@@ -253,7 +250,7 @@ public class FormOptions {
                 f[i] = field;
                 i++;
             }
-            overrideFieldOrder.put(regionCode, f);
+            mOverrideFieldOrder.put(regionCode, f);
             return this;
         }
 
@@ -265,7 +262,7 @@ public class FormOptions {
             if (url == null) {
                 throw new RuntimeException("Can't set address server URL to null.");
             }
-            serverUrl = url;
+            mServerUrl = url;
             return this;
         }
 
@@ -276,7 +273,7 @@ public class FormOptions {
             if (field == null) {
                 throw new RuntimeException("AddressField field cannot be null.");
             }
-            maxLengths.put(field, maxLength);
+            mMaxLengths.put(field, maxLength);
             return this;
         }
 

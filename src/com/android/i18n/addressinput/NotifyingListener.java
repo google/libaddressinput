@@ -20,12 +20,12 @@ package com.android.i18n.addressinput;
  * A helper class to let the calling thread wait until loading has finished.
  */
 public class NotifyingListener implements DataLoadListener {
-    private Object sleeper;
-    private boolean done;
+    private Object mSleeper;
+    private boolean mDone;
 
     public NotifyingListener(Object sleeper) {
-        this.sleeper = sleeper;
-        done = false;
+        mSleeper = sleeper;
+        mDone = false;
     }
 
     public void dataLoadingBegin() {
@@ -33,19 +33,19 @@ public class NotifyingListener implements DataLoadListener {
 
     public void dataLoadingEnd() {
         synchronized (this) {
-            done = true;
+            mDone = true;
         }
-        synchronized (sleeper) {
-            sleeper.notify();
+        synchronized (mSleeper) {
+            mSleeper.notify();
         }
     }
 
     public void waitLoadingEnd() throws InterruptedException {
         synchronized (this) {
-            if (done) return;
+            if (mDone) return;
         }
-        synchronized (sleeper) {
-            sleeper.wait();
+        synchronized (mSleeper) {
+            mSleeper.wait();
         }
     }
 }

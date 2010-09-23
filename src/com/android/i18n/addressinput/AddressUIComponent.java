@@ -66,7 +66,7 @@ public class AddressUIComponent {
      * @param candidatesList
      */
     public void initializeCandidatesList(List<RegionData> candidatesList) {
-        this.mCandidatesList = candidatesList;
+        mCandidatesList = candidatesList;
         if (candidatesList.size() > 1) {
             mUiType = UIComponent.SPINNER;
             switch (mId) {

@@ -99,15 +99,15 @@ public enum FieldNameType {
     private final String mKeyname;
 
     private FieldNameType(AddressField field) {
-        this.mField = field;
+        mField = field;
 
-        String name = this.name();
-        this.mKeyname = name.substring(name.indexOf('_') + 1).toLowerCase();
+        String name = name();
+        mKeyname = name.substring(name.indexOf('_') + 1).toLowerCase();
     }
 
     private FieldNameType(AddressField field, String keyname) {
-        this.mField = field;
-        this.mKeyname = keyname;
+        mField = field;
+        mKeyname = keyname;
     }
 
     private static final Map<String, FieldNameType> map = new HashMap<String, FieldNameType>();

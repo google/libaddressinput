@@ -47,7 +47,7 @@ public class FormatInterpreter {
         Util.checkNotNull(RegionDataConstants.getCountryFormatMap(),
                 "null country name map not allowed");
         Util.checkNotNull(options);
-        this.mFormOptions = options;
+        mFormOptions = options;
         mDefaultFormat = getJsonValue("ZZ", AddressDataKey.FMT);
         Util.checkNotNull(mDefaultFormat, "null default format not allowed");
     }

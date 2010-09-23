@@ -47,7 +47,7 @@ public class JsonpRequestBuilder {
      * @param timeout The expected timeout (ms) for this request.
      */
     public void setTimeout(int timeout) {
-        HttpParams params = AsyncHttp.client.getParams();
+        HttpParams params = AsyncHttp.mClient.getParams();
         HttpConnectionParams.setConnectionTimeout(params, timeout);
         HttpConnectionParams.setSoTimeout(params, timeout);
     }
@@ -65,26 +65,26 @@ public class JsonpRequestBuilder {
      */
     private static class AsyncHttp extends Thread {
 
-        private static final HttpClient client = new DefaultHttpClient();
+        private static final HttpClient mClient = new DefaultHttpClient();
 
-        private HttpUriRequest request;
+        private HttpUriRequest mRequest;
 
-        private AsyncCallback<JsoMap> callback;
+        private AsyncCallback<JsoMap> mCallback;
 
         protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
-            this.request = request;
-            this.callback = callback;
+            mRequest = request;
+            mCallback = callback;
         }
 
         public void run() {
             try {
                 final String response;
-                synchronized (client) {
-                    response = client.execute(request, new BasicResponseHandler());
+                synchronized (mClient) {
+                    response = mClient.execute(mRequest, new BasicResponseHandler());
                 }
-                callback.onSuccess(JsoMap.buildJsoMap(response));
+                mCallback.onSuccess(JsoMap.buildJsoMap(response));
             } catch (Exception e) {
-                callback.onFailure(e);
+                mCallback.onFailure(e);
             }
         }
     }

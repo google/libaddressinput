@@ -111,14 +111,14 @@ public final class CacheData {
         /**
          * Key for the requested data.
          */
-        private final String key;
+        private final String mKey;
 
         /**
          * Pre-existing data for the requested key. Null is allowed.
          */
-        private final JSONObject existingJso;
+        private final JSONObject mExistingJso;
 
-        private final DataLoadListener listener;
+        private final DataLoadListener mListener;
 
         /**
          * Constructs a JsonHandler instance.
@@ -126,12 +126,11 @@ public final class CacheData {
          * @param key    The key for requested data.
          * @param oldJso Pre-existing data for this key or null.
          */
-        private JsonHandler(String key, JSONObject oldJso,
-                DataLoadListener listener) {
+        private JsonHandler(String key, JSONObject oldJso, DataLoadListener listener) {
             checkNotNull(key);
-            this.key = key;
-            this.existingJso = oldJso;
-            this.listener = listener;
+            mKey = key;
+            mExistingJso = oldJso;
+            mListener = listener;
         }
 
         /**
@@ -145,32 +144,32 @@ public final class CacheData {
         private void handleJson(JsoMap map) {
             // Can this ever happen?
             if (map == null) {
-                Log.w(sTag, "server returns null for key:" + key);
-                mBadKeys.add(key);
-                notifyListenersAfterJobDone(key);
-                triggerDataLoadingEndIfNotNull(listener);
+                Log.w(sTag, "server returns null for key:" + mKey);
+                mBadKeys.add(mKey);
+                notifyListenersAfterJobDone(mKey);
+                triggerDataLoadingEndIfNotNull(mListener);
                 return;
             }
 
             JSONObject json = map;
             String idKey = AddressDataKey.ID.name().toLowerCase();
             if (!json.has(idKey)) {
-                Log.w(sTag, "invalid or empty data returned for key: " + key);
-                mBadKeys.add(key);
-                notifyListenersAfterJobDone(key);
-                triggerDataLoadingEndIfNotNull(listener);
+                Log.w(sTag, "invalid or empty data returned for key: " + mKey);
+                mBadKeys.add(mKey);
+                notifyListenersAfterJobDone(mKey);
+                triggerDataLoadingEndIfNotNull(mListener);
                 return;
             }
 
-            if (existingJso != null) {
-                map.mergeData((JsoMap) existingJso);
+            if (mExistingJso != null) {
+                map.mergeData((JsoMap) mExistingJso);
             }
 
-            Log.w(sTag, "put the following key/value pair into cache. key:" + key
+            Log.w(sTag, "put the following key/value pair into cache. key:" + mKey
                     + ", value:" + map.string());
-            mCache.putObj(key, map);
-            notifyListenersAfterJobDone(key);
-            triggerDataLoadingEndIfNotNull(listener);
+            mCache.putObj(mKey, map);
+            notifyListenersAfterJobDone(mKey);
+            triggerDataLoadingEndIfNotNull(mListener);
         }
     }
 
@@ -213,8 +212,7 @@ public final class CacheData {
      * @param existingJso Pre-existing data for this key or null if none.
      * @param listener    An optional listener to call when done.
      */
-    void fetchDynamicData(final LookupKey key,
-            JSONObject existingJso,
+    void fetchDynamicData(final LookupKey key, JSONObject existingJso,
             final DataLoadListener listener) {
         checkNotNull(key, "null key not allowed.");
 

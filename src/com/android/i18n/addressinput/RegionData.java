@@ -37,8 +37,8 @@ public class RegionData {
      */
     private RegionData(RegionData data) {
         Util.checkNotNull(data);
-        this.mKey = data.mKey;
-        this.mName = data.mName;
+        mKey = data.mKey;
+        mName = data.mName;
     }
 
     /**
