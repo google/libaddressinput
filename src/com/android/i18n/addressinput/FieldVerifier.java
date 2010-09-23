@@ -166,8 +166,9 @@ public class FieldVerifier {
         if (Util.trimToNull(sublevel) == null) {
             return new FieldVerifier(this, null);
         }
+        // If the parent node didn't exist, then the subLevelName will start with "null".
         String subLevelName = mId + sKeyDelimiter + sublevel;
-        // For names with no latin equivalent, we can look up the sublevel name directly.
+        // For names with no Latin equivalent, we can look up the sublevel name directly.
         AddressVerificationNodeData nodeData = mDataSource.get(subLevelName);
         if (nodeData != null) {
             return new FieldVerifier(this, nodeData);

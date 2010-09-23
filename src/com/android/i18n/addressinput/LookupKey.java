@@ -240,6 +240,15 @@ public final class LookupKey {
         return mKeyString.hashCode();
     }
 
+    public static boolean hasValidKeyPrefix(String key) {
+        for (KeyType type : KeyType.values()) {
+            if (key.startsWith(type.name().toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Builds lookup keys.
      */

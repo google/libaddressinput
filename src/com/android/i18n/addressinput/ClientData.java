@@ -184,11 +184,15 @@ public class ClientData implements DataSource {
             // If there is bootstrap data for the key, pass the data to fetchDynamicData
             JsoMap regionalData = mBootstrapMap.get(key);
             NotifyingListener listener = new NotifyingListener(this);
-            mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData, listener);
-            try {
-                listener.waitLoadingEnd();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            // If the key was invalid, we don't want to attempt to fetch it.
+            if (LookupKey.hasValidKeyPrefix(key)) {
+                mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData,
+                                            listener);
+                try {
+                    listener.waitLoadingEnd();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
