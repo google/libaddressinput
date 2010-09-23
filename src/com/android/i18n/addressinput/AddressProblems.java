@@ -24,11 +24,8 @@ import java.util.Map;
  */
 public class AddressProblems {
 
-    private Map<AddressField, AddressProblemType> mProblems;
-
-    public AddressProblems() {
-        mProblems = new HashMap<AddressField, AddressProblemType>();
-    }
+    private Map<AddressField, AddressProblemType> mProblems =
+        new HashMap<AddressField, AddressProblemType>();
 
     /**
      * Only one address problem type is saved per addressField. Address field as used here refers to

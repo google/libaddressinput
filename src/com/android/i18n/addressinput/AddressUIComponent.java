@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Represents a component in the address widget UI. It could be either a text box (when there is no
- * candidate) or a select box.
+ * candidate) or a spinner.
  */
 public class AddressUIComponent {
     // The label for the UI component

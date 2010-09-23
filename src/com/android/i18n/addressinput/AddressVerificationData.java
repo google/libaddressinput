@@ -31,9 +31,9 @@ public class AddressVerificationData implements DataSource{
 
     private final Map<String, String> mPropertiesMap;
 
-    private static final Pattern sKeyValuesPattern = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
+    private static final Pattern KEY_VALUES_PATTERN = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
 
-    private static final Pattern sSeparatorPattern = Pattern.compile("\",\"");
+    private static final Pattern SEPARATOR_PATTERN = Pattern.compile("\",\"");
 
     /**
      * Constructs from a map of address property data.  This keeps a reference to the map.  This
@@ -66,8 +66,8 @@ public class AddressVerificationData implements DataSource{
     }
 
     /**
-     * We can be initialized with the full set of address information, but validation only uses info
-     * prefixed with "data" (in particular, no info prefixed with "examples").
+     * We can be initialized with the full set of address information, but validation only uses
+     * info prefixed with "data" (in particular, no info prefixed with "examples").
      */
     private boolean isValidKey(String key) {
         return key.startsWith("data");
@@ -86,7 +86,7 @@ public class AddressVerificationData implements DataSource{
         // - no double quotes within strings
         // - no extra spaces
         // can't use split "," since some data has commas in it.
-        Matcher sm = sSeparatorPattern.matcher(json);
+        Matcher sm = SEPARATOR_PATTERN.matcher(json);
         int pos = 0;
         while (pos < json.length()) {
             String pair;
@@ -98,7 +98,7 @@ public class AddressVerificationData implements DataSource{
                 pos = json.length();
             }
 
-            Matcher m = sKeyValuesPattern.matcher(pair);
+            Matcher m = KEY_VALUES_PATTERN.matcher(pair);
             if (m.matches()) {
                 String value = m.group(2);
 

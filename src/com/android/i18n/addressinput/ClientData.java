@@ -205,7 +205,6 @@ public class ClientData implements DataSource {
     public void prefetchCountry(String country, DataLoadListener listener) {
         String key = "data/" + country;
         Set<RecursiveLoader> loaders = new HashSet<RecursiveLoader>();
-        listener.dataLoadingBegin();
         mCacheData.fetchDynamicData(
                 new LookupKey.Builder(key).build(),
                 null,

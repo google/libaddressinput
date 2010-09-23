@@ -20,9 +20,6 @@ package com.android.i18n.addressinput;
  * Invoked when the data is fetched from the server or the cache.
  */
 public interface DataLoadListener {
-
-    void dataLoadingBegin();
-
+    // This callback is invoked from a background thread.
     void dataLoadingEnd();
-
 }

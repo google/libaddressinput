@@ -41,7 +41,7 @@ public final class CacheData {
     /**
      * Time out value for the server to respond in millisecond.
      */
-    private final int mTimeout = 5000;
+    private final int mTimeout = 1000;
 
     /**
      * CacheData singleton.
@@ -198,6 +198,7 @@ public final class CacheData {
         return mCache.containsKey(key);
     }
 
+    // This method is called from a background thread.
     private void triggerDataLoadingEndIfNotNull(DataLoadListener listener) {
         if (listener != null) {
             listener.dataLoadingEnd();
@@ -216,10 +217,6 @@ public final class CacheData {
             JSONObject existingJso,
             final DataLoadListener listener) {
         checkNotNull(key, "null key not allowed.");
-
-        if (listener != null) {
-            listener.dataLoadingBegin();
-        }
 
         // Key is valid and cached.
         if (mCache.containsKey(key.toString())) {

@@ -32,25 +32,24 @@ import java.util.Queue;
  */
 public class FormController {
     // Used to identify the source of a log message.
-    private static final String sTag = "FormController";
+    private static final String TAG = "FormController";
     // For address hierarchy in lookup key.
-    private static final String sSlashDelim = "/";
+    private static final String SLASH_DELIM = "/";
     // For joined values.
-    private static final String sTildaDelim = "~";
+    private static final String TILDA_DELIM = "~";
     // For language code info in lookup key (E.g., data/CA--fr).
-    private static final String sDashDelim = "--";
-    // Current user language.
-    private String mLanguageCode;
-    private static final LookupKey sRootKey = FormController.getDataKeyForRoot();
-    private static final String sDefaultRegionCode = "ZZ";
-    
-    private static final AddressField[] sAddressHierarchy = {
+    private static final String DASH_DELIM = "--";
+    private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
+    private static final String DEFAULT_REGION_CODE = "ZZ";
+    private static final AddressField[] ADDRESS_HIERARCHY = {
             AddressField.COUNTRY,
             AddressField.ADMIN_AREA,
             AddressField.LOCALITY,
             AddressField.DEPENDENT_LOCALITY
     };
 
+    // Current user language.
+    private String mLanguageCode;
     private ClientData mIntegratedData;
     private String mCurrentCountry;
 
@@ -64,7 +63,7 @@ public class FormController {
         mLanguageCode = languageCode;
         this.mCurrentCountry = currentCountry;
 
-        AddressData address = new AddressData.Builder().setCountry(sDefaultRegionCode).build();
+        AddressData address = new AddressData.Builder().setCountry(DEFAULT_REGION_CODE).build();
         LookupKey defaultCountryKey = getDataKeyFor(address);
 
         AddressVerificationNodeData defaultCountryData =
@@ -116,7 +115,7 @@ public class FormController {
         // Gets the key for deepest available node.
         Queue<String> subkeys = new LinkedList<String>();
 
-        for (AddressField field : sAddressHierarchy) {
+        for (AddressField field : ADDRESS_HIERARCHY) {
             String value = address.getFieldValue(field);
             if (value == null) {
                 break;
@@ -127,10 +126,7 @@ public class FormController {
             throw new RuntimeException("Need at least country level info");
         }
 
-        if (listener != null) {
-            listener.dataLoadingBegin();
-        }
-        requestDataRecursively(sRootKey, subkeys, listener);
+        requestDataRecursively(ROOT_KEY, subkeys, listener);
     }
 
     private void requestDataRecursively(final LookupKey key,
@@ -139,17 +135,11 @@ public class FormController {
         Util.checkNotNull(subkeys, "Null subkeys not allowed");
 
         mIntegratedData.requestData(key, new DataLoadListener() {
-
-            // Override
-            public void dataLoadingBegin() {
-                Log.w(sTag, "requesting data for key " + key);
-            }
-
             // Override
             public void dataLoadingEnd() {
                 List<RegionData> subregions = getRegionData(key);
                 if (subregions.isEmpty()) {
-                    Log.w(sTag, "recursion ends with key " + key);
+                    Log.w(TAG, "recursion ends with key " + key);
                     if (listener != null) {
                         listener.dataLoadingEnd();
                     }
@@ -177,15 +167,15 @@ public class FormController {
     }
 
     private LookupKey buildDataLookupKey(LookupKey lookupKey, String subKey) {
-        String[] subKeys = lookupKey.toString().split(sSlashDelim);
+        String[] subKeys = lookupKey.toString().split(SLASH_DELIM);
         String languageCodeSubTag =
                 (mLanguageCode == null) ? null : Util.getLanguageSubtag(mLanguageCode);
-        String key = lookupKey.toString() + sSlashDelim + subKey;
+        String key = lookupKey.toString() + SLASH_DELIM + subKey;
 
         // Country level key
         if (subKeys.length == 1 &&
                 languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
-            key += sDashDelim + languageCodeSubTag.toString();
+            key += DASH_DELIM + languageCodeSubTag.toString();
         }
         return new LookupKey.Builder(key).build();
     }
@@ -231,7 +221,7 @@ public class FormController {
         List<RegionData> results = new ArrayList<RegionData>();
 
         // Root key.
-        if (normalizedKey.equals(sRootKey)) {
+        if (normalizedKey.equals(ROOT_KEY)) {
             AddressVerificationNodeData data =
                     mIntegratedData.getDefaultData(normalizedKey.toString());
             String[] countries = splitData(data.get(AddressDataKey.COUNTRIES));
@@ -276,7 +266,7 @@ public class FormController {
         if (raw == null || raw.length() == 0) {
             return new String[]{};
         }
-        return raw.split(sTildaDelim);
+        return raw.split(TILDA_DELIM);
     }
 
     private String getSubKey(LookupKey parentKey, String name) {
@@ -304,7 +294,7 @@ public class FormController {
             throw new RuntimeException("Only DATA keyType is supported");
         }
 
-        String subStr[] = key.toString().split(sSlashDelim);
+        String subStr[] = key.toString().split(SLASH_DELIM);
 
         // Root key does not need to be normalized.
         if (subStr.length < 2) {
@@ -315,8 +305,8 @@ public class FormController {
         for (int i = 1; i < subStr.length; ++i) {
             // Strips the language code if contained.
             String languageCode = null;
-            if (i == 1 && subStr[i].contains(sDashDelim)) {
-                String[] s = subStr[i].split(sDashDelim);
+            if (i == 1 && subStr[i].contains(DASH_DELIM)) {
+                String[] s = subStr[i].split(DASH_DELIM);
                 subStr[i] = s[0];
                 languageCode = s[1];
             }
@@ -328,13 +318,13 @@ public class FormController {
             // remaining sub-keys and returns it.
             if (normalizedSubKey == null) {
                 for (; i < subStr.length; ++i) {
-                    sb.append(sSlashDelim).append(subStr[i]);
+                    sb.append(SLASH_DELIM).append(subStr[i]);
                 }
                 break;
             }
-            sb.append(sSlashDelim).append(normalizedSubKey);
+            sb.append(SLASH_DELIM).append(normalizedSubKey);
             if (languageCode != null) {
-                sb.append(sDashDelim).append(languageCode);
+                sb.append(DASH_DELIM).append(languageCode);
             }
         }
         return new LookupKey.Builder(sb.toString()).build();
