@@ -22,14 +22,16 @@ import junit.framework.TestCase;
  * Spot check the standard data set for various cases of interest. This is
  * not an exhaustive test.
  */
-public class MarketVerifierTest extends TestCase {
+public class StandardAddressVerifierTest extends TestCase {
 
   private AddressProblems problems = new AddressProblems();
-  private MarketVerifier verifier;
+  private StandardAddressVerifier verifier;
 
   protected void setUp() {
     problems.clear();
-    verifier = new MarketVerifier();
+    verifier = new StandardAddressVerifier(
+            new FieldVerifier(new ClientData(CacheData.getInstance())),
+            StandardChecks.PROBLEM_MAP);
   }
 
   public void testUnitedStatesOk() {
