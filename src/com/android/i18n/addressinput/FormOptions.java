@@ -142,7 +142,10 @@ public class FormOptions {
         private final EnumMap<AddressField, Integer> mMaxLengths =
                 new EnumMap<AddressField, Integer>(AddressField.class);
 
-        private String mServerUrl = CacheData.getInstance().getUrl();
+        /**
+         * Uses the default server URL from CacheData.
+         */
+        private String mServerUrl = new CacheData().getUrl();
 
         /**
          * Sets the base ID of the address form.

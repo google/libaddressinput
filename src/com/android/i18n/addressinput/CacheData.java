@@ -44,11 +44,6 @@ public final class CacheData {
     private final int mTimeout = 1000;
 
     /**
-     * CacheData singleton.
-     */
-    private static final CacheData sInstance = new CacheData();
-
-    /**
      * URL to get public address data.
      */
     private static final String sPublicAddressDataServer =
@@ -62,7 +57,7 @@ public final class CacheData {
     /**
      * Storage for all dynamically retrieved data.
      */
-    private final JsoMap mCache = JsoMap.createEmptyJsoMap();
+    private final JsoMap mCache;
 
     /**
      * All requests that have been sent.
@@ -84,11 +79,14 @@ public final class CacheData {
             new HashMap<LookupKey, HashSet<CacheListener>>();
 
     /**
-     * Private constructor - singleton class.
+     * Creates an instance of CacheData with an empty cache.
      */
-    private CacheData() {
+    public CacheData() {
+        // TODO(AAW): Replace with a call to this other constructor when it exists.
+        mCache = JsoMap.createEmptyJsoMap();
+        // this(JsoMap.createEmptyJsoMap());
     }
-
+    
     /**
      * Interface for all listeners to {@link CacheData} change. This is only used when multiple
      * requests of the same key is dispatched and server has not responded yet.
@@ -262,13 +260,6 @@ public final class CacheData {
                         handler.handleJson(result);
                     }
                 });
-    }
-
-    /**
-     * Gets the instance of CacheData.
-     */
-    public static CacheData getInstance() {
-        return sInstance;
     }
 
     /**

@@ -30,7 +30,7 @@ public class StandardAddressVerifierTest extends TestCase {
   protected void setUp() {
     problems.clear();
     verifier = new StandardAddressVerifier(
-            new FieldVerifier(new ClientData(CacheData.getInstance())),
+            new FieldVerifier(new ClientData(new CacheData())),
             StandardChecks.PROBLEM_MAP);
   }
 
