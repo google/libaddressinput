@@ -36,7 +36,7 @@ public class FormController {
     // For address hierarchy in lookup key.
     private static final String SLASH_DELIM = "/";
     // For joined values.
-    private static final String TILDA_DELIM = "~";
+    private static final String TILDE_DELIM = "~";
     // For language code info in lookup key (E.g., data/CA--fr).
     private static final String DASH_DELIM = "--";
     private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
@@ -274,7 +274,7 @@ public class FormController {
         if (raw == null || raw.length() == 0) {
             return new String[]{};
         }
-        return raw.split(TILDA_DELIM);
+        return raw.split(TILDE_DELIM);
     }
 
     private String getSubKey(LookupKey parentKey, String name) {

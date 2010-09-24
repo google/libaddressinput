@@ -397,16 +397,16 @@ public class RegionDataConstants {
         }
     }
 
-    private static final Map<String, String> sCountryFormatMap =
+    private static final Map<String, String> COUNTRY_FORMAT_MAP =
             new HashMap<String, String>();
 
     static {
         for (RegionDataEnum region : RegionDataEnum.values()) {
-            sCountryFormatMap.put(region.toString(), region.getJsonString());
+            COUNTRY_FORMAT_MAP.put(region.toString(), region.getJsonString());
         }
     }
 
     public static Map<String, String> getCountryFormatMap() {
-        return sCountryFormatMap;
+        return COUNTRY_FORMAT_MAP;
     }
 }

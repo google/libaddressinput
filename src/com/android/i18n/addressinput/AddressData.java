@@ -57,17 +57,17 @@ public class AddressData {
     // ISO 3166-1-alpha-2 country code (two letter codes, as used in DNS)
     // For example, "US" for United States.
     // (Note: Use "GB", not "UK", for Great Britain)
-    private final String postalCountry;
+    private final String mPostalCountry;
 
     // street street, line 1
-    private final String addressLine1;
+    private final String mAddressLine1;
 
     // street street, line 2
-    private final String addressLine2;
+    private final String mAddressLine2;
 
     // Top-level administrative subdivision of this country.
     // Examples: US state, IT region, UK constituent nation, JP prefecture.
-    private final String administrativeArea;
+    private final String mAdministrativeArea;
 
     // Locality. A fuzzy term, but it generally refers to
     // the city/town portion of an address.  In regions of the world where
@@ -75,52 +75,52 @@ public class AddressData {
     // (for example, Japan and China), leave locality empty and use
     // addressLine1.
     // Examples: US city, IT comune, UK post town.
-    private final String locality;
+    private final String mLocality;
 
     // Dependent locality or sublocality.  Used for UK dependent localities,
     // or neighborhoods or boroughs in other locations.  If trying to
     // represent a UK double-dependent locality, include both the
     // double-dependent locality and the dependent locality in this field,
     // e.g. "Whaley, Langwith".
-    private final String dependentLocality;
+    private final String mDependentLocality;
 
     // Postal Code. values are frequently alphanumeric.
     // Examples: "94043", "94043-1351", "SW1W", "SW1W 9TQ".
-    private final String postalCode;
+    private final String mPostalCode;
 
     // Sorting code - use is very country-specific.
     // This corresponds to the SortingCode sub-element of the xAL
     // PostalServiceElements element.
     // Examples: FR CEDEX.
-    private final String sortingCode;
+    private final String mSortingCode;
 
     // The firm or organization. This goes at a finer granularity than
     // address lines in the address. Omit if not needed.
-    private final String organization;
+    private final String mOrganization;
 
     // The recipient. This goes at a finer granularity than address lines
     // in the address. Not present in xAL. Omit if not needed.
-    private final String recipient;
+    private final String mRecipient;
 
     // Language code of the address. Can be set to null. See its getter and setter
     // for more information.
-    private final String languageCode;
+    private final String mLanguageCode;
 
     /**
      * Use {@link Builder} to create instances.
      */
     private AddressData(Builder builder) {
-        postalCountry = builder.values.get(AddressField.COUNTRY);
-        administrativeArea = builder.values.get(AddressField.ADMIN_AREA);
-        locality = builder.values.get(AddressField.LOCALITY);
-        dependentLocality = builder.values.get(AddressField.DEPENDENT_LOCALITY);
-        postalCode = builder.values.get(AddressField.POSTAL_CODE);
-        sortingCode = builder.values.get(AddressField.SORTING_CODE);
-        organization = builder.values.get(AddressField.ORGANIZATION);
-        recipient = builder.values.get(AddressField.RECIPIENT);
-        addressLine1 = builder.values.get(AddressField.ADDRESS_LINE_1);
-        addressLine2 = builder.values.get(AddressField.ADDRESS_LINE_2);
-        languageCode = builder.languageCode;
+        mPostalCountry = builder.mValues.get(AddressField.COUNTRY);
+        mAdministrativeArea = builder.mValues.get(AddressField.ADMIN_AREA);
+        mLocality = builder.mValues.get(AddressField.LOCALITY);
+        mDependentLocality = builder.mValues.get(AddressField.DEPENDENT_LOCALITY);
+        mPostalCode = builder.mValues.get(AddressField.POSTAL_CODE);
+        mSortingCode = builder.mValues.get(AddressField.SORTING_CODE);
+        mOrganization = builder.mValues.get(AddressField.ORGANIZATION);
+        mRecipient = builder.mValues.get(AddressField.RECIPIENT);
+        mAddressLine1 = builder.mValues.get(AddressField.ADDRESS_LINE_1);
+        mAddressLine2 = builder.mValues.get(AddressField.ADDRESS_LINE_2);
+        mLanguageCode = builder.mLanguage;
     }
 
     /**
@@ -130,15 +130,15 @@ public class AddressData {
      * return {@code "GB"}, while addresses in Great Britain should be displayed using "UK".
      */
     public String getPostalCountry() {
-        return postalCountry;
+        return mPostalCountry;
     }
 
     public String getAddressLine1() {
-        return addressLine1;
+        return mAddressLine1;
     }
 
     public String getAddressLine2() {
-        return addressLine2;
+        return mAddressLine2;
     }
 
     /**
@@ -148,7 +148,7 @@ public class AddressData {
      * "prefecture" in Japan.
      */
     public String getAdministrativeArea() {
-        return administrativeArea;
+        return mAdministrativeArea;
     }
 
     /**
@@ -158,7 +158,7 @@ public class AddressData {
      * called "city" in the United States, "comune" in Italy, or "post town" in Great Britain.
      */
     public String getLocality() {
-        return locality;
+        return mLocality;
     }
 
     /**
@@ -171,21 +171,21 @@ public class AddressData {
      * as "Whaley, Langwith".
      */
     public String getDependentLocality() {
-        return dependentLocality;
+        return mDependentLocality;
     }
 
     /**
      * Returns the firm or organization.
      */
     public String getOrganization() {
-        return organization;
+        return mOrganization;
     }
 
     /**
      * Returns the recipient. Examples: "Jesse Wilson" or "Jesse Wilson c/o Apurva Mathad".
      */
     public String getRecipient() {
-        return recipient;
+        return mRecipient;
     }
 
     /**
@@ -193,7 +193,7 @@ public class AddressData {
      * "SW1W 9TQ".
      */
     public String getPostalCode() {
-        return postalCode;
+        return mPostalCode;
     }
 
     /**
@@ -201,31 +201,31 @@ public class AddressData {
      * <a href="http://en.wikipedia.org/wiki/List_of_postal_codes_in_France"> French CEDEX</a>
      */
     public String getSortingCode() {
-        return sortingCode;
+        return mSortingCode;
     }
 
     public String getFieldValue(AddressField field) {
         switch (field) {
             case COUNTRY:
-                return postalCountry;
+                return mPostalCountry;
             case ADMIN_AREA:
-                return administrativeArea;
+                return mAdministrativeArea;
             case LOCALITY:
-                return locality;
+                return mLocality;
             case DEPENDENT_LOCALITY:
-                return dependentLocality;
+                return mDependentLocality;
             case POSTAL_CODE:
-                return postalCode;
+                return mPostalCode;
             case SORTING_CODE:
-                return sortingCode;
+                return mSortingCode;
             case ADDRESS_LINE_1:
-                return addressLine1;
+                return mAddressLine1;
             case ADDRESS_LINE_2:
-                return addressLine2;
+                return mAddressLine2;
             case ORGANIZATION:
-                return organization;
+                return mOrganization;
             case RECIPIENT:
-                return recipient;
+                return mRecipient;
             default:
                 throw new IllegalArgumentException("unrecognized key: " + field);
         }
@@ -238,7 +238,7 @@ public class AddressData {
      * different languages. For example, the French name of "New Mexico" is "Nouveau-Mexique".
      */
     public String getLanguageCode() {
-        return languageCode;
+        return mLanguageCode;
     }
 
     /**
@@ -246,12 +246,12 @@ public class AddressData {
      */
     public static class Builder {
 
-        private final Map<AddressField, String> values;
+        private final Map<AddressField, String> mValues;
 
-        private String languageCode = null;
+        private String mLanguage = null;
 
         public Builder() {
-            values = new HashMap<AddressField, String>();
+            mValues = new HashMap<AddressField, String>();
         }
 
         /**
@@ -261,7 +261,7 @@ public class AddressData {
          * has a value, this method will copy street line 2's value and set it to street line 1.
          */
         public Builder(AddressData addr) {
-            values = new HashMap<AddressField, String>();
+            mValues = new HashMap<AddressField, String>();
             set(addr);
         }
 
@@ -295,7 +295,7 @@ public class AddressData {
          * @param languageCode the language to use, or {@code null} for no specified language.
          */
         public Builder setLanguageCode(String languageCode) {
-            this.languageCode = languageCode;
+            this.mLanguage = languageCode;
             return this;
         }
 
@@ -319,7 +319,7 @@ public class AddressData {
          * this method will copy street line 2's value and set it to street line 1.
          */
         public Builder set(AddressData data) {
-            values.clear();
+            mValues.clear();
             for (AddressField addressField : AddressField.values()) {
                 if (addressField == AddressField.STREET_ADDRESS) {
                     continue;  // Do nothing.
@@ -355,9 +355,9 @@ public class AddressData {
          */
         public Builder set(AddressField field, String value) {
             if (value == null || value.length() == 0) {
-                values.remove(field);
+                mValues.remove(field);
             } else {
-                values.put(field, value.trim());
+                mValues.put(field, value.trim());
             }
             normalizeAddresses();
             return this;
@@ -374,8 +374,8 @@ public class AddressData {
          * saved in address_line_2.
          */
         private void normalizeAddresses() {
-            String address1 = values.get(AddressField.ADDRESS_LINE_1);
-            String address2 = values.get(AddressField.ADDRESS_LINE_2);
+            String address1 = mValues.get(AddressField.ADDRESS_LINE_1);
+            String address2 = mValues.get(AddressField.ADDRESS_LINE_2);
             if (address1 == null || address1.trim().length() == 0) {
                 address1 = address2;
                 address2 = null;
@@ -387,8 +387,8 @@ public class AddressData {
                     address2 = addressLines[1];
                 }
             }
-            values.put(AddressField.ADDRESS_LINE_1, address1);
-            values.put(AddressField.ADDRESS_LINE_2, address2);
+            mValues.put(AddressField.ADDRESS_LINE_1, address1);
+            mValues.put(AddressField.ADDRESS_LINE_2, address2);
         }
     }
 }

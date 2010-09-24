@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
  */
 public class FieldVerifier {
     // Node data values are delimited by this symbol.
-    private static final String sDataDelimiter = "~";
+    private static final String DATA_DELIMITER = "~";
     // Keys are built up using this delimiter: eg data/US, data/US/CA.
-    private static final String sKeyDelimiter = "/";
+    private static final String KEY_DELIMITER = "/";
 
     private String mId;
     private DataSource mDataSource;
@@ -98,7 +98,7 @@ public class FieldVerifier {
         // Keys come from the countries under "data".
         AddressVerificationNodeData rootNode = mDataSource.getDefaultData("data");
         if (rootNode.containsKey(AddressDataKey.COUNTRIES)) {
-            mKeys = rootNode.get(AddressDataKey.COUNTRIES).split(sDataDelimiter);
+            mKeys = rootNode.get(AddressDataKey.COUNTRIES).split(DATA_DELIMITER);
         }
         // candidateValues is just the set of keys.
         mCandidateValues = Util.buildNameToKeyMap(mKeys, null, null);
@@ -128,13 +128,13 @@ public class FieldVerifier {
             mId = nodeData.get(AddressDataKey.ID);
         }
         if (nodeData.containsKey(AddressDataKey.SUB_KEYS)) {
-            mKeys = nodeData.get(AddressDataKey.SUB_KEYS).split(sDataDelimiter);
+            mKeys = nodeData.get(AddressDataKey.SUB_KEYS).split(DATA_DELIMITER);
         }
         if (nodeData.containsKey(AddressDataKey.SUB_LNAMES)) {
-            mLatinNames = nodeData.get(AddressDataKey.SUB_LNAMES).split(sDataDelimiter);
+            mLatinNames = nodeData.get(AddressDataKey.SUB_LNAMES).split(DATA_DELIMITER);
         }
         if (nodeData.containsKey(AddressDataKey.SUB_NAMES)) {
-            mLocalNames = nodeData.get(AddressDataKey.SUB_NAMES).split(sDataDelimiter);
+            mLocalNames = nodeData.get(AddressDataKey.SUB_NAMES).split(DATA_DELIMITER);
         }
         if (nodeData.containsKey(AddressDataKey.FMT)) {
             mPossibleFields = parseAddressFields(nodeData.get(AddressDataKey.FMT));
@@ -167,7 +167,7 @@ public class FieldVerifier {
             return new FieldVerifier(this, null);
         }
         // If the parent node didn't exist, then the subLevelName will start with "null".
-        String subLevelName = mId + sKeyDelimiter + sublevel;
+        String subLevelName = mId + KEY_DELIMITER + sublevel;
         // For names with no Latin equivalent, we can look up the sublevel name directly.
         AddressVerificationNodeData nodeData = mDataSource.get(subLevelName);
         if (nodeData != null) {
@@ -182,7 +182,7 @@ public class FieldVerifier {
             if (mLatinNames[n].equalsIgnoreCase(sublevel)) {
                 // We found a match - we should try looking up a key with the local name at the same
                 // index.
-                subLevelName = mId + sKeyDelimiter + mLocalNames[n];
+                subLevelName = mId + KEY_DELIMITER + mLocalNames[n];
                 nodeData = mDataSource.get(subLevelName);
                 if (nodeData != null) {
                     return new FieldVerifier(this, nodeData);
@@ -350,6 +350,6 @@ public class FieldVerifier {
      */
     private boolean isCountryKey() {
         Util.checkNotNull(mId, "Cannot use null as key");
-        return mId.split(sKeyDelimiter).length == 2;
+        return mId.split(KEY_DELIMITER).length == 2;
     }
 }

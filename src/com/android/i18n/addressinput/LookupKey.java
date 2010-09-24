@@ -82,17 +82,17 @@ public final class LookupKey {
      * The universal address hierarchy. Notice that sub-administrative area is neglected here since
      * it is not required to fill out address form.
      */
-    private static AddressField[] sHierarchy = {
+    private static final AddressField[] HIERARCHY = {
             AddressField.COUNTRY,
             AddressField.ADMIN_AREA,
             AddressField.LOCALITY,
             AddressField.DEPENDENT_LOCALITY};
 
-    private static final String sSlashDelim = "/";
+    private static final String SLASH_DELIM = "/";
 
-    private static final String sDashDelim = "--";
+    private static final String DASH_DELIM = "--";
 
-    private static final String sDefaultLanguage = "_default";
+    private static final String DEFAULT_LANGUAGE = "_default";
 
     private final KeyType mKeyType;
 
@@ -132,7 +132,7 @@ public final class LookupKey {
 
         boolean removeNode = false;
         boolean fieldInHierarchy = false;
-        for (AddressField hierarchyField : sHierarchy) {
+        for (AddressField hierarchyField : HIERARCHY) {
             if (removeNode) {
                 if (newKeyBuilder.nodes.containsKey(hierarchyField)) {
                     newKeyBuilder.nodes.remove(hierarchyField);
@@ -173,7 +173,7 @@ public final class LookupKey {
         Builder parentKeyBuilder = new Builder(this);
         AddressField mostGranularField = AddressField.COUNTRY;
 
-        for (AddressField hierarchyField : sHierarchy) {
+        for (AddressField hierarchyField : HIERARCHY) {
             if (!mNodes.containsKey(hierarchyField)) {
                 break;
             }
@@ -194,24 +194,24 @@ public final class LookupKey {
         StringBuilder keyBuilder = new StringBuilder(mKeyType.name().toLowerCase());
 
         if (mKeyType == KeyType.DATA) {
-            for (AddressField field : sHierarchy) {
+            for (AddressField field : HIERARCHY) {
                 if (!mNodes.containsKey(field)) {
                     break;
                 }
                 if (field == AddressField.COUNTRY && mLanguageCode != null) {
-                    keyBuilder.append(sSlashDelim)
-                            .append(mNodes.get(field)).append(sDashDelim)
+                    keyBuilder.append(SLASH_DELIM)
+                            .append(mNodes.get(field)).append(DASH_DELIM)
                             .append(mLanguageCode);
                 } else {
-                    keyBuilder.append(sSlashDelim).append(mNodes.get(field));
+                    keyBuilder.append(SLASH_DELIM).append(mNodes.get(field));
                 }
             }
         } else {
             if (mNodes.containsKey(AddressField.COUNTRY)) {
                 // Example key. E.g., "examples/TW/local/_default".
-                keyBuilder.append(sSlashDelim).append(mNodes.get(AddressField.COUNTRY))
-                        .append(sSlashDelim).append(mScriptType.name().toLowerCase())
-                        .append(sSlashDelim).append(sDefaultLanguage);
+                keyBuilder.append(SLASH_DELIM).append(mNodes.get(AddressField.COUNTRY))
+                        .append(SLASH_DELIM).append(mScriptType.name().toLowerCase())
+                        .append(SLASH_DELIM).append(DEFAULT_LANGUAGE);
             }
         }
 
@@ -279,7 +279,7 @@ public final class LookupKey {
             this.keyType = oldKey.mKeyType;
             this.script = oldKey.mScriptType;
             this.languageCode = oldKey.mLanguageCode;
-            for (AddressField field : sHierarchy) {
+            for (AddressField field : HIERARCHY) {
                 if (!oldKey.mNodes.containsKey(field)) {
                     break;
                 }
@@ -297,13 +297,13 @@ public final class LookupKey {
          * @param keyString e.g., "data/US/CA"
          */
         public Builder(String keyString) {
-            String[] parts = keyString.split(sSlashDelim);
+            String[] parts = keyString.split(SLASH_DELIM);
             // Check some pre-conditions.
             if (!parts[0].equals(KeyType.DATA.name().toLowerCase()) &&
                     !parts[0].equals(KeyType.EXAMPLES.name().toLowerCase())) {
                 throw new RuntimeException("Wrong key type: " + parts[0]);
             }
-            if (parts.length > sHierarchy.length + 1) {
+            if (parts.length > HIERARCHY.length + 1) {
                 throw new RuntimeException(
                         "input key '" + keyString + "' deeper than supported hierarchy");
             }
@@ -313,8 +313,8 @@ public final class LookupKey {
                 // Parses country and language info.
                 if (parts.length > 1) {
                     String substr = Util.trimToNull(parts[1]);
-                    if (substr.contains(sDashDelim)) {
-                        String[] s = substr.split(sDashDelim);
+                    if (substr.contains(DASH_DELIM)) {
+                        String[] s = substr.split(DASH_DELIM);
                         if (s.length != 2) {
                             throw new RuntimeException(
                                     "Wrong format: Substring should be country "
@@ -323,7 +323,7 @@ public final class LookupKey {
                         substr = s[0];
                         languageCode = s[1];
                     }
-                    this.nodes.put(sHierarchy[0], substr);
+                    this.nodes.put(HIERARCHY[0], substr);
                 }
 
                 // Parses sub-country info.
@@ -333,7 +333,7 @@ public final class LookupKey {
                         if (substr == null) {
                             break;
                         }
-                        this.nodes.put(sHierarchy[i - 1], substr);
+                        this.nodes.put(HIERARCHY[i - 1], substr);
                     }
                 }
             } else if (parts[0].equals("examples")) {
@@ -358,7 +358,7 @@ public final class LookupKey {
 
                 // Parses language code. Example: "zh_Hant" in
                 // "examples/TW/local/zH_Hant".
-                if (parts.length > 3 && !parts[3].equals(sDefaultLanguage)) {
+                if (parts.length > 3 && !parts[3].equals(DEFAULT_LANGUAGE)) {
                     languageCode = parts[3];
                 }
             }

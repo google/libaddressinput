@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class FormatInterpreter {
 
-    private static final String sNewLine = "%n";
+    private static final String NEW_LINE = "%n";
 
     private final String mDefaultFormat;
 
@@ -64,7 +64,7 @@ public class FormatInterpreter {
         List<AddressField> fieldOrder = new ArrayList<AddressField>();
         for (String substring : getFormatSubStrings(scriptType, regionCode)) {
             // Skips un-escaped characters and new lines.
-            if (!substring.matches("%.") || substring.equals(sNewLine)) {
+            if (!substring.matches("%.") || substring.equals(NEW_LINE)) {
                 continue;
             }
 
@@ -155,7 +155,7 @@ public class FormatInterpreter {
         List<String> lines = new ArrayList<String>();
         StringBuilder currentLine = new StringBuilder();
         for (String substr : getFormatSubStrings(scriptType, regionCode)) {
-            if (substr.equals(sNewLine)) {
+            if (substr.equals(NEW_LINE)) {
                 String normalizedStr = removeAllRedundantSpaces(currentLine.toString());
                 if (normalizedStr.length() > 0) {
                     lines.add(normalizedStr);
@@ -225,8 +225,8 @@ public class FormatInterpreter {
         for (char c : formatString.toCharArray()) {
             if (escaped) {
                 escaped = false;
-                if (sNewLine.equals("%" + c)) {
-                    parts.add(sNewLine);
+                if (NEW_LINE.equals("%" + c)) {
+                    parts.add(NEW_LINE);
                 } else {
                     Util.checkNotNull(AddressField.of(c), "Unrecognized character '" + c
                             + "' in format pattern: " + formatString);

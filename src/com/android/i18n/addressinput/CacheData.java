@@ -36,7 +36,7 @@ public final class CacheData {
     /**
      * Used to identify the source of a log message.
      */
-    private static final String sTag = "CacheData";
+    private static final String TAG = "CacheData";
 
     /**
      * Time out value for the server to respond in millisecond.
@@ -46,13 +46,13 @@ public final class CacheData {
     /**
      * URL to get public address data.
      */
-    private static final String sPublicAddressDataServer =
+    private static final String PUBLIC_ADDRESS_SERVER =
             "http://i18napis.appspot.com/address";
 
     /**
      * URL to get address data. You can also reset it by calling {@link #setUrl(String)}.
      */
-    private String mServiceUrl = sPublicAddressDataServer;
+    private String mServiceUrl = PUBLIC_ADDRESS_SERVER;
 
     /**
      * Storage for all dynamically retrieved data.
@@ -142,7 +142,7 @@ public final class CacheData {
         private void handleJson(JsoMap map) {
             // Can this ever happen?
             if (map == null) {
-                Log.w(sTag, "server returns null for key:" + mKey);
+                Log.w(TAG, "server returns null for key:" + mKey);
                 mBadKeys.add(mKey);
                 notifyListenersAfterJobDone(mKey);
                 triggerDataLoadingEndIfNotNull(mListener);
@@ -152,7 +152,7 @@ public final class CacheData {
             JSONObject json = map;
             String idKey = AddressDataKey.ID.name().toLowerCase();
             if (!json.has(idKey)) {
-                Log.w(sTag, "invalid or empty data returned for key: " + mKey);
+                Log.w(TAG, "invalid or empty data returned for key: " + mKey);
                 mBadKeys.add(mKey);
                 notifyListenersAfterJobDone(mKey);
                 triggerDataLoadingEndIfNotNull(mListener);
@@ -163,7 +163,7 @@ public final class CacheData {
                 map.mergeData((JsoMap) mExistingJso);
             }
 
-            Log.w(sTag, "put the following key/value pair into cache. key:" + mKey
+            Log.w(TAG, "put the following key/value pair into cache. key:" + mKey
                     + ", value:" + map.string());
             mCache.putObj(mKey, map);
             notifyListenersAfterJobDone(mKey);
@@ -220,7 +220,7 @@ public final class CacheData {
 
         // Key is valid and cached.
         if (mCache.containsKey(key.toString())) {
-            Log.w(sTag, "returning data for key " + key + " from the cache");
+            Log.w(TAG, "returning data for key " + key + " from the cache");
             triggerDataLoadingEndIfNotNull(listener);
             return;
         }
@@ -233,7 +233,7 @@ public final class CacheData {
 
         // Already requested the key, and is still waiting for server's response.
         if (!mRequestedKeys.add(key.toString())) {
-            Log.w(sTag, "data for key " + key + " requested but not cached yet");
+            Log.w(TAG, "data for key " + key + " requested but not cached yet");
             addListenerToTempStore(key, new CacheListener() {
                 public void onAdd(String myKey) {
                     triggerDataLoadingEndIfNotNull(listener);
@@ -250,7 +250,7 @@ public final class CacheData {
         jsonp.requestObject(mServiceUrl + "/" + key.toString(),
                 new AsyncCallback<JsoMap>() {
                     public void onFailure(Throwable caught) {
-                        Log.w(sTag, "Request for key " + key + " failed");
+                        Log.w(TAG, "Request for key " + key + " failed");
                         mRequestedKeys.remove(key.toString());
                         notifyListenersAfterJobDone(key.toString());
                         triggerDataLoadingEndIfNotNull(listener);

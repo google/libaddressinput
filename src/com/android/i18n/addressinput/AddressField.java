@@ -42,12 +42,12 @@ public enum AddressField {
 
     COUNTRY('R');
 
-    private static Map<Character, AddressField> sFieldMapping
+    private static final Map<Character, AddressField> FIELD_MAPPING
             = new HashMap<Character, AddressField>();
 
     static {
         for (AddressField value : values()) {
-            sFieldMapping.put(value.getChar(), value);
+            FIELD_MAPPING.put(value.getChar(), value);
         }
     }
 
@@ -69,7 +69,7 @@ public enum AddressField {
      * not recognized.
      */
     public static AddressField of(char field) {
-        return sFieldMapping.get(field);
+        return FIELD_MAPPING.get(field);
     }
 
     /**

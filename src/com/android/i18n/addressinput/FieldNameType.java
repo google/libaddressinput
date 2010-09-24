@@ -77,7 +77,7 @@ public enum FieldNameType {
      * Given a keyname (as used in the JSON data), returns the field name type, or null.
      */
     public static FieldNameType get(String keyname) {
-        return map.get(keyname.toLowerCase());
+        return FIELD_NAME_MAP.get(keyname.toLowerCase());
     }
 
     /**
@@ -110,11 +110,11 @@ public enum FieldNameType {
         mKeyname = keyname;
     }
 
-    private static final Map<String, FieldNameType> map = new HashMap<String, FieldNameType>();
+    private static final Map<String, FieldNameType> FIELD_NAME_MAP = new HashMap<String, FieldNameType>();
 
     static {
         for (FieldNameType fc : values()) {
-            map.put(fc.mKeyname, fc);
+            FIELD_NAME_MAP.put(fc.mKeyname, fc);
         }
     }
 }
