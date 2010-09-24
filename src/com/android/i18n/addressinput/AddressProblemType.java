@@ -22,11 +22,11 @@ package com.android.i18n.addressinput;
 public enum AddressProblemType {
 
     /**
-     * The field is not null and not whitespace, and the field is not used.
+     * The field is not null and not whitespace, and the field should not be used for this country.
      *
      * <p>For example, in the U.S. the SORTING_CODE field is unused, so its presence is an error.
      */
-    UNUSED_FIELD,
+    USING_UNUSED_FIELD,
 
     /**
      * The field is null or whitespace, and the field is required.

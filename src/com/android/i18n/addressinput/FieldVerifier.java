@@ -211,7 +211,7 @@ public class FieldVerifier {
 
         String trimmedValue = Util.trimToNull(value);
         switch (problem) {
-            case UNUSED_FIELD:
+            case USING_UNUSED_FIELD:
                 if (trimmedValue != null && !mPossibleFields.contains(field)) {
                     problemFound = true;
                 }
