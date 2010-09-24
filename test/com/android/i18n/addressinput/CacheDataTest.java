@@ -16,6 +16,11 @@
 
 package com.android.i18n.addressinput;
 
+import com.android.i18n.addressinput.testing.AddressDataMapLoader;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CacheDataTest extends AsyncTestCase {
   private CacheData cache;
 
@@ -44,6 +49,40 @@ public class CacheDataTest extends AsyncTestCase {
 
   public void setUp() {
     cache = new CacheData();
+  }
+
+  public void testJsonConstructor() {
+    // Creating cache with content.
+    String id = "data/CA";
+    JSONObject jsonObject = null;
+    try {
+      jsonObject = new JSONObject(AddressDataMapLoader.DATA.get(id));
+    } catch (JSONException jsonException) {
+      // If this throws an exception the test fails.
+      fail("Can't parse json object");
+    }
+    cache.addToJsoMap(id, jsonObject);
+    String toBackup = cache.getJsonString();
+
+    // Creating cache from saved data.
+    cache = new CacheData(toBackup);
+    assertTrue(cache.containsKey(id));
+  }
+
+  public void testJsonConstructorTruncatedProperString() {
+    // Creating cache with content.
+    String id = "data/CA";
+    try {
+      JSONObject jsonObject = new JSONObject(AddressDataMapLoader.DATA.get(id));
+      String jsonString = jsonObject.toString();
+      jsonString = jsonString.substring(0, jsonString.length()/2);
+
+      cache = new CacheData(jsonString);
+      assertTrue(cache.toString(), cache.isEmpty());
+    } catch (JSONException jsonException) {
+      // If this throws an exception the test fails.
+      fail("Can't parse json object");
+    }
   }
 
   public void testSimpleFetching() {
@@ -202,7 +241,7 @@ public class CacheDataTest extends AsyncTestCase {
     cache.fetchDynamicData(key, null, null);
   }
 
-  public void testFetchAgainRighAfterOneFetchStart() {
+  public void testFetchAgainRightAfterOneFetchStart() {
     final LookupKey key = new LookupKey.Builder(US_KEY).build();
 
     delayTestFinish(10000);

@@ -22,6 +22,7 @@ import com.android.i18n.addressinput.JsonpRequestBuilder.AsyncCallback;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.EventListener;
@@ -82,9 +83,39 @@ public final class CacheData {
      * Creates an instance of CacheData with an empty cache.
      */
     public CacheData() {
-        // TODO(AAW): Replace with a call to this other constructor when it exists.
         mCache = JsoMap.createEmptyJsoMap();
-        // this(JsoMap.createEmptyJsoMap());
+    }
+
+    /**
+     * This constructor is meant to be used together with external caching.
+     *
+     * Use case:
+     *
+     * After having finished using the address widget:
+     * String allCachedData = getJsonString();
+     * Cache (save) allCachedData wherever makes sense for your service / activity
+     *
+     * Before using it next time:
+     * Get the saved allCachedData string
+     * new ClientData(new CacheData(allCachedData))
+     *
+     * If you don't have any saved data you can either just pass an empty string to
+     * this constructor or use the other constructor.
+     *
+     * @param jsonString cached data from last time the class was used
+     */
+    public CacheData(String jsonString) {
+        JsoMap tempMap = null;      
+        try {
+            tempMap = JsoMap.buildJsoMap(jsonString);            
+        } catch (JSONException jsonE) {
+            // If parsing the JSON string throws an exception, default to
+            // starting with an empty cache.
+            Log.w(TAG, "Could not parse json string, creating empty cache instead.");
+            tempMap = JsoMap.createEmptyJsoMap();
+        } finally {
+            mCache = tempMap;
+        }
     }
     
     /**
@@ -186,6 +217,16 @@ public final class CacheData {
      */
     public String getUrl() {
         return mServiceUrl;
+    }
+
+    /**
+     * Returns a JSON string representing the data currently stored in this cache. It can be used
+     * to later create a new CacheData object containing the same cached data.
+     * 
+     * @return a JSON string representing the data stored in this cache
+     */
+    public String getJsonString() {
+        return mCache.toString();
     }
 
     /**
@@ -304,5 +345,24 @@ public final class CacheData {
             mTemporaryListenerStore.put(key, listeners);
         }
         listeners.add(listener);
+    }
+
+    /**
+     * Added for testing purposes.
+     * Adds a new object into the cache.
+     * @param id string of the format "data/country/.." ie. "data/US/CA"
+     * @param object The JSONObject to be put into cache.
+     */
+    void addToJsoMap(String id, JSONObject object) {
+        mCache.putObj(id, object);
+    }
+
+    /**
+     * Added for testing purposes.
+     * Checks to see if the cache is empty,
+     * @return true if the internal cache is empty
+     */
+    boolean isEmpty() {
+        return mCache.length() == 0; 
     }
 }
