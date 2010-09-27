@@ -167,7 +167,7 @@ public final class CacheData {
          * saves it in the invalid cache. If there is pre-existing data for the key, it will merge
          * the new data will the old one. It also triggers {@link DataLoadListener#dataLoadingEnd()}
          * method before it returns (even when the key is invalid, or input jso is null). This is
-         * called from a backgroud thread.
+         * called from a background thread.
          *
          * @param map The received JSON data as a map.
          */
