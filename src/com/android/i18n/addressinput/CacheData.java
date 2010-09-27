@@ -42,7 +42,7 @@ public final class CacheData {
     /**
      * Time out value for the server to respond in millisecond.
      */
-    private final int mTimeout = 1000;
+    private static final int TIMEOUT = 5000;
 
     /**
      * URL to get public address data.
@@ -166,7 +166,8 @@ public final class CacheData {
          * Saves valid responded data to the cache once data arrives, or if the key is invalid,
          * saves it in the invalid cache. If there is pre-existing data for the key, it will merge
          * the new data will the old one. It also triggers {@link DataLoadListener#dataLoadingEnd()}
-         * method before it returns (even when the key is invalid, or input jso is null).
+         * method before it returns (even when the key is invalid, or input jso is null). This is
+         * called from a backgroud thread.
          *
          * @param map The received JSON data as a map.
          */
@@ -194,7 +195,7 @@ public final class CacheData {
                 map.mergeData((JsoMap) mExistingJso);
             }
 
-            Log.w(TAG, "put the following key/value pair into cache. key:" + mKey
+            Log.d(TAG, "put the following key/value pair into cache. key:" + mKey
                     + ", value:" + map.string());
             mCache.putObj(mKey, map);
             notifyListenersAfterJobDone(mKey);
@@ -261,7 +262,7 @@ public final class CacheData {
 
         // Key is valid and cached.
         if (mCache.containsKey(key.toString())) {
-            Log.w(TAG, "returning data for key " + key + " from the cache");
+            Log.d(TAG, "returning data for key " + key + " from the cache");
             triggerDataLoadingEndIfNotNull(listener);
             return;
         }
@@ -274,7 +275,7 @@ public final class CacheData {
 
         // Already requested the key, and is still waiting for server's response.
         if (!mRequestedKeys.add(key.toString())) {
-            Log.w(TAG, "data for key " + key + " requested but not cached yet");
+            Log.d(TAG, "data for key " + key + " requested but not cached yet");
             addListenerToTempStore(key, new CacheListener() {
                 public void onAdd(String myKey) {
                     triggerDataLoadingEndIfNotNull(listener);
@@ -285,7 +286,7 @@ public final class CacheData {
 
         // Key is not cached yet, now sending the request to the server.
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        jsonp.setTimeout(mTimeout);
+        jsonp.setTimeout(TIMEOUT);
         final JsonHandler handler = new JsonHandler(key.toString(),
                 existingJso, listener);
         jsonp.requestObject(mServiceUrl + "/" + key.toString(),

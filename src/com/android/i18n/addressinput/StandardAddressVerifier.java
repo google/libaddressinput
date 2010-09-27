@@ -83,11 +83,6 @@ public class StandardAddressVerifier {
         mProblemMap = StandardChecks.PROBLEM_MAP;
     }
 
-    /**
-     * @deprecated Replaced by {@link #verifyAsync(AddressData address,
-     * AddressProblems problems, DataLoadListener listener)}
-     */
-    @Deprecated
     public void verify(AddressData address, AddressProblems problems) {
         NotifyingListener listener = new NotifyingListener(this);
         verifyAsync(address, problems, listener);

@@ -140,14 +140,14 @@ public class FormController {
         mIntegratedData.requestData(key, new DataLoadListener() {
             // Override
             public void dataLoadingBegin() {
-                Log.w(TAG, "requesting data for key " + key);
+                Log.i(TAG, "requesting data for key " + key);
             }
 
             // Override
             public void dataLoadingEnd() {
                 List<RegionData> subregions = getRegionData(key);
                 if (subregions.isEmpty()) {
-                    Log.w(TAG, "recursion ends with key " + key);
+                    Log.i(TAG, "recursion ends with key " + key);
                     if (listener != null) {
                         listener.dataLoadingEnd();
                     }
