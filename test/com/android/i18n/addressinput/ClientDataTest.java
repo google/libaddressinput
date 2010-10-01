@@ -16,6 +16,10 @@
 
 package com.android.i18n.addressinput;
 
+/**
+ * Tests for the ClientData class, to ensure it uses the cache data to
+ * correctly fetch data from the server and recovers if no data is present.
+ */
 public class ClientDataTest extends AsyncTestCase {
   private ClientData client;
 
@@ -55,5 +59,20 @@ public class ClientDataTest extends AsyncTestCase {
         finishTest();
       }
     });
+  }
+
+  public void testFetchDataWithBadServer() {
+    CacheData badCache = new CacheData();
+    badCache.setUrl("http://www.google.com");
+    ClientData badServerClient = new ClientData(badCache);
+
+    AddressVerificationNodeData data = badServerClient.get("data/US");
+
+    // No data was available on the server or in the cache - it should check
+    // that there is nothing in region data constants, and should return the
+    // data from there.
+    assertNotNull(data);
+    String unitedStatesFormatInfo = data.get(AddressDataKey.FMT);
+    assertEquals("%N%n%O%n%A%n%C %S %Z", unitedStatesFormatInfo);
   }
 }

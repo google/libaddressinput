@@ -18,6 +18,8 @@ package com.android.i18n.addressinput;
 
 import com.android.i18n.addressinput.LookupKey.KeyType;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -33,7 +35,10 @@ import java.util.Set;
  */
 public class ClientData implements DataSource {
 
-    /* Data to bootstrap the process. The data are all regional (country level)
+    private static final String TAG = "ClientData";
+
+    /**
+     * Data to bootstrap the process. The data are all regional (country level)
      * data. Keys are like "data/US/CA"
      */
     private final Map<String, JsoMap> mBootstrapMap = new HashMap<String, JsoMap>();
@@ -186,10 +191,16 @@ public class ClientData implements DataSource {
             NotifyingListener listener = new NotifyingListener(this);
             // If the key was invalid, we don't want to attempt to fetch it.
             if (LookupKey.hasValidKeyPrefix(key)) {
-                mCacheData.fetchDynamicData(new LookupKey.Builder(key).build(), regionalData,
-                                            listener);
+                LookupKey lookupKey = new LookupKey.Builder(key).build();
+                mCacheData.fetchDynamicData(lookupKey, regionalData, listener);
                 try {
                     listener.waitLoadingEnd();
+                    // Check to see if there is data for this key now.
+                    if (mCacheData.getObj(key) == null && isCountryKey(key)) {
+                        // If not, see if there is data in RegionDataConstants.
+                    	Log.i(TAG, "Server failure: looking up key in region data constants.");
+                        mCacheData.getFromRegionDataConstants(lookupKey);
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

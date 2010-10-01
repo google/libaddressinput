@@ -120,7 +120,7 @@ public final class LookupKey {
      * @param field a field in the address hierarchy.
      * @return key of the specified address field. If address field is not in the hierarchy, or is
      *         more granular than the current key has, returns null. For example, if your current
-     *         key is "data/US" (down to country level), and you wants to get the key for Locality
+     *         key is "data/US" (down to country level), and you want to get the key for Locality
      *         (more granular than country), it will return null.
      */
     public LookupKey getKeyForUpperLevelField(AddressField field) {
@@ -158,6 +158,26 @@ public final class LookupKey {
     }
 
     /**
+     * Returns the string value of a field in a key for a particular
+     * AddressField. For example, for the key "data/US/CA" and the address
+     * field AddressField.COUNTRY, "US" would be returned. Returns an empty
+     * string if the key does not have this field in it.
+     */
+    String getValueForUpperLevelField(AddressField field) {
+        // First, get the key for this field.
+        LookupKey key = getKeyForUpperLevelField(field);
+        // Now we know the last value in the string is the value for this field.
+        if (key != null) {
+            String keyString = key.toString();
+            int lastSlashPosition = keyString.lastIndexOf(SLASH_DELIM);
+            if (lastSlashPosition > 0 && lastSlashPosition != keyString.length()) {
+                return keyString.substring(lastSlashPosition + 1);
+            }
+        }
+        return "";
+    }
+
+    /**
      * Gets parent key for data key. For example, parent key for "data/US/CA" is "data/US". This
      * method does not allow key with key type of {@link KeyType#EXAMPLES}.
      */
@@ -182,7 +202,7 @@ public final class LookupKey {
         parentKeyBuilder.nodes.remove(mostGranularField);
         return parentKeyBuilder.build();
     }
-
+    
     public KeyType getKeyType() {
         return mKeyType;
     }

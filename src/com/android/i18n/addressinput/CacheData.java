@@ -305,6 +305,26 @@ public final class CacheData {
     }
 
     /**
+     * Gets region data from our compiled-in java file and stores it in the
+     * cache. This is only called when data cannot be obtained from the server,
+     * so there will be no pre-existing data for this key.
+     */
+    void getFromRegionDataConstants(final LookupKey key) {
+        checkNotNull(key, "null key not allowed.");
+        String data = RegionDataConstants.getCountryFormatMap().get(
+            key.getValueForUpperLevelField(AddressField.COUNTRY));
+        if (data != null) {
+            try {
+                mCache.putObj(key.toString(), (JSONObject) JsoMap.buildJsoMap(data));
+            } catch (JSONException e) {
+                Log.w(TAG, "Failed to parse data for key " + key +
+                      " from RegionDataConstants");
+            }
+        }
+    }
+
+
+    /**
      * Retrieves string data identified by key.
      *
      * @param key Non-null key. E.g., "data/US/CA".

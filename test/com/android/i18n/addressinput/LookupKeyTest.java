@@ -219,4 +219,16 @@ public class LookupKeyTest extends TestCase {
     }
     assertFalse(map.containsKey(new LookupKey.Builder(RANDOM_COUNTRY_KEY).build()));
   }
+
+  public void testGetValueForUpperLevelField() {
+    LookupKey key = new LookupKey.Builder("data/US/CA").build();
+    assertEquals("US", key.getValueForUpperLevelField(AddressField.COUNTRY));
+  }
+  
+  public void testGetValueForUpperLevelFieldInvalid() {
+    LookupKey key = new LookupKey.Builder("data").build();
+    assertEquals("", key.getValueForUpperLevelField(AddressField.COUNTRY));
+    LookupKey key2 = new LookupKey.Builder("data/").build();
+    assertEquals("", key2.getValueForUpperLevelField(AddressField.COUNTRY));
+  }
 }
