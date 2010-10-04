@@ -114,7 +114,6 @@ public class StandardAddressVerifier {
             mListener.dataLoadingBegin();
 
             FieldVerifier v = mRootVerifier;
-            VerifierRefiner r = mRefiner.newInstance();
 
             ScriptType script = null;
             if (mAddress.getLanguageCode() != null) {

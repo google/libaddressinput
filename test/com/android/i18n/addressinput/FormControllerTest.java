@@ -42,7 +42,6 @@ public class FormControllerTest extends AsyncTestCase {
 
   @Override
   public void setUp() {
-    RegionDataConstants regionDataConstants = new RegionDataConstants();
     clientData = new ClientData(new CacheData());
   }
 

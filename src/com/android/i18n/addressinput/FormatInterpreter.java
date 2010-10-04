@@ -264,9 +264,6 @@ public class FormatInterpreter {
 
         try {
             JSONObject jsonObj = new JSONObject(new JSONTokener(jsonString));
-            if (jsonObj == null) {
-                return null;
-            }
             if (!jsonObj.has(key.name().toLowerCase())) {
                 // Key not found. Return null.
                 return null;
