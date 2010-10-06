@@ -88,7 +88,7 @@ public class AddressUIComponent {
      */
     public String getValue() {
         if (mView == null) {
-            return (mCandidatesList.size() == 0) ? "" : mCandidatesList.get(0).getName();
+            return (mCandidatesList.size() == 0) ? "" : mCandidatesList.get(0).getDisplayName();
         }
         switch (mUiType) {
             case SPINNER:

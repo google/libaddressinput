@@ -56,6 +56,13 @@ public class RegionData {
     }
 
     /**
+     * Gets the best display name. Returns the name if this is not null, otherwise the key.
+     */
+    public String getDisplayName() {
+        return (mName != null) ? mName : mKey;
+    }
+
+    /**
      * Checks if the input subkey is the name (in Latin or local script) of the region. Returns
      * false if subkey is not a valid name for the region, or the input subkey is null.
      *
@@ -76,24 +83,24 @@ public class RegionData {
      * A builder class to facilitate the creation of RegionData objects.
      */
     public static class Builder {
-
-        RegionData data = new RegionData();
+        RegionData mData = new RegionData();
 
         public RegionData build() {
-            return new RegionData(data);
+            return new RegionData(mData);
         }
 
         public Builder setKey(String key) {
             Util.checkNotNull(key, "Key should not be null.");
-            data.mKey = key;
+            mData.mKey = key;
             return this;
         }
 
         /**
-         * Sets name of the region. For example, "California".
+         * Sets name of the region. For example, "California". If the name is an empty string, sets it
+         * to null.
          */
         public Builder setName(String name) {
-            data.mName = name;
+            mData.mName = Util.trimToNull(name);
             return this;
         }
     }

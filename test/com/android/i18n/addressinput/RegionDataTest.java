@@ -44,4 +44,14 @@ public class RegionDataTest extends TestCase {
     assertEquals("CA", data.getKey());
     assertEquals(null, data.getName());
   }
+
+  public void testBuilderWhitespaceName() throws Exception {
+    RegionData data = new RegionData.Builder()
+        .setKey("CA")
+        .setName("  ")
+        .build();
+    assertEquals("CA", data.getKey());
+    assertEquals(null, data.getName());
+    assertEquals("CA", data.getDisplayName());
+  }
 }
