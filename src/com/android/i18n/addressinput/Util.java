@@ -120,34 +120,49 @@ public class Util {
         return sb == null ? null : sb.toString();
     }
 
-    protected static Map<String, String> buildNameToKeyMap(String[] keys,
-            String[] names, String[] lnames) {
+    /**
+     * Builds a map of the lower-cased values of the keys, names and local names provided. Each name
+     * and local name is mapped to its respective key in the map.
+     *
+     * @throws IllegalStateException if the names or lnames array is greater than the keys array.
+     */
+    static Map<String, String> buildNameToKeyMap(String[] keys, String[] names, String[] lnames) {
         if (keys == null) {
             return null;
         }
 
         Map<String, String> nameToKeyMap = new HashMap<String, String>();
 
-        int len = keys.length;
+        int keyLength = keys.length;
         for (String k : keys) {
             nameToKeyMap.put(k.toLowerCase(), k);
         }
         if (names != null) {
-            if (names.length != len) {
-                throw new IllegalStateException("names (" + names.toString() + ") length"
-                        + " does not match keys (" + keys.toString() + ") length");
+            if (names.length > keyLength) {
+                throw new IllegalStateException(
+                        "names length (" + names.length + ") is greater than keys length (" +
+                        keys.length + ")");
             }
-            for (int i = 0; i < len; ++i) {
-                nameToKeyMap.put(names[i].toLowerCase(), keys[i]);
+            for (int i = 0; i < keyLength; i++) {
+                // If we have less names than keys, we insert empty strings for all missing names.
+                // This happens generally because reg-ex splitting methods on different platforms
+                // (java, js etc) behave differently in the default case. Since missing names are
+                // fine, we opt to be more robust here.
+                if (i < names.length && names[i].length() > 0) {
+                    nameToKeyMap.put(names[i].toLowerCase(), keys[i]);
+                }
             }
         }
         if (lnames != null) {
-            if (lnames.length != len) {
-                throw new IllegalStateException("lnames (" + lnames.toString() + ") length"
-                        + " does not match keys (" + keys.toString() + ") length");
+            if (lnames.length > keyLength) {
+                throw new IllegalStateException(
+                        "lnames length (" + lnames.length + ") is greater than keys length (" +
+                        keys.length + ")");
             }
-            for (int i = 0; i < len; ++i) {
-                nameToKeyMap.put(lnames[i].toLowerCase(), keys[i]);
+            for (int i = 0; i < keyLength; i++) {
+                if (i < lnames.length && lnames[i].length() > 0) {
+                    nameToKeyMap.put(lnames[i].toLowerCase(), keys[i]);
+                }
             }
         }
         return nameToKeyMap;

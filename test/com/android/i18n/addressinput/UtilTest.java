@@ -19,6 +19,7 @@ package com.android.i18n.addressinput;
 import junit.framework.TestCase;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Tests for util functions.
@@ -26,7 +27,7 @@ import java.util.Locale;
 public class UtilTest extends TestCase {
 
     public void testIsExplicitLatinScript() throws Exception {
-        // Should recognise latin script in a variety of forms.
+        // Should recognise Latin script in a variety of forms.
         assertTrue(Util.isExplicitLatinScript("zh-Latn"));
         assertTrue(Util.isExplicitLatinScript("ja_LATN"));
         assertTrue(Util.isExplicitLatinScript("und_LATN"));
@@ -116,5 +117,31 @@ public class UtilTest extends TestCase {
         // CJK language - should be unaltered too.
         assertEquals(Locale.KOREAN.toString(),
                      Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "US"));
+    }
+
+    public void testBuildNameToKeyMap() throws Exception {
+        String names[] = {"", "", "", "", "NEW PROVIDENCE" };
+        // We have one more key than name here.
+        String keys[] = {"AB", "AC", "AD", "AE", "NP", "XX"};
+        Map<String, String> result = Util.buildNameToKeyMap(keys, names, null);
+        // We should have the six keys, and the one name, in the end result. No empty-string names
+        // should be present.
+        assertEquals(keys.length + 1, result.size());
+        // The empty string should not be present.
+        assertFalse(result.containsKey(""));
+
+        // Try with Latin names instead.
+        Map<String, String> resultWithLatin = Util.buildNameToKeyMap(keys, null, names);
+        // We should have the six keys and the one Latin-script name in the end result.
+        assertEquals(keys.length + 1, resultWithLatin.size());
+        String lnames[] = { "Other name" };
+        resultWithLatin = Util.buildNameToKeyMap(keys, names, lnames);
+        // We should have the keys, plus the names in lnames and names.
+        assertEquals(keys.length + 2, resultWithLatin.size());
+        assertTrue(resultWithLatin.containsKey("other name"));
+        assertTrue(resultWithLatin.containsKey("new providence"));
+        assertTrue(resultWithLatin.containsKey("xx"));
+        // The empty string should not be present.
+        assertFalse(resultWithLatin.containsKey(""));
     }
 }
