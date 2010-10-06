@@ -19,19 +19,19 @@ package com.android.i18n.addressinput;
 import junit.framework.TestCase;
 
 /**
- * @author Lara Rennie
+ * Tests for the AddressField enum.
  */
 public class AddressFieldTest extends TestCase {
 
-  public void testOf() throws Exception {
-    assertEquals(AddressField.COUNTRY, AddressField.of('R'));
-  }
+    public void testOf() throws Exception {
+        assertEquals(AddressField.COUNTRY, AddressField.of('R'));
+    }
 
-  public void testGetChar() throws Exception {
-    assertEquals('R', AddressField.COUNTRY.getChar());
-  }
+    public void testGetChar() throws Exception {
+        assertEquals('R', AddressField.COUNTRY.getChar());
+    }
 
-  public void testGetAttributeName() throws Exception {
-    assertEquals("name", AddressField.RECIPIENT.getAttributeName());
-  }
+    public void testGetAttributeName() throws Exception {
+        assertEquals("name", AddressField.RECIPIENT.getAttributeName());
+    }
 }

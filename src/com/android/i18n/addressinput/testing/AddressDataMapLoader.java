@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Helper class to load json data for testing.
+ * Helper class to load JSON data for testing.
  */
 public class AddressDataMapLoader {
 
-    private static final String dataPath = "/countryinfo.txt";
+    private static final String DATA_PATH = "/countryinfo.txt";
 
     private AddressDataMapLoader() {
     }
@@ -38,7 +38,7 @@ public class AddressDataMapLoader {
         DATA = new HashMap<String, String>();
         try {
             BufferedReader br = new BufferedReader(
-                    new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(dataPath),
+                    new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(DATA_PATH),
                             "utf-8"));
             String line = null;
             while (null != (line = br.readLine())) {

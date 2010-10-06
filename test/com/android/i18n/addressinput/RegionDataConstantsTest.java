@@ -23,22 +23,22 @@ import junit.framework.TestCase;
  * and converted into the appropriate format.
  */
 public class RegionDataConstantsTest extends TestCase {
-  public void testDataLoad() throws Exception {
-    assertFalse("The list of countries should not be empty",
-                RegionDataConstants.getCountryFormatMap().isEmpty());
-  }
+    public void testDataLoad() throws Exception {
+        assertFalse("The list of countries should not be empty",
+                    RegionDataConstants.getCountryFormatMap().isEmpty());
+    }
 
-  public void testZZRegion() throws Exception {
-    assertNotNull("Data for 'ZZ' is missing (needed for default region info.)",
-                  RegionDataConstants.getCountryFormatMap().get("ZZ"));
-  }
+    public void testZZRegion() throws Exception {
+        assertNotNull("Data for 'ZZ' is missing (needed for default region info.)",
+                      RegionDataConstants.getCountryFormatMap().get("ZZ"));
+    }
 
-  public void testStringsAreConvertedIntoJson() throws Exception {
-    String[] input = {"key", "value", "key2", "value2"};
-    // Input order is not maintained, since we build this using JSON objects. This is unimportant,
-    // so long as the key-value mappings are maintained.
-    String expectedOutput = "{\"key2\":\"value2\",\"key\":\"value\"}";
-    String actualOutput = RegionDataConstants.convertArrayToJsonString(input);
-    assertEquals(expectedOutput, actualOutput);
-  }
+    public void testStringsAreConvertedIntoJson() throws Exception {
+        String[] input = { "key", "value", "key2", "value2" };
+        // Input order is not maintained, since we build this using JSON objects. This is
+        // unimportant, so long as the key-value mappings are maintained.
+        String expectedOutput = "{\"key2\":\"value2\",\"key\":\"value\"}";
+        String actualOutput = RegionDataConstants.convertArrayToJsonString(input);
+        assertEquals(expectedOutput, actualOutput);
+    }
 }
