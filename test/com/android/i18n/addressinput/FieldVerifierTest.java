@@ -255,4 +255,16 @@ public class FieldVerifierTest extends TestCase {
         assertEquals(AddressProblemType.UNKNOWN_VALUE,
                      problems.getProblem(AddressField.ADMIN_AREA));
     }
+    
+    public void testCanadaMixedCasePostcode() {
+      final AddressData address = new AddressData.Builder()
+              .setRecipient("Joe Bloggs")
+              .setAddress("11 East St")
+              .setLocality("Montreal")
+              .setAdminArea("Quebec")
+              .setCountry("CA")
+              .setPostalCode("H2b 2y5").build();
+      VERIFIER.verify(address, problems);
+      assertTrue(problems.isEmpty());
+  }
 }

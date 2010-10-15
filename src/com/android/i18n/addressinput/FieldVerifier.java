@@ -143,15 +143,17 @@ public class FieldVerifier {
             mRequired = parseRequireString(nodeData.get(AddressDataKey.REQUIRE));
         }
         if (nodeData.containsKey(AddressDataKey.XZIP)) {
-            mFormat = Pattern.compile(nodeData.get(AddressDataKey.XZIP));
+            mFormat = Pattern.compile(nodeData.get(AddressDataKey.XZIP), Pattern.CASE_INSENSITIVE);
         }
         if (nodeData.containsKey(AddressDataKey.ZIP)) {
             // This key has two different meanings, depending on whether this is a country-level key
             // or not.
             if (isCountryKey()) {
-                mFormat = Pattern.compile(nodeData.get(AddressDataKey.ZIP));
+                mFormat = Pattern.compile(nodeData.get(AddressDataKey.ZIP),
+                                          Pattern.CASE_INSENSITIVE);
             } else {
-                mMatch = Pattern.compile(nodeData.get(AddressDataKey.ZIP));
+                mMatch = Pattern.compile(nodeData.get(AddressDataKey.ZIP),
+                                         Pattern.CASE_INSENSITIVE);
             }
         }
         // If there are latin names but no local names, and there are the same number of latin names
