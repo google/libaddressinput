@@ -181,9 +181,10 @@ public class Util {
      */
     public static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
         String country = currentCountry.toUpperCase();
-        // Only do something if the country is China, Taiwan, Japan, or South or North Korea.
+        // Only do something if the country is China, Taiwan, Japan, Hong Kong, or South
+        // or North Korea.
         if (country.equals("CN") || country.equals("TW") || country.equals("JP") ||
-            country.equals("KR") || country.equals("KP")) {
+            country.equals("HK") || country.equals("KR") || country.equals("KP")) {
             String languageTag = language.getLanguage();
             // Only do something if the language tag is _not_ Chinese, Japanese or Korean.
             if (!languageTag.equals("zh") && !languageTag.equals("ja") &&
