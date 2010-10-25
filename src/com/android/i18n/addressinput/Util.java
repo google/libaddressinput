@@ -144,10 +144,10 @@ public class Util {
                         keys.length + ")");
             }
             for (int i = 0; i < keyLength; i++) {
-                // If we have less names than keys, we insert empty strings for all missing names.
-                // This happens generally because reg-ex splitting methods on different platforms
-                // (java, js etc) behave differently in the default case. Since missing names are
-                // fine, we opt to be more robust here.
+                // If we have less names than keys, we ignore all missing names. This happens
+                // generally because reg-ex splitting methods on different platforms (java, js etc)
+                // behave differently in the default case. Since missing names are fine, we opt to
+                // be more robust here.
                 if (i < names.length && names[i].length() > 0) {
                     nameToKeyMap.put(names[i].toLowerCase(), keys[i]);
                 }

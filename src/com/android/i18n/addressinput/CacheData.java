@@ -61,6 +61,11 @@ public final class CacheData {
     private final JsoMap mCache;
 
     /**
+     * CacheManager that handles caching that is needed by the client of the Address Widget.
+     */
+    private final ClientCacheManager mClientCacheManager;
+
+    /**
      * All requests that have been sent.
      */
     private final HashSet<String> mRequestedKeys = new HashSet<String>();
@@ -80,9 +85,20 @@ public final class CacheData {
             new HashMap<LookupKey, HashSet<CacheListener>>();
 
     /**
-     * Creates an instance of CacheData with an empty cache.
+     * Creates an instance of CacheData with an empty cache, and uses no caching that is external
+     * to the AddressWidget.
      */
     public CacheData() {
+        mClientCacheManager = new SimpleClientCacheManager();
+        mCache = JsoMap.createEmptyJsoMap();
+    }
+
+    /**
+     * Creates an instance of CacheData with an empty cache, and uses additional caching (external
+     * to the AddressWidget) specified by clientCacheManager.
+     */
+    public CacheData(ClientCacheManager clientCacheManager) {
+        mClientCacheManager = clientCacheManager;
         mCache = JsoMap.createEmptyJsoMap();
     }
 
@@ -105,9 +121,10 @@ public final class CacheData {
      * @param jsonString cached data from last time the class was used
      */
     public CacheData(String jsonString) {
-        JsoMap tempMap = null;      
+        mClientCacheManager = new SimpleClientCacheManager();
+        JsoMap tempMap = null;
         try {
-            tempMap = JsoMap.buildJsoMap(jsonString);            
+            tempMap = JsoMap.buildJsoMap(jsonString);
         } catch (JSONException jsonE) {
             // If parsing the JSON string throws an exception, default to
             // starting with an empty cache.
@@ -117,7 +134,7 @@ public final class CacheData {
             mCache = tempMap;
         }
     }
-    
+
     /**
      * Interface for all listeners to {@link CacheData} change. This is only used when multiple
      * requests of the same key is dispatched and server has not responded yet.
@@ -223,7 +240,7 @@ public final class CacheData {
     /**
      * Returns a JSON string representing the data currently stored in this cache. It can be used
      * to later create a new CacheData object containing the same cached data.
-     * 
+     *
      * @return a JSON string representing the data stored in this cache
      */
     public String getJsonString() {
@@ -284,6 +301,20 @@ public final class CacheData {
             return;
         }
 
+        // Key is in the cache maintained by the client of the AddressWidget.
+        String dataFromClientCache = mClientCacheManager.get(key.toString());
+        if (dataFromClientCache != null && dataFromClientCache.length() > 0) {
+            final JsonHandler handler = new JsonHandler(key.toString(),
+                existingJso, listener);
+            try {
+                handler.handleJson(JsoMap.buildJsoMap(dataFromClientCache));
+                return;
+            } catch (JSONException e) {
+                Log.w(TAG, "Data from client's cache is in the wrong format: "
+                        + dataFromClientCache);
+            }
+        }
+
         // Key is not cached yet, now sending the request to the server.
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         jsonp.setTimeout(TIMEOUT);
@@ -300,6 +331,10 @@ public final class CacheData {
 
                     public void onSuccess(JsoMap result) {
                         handler.handleJson(result);
+                        // Put metadata into the cache maintained by the client of the
+                        // AddressWidget.
+                        String dataRetrieved = result.toString();
+                        mClientCacheManager.put(key.toString(), dataRetrieved);
                     }
                 });
     }
@@ -312,7 +347,7 @@ public final class CacheData {
     void getFromRegionDataConstants(final LookupKey key) {
         checkNotNull(key, "null key not allowed.");
         String data = RegionDataConstants.getCountryFormatMap().get(
-            key.getValueForUpperLevelField(AddressField.COUNTRY));
+                key.getValueForUpperLevelField(AddressField.COUNTRY));
         if (data != null) {
             try {
                 mCache.putObj(key.toString(), (JSONObject) JsoMap.buildJsoMap(data));
@@ -322,7 +357,6 @@ public final class CacheData {
             }
         }
     }
-
 
     /**
      * Retrieves string data identified by key.

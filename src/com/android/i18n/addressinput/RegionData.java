@@ -96,8 +96,8 @@ public class RegionData {
         }
 
         /**
-         * Sets name of the region. For example, "California". If the name is an empty string, sets it
-         * to null.
+         * Sets name of the region. For example, "California". If the name is an empty string, sets
+         * it to null.
          */
         public Builder setName(String name) {
             mData.mName = Util.trimToNull(name);

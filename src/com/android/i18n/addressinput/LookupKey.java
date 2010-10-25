@@ -202,7 +202,7 @@ public final class LookupKey {
         parentKeyBuilder.nodes.remove(mostGranularField);
         return parentKeyBuilder.build();
     }
-    
+
     public KeyType getKeyType() {
         return mKeyType;
     }

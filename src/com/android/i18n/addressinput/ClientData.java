@@ -198,7 +198,7 @@ public class ClientData implements DataSource {
                     // Check to see if there is data for this key now.
                     if (mCacheData.getObj(key) == null && isCountryKey(key)) {
                         // If not, see if there is data in RegionDataConstants.
-                    	Log.i(TAG, "Server failure: looking up key in region data constants.");
+                        Log.i(TAG, "Server failure: looking up key in region data constants.");
                         mCacheData.getFromRegionDataConstants(lookupKey);
                     }
                 } catch (InterruptedException e) {
