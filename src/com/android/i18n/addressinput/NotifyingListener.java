@@ -23,7 +23,7 @@ public class NotifyingListener implements DataLoadListener {
     private Object mSleeper;
     private boolean mDone;
 
-    public NotifyingListener(Object sleeper) {
+    NotifyingListener(Object sleeper) {
         mSleeper = sleeper;
         mDone = false;
     }
@@ -40,7 +40,7 @@ public class NotifyingListener implements DataLoadListener {
         }
     }
 
-    public void waitLoadingEnd() throws InterruptedException {
+    void waitLoadingEnd() throws InterruptedException {
         synchronized (this) {
             if (mDone) return;
         }

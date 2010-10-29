@@ -68,7 +68,7 @@ public enum AddressField {
      * Gets the corresponding AddressField for the character code. Returns null if the character is
      * not recognized.
      */
-    public static AddressField of(char field) {
+    static AddressField of(char field) {
         return FIELD_MAPPING.get(field);
     }
 
@@ -79,7 +79,7 @@ public enum AddressField {
      * Note: Not all address fields have attribute names. Fields like postal code, country, sorting
      * code, or street address do not have attribute names.
      */
-    public String getAttributeName() {
+    String getAttributeName() {
         return mAttributeName;
     }
 
@@ -88,7 +88,7 @@ public enum AddressField {
      *
      * @return identification char.
      */
-    public char getChar() {
+    char getChar() {
         return mField;
     }
 }

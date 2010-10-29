@@ -16,9 +16,9 @@
 
 package com.android.i18n.addressinput.testing;
 
-import java.util.concurrent.TimeoutException;
-
 import junit.framework.TestCase;
+
+import java.util.concurrent.TimeoutException;
 
 /**
  * An extension of TestCase that provides delayTestFinish() and finishTest() methods that behave

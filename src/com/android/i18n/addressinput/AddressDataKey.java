@@ -23,7 +23,7 @@ import java.util.Map;
  * Enumerates all the data fields found in the JSON-format address property data that are used by
  * the Android Address Input Widget.
  */
-public enum AddressDataKey {
+enum AddressDataKey {
     /**
      * Identifies the countries for which data is provided.
      */
@@ -98,7 +98,7 @@ public enum AddressDataKey {
      * Returns a field based on its keyname (value in the JSON-format file), or null if no field
      * matches.
      */
-    public static AddressDataKey get(String keyname) {
+    static AddressDataKey get(String keyname) {
         return ADDRESS_KEY_NAME_MAP.get(keyname.toLowerCase());
     }
 

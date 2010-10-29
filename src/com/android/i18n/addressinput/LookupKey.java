@@ -32,14 +32,14 @@ import java.util.Map;
  *
  * {@code AddressField#Country} -> {@code ScriptType} -> language. </p>
  */
-public final class LookupKey {
+final class LookupKey {
 
     /**
      * Key types. Address Widget organizes address info based on key types. For example, if you want
      * to know how to verify or format an US address, you need to use {@link KeyType#DATA} to get
      * that info; if you want to get an example address, you use {@link KeyType#EXAMPLES} instead.
      */
-    public enum KeyType {
+    enum KeyType {
 
         /**
          * Key type for getting address data.
@@ -60,7 +60,7 @@ public final class LookupKey {
      *
      * Notice that {@link ScriptType} is based on country/region, not language.
      */
-    public enum ScriptType {
+    enum ScriptType {
 
         /**
          * The script that uses Roman characters like ABC (as opposed to scripts like Cyrillic or
@@ -123,7 +123,7 @@ public final class LookupKey {
      *         key is "data/US" (down to country level), and you want to get the key for Locality
      *         (more granular than country), it will return null.
      */
-    public LookupKey getKeyForUpperLevelField(AddressField field) {
+    LookupKey getKeyForUpperLevelField(AddressField field) {
         if (mKeyType != KeyType.DATA) {
             // We only support getting the parent key for the data key type.
             throw new RuntimeException("Only support getting parent keys for the data key type.");
@@ -181,7 +181,7 @@ public final class LookupKey {
      * Gets parent key for data key. For example, parent key for "data/US/CA" is "data/US". This
      * method does not allow key with key type of {@link KeyType#EXAMPLES}.
      */
-    public LookupKey getParentKey() {
+    LookupKey getParentKey() {
         if (mKeyType != KeyType.DATA) {
             throw new RuntimeException("Only support getting parent keys for the data key type.");
         }
@@ -203,7 +203,7 @@ public final class LookupKey {
         return parentKeyBuilder.build();
     }
 
-    public KeyType getKeyType() {
+    KeyType getKeyType() {
         return mKeyType;
     }
 
@@ -260,7 +260,7 @@ public final class LookupKey {
         return mKeyString.hashCode();
     }
 
-    public static boolean hasValidKeyPrefix(String key) {
+    static boolean hasValidKeyPrefix(String key) {
         for (KeyType type : KeyType.values()) {
             if (key.startsWith(type.name().toLowerCase())) {
                 return true;
@@ -268,11 +268,11 @@ public final class LookupKey {
         }
         return false;
     }
-    
+
     /**
      * Builds lookup keys.
      */
-    public static class Builder {
+    static class Builder {
 
         private KeyType keyType;
 
@@ -288,14 +288,14 @@ public final class LookupKey {
         /**
          * Creates a new builder for the specified key type. keyType cannot be null.
          */
-        public Builder(KeyType keyType) {
+        Builder(KeyType keyType) {
             this.keyType = keyType;
         }
 
         /**
          * Creates a new builder for the specified key. oldKey cannot be null.
          */
-        public Builder(LookupKey oldKey) {
+        Builder(LookupKey oldKey) {
             this.keyType = oldKey.mKeyType;
             this.script = oldKey.mScriptType;
             this.languageCode = oldKey.mLanguageCode;
@@ -316,7 +316,7 @@ public final class LookupKey {
          *
          * @param keyString e.g., "data/US/CA"
          */
-        public Builder(String keyString) {
+        Builder(String keyString) {
             String[] parts = keyString.split(SLASH_DELIM);
             // Check some pre-conditions.
             if (!parts[0].equals(KeyType.DATA.name().toLowerCase()) &&
@@ -384,7 +384,7 @@ public final class LookupKey {
             }
         }
 
-        public Builder setLanguageCode(String languageCode) {
+        Builder setLanguageCode(String languageCode) {
             this.languageCode = languageCode;
             return this;
         }
@@ -396,7 +396,7 @@ public final class LookupKey {
          *
          * <p> country: US<br> administrative area: null<br> locality: Mt. View </p>
          */
-        public Builder setAddressData(AddressData data) {
+        Builder setAddressData(AddressData data) {
             languageCode = data.getLanguageCode();
             if (languageCode != null) {
                 if (Util.isExplicitLatinScript(languageCode)) {
@@ -426,7 +426,7 @@ public final class LookupKey {
             return this;
         }
 
-        public LookupKey build() {
+        LookupKey build() {
             return new LookupKey(this);
         }
     }

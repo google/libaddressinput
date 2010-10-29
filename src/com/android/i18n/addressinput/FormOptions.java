@@ -65,7 +65,7 @@ public class FormOptions {
     /**
      * Gets base ID of the address form. Default is "addressform".
      */
-    public String getBaseId() {
+    String getBaseId() {
         return mBaseId;
     }
 

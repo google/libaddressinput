@@ -19,7 +19,7 @@ package com.android.i18n.addressinput;
 /**
  * A simple class to hold region data. Instances of this class are immutable.
  */
-public class RegionData {
+class RegionData {
 
     private String mKey;
     private String mName;
@@ -44,14 +44,14 @@ public class RegionData {
     /**
      * Gets the key of the region. For example, California's key is "CA".
      */
-    public String getKey() {
+    String getKey() {
         return mKey;
     }
 
     /**
      * Gets the name. Returns null if not specified.
      */
-    public String getName() {
+    String getName() {
         return mName;
     }
 
@@ -69,7 +69,7 @@ public class RegionData {
      * @param subkey a string that refers to the name of a geo location. Like "California", "CA", or
      *               "Mountain View". Names in the local script are also supported.
      */
-    public boolean isValidName(String subkey) {
+    boolean isValidName(String subkey) {
         if (subkey == null) {
             return false;
         }
@@ -82,14 +82,14 @@ public class RegionData {
     /**
      * A builder class to facilitate the creation of RegionData objects.
      */
-    public static class Builder {
+    static class Builder {
         RegionData mData = new RegionData();
 
-        public RegionData build() {
+        RegionData build() {
             return new RegionData(mData);
         }
 
-        public Builder setKey(String key) {
+        Builder setKey(String key) {
             Util.checkNotNull(key, "Key should not be null.");
             mData.mKey = key;
             return this;
@@ -99,7 +99,7 @@ public class RegionData {
          * Sets name of the region. For example, "California". If the name is an empty string, sets
          * it to null.
          */
-        public Builder setName(String name) {
+        Builder setName(String name) {
             mData.mName = Util.trimToNull(name);
             return this;
         }

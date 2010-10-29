@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Utility functions used by the address widget.
  */
-public class Util {
+class Util {
     /**
      * This variable is in upper-case, since we convert the language code to upper case before doing
      * string comparison.
@@ -42,7 +42,7 @@ public class Util {
      * Returns true if the language code is explicitly marked to be in the latin script. For
      * example, "zh-Latn" would return true, but "zh-TW", "en" and "zh" would all return false.
      */
-    public static boolean isExplicitLatinScript(String languageCode) {
+    static boolean isExplicitLatinScript(String languageCode) {
         // Convert to upper-case for easier comparison.
         languageCode = languageCode.toUpperCase();
         // Check to see if the language code contains a script modifier.
@@ -62,7 +62,7 @@ public class Util {
      * "zh-CN" or other "zh" variants. If no language subtag can be found or the language tag is
      * malformed, returns "und".
      */
-    public static String getLanguageSubtag(String languageCode) {
+    static String getLanguageSubtag(String languageCode) {
         final Pattern languageCodePattern = Pattern
                 .compile("(\\w{2,3})(?:[-_]\\w{4})?(?:[-_]\\w{2})?");
         Matcher m = languageCodePattern.matcher(languageCode);
@@ -76,7 +76,7 @@ public class Util {
      * Trims the string. If the field is empty after trimming, returns null instead. Note that this
      * only trims ASCII white-space.
      */
-    public static String trimToNull(String originalStr) {
+    static String trimToNull(String originalStr) {
         if (originalStr == null) {
             return null;
         }
@@ -87,14 +87,14 @@ public class Util {
     /**
      * Throws an exception if the object is null, with a generic error message.
      */
-    public static void checkNotNull(Object o) throws NullPointerException {
+    static void checkNotNull(Object o) throws NullPointerException {
         checkNotNull(o, "This object should not be null.");
     }
 
     /**
      * Throws an exception if the object is null, with the error message supplied.
      */
-    public static void checkNotNull(Object o, String message) throws NullPointerException {
+    static void checkNotNull(Object o, String message) throws NullPointerException {
         if (o == null) {
             throw new NullPointerException(message);
         }
@@ -103,7 +103,7 @@ public class Util {
     /**
      * Joins input string with the given separator. If an input string is null, it will be skipped.
      */
-    public static String joinAndSkipNulls(String separator, String... strings) {
+    static String joinAndSkipNulls(String separator, String... strings) {
         StringBuilder sb = null;
         for (String s : strings) {
             if (s != null) {
@@ -179,7 +179,7 @@ public class Util {
      * @return a language code string in BCP-47 format (e.g. "en", "zh-Latn", "zh-Hans" or
      * "en-US").
      */
-    public static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
+    static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
         String country = currentCountry.toUpperCase();
         // Only do something if the country is China, Taiwan, Japan, Hong Kong, or South
         // or North Korea.

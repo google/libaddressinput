@@ -34,7 +34,7 @@ import java.util.Map;
  * POSTCODE_AS_USED_IN_US... and so on for all 240 countries, only "postcode" and "zipcode" need to
  * be translated.
  */
-public enum FieldNameType {
+enum FieldNameType {
     // COUNTRY
     C_COUNTRY(AddressField.COUNTRY),
 
@@ -76,21 +76,21 @@ public enum FieldNameType {
     /**
      * Given a keyname (as used in the JSON data), returns the field name type, or null.
      */
-    public static FieldNameType get(String keyname) {
+    static FieldNameType get(String keyname) {
         return FIELD_NAME_MAP.get(keyname.toLowerCase());
     }
 
     /**
      * Returns the field associated with this field name type.
      */
-    public AddressField field() {
+    AddressField field() {
         return mField;
     }
 
     /**
      * Returns the keyname of this field name type.
      */
-    public String keyname() {
+    String keyname() {
         return mKeyname;
     }
 

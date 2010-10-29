@@ -27,7 +27,7 @@ import java.util.Map;
  * and a list of all the regions that the widget can support. Data has been sorted below for ease of
  * editing.
  */
-public class RegionDataConstants {
+class RegionDataConstants {
 
     /**
      * Assumes the array is a well-formed array - i.e., there are no unmatched keys in the input.
@@ -392,7 +392,7 @@ public class RegionDataConstants {
             jsonString = convertArrayToJsonString(inputArray);
         }
 
-        public String getJsonString() {
+        String getJsonString() {
             return jsonString;
         }
     }
@@ -406,7 +406,7 @@ public class RegionDataConstants {
         }
     }
 
-    public static Map<String, String> getCountryFormatMap() {
+    static Map<String, String> getCountryFormatMap() {
         return COUNTRY_FORMAT_MAP;
     }
 }

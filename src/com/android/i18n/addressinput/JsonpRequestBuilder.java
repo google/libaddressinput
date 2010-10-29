@@ -31,12 +31,12 @@ import java.net.URLEncoder;
  * Android implementation of those parts of the com.google.gwt.jsonp.client.JsonpRequestBuilder
  * class that the CacheData class uses.
  */
-public class JsonpRequestBuilder {
+class JsonpRequestBuilder {
 
     /**
      * Re-implementation of the com.google.gwt.user.client.rpc.AsyncCallback interface.
      */
-    public interface AsyncCallback<T> {
+    interface AsyncCallback<T> {
 
         public void onFailure(Throwable caught);
 
@@ -46,7 +46,7 @@ public class JsonpRequestBuilder {
     /**
      * @param timeout The expected timeout (ms) for this request.
      */
-    public void setTimeout(int timeout) {
+    void setTimeout(int timeout) {
         HttpParams params = AsyncHttp.CLIENT.getParams();
         HttpConnectionParams.setConnectionTimeout(params, timeout);
         HttpConnectionParams.setSoTimeout(params, timeout);
@@ -55,7 +55,7 @@ public class JsonpRequestBuilder {
     /**
      * Sends a JSONP request and expects a JsoMap object as a result.
      */
-    public void requestObject(String url, AsyncCallback<JsoMap> callback) {
+    void requestObject(String url, AsyncCallback<JsoMap> callback) {
         HttpUriRequest request = new HttpGet(encodeUrl(url));
         (new AsyncHttp(request, callback)).start();
     }

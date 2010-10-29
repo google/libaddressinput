@@ -200,10 +200,6 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
             }
             return "";
         }
-
-        public Spinner getSpinner() {
-            return mView;
-        }
     }
 
     private ArrayList<AddressSpinnerInfo> mSpinners = new ArrayList<AddressSpinnerInfo>();
@@ -458,7 +454,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         mFormController.requestDataForAddress(data, new DataLoadListener() {
             public void dataLoadingBegin() {
                 mProgressDialog = ProgressDialog.show(mContext, "",
-                        mContext.getString(R.string.loading));
+                        mContext.getString(R.string.address_data_loading));
                 Log.d(this.toString(), "Progress dialog started.");
             };
             public void dataLoadingEnd() {

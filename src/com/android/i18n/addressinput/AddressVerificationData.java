@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Wraps a Map of address property data to provide the AddressVerificationData API.
  */
-public class AddressVerificationData implements DataSource {
+class AddressVerificationData implements DataSource {
 
     private final Map<String, String> mPropertiesMap;
 
@@ -39,7 +39,7 @@ public class AddressVerificationData implements DataSource {
      * Constructs from a map of address property data.  This keeps a reference to the map.  This
      * does not mutate the map. The map should not be mutated subsequent to this call.
      */
-    public AddressVerificationData(Map<String, String> propertiesMap) {
+    AddressVerificationData(Map<String, String> propertiesMap) {
         mPropertiesMap = propertiesMap;
     }
 
@@ -55,7 +55,7 @@ public class AddressVerificationData implements DataSource {
      * Returns a set of the keys for which verification data is provided.  The returned set is
      * immutable.
      */
-    public Set<String> keys() {
+    Set<String> keys() {
         Set<String> result = new HashSet<String>();
         for (String key : mPropertiesMap.keySet()) {
             if (isValidKey(key)) {
@@ -76,7 +76,7 @@ public class AddressVerificationData implements DataSource {
     /**
      * Returns the contents of the JSON-format string as a map.
      */
-    protected AddressVerificationNodeData createNodeData(String json) {
+    AddressVerificationNodeData createNodeData(String json) {
         // Remove leading and trailing { and }.
         json = json.substring(1, json.length() - 1);
         Map<AddressDataKey, String> map =

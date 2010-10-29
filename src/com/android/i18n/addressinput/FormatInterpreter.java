@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * Address format interpreter. A utility to find address format related info.
  */
-public class FormatInterpreter {
+class FormatInterpreter {
 
     private static final String NEW_LINE = "%n";
 
@@ -43,7 +43,7 @@ public class FormatInterpreter {
     /**
      * Creates a new instance of {@link FormatInterpreter}.
      */
-    public FormatInterpreter(FormOptions options) {
+    FormatInterpreter(FormOptions options) {
         Util.checkNotNull(RegionDataConstants.getCountryFormatMap(),
                 "null country name map not allowed");
         Util.checkNotNull(options);
@@ -58,7 +58,7 @@ public class FormatInterpreter {
      *
      * @param scriptType if {@link ScriptType#LOCAL}, use local format; else use Latin format.
      */
-    public List<AddressField> getAddressFieldOrder(ScriptType scriptType, String regionCode) {
+    List<AddressField> getAddressFieldOrder(ScriptType scriptType, String regionCode) {
         Util.checkNotNull(scriptType);
         Util.checkNotNull(regionCode);
         List<AddressField> fieldOrder = new ArrayList<AddressField>();
@@ -91,7 +91,7 @@ public class FormatInterpreter {
      * Returns a list of address fields based on the format of {@code regionCode} -- assuming script
      * type is {@link ScriptType#LOCAL}.
      */
-    public List<AddressField> getAddressFieldOrder(String regionCode) {
+    List<AddressField> getAddressFieldOrder(String regionCode) {
         Util.checkNotNull(regionCode);
         return getAddressFieldOrder(ScriptType.LOCAL, regionCode);
     }
@@ -142,7 +142,7 @@ public class FormatInterpreter {
      * This method does not validate addresses. Also, it will "normalize" the result strings by
      * removing redundant spaces and empty lines.
      */
-    public List<String> getEnvelopeAddress(AddressData address) {
+    List<String> getEnvelopeAddress(AddressData address) {
         Util.checkNotNull(address, "null input address not allowed");
         String regionCode = address.getPostalCountry();
 

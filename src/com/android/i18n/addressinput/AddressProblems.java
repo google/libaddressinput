@@ -31,7 +31,7 @@ public class AddressProblems {
      * Only one address problem type is saved per addressField. Address field as used here refers to
      * the different data parts in the AddressData class.
      */
-    public void add(AddressField addressField, AddressProblemType problem) {
+    void add(AddressField addressField, AddressProblemType problem) {
         mProblems.put(addressField, problem);
     }
 

@@ -30,7 +30,7 @@ import java.util.Queue;
  * Responsible for looking up data for address fields. This fetches possible
  * values for the next level down in the address hierarchy, if these are known.
  */
-public class FormController {
+class FormController {
     // Used to identify the source of a log message.
     private static final String TAG = "FormController";
     // For address hierarchy in lookup key.
@@ -58,7 +58,7 @@ public class FormController {
      * as "en" or "zh-Hant") and currentCountry should be an ISO 2-letter region code (such as "GB"
      * or "US").
      */
-    public FormController(ClientData integratedData, String languageCode, String currentCountry) {
+    FormController(ClientData integratedData, String languageCode, String currentCountry) {
         Util.checkNotNull(integratedData, "null data not allowed");
         mLanguageCode = languageCode;
         this.mCurrentCountry = currentCountry;
@@ -73,7 +73,7 @@ public class FormController {
         this.mIntegratedData = integratedData;
     }
 
-    public void setLanguageCode(String languageCode) {
+    void setLanguageCode(String languageCode) {
         mLanguageCode = languageCode;
     }
 
@@ -109,7 +109,7 @@ public class FormController {
      * @param address  the current address.
      * @param listener triggered when requested data for the address is returned.
      */
-    public void requestDataForAddress(AddressData address, DataLoadListener listener) {
+    void requestDataForAddress(AddressData address, DataLoadListener listener) {
         Util.checkNotNull(address.getPostalCountry(), "null country not allowed");
 
         // Gets the key for deepest available node.

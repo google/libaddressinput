@@ -27,7 +27,7 @@ import java.util.List;
  * Represents a component in the address widget UI. It could be either a text box (when there is no
  * candidate) or a spinner.
  */
-public class AddressUIComponent {
+class AddressUIComponent {
     // The label for the UI component
     private String mFieldName;
 
@@ -50,11 +50,11 @@ public class AddressUIComponent {
     /**
      * Type of UI component. There are only EDIT (text-box) and SPINNER (drop-down) components.
      */
-    public enum UIComponent {
+    enum UIComponent {
         EDIT, SPINNER,
     }
 
-    public AddressUIComponent(AddressField id) {
+    AddressUIComponent(AddressField id) {
         mId = id;
         // By default, an AddressUIComponent doesn't depend on anything else.
         mParentId = null;
@@ -65,7 +65,7 @@ public class AddressUIComponent {
      * Initializes the candidatesList, and set the uiType and parentId.
      * @param candidatesList
      */
-    public void initializeCandidatesList(List<RegionData> candidatesList) {
+    void initializeCandidatesList(List<RegionData> candidatesList) {
         mCandidatesList = candidatesList;
         if (candidatesList.size() > 1) {
             mUiType = UIComponent.SPINNER;
@@ -86,7 +86,7 @@ public class AddressUIComponent {
     /**
      * Gets the value entered in the UI component.
      */
-    public String getValue() {
+    String getValue() {
         if (mView == null) {
             return (mCandidatesList.size() == 0) ? "" : mCandidatesList.get(0).getDisplayName();
         }
@@ -104,51 +104,51 @@ public class AddressUIComponent {
         }
     }
 
-    public String getFieldName() {
+    String getFieldName() {
         return mFieldName;
     }
 
-    public void setFieldName(String fieldName) {
+    void setFieldName(String fieldName) {
         mFieldName = fieldName;
     }
 
-    public UIComponent getUIType() {
+    UIComponent getUIType() {
         return mUiType;
     }
 
-    public void setUIType(UIComponent uiType) {
+    void setUIType(UIComponent uiType) {
         mUiType = uiType;
     }
 
-    public List<RegionData> getCandidatesList() {
+    List<RegionData> getCandidatesList() {
         return mCandidatesList;
     }
 
-    public void setCandidatesList(List<RegionData> candidatesList) {
+    void setCandidatesList(List<RegionData> candidatesList) {
         mCandidatesList = candidatesList;
     }
 
-    public AddressField getId() {
+    AddressField getId() {
         return mId;
     }
 
-    public void setId(AddressField id) {
+    void setId(AddressField id) {
         mId = id;
     }
 
-    public AddressField getParentId() {
+    AddressField getParentId() {
         return mParentId;
     }
 
-    public void setParentId(AddressField parentId) {
+    void setParentId(AddressField parentId) {
         mParentId = parentId;
     }
 
-    public void setView(View view) {
+    void setView(View view) {
         mView = view;
     }
 
-    public View getView() {
+    View getView() {
         return mView;
     }
 }
