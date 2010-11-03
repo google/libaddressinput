@@ -24,4 +24,6 @@ public interface ClientCacheManager {
     public String get(String key);
     // Put the data for the given key into the cache.
     public void put(String key, String data);
+    // Get the Url of the server that serves address metadata.
+    public String getAddressServerUrl();
 }

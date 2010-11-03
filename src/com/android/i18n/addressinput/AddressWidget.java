@@ -97,16 +97,16 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     static {
         Map<String, Integer> adminLabelMap = new HashMap<String, Integer>(15);
-        adminLabelMap.put("state", R.string.state_label);
-        adminLabelMap.put("province", R.string.province);
-        adminLabelMap.put("prefecture", R.string.prefecture);
-        adminLabelMap.put("parish", R.string.parish);
-        adminLabelMap.put("island", R.string.island);
-        adminLabelMap.put("emirate", R.string.emirate);
-        adminLabelMap.put("department", R.string.department);
-        adminLabelMap.put("county", R.string.county_label);
-        adminLabelMap.put("area", R.string.area);
-        adminLabelMap.put("do_si", R.string.do_si);
+        adminLabelMap.put("state", R.string.i18n_state_label);
+        adminLabelMap.put("province", R.string.i18n_province);
+        adminLabelMap.put("prefecture", R.string.i18n_prefecture);
+        adminLabelMap.put("parish", R.string.i18n_parish);
+        adminLabelMap.put("island", R.string.i18n_island);
+        adminLabelMap.put("emirate", R.string.i18n_emirate);
+        adminLabelMap.put("department", R.string.i18n_department);
+        adminLabelMap.put("county", R.string.i18n_county_label);
+        adminLabelMap.put("area", R.string.i18n_area);
+        adminLabelMap.put("do_si", R.string.i18n_do_si);
         ADMIN_LABELS = Collections.unmodifiableMap(adminLabelMap);
 
         Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
@@ -258,17 +258,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
         // Set up AddressField.LOCALITY
         AddressUIComponent localityUI = new AddressUIComponent(AddressField.LOCALITY);
-        localityUI.setFieldName(mContext.getString(R.string.locality_label));
+        localityUI.setFieldName(mContext.getString(R.string.i18n_locality_label));
         mInputWidgets.put(AddressField.LOCALITY, localityUI);
 
         // Set up AddressField.DEPENDENT_LOCALITY
         AddressUIComponent subLocalityUI = new AddressUIComponent(AddressField.DEPENDENT_LOCALITY);
-        subLocalityUI.setFieldName(mContext.getString(R.string.dependent_locality_label));
+        subLocalityUI.setFieldName(mContext.getString(R.string.i18n_dependent_locality_label));
         mInputWidgets.put(AddressField.DEPENDENT_LOCALITY, subLocalityUI);
 
         // Set up AddressField.ADDRESS_LINE_1
         AddressUIComponent addressLine1UI = new AddressUIComponent(AddressField.ADDRESS_LINE_1);
-        addressLine1UI.setFieldName(mContext.getString(R.string.address_line1_label));
+        addressLine1UI.setFieldName(mContext.getString(R.string.i18n_address_line1_label));
         mInputWidgets.put(AddressField.ADDRESS_LINE_1, addressLine1UI);
 
         // Set up AddressField.ADDRESS_LINE_2
@@ -278,12 +278,12 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
         // Set up AddressField.ORGANIZATION
         AddressUIComponent organizationUI = new AddressUIComponent(AddressField.ORGANIZATION);
-        organizationUI.setFieldName(mContext.getString(R.string.organization_label));
+        organizationUI.setFieldName(mContext.getString(R.string.i18n_organization_label));
         mInputWidgets.put(AddressField.ORGANIZATION, organizationUI);
 
         // Set up AddressField.RECIPIENT
         AddressUIComponent recipientUI = new AddressUIComponent(AddressField.RECIPIENT);
-        recipientUI.setFieldName(mContext.getString(R.string.recipient_label));
+        recipientUI.setFieldName(mContext.getString(R.string.i18n_recipient_label));
         mInputWidgets.put(AddressField.RECIPIENT, recipientUI);
 
         // Set up AddressField.POSTAL_CODE
@@ -314,10 +314,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         String zipType = countryNode.get(AddressDataKey.ZIP_NAME_TYPE);
         if (zipType == null) {
             mZipLabel = ZipLabel.POSTAL;
-            zipName = mContext.getString(R.string.postal_code_label);
+            zipName = mContext.getString(R.string.i18n_postal_code_label);
         } else {
             mZipLabel = ZipLabel.ZIP;
-            zipName = mContext.getString(R.string.zip_code_label);
+            zipName = mContext.getString(R.string.i18n_zip_code_label);
         }
         return zipName;
     }
@@ -328,7 +328,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         Integer result = ADMIN_LABELS.get(adminLabelType);
         if (result == null) {
             // Fallback to province.
-            result = R.string.province;
+            result = R.string.i18n_province;
         }
         return mContext.getString(result);
     }
@@ -336,7 +336,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     private void buildCountryListBox() {
         // Set up AddressField.COUNTRY
         AddressUIComponent countryUI = new AddressUIComponent(AddressField.COUNTRY);
-        countryUI.setFieldName(mContext.getString(R.string.country_label));
+        countryUI.setFieldName(mContext.getString(R.string.i18n_country_label));
         ArrayList<RegionData> countries = new ArrayList<RegionData>();
         for (RegionData regionData : mFormController.getRegionData(new LookupKey.Builder(
                 KeyType.DATA).build())) {

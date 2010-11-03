@@ -45,15 +45,9 @@ public final class CacheData {
     private static final int TIMEOUT = 5000;
 
     /**
-     * URL to get public address data.
-     */
-    private static final String PUBLIC_ADDRESS_SERVER =
-            "http://i18napis.appspot.com/address";
-
-    /**
      * URL to get address data. You can also reset it by calling {@link #setUrl(String)}.
      */
-    private String mServiceUrl = PUBLIC_ADDRESS_SERVER;
+    private String mServiceUrl;
 
     /**
      * Storage for all dynamically retrieved data.
@@ -89,8 +83,7 @@ public final class CacheData {
      * to the AddressWidget.
      */
     public CacheData() {
-        mClientCacheManager = new SimpleClientCacheManager();
-        mCache = JsoMap.createEmptyJsoMap();
+        this(new SimpleClientCacheManager());
     }
 
     /**
@@ -99,6 +92,7 @@ public final class CacheData {
      */
     public CacheData(ClientCacheManager clientCacheManager) {
         mClientCacheManager = clientCacheManager;
+        setUrl(mClientCacheManager.getAddressServerUrl());
         mCache = JsoMap.createEmptyJsoMap();
     }
 
@@ -122,6 +116,7 @@ public final class CacheData {
      */
     public CacheData(String jsonString) {
         mClientCacheManager = new SimpleClientCacheManager();
+        setUrl(mClientCacheManager.getAddressServerUrl());
         JsoMap tempMap = null;
         try {
             tempMap = JsoMap.buildJsoMap(jsonString);
