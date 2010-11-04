@@ -69,33 +69,33 @@ public class FormOptions {
         return mBaseId;
     }
 
-    public boolean isHidden(AddressField field) {
+    boolean isHidden(AddressField field) {
         return mHiddenFields.contains(field);
     }
 
-    public boolean isReadonly(AddressField field) {
+    boolean isReadonly(AddressField field) {
         return mReadonlyFields.contains(field);
     }
 
-    public boolean isRequired(AddressField field) {
+    boolean isRequired(AddressField field) {
         return mRequiredFields.contains(field);
     }
 
-    public EnumSet<AddressField> getRequiredFields() {
+    EnumSet<AddressField> getRequiredFields() {
         return mRequiredFields;
     }
 
     /**
      * Gets the customized label for the {@code field}, or returns null if none.
      */
-    public String getCustomLabel(AddressField field) {
+    String getCustomLabel(AddressField field) {
         return mCustomLabels.get(field);
     }
 
     /**
      * Gets the URL of the Address Data Server.
      */
-    public String getUrl() {
+    String getUrl() {
         return mServerUrl;
     }
 
@@ -103,7 +103,7 @@ public class FormOptions {
      * Gets the overridden field orders with their corresponding region code. Returns null if field
      * orders for {@code regionCode} is not specified.
      */
-    public AddressField[] getCustomFieldOrder(String regionCode) {
+    AddressField[] getCustomFieldOrder(String regionCode) {
         if (regionCode == null) {
             throw new RuntimeException("regionCode cannot be null.");
         }
@@ -113,7 +113,7 @@ public class FormOptions {
     /**
      * Gets the customized max length for the {@code field}, or null if none.
      */
-    public Integer getCustomMaxLength(AddressField field) {
+    Integer getCustomMaxLength(AddressField field) {
         return mMaxLengths.get(field);
     }
 

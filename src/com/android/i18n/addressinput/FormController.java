@@ -19,8 +19,6 @@ package com.android.i18n.addressinput;
 import com.android.i18n.addressinput.LookupKey.KeyType;
 import com.android.i18n.addressinput.LookupKey.ScriptType;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,8 +29,6 @@ import java.util.Queue;
  * values for the next level down in the address hierarchy, if these are known.
  */
 class FormController {
-    // Used to identify the source of a log message.
-    private static final String TAG = "FormController";
     // For address hierarchy in lookup key.
     private static final String SLASH_DELIM = "/";
     // For joined values.
@@ -140,14 +136,12 @@ class FormController {
         mIntegratedData.requestData(key, new DataLoadListener() {
             // Override
             public void dataLoadingBegin() {
-                Log.i(TAG, "requesting data for key " + key);
             }
 
             // Override
             public void dataLoadingEnd() {
                 List<RegionData> subregions = getRegionData(key);
                 if (subregions.isEmpty()) {
-                    Log.i(TAG, "recursion ends with key " + key);
                     if (listener != null) {
                         listener.dataLoadingEnd();
                     }

@@ -207,8 +207,6 @@ public final class CacheData {
                 map.mergeData((JsoMap) mExistingJso);
             }
 
-            Log.d(TAG, "put the following key/value pair into cache. key:" + mKey
-                    + ", value:" + map.string());
             mCache.putObj(mKey, map);
             notifyListenersAfterJobDone(mKey);
             triggerDataLoadingEndIfNotNull(mListener);
@@ -274,7 +272,6 @@ public final class CacheData {
 
         // Key is valid and cached.
         if (mCache.containsKey(key.toString())) {
-            Log.d(TAG, "returning data for key " + key + " from the cache");
             triggerDataLoadingEndIfNotNull(listener);
             return;
         }
