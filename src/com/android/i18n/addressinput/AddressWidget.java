@@ -87,6 +87,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     private static final Map<String, Integer> ADMIN_LABELS;
     private static final Map<String, Integer> ADMIN_ERROR_MESSAGES;
 
+    private static final FormOptions SHOW_ALL_FIELDS = new FormOptions.Builder().build();
+
     // The appropriate label that should be applied to the zip code field of the current country.
     private enum ZipLabel {
         ZIP,
@@ -628,6 +630,14 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
      */
     public List<String> getEnvelopeAddress(AddressData address) {
         return mFormatInterpreter.getEnvelopeAddress(address);
+    }
+
+    /**
+     * Gets the formatted address based on the AddressData passed in with none of the relevant
+     * fields hidden.
+     */
+    public static List<String> getFullEnvelopeAddress(AddressData address) {
+        return new FormatInterpreter(SHOW_ALL_FIELDS).getEnvelopeAddress(address);
     }
 
     /**
