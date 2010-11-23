@@ -99,29 +99,31 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     static {
         Map<String, Integer> adminLabelMap = new HashMap<String, Integer>(15);
-        adminLabelMap.put("state", R.string.i18n_state_label);
-        adminLabelMap.put("province", R.string.i18n_province);
-        adminLabelMap.put("prefecture", R.string.i18n_prefecture);
-        adminLabelMap.put("parish", R.string.i18n_parish);
-        adminLabelMap.put("island", R.string.i18n_island);
-        adminLabelMap.put("emirate", R.string.i18n_emirate);
-        adminLabelMap.put("department", R.string.i18n_department);
-        adminLabelMap.put("county", R.string.i18n_county_label);
         adminLabelMap.put("area", R.string.i18n_area);
+        adminLabelMap.put("county", R.string.i18n_county_label);
+        adminLabelMap.put("department", R.string.i18n_department);
+        adminLabelMap.put("district", R.string.i18n_dependent_locality_label);
         adminLabelMap.put("do_si", R.string.i18n_do_si);
+        adminLabelMap.put("emirate", R.string.i18n_emirate);
+        adminLabelMap.put("island", R.string.i18n_island);
+        adminLabelMap.put("parish", R.string.i18n_parish);
+        adminLabelMap.put("prefecture", R.string.i18n_prefecture);
+        adminLabelMap.put("province", R.string.i18n_province);
+        adminLabelMap.put("state", R.string.i18n_state_label);
         ADMIN_LABELS = Collections.unmodifiableMap(adminLabelMap);
 
         Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
-        adminErrorMap.put("state", R.string.invalid_state_label);
-        adminErrorMap.put("province", R.string.invalid_province);
-        adminErrorMap.put("prefecture", R.string.invalid_prefecture);
-        adminErrorMap.put("parish", R.string.invalid_parish);
-        adminErrorMap.put("island", R.string.invalid_island);
-        adminErrorMap.put("emirate", R.string.invalid_emirate);
-        adminErrorMap.put("department", R.string.invalid_department);
-        adminErrorMap.put("county", R.string.invalid_county_label);
         adminErrorMap.put("area", R.string.invalid_area);
+        adminErrorMap.put("county", R.string.invalid_county_label);
+        adminErrorMap.put("department", R.string.invalid_department);
+        adminErrorMap.put("district", R.string.invalid_dependent_locality_label);
         adminErrorMap.put("do_si", R.string.invalid_do_si);
+        adminErrorMap.put("emirate", R.string.invalid_emirate);
+        adminErrorMap.put("island", R.string.invalid_island);
+        adminErrorMap.put("parish", R.string.invalid_parish);
+        adminErrorMap.put("prefecture", R.string.invalid_prefecture);
+        adminErrorMap.put("province", R.string.invalid_province);
+        adminErrorMap.put("state", R.string.invalid_state_label);
         ADMIN_ERROR_MESSAGES = Collections.unmodifiableMap(adminErrorMap);
     }
 

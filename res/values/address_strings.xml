@@ -42,7 +42,7 @@
     <string name="i18n_locality_label">City</string>
 
     <!-- Area of a town (a neighbourhood/suburb) used for addresses in Korea and
-         China [CHAR LIMIT=30] -->
+         China, or a district of a country such as Nauru [CHAR LIMIT=30] -->
     <string name="i18n_dependent_locality_label">District</string>
 
     <!-- Company/Organization of the address [CHAR LIMIT=30] -->
@@ -105,7 +105,7 @@
 
     <!-- Message to be shown when an area of a city which is entered by the user (a
          neighbourhood/suburb), is invalid. Used for addresses in Korea and
-         China, [CHAR LIMIT=30] -->
+         China, or for districts of a country such as Nauru [CHAR LIMIT=30] -->
     <string name="invalid_dependent_locality_label">Invalid district</string>
 
     <!-- Message to be shown when an incorrect postal code is entered by the user. Postal codes
