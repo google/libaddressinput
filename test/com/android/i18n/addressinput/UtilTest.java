@@ -106,6 +106,13 @@ public class UtilTest extends TestCase {
         assertEquals("zh_CN", Util.getWidgetCompatibleLanguageCode(chineseChina, "CN"));
     }
 
+    public void testGetWidgetCompatibleLanguageCodeThailand() throws Exception {
+      Locale thai = new Locale("th", "TH");
+      assertEquals("th_TH", Util.getWidgetCompatibleLanguageCode(thai, "TH"));
+      // However, we assume Thai users prefer latin names for China.
+      assertEquals("th_latn_TH", Util.getWidgetCompatibleLanguageCode(thai, "CN"));
+    }
+
     public void testGetWidgetCompatibleLanguageCodeNonCjkCountry() throws Exception {
         // Nothing should be changed for non-CJK countries, since their form layout is the same
         // regardless of language.

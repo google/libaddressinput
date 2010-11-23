@@ -33,6 +33,26 @@ class Util {
     private static final String LATIN_SCRIPT = "LATN";
 
     /**
+     * Map of countries that have non-latin local names, with the language that their local names
+     * are in. We only list a country here if we have the appropriate data. Only language sub-tags
+     * are listed.
+     */
+     private static final Map<String, String> nonLatinLocalLanguageCountries =
+             new HashMap<String, String>();
+     static {
+       nonLatinLocalLanguageCountries.put("AM", "hy");
+       nonLatinLocalLanguageCountries.put("CN", "zh");
+       nonLatinLocalLanguageCountries.put("HK", "zh");
+       nonLatinLocalLanguageCountries.put("JP", "ja");
+       nonLatinLocalLanguageCountries.put("KP", "ko");
+       nonLatinLocalLanguageCountries.put("KR", "ko");
+       nonLatinLocalLanguageCountries.put("MO", "zh");
+       nonLatinLocalLanguageCountries.put("TH", "th");
+       nonLatinLocalLanguageCountries.put("TW", "zh");
+       nonLatinLocalLanguageCountries.put("VN", "vi");
+     }
+
+    /**
      * Cannot instantiate this class - private constructor.
      */
     private Util() {
@@ -181,16 +201,17 @@ class Util {
      */
     static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
         String country = currentCountry.toUpperCase();
-        // Only do something if the country is China, Taiwan, Japan, Hong Kong, or South
-        // or North Korea.
-        if (country.equals("CN") || country.equals("TW") || country.equals("JP") ||
-            country.equals("HK") || country.equals("KR") || country.equals("KP")) {
+        // Only do something if the country is one of those where we have names in the local
+        // language as well as in latin script.
+        if (nonLatinLocalLanguageCountries.contains(country) {
             String languageTag = language.getLanguage();
-            // Only do something if the language tag is _not_ Chinese, Japanese or Korean.
-            if (!languageTag.equals("zh") && !languageTag.equals("ja") &&
-                !languageTag.equals("ko")) {
+            // Only do something if the language tag is _not_ the local language.
+            if (!languageTag.equals(nonLatinLocalLanguageCountries.getValue(country))) {
                 // Build up the language tag with the country and language specified, and add in the
-                // script-tag of "Latn" explicitly, since this is _not_ a local language.
+                // script-tag of "Latn" explicitly, since this is _not_ a local language. This means
+                // that we might create a language tag of "th-Latn", which is not what the actual
+                // language being used is, but it indicates that we prefer "Latn" names to whatever
+                // the local alternative was.
                 StringBuilder languageTagBuilder = new StringBuilder(languageTag);
                 languageTagBuilder.append("_latn");
                 if (language.getCountry().length() > 0) {
