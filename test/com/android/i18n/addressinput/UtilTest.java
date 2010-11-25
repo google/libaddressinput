@@ -91,7 +91,7 @@ public class UtilTest extends TestCase {
 
     public void testGetWidgetCompatibleLanguageCodeCjkCountry() throws Exception {
         Locale canadianFrench = new Locale("fr", "CA");
-        // Latin language, CJK country. Need explicit latin tag, and country should be retained.
+        // Latin language, CJK country. Need explicit Latin tag, and country should be retained.
         assertEquals("fr_latn_CA", Util.getWidgetCompatibleLanguageCode(canadianFrench, "CN"));
         Locale canadianFrenchUpper = new Locale("FR", "CA");
         // Test that the locale returns the same language code, regardless of the case of the
@@ -99,8 +99,8 @@ public class UtilTest extends TestCase {
         assertEquals("fr_latn_CA", Util.getWidgetCompatibleLanguageCode(canadianFrenchUpper, "CN"));
         // No country in the Locale language.
         assertEquals("fr_latn", Util.getWidgetCompatibleLanguageCode(Locale.FRENCH, "CN"));
-        // CJK language - should be unaltered.
-        assertEquals(Locale.KOREAN.toString(),
+        // CJK language - but wrong country.
+        assertEquals("ko_latn",
                      Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "CN"));
         Locale chineseChina = new Locale("zh", "CN");
         assertEquals("zh_CN", Util.getWidgetCompatibleLanguageCode(chineseChina, "CN"));
@@ -109,7 +109,7 @@ public class UtilTest extends TestCase {
     public void testGetWidgetCompatibleLanguageCodeThailand() throws Exception {
       Locale thai = new Locale("th", "TH");
       assertEquals("th_TH", Util.getWidgetCompatibleLanguageCode(thai, "TH"));
-      // However, we assume Thai users prefer latin names for China.
+      // However, we assume Thai users prefer Latin names for China.
       assertEquals("th_latn_TH", Util.getWidgetCompatibleLanguageCode(thai, "CN"));
     }
 

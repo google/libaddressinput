@@ -203,10 +203,10 @@ class Util {
         String country = currentCountry.toUpperCase();
         // Only do something if the country is one of those where we have names in the local
         // language as well as in latin script.
-        if (nonLatinLocalLanguageCountries.contains(country) {
+        if (nonLatinLocalLanguageCountries.containsKey(country)) {
             String languageTag = language.getLanguage();
             // Only do something if the language tag is _not_ the local language.
-            if (!languageTag.equals(nonLatinLocalLanguageCountries.getValue(country))) {
+            if (!languageTag.equals(nonLatinLocalLanguageCountries.get(country))) {
                 // Build up the language tag with the country and language specified, and add in the
                 // script-tag of "Latn" explicitly, since this is _not_ a local language. This means
                 // that we might create a language tag of "th-Latn", which is not what the actual
