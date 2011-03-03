@@ -29,9 +29,12 @@ import java.util.Map;
  */
 class RegionDataConstants {
 
+    private static final Map<String, String> COUNTRY_FORMAT_MAP =
+            new HashMap<String, String>();
+
     /**
      * Assumes the array is a well-formed array - i.e., there are no unmatched keys in the input.
-     * Package private so it can be accessed by tests.
+     * Package-private so it can be accessed by tests.
      */
     static String convertArrayToJsonString(String[] input) {
         JSONObject object = new JSONObject();
@@ -400,9 +403,6 @@ class RegionDataConstants {
             return jsonString;
         }
     }
-
-    private static final Map<String, String> COUNTRY_FORMAT_MAP =
-            new HashMap<String, String>();
 
     static {
         for (RegionDataEnum region : RegionDataEnum.values()) {
