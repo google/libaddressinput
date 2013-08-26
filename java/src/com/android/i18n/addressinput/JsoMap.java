@@ -80,6 +80,7 @@ class JsoMap extends JSONObject {
      * @return string value.
      * @throws ClassCastException, IllegalArgumentException.
      */
+    @Override
     public String get(String key) {  // throws ClassCastException, IllegalArgumentException
         try {
             Object o = super.get(key);
@@ -111,6 +112,7 @@ class JsoMap extends JSONObject {
      *
      * @return integer value or -1 if value is undefined.
      */
+    @Override
     public int getInt(String key) {
         try {
             Object o = super.get(key);

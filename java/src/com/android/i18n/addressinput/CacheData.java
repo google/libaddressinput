@@ -286,6 +286,7 @@ public final class CacheData {
         if (!mRequestedKeys.add(key.toString())) {
             Log.d(TAG, "data for key " + key + " requested but not cached yet");
             addListenerToTempStore(key, new CacheListener() {
+                @Override
                 public void onAdd(String myKey) {
                     triggerDataLoadingEndIfNotNull(listener);
                 }
@@ -314,6 +315,7 @@ public final class CacheData {
                 existingJso, listener);
         jsonp.requestObject(mServiceUrl + "/" + key.toString(),
                 new AsyncCallback<JsoMap>() {
+                    @Override
                     public void onFailure(Throwable caught) {
                         Log.w(TAG, "Request for key " + key + " failed");
                         mRequestedKeys.remove(key.toString());
@@ -321,6 +323,7 @@ public final class CacheData {
                         triggerDataLoadingEndIfNotNull(listener);
                     }
 
+                    @Override
                     public void onSuccess(JsoMap result) {
                         handler.handleJson(result);
                         // Put metadata into the cache maintained by the client of the
@@ -342,7 +345,7 @@ public final class CacheData {
                 key.getValueForUpperLevelField(AddressField.COUNTRY));
         if (data != null) {
             try {
-                mCache.putObj(key.toString(), (JSONObject) JsoMap.buildJsoMap(data));
+                mCache.putObj(key.toString(), JsoMap.buildJsoMap(data));
             } catch (JSONException e) {
                 Log.w(TAG, "Failed to parse data for key " + key +
                       " from RegionDataConstants");

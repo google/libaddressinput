@@ -43,6 +43,7 @@ class AddressVerificationData implements DataSource {
         mPropertiesMap = propertiesMap;
     }
 
+    @Override
     public AddressVerificationNodeData get(String key) {
         String json = mPropertiesMap.get(key);
         if (json != null && isValidKey(key)) {
@@ -139,6 +140,7 @@ class AddressVerificationData implements DataSource {
         return new AddressVerificationNodeData(map);
     }
 
+    @Override
     public AddressVerificationNodeData getDefaultData(String key) {
         // gets country key
         if (key.split("/").length > 1) {

@@ -54,6 +54,7 @@ public abstract class AsyncTestCase extends TestCase {
         }
     }
 
+    @Override
     protected void runTest() throws Throwable {
         mTestIsFinished = false;
         mTestTimeoutMillis = 0;

@@ -131,6 +131,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     final Handler mHandler = new Handler();
 
     final Runnable mUpdateMultipleFields = new Runnable() {
+        @Override
         public void run() {
             updateFields();
         }
@@ -143,6 +144,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
             myId = id;
         }
 
+        @Override
         public void run() {
             updateInputWidget(myId);
         }
@@ -423,9 +425,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         }
 
         mFormController.requestDataForAddress(getAddressData(), new DataLoadListener() {
+            @Override
             public void dataLoadingBegin(){
             }
 
+            @Override
             public void dataLoadingEnd() {
                 Runnable updateChild = new UpdateRunnable(myId);
                 mHandler.post(updateChild);
@@ -456,11 +460,13 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         AddressData data = new AddressData.Builder().setCountry(mCurrentRegion)
                 .setLanguageCode(mWidgetLocale).build();
         mFormController.requestDataForAddress(data, new DataLoadListener() {
+            @Override
             public void dataLoadingBegin() {
                 mProgressDialog = ProgressDialog.show(mContext, "",
                         mContext.getString(R.string.address_data_loading));
                 Log.d(this.toString(), "Progress dialog started.");
-            };
+            }
+            @Override
             public void dataLoadingEnd() {
                 Log.d(this.toString(), "Data loading completed.");
                 mProgressDialog.dismiss();
@@ -711,9 +717,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       return component.getView();
     }
 
+    @Override
     public void onNothingSelected(AdapterView<?> arg0) {
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         updateChildNodes(parent, position);
     }

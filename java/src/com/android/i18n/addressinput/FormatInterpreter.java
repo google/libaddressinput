@@ -123,6 +123,7 @@ class FormatInterpreter {
 
         // Overrides field order with priority list.
         Collections.sort(union, new Comparator<AddressField>() {
+            @Override
             public int compare(AddressField o1, AddressField o2) {
                 return fieldPriority.get(o1) - fieldPriority.get(o2);
             }

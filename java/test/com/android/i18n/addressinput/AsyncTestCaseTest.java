@@ -27,6 +27,7 @@ public class AsyncTestCaseTest extends AsyncTestCase {
   public void testSuccess() {
       delayTestFinish(1000);
       AsyncCallback.execute(500, new Runnable() {
+          @Override
           public void run() {
               finishTest();
           }
@@ -37,12 +38,14 @@ public class AsyncTestCaseTest extends AsyncTestCase {
       expectTimeout = true;
       delayTestFinish(1000);
       AsyncCallback.execute(1500, new Runnable() {
+          @Override
           public void run() {
               finishTest();
           }
       });
   }
 
+  @Override
   protected void runTest() throws Throwable {
       expectTimeout = false;
       try {
@@ -69,6 +72,7 @@ public class AsyncTestCaseTest extends AsyncTestCase {
           (new AsyncCallback(waitMillis, callback)).start();
       }
 
+      @Override
       public void run() {
           try {
               synchronized (this) {

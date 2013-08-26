@@ -110,6 +110,7 @@ public class StandardAddressVerifier {
             mListener = listener;
         }
 
+        @Override
         public void run() {
             mListener.dataLoadingBegin();
 

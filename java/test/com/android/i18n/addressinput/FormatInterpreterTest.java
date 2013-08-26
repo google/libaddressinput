@@ -50,6 +50,7 @@ public class FormatInterpreterTest extends TestCase {
                                               .build();
     }
 
+    @Override
     public void setUp() {
         formatInterpreter = new FormatInterpreter(new FormOptions.Builder().build());
     }

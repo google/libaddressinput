@@ -25,6 +25,7 @@ import com.android.i18n.addressinput.testing.AsyncTestCase;
 public class ClientDataTest extends AsyncTestCase {
     private ClientData client;
 
+    @Override
     public void setUp() {
         client = new ClientData(new CacheData());
     }
@@ -50,10 +51,12 @@ public class ClientDataTest extends AsyncTestCase {
         client.prefetchCountry("TW", new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
                 // Currently this test only tests that the execution doesn't crash and eventually

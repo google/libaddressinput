@@ -50,6 +50,7 @@ public class ClientData implements DataSource {
         buildRegionalData();
     }
 
+    @Override
     public AddressVerificationNodeData get(String key) {
         JsoMap jso = mCacheData.getObj(key);
         if (jso == null) {  // Not cached.
@@ -62,6 +63,7 @@ public class ClientData implements DataSource {
         return null;
     }
 
+    @Override
     public AddressVerificationNodeData getDefaultData(String key) {
         // root data
         if (key.split("/").length == 1) {
@@ -249,9 +251,11 @@ public class ClientData implements DataSource {
             }
         }
 
+        @Override
         public void dataLoadingBegin() {
         }
 
+        @Override
         public void dataLoadingEnd() {
             final String subKeys = AddressDataKey.SUB_KEYS.name().toLowerCase();
             final String subMores = AddressDataKey.SUB_MORES.name().toLowerCase();

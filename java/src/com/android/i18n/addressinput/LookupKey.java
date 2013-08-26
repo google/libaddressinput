@@ -241,10 +241,12 @@ final class LookupKey {
     /**
      * Gets a lookup key as a plain text string., e.g., "data/US/CA".
      */
+    @Override
     public String toString() {
         return mKeyString;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -256,6 +258,7 @@ final class LookupKey {
         return ((LookupKey) obj).toString().equals(mKeyString);
     }
 
+    @Override
     public int hashCode() {
         return mKeyString.hashCode();
     }

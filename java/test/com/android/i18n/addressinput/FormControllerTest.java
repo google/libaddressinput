@@ -52,10 +52,12 @@ public class FormControllerTest extends AsyncTestCase {
 
         controller.requestDataForAddress(US_CA_ADDRESS, new DataLoadListener() {
             boolean beginCalled = false;
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
                            beginCalled);
@@ -87,10 +89,12 @@ public class FormControllerTest extends AsyncTestCase {
 
         controller.requestDataForAddress(address, new DataLoadListener() {
             boolean beginCalled = false;
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
                            beginCalled);
@@ -120,10 +124,12 @@ public class FormControllerTest extends AsyncTestCase {
 
         controller.requestDataForAddress(US_ADDRESS, new DataLoadListener() {
             boolean beginCalled = false;
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
                            beginCalled);

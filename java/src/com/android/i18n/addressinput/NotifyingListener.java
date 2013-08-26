@@ -28,9 +28,11 @@ public class NotifyingListener implements DataLoadListener {
         mDone = false;
     }
 
+    @Override
     public void dataLoadingBegin() {
     }
 
+    @Override
     public void dataLoadingEnd() {
         synchronized (this) {
             mDone = true;

@@ -29,6 +29,7 @@ import java.net.SocketTimeoutException;
 public class JsonpRequestBuilderTest extends AsyncTestCase {
     private JsonpRequestBuilder builder;
 
+    @Override
     public void setUp() {
         builder = new JsonpRequestBuilder();
     }
@@ -40,10 +41,12 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
         String url = HttpServer.execute(1000, "{\"id\": \"data\"}");
 
         builder.requestObject(url, new AsyncCallback<JsoMap>() {
+            @Override
             public void onFailure(Throwable caught) {
                 fail(caught.toString());
             }
 
+            @Override
             public void onSuccess(JsoMap result) {
                 assertNotNull(result);
                 assertEquals("data", result.get("id"));
@@ -59,12 +62,14 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
         String url = HttpServer.execute(2000, "Fubar");
 
         builder.requestObject(url, new AsyncCallback<JsoMap>() {
+            @Override
             public void onFailure(Throwable caught) {
                 assertNotNull(caught);
                 assertTrue(caught instanceof SocketTimeoutException);
                 finishTest();
             }
 
+            @Override
             public void onSuccess(JsoMap result) {
                 fail("The request should have timed out.");
             }
@@ -79,10 +84,12 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
         String url = urlBase + "address/data/VN/B\u1EAFc K\u1EA1n";
 
         builder.requestObject(url, new AsyncCallback<JsoMap>() {
+            @Override
             public void onFailure(Throwable caught) {
                 fail(caught.toString());
             }
 
+            @Override
             public void onSuccess(JsoMap result) {
                 assertNotNull(result);
                 assertEquals("data", result.get("id"));
@@ -111,6 +118,7 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
             return "http://localhost:" + server.serverSocket.getLocalPort() + "/";
         }
 
+        @Override
         public void run() {
             try {
                 Socket clientSocket = serverSocket.accept();

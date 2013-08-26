@@ -26,6 +26,7 @@ public class StandardAddressVerifierTest extends TestCase {
     private AddressProblems problems = new AddressProblems();
     private StandardAddressVerifier verifier;
 
+    @Override
     protected void setUp() {
         problems.clear();
         verifier = new StandardAddressVerifier(new FieldVerifier(new ClientData(new CacheData())),

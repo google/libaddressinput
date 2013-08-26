@@ -46,6 +46,7 @@ public class CacheDataTest extends AsyncTestCase {
 
     private static boolean reachedMaxCount = false;
 
+    @Override
     public void setUp() {
         cache = new CacheData();
     }
@@ -92,10 +93,12 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
                 JsoMap map = cache.getObj(CANADA_KEY);
@@ -128,10 +131,12 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
 
@@ -165,10 +170,12 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
 
@@ -184,6 +191,7 @@ public class CacheDataTest extends AsyncTestCase {
         final int maxCount = 10;
 
         class CounterListener implements DataLoadListener {
+            @Override
             public void dataLoadingBegin() {
                 listenerInvokeCount++;
                 if (listenerInvokeCount == maxCount) {
@@ -194,6 +202,7 @@ public class CacheDataTest extends AsyncTestCase {
                            listenerInvokeCount <= maxCount);
             }
 
+            @Override
             public void dataLoadingEnd() {
                 listenerInvokeCount--;
                 assertTrue(listenerInvokeCount >= 0);
@@ -230,12 +239,14 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 assertFalse("data for key " + key + " should not be fetched yet",
                             cache.containsKey(key.toString()));
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
 
@@ -244,10 +255,12 @@ public class CacheDataTest extends AsyncTestCase {
                 cache.fetchDynamicData(key, null, new DataLoadListener() {
                     boolean beginCalled2 = false;
 
+                    @Override
                     public void dataLoadingBegin() {
                         beginCalled2 = true;
                     }
 
+                    @Override
                     public void dataLoadingEnd() {
                         assertTrue("dataLoadingBegin should be called", beginCalled2);
 
@@ -267,10 +280,12 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
                 assertFalse(cache.containsKey(key.toString()));
@@ -294,10 +309,12 @@ public class CacheDataTest extends AsyncTestCase {
         cache.fetchDynamicData(key, null, new DataLoadListener() {
             boolean beginCalled = false;
 
+            @Override
             public void dataLoadingBegin() {
                 beginCalled = true;
             }
 
+            @Override
             public void dataLoadingEnd() {
                 assertTrue("dataLoadingBegin should be called", beginCalled);
                 assertFalse(cache.containsKey(key.toString()));

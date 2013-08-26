@@ -31,6 +31,7 @@ public class FieldVerifierTest extends TestCase {
 
     private AddressProblems problems = new AddressProblems();
 
+    @Override
     protected void setUp() {
         problems.clear();
     }
