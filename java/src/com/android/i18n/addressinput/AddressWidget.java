@@ -519,7 +519,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
             ClientCacheManager cacheManager) {
         mCurrentRegion =
             ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE))
-                    .getSimCountryIso().toUpperCase();
+                    .getSimCountryIso().toUpperCase(Locale.US);
         if (mCurrentRegion.length() == 0) {
             mCurrentRegion = "US";
         }
