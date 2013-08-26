@@ -255,7 +255,7 @@ public class FieldVerifierTest extends TestCase {
         assertEquals(AddressProblemType.UNKNOWN_VALUE,
                      problems.getProblem(AddressField.ADMIN_AREA));
     }
-    
+
     public void testCanadaMixedCasePostcode() {
       final AddressData address = new AddressData.Builder()
               .setRecipient("Joe Bloggs")

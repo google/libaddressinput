@@ -28,14 +28,14 @@
            encoding="utf-8"
            includes="com/android/i18n/**"
            excludes="com/android/i18n/addressinput/AddressWidget.java"
-           destdir="${classes.dir}" 
+           destdir="${classes.dir}"
            classpathref="classpath"
            includeantruntime="false"
            debug="on">
       <compilerarg value="-Xlint"/>
     </javac>
-    <javac srcdir="${test.dir}" 
-           destdir="${classes.dir}" 
+    <javac srcdir="${test.dir}"
+           destdir="${classes.dir}"
            classpathref="test.classpath"
            encoding="utf-8"
            includeantruntime="true"

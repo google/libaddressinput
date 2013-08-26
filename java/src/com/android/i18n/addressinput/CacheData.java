@@ -410,6 +410,6 @@ public final class CacheData {
      * @return true if the internal cache is empty
      */
     boolean isEmpty() {
-        return mCache.length() == 0; 
+        return mCache.length() == 0;
     }
 }

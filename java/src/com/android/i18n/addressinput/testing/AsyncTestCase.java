@@ -37,7 +37,7 @@ public abstract class AsyncTestCase extends TestCase {
 
     /**
      * Puts the current test in asynchronous mode.
-     * 
+     *
      * @param timeoutMillis time to wait before failing the test for timing out
      */
     protected void delayTestFinish(int timeoutMillis) {

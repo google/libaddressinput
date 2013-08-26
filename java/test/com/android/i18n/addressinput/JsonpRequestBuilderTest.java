@@ -97,7 +97,7 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
     private static class HttpServer extends Thread {
         /**
          * Start an HTTP server that will serve one request and then terminate.
-         * 
+         *
          * @param timeoutMillis
          *            Wait this long before answering a request.
          * @param response
