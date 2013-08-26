@@ -212,6 +212,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private void createView(ViewGroup rootView, AddressUIComponent field, String defaultKey,
             boolean readOnly) {
+        @SuppressWarnings("deprecation")  // FILL_PARENT renamed MATCH_PARENT in API Level 8.
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT);
         String fieldText = field.getFieldName();
