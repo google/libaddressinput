@@ -122,7 +122,7 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
                     throw new RuntimeException(e);
                 }
                 InputStream inputStream = clientSocket.getInputStream();
-                inputStream.skip(1024);
+                inputStream.read(new byte[1024]);  // Discard input.
                 OutputStream outputStream = clientSocket.getOutputStream();
                 outputStream.write(response);
                 outputStream.close();
