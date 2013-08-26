@@ -6,7 +6,7 @@
   <property name="build.dir" value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir" value="${build.dir}/jar"/>
-  <property name="data.dir" value="data"/>
+  <property name="testdata.dir" value="../testdata"/>
   <property name="testlibs.dir" value="testlibs"/>
   <property name="report.dir" value="${build.dir}/junitreport"/>
 
@@ -59,7 +59,7 @@
         <include name="**/*.class"/>
         <exclude name="**/*Test*"/>
       </fileset>
-      <fileset dir="${data.dir}" />
+      <fileset dir="${testdata.dir}" />
     </jar>
   </target>
 
