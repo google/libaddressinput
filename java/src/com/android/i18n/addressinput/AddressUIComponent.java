@@ -79,6 +79,8 @@ class AddressUIComponent {
                 case ADMIN_AREA:
                     mParentId = AddressField.COUNTRY;
                     break;
+                default:
+                    // Ignore.
             }
         }
     }
