@@ -26,6 +26,7 @@
         '<(SHARED_INTERMEDIATE_DIR)/src/gtest-all.cc',
       ],
       'include_dirs': [
+        '<(gtest_dir)',
         '<(gtest_src_dir)',
       ],
       'copies': [
