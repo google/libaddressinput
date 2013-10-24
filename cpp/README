@@ -54,9 +54,14 @@ Build
 Building the library involves generating an out/Default/build.ninja file and
 running ninja:
 
-$ export GYP_GENERATORS=ninja
+$ export GYP_GENERATORS='ninja'
 $ gyp --depth .
 $ ninja -C out/Default
+
+Overriding paths defined in the *.gyp files can be done by setting the
+GYP_DEFINES environment variable before running gyp:
+
+$ export GYP_DEFINES="gtest_dir='/xxx/include' gtest_src_dir='/xxx'"
 
 Test
 ====
@@ -64,3 +69,8 @@ Test
 This command will execute the unit tests for the library:
 
 $ out/Default/unit_tests
+
+When running on Mac OS X, it's necessary to explicitly specify the path to the
+dynamically linked libraries, to run the tests out of the build directory:
+
+$ DYLD_LIBRARY_PATH='out/Default' out/Default/unit_tests
