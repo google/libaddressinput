@@ -27,6 +27,27 @@
         'libaddressinput',
         'gtest.gyp:main',
       ],
+      'conditions': [
+        [ 'OS == "mac"', {
+          'postbuilds': [
+            {
+              # To make it possible to execute the unit tests directly from the
+              # build directory, without first installing the library, the path
+              # to the library is set to be relative to the unit test executable
+              # (so that also the library will be loaded directly from the build
+              # directory).
+              'postbuild_name': 'Make dylib path relative to executable',
+              'action': [
+                'install_name_tool',
+                '-change',
+                '/usr/local/lib/libaddressinput.dylib',
+                '@executable_path/libaddressinput.dylib',
+                '${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}'
+              ],
+            },
+          ],
+        }],
+      ],
     },
   ],
 }

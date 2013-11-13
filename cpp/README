@@ -69,8 +69,3 @@ Test
 This command will execute the unit tests for the library:
 
 $ out/Default/unit_tests
-
-When running on Mac OS X, it's necessary to explicitly specify the path to the
-dynamically linked libraries, to run the tests out of the build directory:
-
-$ DYLD_LIBRARY_PATH='out/Default' out/Default/unit_tests
