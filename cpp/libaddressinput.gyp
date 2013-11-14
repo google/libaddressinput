@@ -15,14 +15,31 @@
   'variables': {
     'component%': 'shared_library',
   },
+  'target_defaults': {
+    'conditions': [
+      ['OS == "linux" and "<(component)" == "shared_library"', {
+        # https://code.google.com/p/gyp/issues/detail?id=374
+        'cflags': ['-fPIC'],
+      }],
+    ],
+  },
   'targets': [
     {
       'target_name': 'libaddressinput',
       'type': '<(component)',
+      'sources': [
+        'src/region_data_constants.cc',
+      ],
     },
     {
       'target_name': 'unit_tests',
       'type': 'executable',
+      'sources': [
+        'test/region_data_constants_test.cc',
+      ],
+      'include_dirs': [
+        'src',
+      ],
       'dependencies': [
         'libaddressinput',
         'gtest.gyp:main',
