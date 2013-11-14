@@ -22,6 +22,9 @@
         'cflags': ['-fPIC'],
       }],
     ],
+    'include_dirs': [
+      'include',
+    ],
   },
   'targets': [
     {
@@ -29,6 +32,10 @@
       'type': '<(component)',
       'sources': [
         'src/region_data_constants.cc',
+        'src/util/json.cc',
+      ],
+      'dependencies': [
+        'rapidjson.gyp:rapidjson',
       ],
     },
     {
@@ -36,6 +43,7 @@
       'type': 'executable',
       'sources': [
         'test/region_data_constants_test.cc',
+        'test/util/json_test.cc',
       ],
       'include_dirs': [
         'src',
