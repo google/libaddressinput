@@ -35,6 +35,7 @@
         'src/util/json.cc',
       ],
       'dependencies': [
+        'grit.gyp:generated_messages',
         'rapidjson.gyp:rapidjson',
       ],
     },

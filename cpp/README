@@ -23,11 +23,12 @@ The library depends on these tools and libraries:
 GYP: Generates the build files.
 Ninja: Executes the build files.
 GTest: Used for unit tests.
+Python: Used by GRIT, which generates localization files.
 
 Most of these packages are available on Debian-like distributions. You can
 install them with this command:
 
-$ sudo apt-get install gyp ninja-build libgtest-dev
+$ sudo apt-get install gyp ninja-build libgtest-dev python
 
 Make sure that your version of GYP is at least 0.1~svn1395. Older versions of
 GYP do not generate the Ninja build files correctly. You can download a
@@ -39,6 +40,7 @@ you can download them from these locations:
 http://packages.ubuntu.com/saucy/gyp
 http://packages.ubuntu.com/saucy/ninja-build
 http://packages.ubuntu.com/saucy/libgtest-dev
+http://packages.ubuntu.com/saucy/python
 
 Alternatively, you can download, build, and install these tools and libraries
 from source code. Their home pages contain information on how to accomplish
@@ -47,6 +49,7 @@ that.
 https://code.google.com/p/gyp/
 http://martine.github.io/ninja/
 https://code.google.com/p/googletest/
+http://python.org/
 
 Build
 =====

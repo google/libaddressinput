@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2013 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+The original messages are from:
+https://code.google.com/p/libaddressinput/source/browse/trunk/java/res/values/address_strings.xml?r=124
+-->
+<grit-part>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_COUNTRY_LABEL"
+      desc="A country or a political region (countries like the United States or regions like Hong Kong)">
+    Country / Region
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_LOCALITY_LABEL"
+      desc="A city or town, such as New York City">
+    City
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL"
+      desc="Area of a town (a neighbourhood/suburb) used for addresses in Korea and China, or a district of a country such as Nauru">
+    District
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_ORGANIZATION_LABEL"
+      desc="Company/Organization of the address">
+    Company
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL"
+      desc="Label indicating the person to be contacted as part of this address, to be used for example as 'Contact Name: John Doe'.">
+    Contact Name
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_ADDRESS_LINE1_LABEL"
+      desc="Street-level part of an address, e.g., 18th Street, Unit 3">
+    Street Address
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL"
+      desc="Postal Code. Values are frequently alphanumeric.">
+    Postal Code
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL"
+      desc="Label to represent ZIP codes, used in countries like the US.">
+    ZIP Code
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_CEDEX_LABEL"
+      desc="Sorting code designed for recipients of large volumes of mail. Used mostly in France.">
+    CEDEX
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_AREA"
+      desc="Administrative Area for Hong Kong (e.g., Kowloon)">
+    Area
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_COUNTY_LABEL"
+      desc="Administrative Area for the United Kingdom (e.g., Yorkshire)">
+    County
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_DEPARTMENT"
+      desc="Administrative Area, as used for countries like Nicaragua (e.g., Boaco)">
+    Department
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_DO_SI"
+      desc="Administrative Area for Korea (e.g., Gyeonggi-do or Busan-si)">
+    Do
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_EMIRATE"
+      desc="Administrative Area for United Arab Emirates (e.g., Abu Dhabi)">
+    Emirate
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_ISLAND"
+      desc="Administrative Area for certain countries (e.g., Bahama's Cat Island)">
+    Island
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_PARISH"
+      desc="Administrative Area for certain countries (e.g., Andorra's Canillo)">
+    Parish
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_PREFECTURE"
+      desc="Administrative Area for Japan (e.g., Hokkaido)">
+    Prefecture
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_PROVINCE"
+      desc="Administrative Area for certain countries (e.g., France's Champagne)">
+    Province
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_STATE_LABEL"
+      desc="Administrative Area for certain countries (e.g., US' California)">
+    State
+  </message>
+</grit-part>
