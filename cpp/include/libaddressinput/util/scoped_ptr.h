@@ -1,16 +1,12 @@
 // Copyright (c) 2012 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// https://code.google.com/p/libphonenumber/source/browse/trunk/cpp/src/phonenumbers/base/memory/scoped_ptr.h?r=621
 
-#ifndef I18N_PHONENUMBERS_BASE_MEMORY_SCOPED_PTR_H_
-#define I18N_PHONENUMBERS_BASE_MEMORY_SCOPED_PTR_H_
-
-#if defined(I18N_PHONENUMBERS_USE_BOOST)
-
-#include <boost/scoped_ptr.hpp>
-using boost::scoped_ptr;
-
-#else  // !I18N_PHONENUMBERS_USE_BOOST
+#ifndef I18N_ADDRESSINPUT_UTIL_SCOPED_PTR_H_
+#define I18N_ADDRESSINPUT_UTIL_SCOPED_PTR_H_
 
 // This is an implementation designed to match the anticipated future TR2
 // implementation of the scoped_ptr class and scoped_ptr_malloc (deprecated).
@@ -21,11 +17,11 @@ using boost::scoped_ptr;
 
 #include <algorithm>  // For std::swap().
 
-#include "phonenumbers/base/basictypes.h"
-#include "phonenumbers/base/template_util.h"
+#include <libaddressinput/util/basictypes.h>
+#include <libaddressinput/util/template_util.h>
 
 namespace i18n {
-namespace phonenumbers {
+namespace addressinput {
 
 // Function object which deletes its parameter, which must be a pointer.
 // If C is an array type, invokes 'delete[]' on the parameter; otherwise,
@@ -443,8 +439,7 @@ scoped_ptr<T> make_scoped_ptr(T* ptr) {
   return scoped_ptr<T>(ptr);
 }
 
-}  // namespace phonenumbers
+}  // namespace addressinput
 }  // namespace i18n
 
-#endif  // !I18N_PHONENUMBERS_USE_BOOST
-#endif  // I18N_PHONENUMBERS_BASE_MEMORY_SCOPED_PTR_H_
+#endif  // I18N_ADDRESSINPUT_UTIL_SCOPED_PTR_H_

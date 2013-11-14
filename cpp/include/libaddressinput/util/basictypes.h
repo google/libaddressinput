@@ -1,9 +1,12 @@
 // Copyright (c) 2010 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// https://code.google.com/p/libphonenumber/source/browse/trunk/cpp/src/phonenumbers/base/basictypes.h?r=621
 
-#ifndef I18N_PHONENUMBERS_BASE_BASICTYPES_H_
-#define I18N_PHONENUMBERS_BASE_BASICTYPES_H_
+#ifndef I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
+#define I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 
 #include <limits.h>         // So we can set the bounds of our types
 #include <stddef.h>         // For size_t
@@ -13,9 +16,6 @@
 // stdint.h is part of C99 but MSVC doesn't have it.
 #include <stdint.h>         // For intptr_t.
 #endif
-
-namespace i18n {
-namespace phonenumbers {
 
 #ifdef INT64_MAX
 
@@ -198,7 +198,4 @@ struct CompileAssert {
   typedef CompileAssert<(bool(expr))> msg[bool(expr) ? 1 : -1]
 #endif
 
-}  // namespace phonenumbers
-}  // namespace i18n
-
-#endif  // I18N_PHONENUMBERS_BASE_BASICTYPES_H_
+#endif  // I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
