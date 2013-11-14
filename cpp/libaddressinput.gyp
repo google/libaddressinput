@@ -31,6 +31,8 @@
       'target_name': 'libaddressinput',
       'type': '<(component)',
       'sources': [
+        'src/address_field.cc',
+        'src/address_field_util.cc',
         'src/region_data_constants.cc',
         'src/util/json.cc',
       ],
@@ -43,6 +45,7 @@
       'target_name': 'unit_tests',
       'type': 'executable',
       'sources': [
+        'test/address_field_util_test.cc',
         'test/region_data_constants_test.cc',
         'test/util/json_test.cc',
       ],
