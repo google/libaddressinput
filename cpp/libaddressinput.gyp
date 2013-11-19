@@ -33,6 +33,7 @@
       'sources': [
         'src/address_field.cc',
         'src/address_field_util.cc',
+        'src/address_ui.cc',
         'src/localization.cc',
         'src/region_data_constants.cc',
         'src/rule.cc',
@@ -48,6 +49,7 @@
       'type': 'executable',
       'sources': [
         'test/address_field_util_test.cc',
+        'test/address_ui_test.cc',
         'test/localization_test.cc',
         'test/region_data_constants_test.cc',
         'test/rule_test.cc',
