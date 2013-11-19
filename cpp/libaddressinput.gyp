@@ -52,6 +52,7 @@
         'test/region_data_constants_test.cc',
         'test/rule_test.cc',
         'test/util/json_test.cc',
+        'test/util/scoped_ptr_unittest.cc',
       ],
       'include_dirs': [
         'src',

@@ -1,12 +1,19 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// http://src.chromium.org/viewvc/chrome/trunk/src/base/memory/scoped_ptr_unittest.cc?revision=79524
 
-#include "base/basictypes.h"
-#include "base/memory/scoped_ptr.h"
-#include "testing/gtest/include/gtest/gtest.h"
+#include <libaddressinput/util/scoped_ptr.h>
+
+#include <libaddressinput/util/basictypes.h>
+
+#include <gtest/gtest.h>
 
 namespace {
+
+using i18n::addressinput::scoped_ptr;
 
 class ConDecLogger {
  public:
@@ -22,8 +29,6 @@ class ConDecLogger {
   int* ptr_;
   DISALLOW_COPY_AND_ASSIGN(ConDecLogger);
 };
-
-}  // namespace
 
 TEST(ScopedPtrTest, ScopedPtr) {
   int constructed = 0;
@@ -92,78 +97,4 @@ TEST(ScopedPtrTest, ScopedPtr) {
   EXPECT_EQ(0, constructed);
 }
 
-TEST(ScopedPtrTest, ScopedArray) {
-  static const int kNumLoggers = 12;
-
-  int constructed = 0;
-
-  {
-    scoped_array<ConDecLogger> scoper(new ConDecLogger[kNumLoggers]);
-    EXPECT_TRUE(scoper.get());
-    EXPECT_EQ(&scoper[0], scoper.get());
-    for (int i = 0; i < kNumLoggers; ++i) {
-      scoper[i].set_ptr(&constructed);
-    }
-    EXPECT_EQ(12, constructed);
-
-    EXPECT_EQ(10, scoper.get()->SomeMeth(10));
-    EXPECT_EQ(10, scoper[2].SomeMeth(10));
-  }
-  EXPECT_EQ(0, constructed);
-
-  // Test reset() and release()
-  {
-    scoped_array<ConDecLogger> scoper;
-    EXPECT_FALSE(scoper.get());
-    EXPECT_FALSE(scoper.release());
-    EXPECT_FALSE(scoper.get());
-    scoper.reset();
-    EXPECT_FALSE(scoper.get());
-
-    scoper.reset(new ConDecLogger[kNumLoggers]);
-    for (int i = 0; i < kNumLoggers; ++i) {
-      scoper[i].set_ptr(&constructed);
-    }
-    EXPECT_EQ(12, constructed);
-    scoper.reset();
-    EXPECT_EQ(0, constructed);
-
-    scoper.reset(new ConDecLogger[kNumLoggers]);
-    for (int i = 0; i < kNumLoggers; ++i) {
-      scoper[i].set_ptr(&constructed);
-    }
-    EXPECT_EQ(12, constructed);
-    ConDecLogger* ptr = scoper.release();
-    EXPECT_EQ(12, constructed);
-    delete[] ptr;
-    EXPECT_EQ(0, constructed);
-  }
-  EXPECT_EQ(0, constructed);
-
-  // Test swap(), == and !=
-  {
-    scoped_array<ConDecLogger> scoper1;
-    scoped_array<ConDecLogger> scoper2;
-    EXPECT_TRUE(scoper1 == scoper2.get());
-    EXPECT_FALSE(scoper1 != scoper2.get());
-
-    ConDecLogger* loggers = new ConDecLogger[kNumLoggers];
-    for (int i = 0; i < kNumLoggers; ++i) {
-      loggers[i].set_ptr(&constructed);
-    }
-    scoper1.reset(loggers);
-    EXPECT_EQ(loggers, scoper1.get());
-    EXPECT_FALSE(scoper2.get());
-    EXPECT_FALSE(scoper1 == scoper2.get());
-    EXPECT_TRUE(scoper1 != scoper2.get());
-
-    scoper2.swap(scoper1);
-    EXPECT_EQ(loggers, scoper2.get());
-    EXPECT_FALSE(scoper1.get());
-    EXPECT_FALSE(scoper1 == scoper2.get());
-    EXPECT_TRUE(scoper1 != scoper2.get());
-  }
-  EXPECT_EQ(0, constructed);
-}
-
-// TODO scoped_ptr_malloc
+}  // namespace
