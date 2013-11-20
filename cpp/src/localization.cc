@@ -15,6 +15,7 @@
 #include <libaddressinput/localization.h>
 
 #include <cassert>
+#include <cstddef>
 #include <string>
 
 namespace i18n {

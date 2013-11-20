@@ -15,6 +15,7 @@
 #include "json.h"
 
 #include <cassert>
+#include <cstddef>
 #include <string>
 
 #include <rapidjson/document.h>

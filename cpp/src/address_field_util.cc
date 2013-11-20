@@ -17,6 +17,7 @@
 #include <libaddressinput/address_field.h>
 
 #include <cassert>
+#include <cstddef>
 #include <map>
 #include <string>
 #include <utility>
