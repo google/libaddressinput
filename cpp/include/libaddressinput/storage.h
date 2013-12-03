@@ -25,8 +25,6 @@
 namespace i18n {
 namespace addressinput {
 
-class StorageObserver;
-
 // Stores downloaded validation rules. Sample usage:
 //    class MyStorage : public Storage {
 //     public:
@@ -35,7 +33,7 @@ class StorageObserver;
 //      }
 //
 //      virtual void Get(const std::string& key,
-//                       DataReadyCallback data_ready) const {
+//                       const Callback& data_ready) const {
 //        bool success = ...
 //        std::string data = ...
 //        data_ready(success, key, data);
@@ -43,13 +41,16 @@ class StorageObserver;
 //    };
 class Storage {
  public:
-  typedef Callback<StorageObserver, std::string, std::string> DataReadyCallback;
+  typedef i18n::addressinput::Callback<std::string, std::string> Callback;
 
   virtual ~Storage() {}
 
+  // Stores |data| for |key|.
   virtual void Put(const std::string& key, const std::string& data) = 0;
+
+  // Retrieves the data for |key| and invokes the |data_ready| callback.
   virtual void Get(const std::string& key,
-                   DataReadyCallback data_ready) const = 0;
+                   const Callback& data_ready) const = 0;
 };
 
 }  // namespace addressinput

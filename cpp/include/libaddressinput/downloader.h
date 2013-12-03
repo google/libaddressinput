@@ -25,13 +25,11 @@
 namespace i18n {
 namespace addressinput {
 
-class DownloaderObserver;
-
 // Downloads validation rules from the server. Sample usage:
 //    class MyDownloader : public Downloader {
 //     public:
 //      virtual void Download(const std::string& url,
-//                            DownloadedCallback downloaded) const {
+//                            const Callback& downloaded) const {
 //        bool success = ...
 //        std::string data = ...
 //        downloaded(success, url, data);
@@ -39,13 +37,13 @@ class DownloaderObserver;
 //    };
 class Downloader {
  public:
-  typedef Callback<DownloaderObserver, std::string, std::string>
-      DownloadedCallback;
+  typedef i18n::addressinput::Callback<std::string, std::string> Callback;
 
   virtual ~Downloader() {}
 
+  // Downloads |url| and invokes the |downloaded| callback.
   virtual void Download(const std::string& url,
-                        DownloadedCallback downloaded) const = 0;
+                        const Callback& downloaded) const = 0;
 };
 
 }  // namespace addressinput

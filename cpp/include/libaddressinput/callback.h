@@ -31,36 +31,52 @@ namespace addressinput {
 // Stores a pointer to a method in an object. Sample usage:
 //    class MyClass {
 //     public:
+//      typedef Callback<MyType, MyDataType> MyCallback;
+//
 //      void GetDataAsynchronously() {
-//        Callback<MyClass, MyKeyType, MyDataType> callback(
-//            this, &MyClass::MyCallback);
+//        scoped_ptr<MyCallback> callback(BuildCallback(
+//            this, &MyClass::OnDataReady));
 //        bool success = ...
 //        MyKeyType key = ...
 //        MyDataType data = ...
-//        callback(success, key, data);
+//        (*callback)(success, key, data);
 //      }
 //
-//      void MyCallback(bool success,
-//                      const MyKeyType& key,
-//                      const MyDataType& data) {
+//      void OnDataReady(bool success,
+//                       const MyKeyType& key,
+//                       const MyDataType& data) {
 //        ...
 //      }
 //    };
-template <typename Observer, typename Key, typename Data>
+template <typename Key, typename Data>
 class Callback {
+ public:
+  virtual ~Callback() {}
+
+  virtual void operator()(bool success,
+                          const Key& key,
+                          const Data& data) const = 0;
+};
+
+namespace {
+
+template <typename Observer, typename Key, typename Data>
+class CallbackImpl : public Callback<Key, Data> {
  public:
   typedef void (Observer::*ObserveEvent)(bool, const Key&, const Data&);
 
-  Callback(Observer* observer, ObserveEvent observe_event)
+  CallbackImpl(Observer* observer, ObserveEvent observe_event)
       : observer_(observer),
         observe_event_(observe_event) {
     assert(observer_ != NULL);
     assert(observe_event_ != NULL);
   }
 
-  ~Callback() {}
+  virtual ~CallbackImpl() {}
 
-  void operator()(bool success, const Key& key, const Data& data) const {
+  virtual void operator()(bool success,
+                          const Key& key,
+                          const Data& data) const {
     (observer_->*observe_event_)(success, key, data);
   }
 
@@ -68,6 +84,17 @@ class Callback {
   Observer* observer_;
   ObserveEvent observe_event_;
 };
+
+}  // namespace
+
+// Returns a callback to |observer->observe_event| method. The caller owns the
+// result.
+template <typename Observer, typename Key, typename Data>
+Callback<Key, Data>* BuildCallback(
+    Observer* observer,
+    void (Observer::*observe_event)(bool, const Key&, const Data&)) {
+  return new CallbackImpl<Observer, Key, Data>(observer, observe_event);
+}
 
 }  // namespace addressinput
 }  // namespace i18n
