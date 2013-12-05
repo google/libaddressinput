@@ -50,11 +50,16 @@
       'sources': [
         'test/address_field_util_test.cc',
         'test/address_ui_test.cc',
+        'test/fake_downloader.cc',
+        'test/fake_downloader_test.cc',
         'test/localization_test.cc',
         'test/region_data_constants_test.cc',
         'test/rule_test.cc',
         'test/util/json_test.cc',
         'test/util/scoped_ptr_unittest.cc',
+      ],
+      'defines': [
+        'TEST_DATA_DIR="../testdata"',
       ],
       'include_dirs': [
         'src',
