@@ -1,6 +1,9 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// http://src.chromium.org/viewvc/chrome/trunk/src/base/md5.cc?revision=94203
 
 // The original file was copied from sqlite, and was in the public domain.
 
@@ -21,9 +24,11 @@
  * will fill a supplied 16-byte array with the digest.
  */
 
-#include "base/md5.h"
+#include "md5.h"
 
-#include "base/basictypes.h"
+#include <libaddressinput/util/basictypes.h>
+
+#include <string>
 
 namespace {
 
@@ -147,7 +152,8 @@ void MD5Transform(uint32 buf[4], const uint32 in[16]) {
 
 }  // namespace
 
-namespace base {
+namespace i18n {
+namespace addressinput {
 
 /*
  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
@@ -167,7 +173,7 @@ void MD5Init(MD5Context* context) {
  * Update context to reflect the concatenation of another buffer full
  * of bytes.
  */
-void MD5Update(MD5Context* context, const StringPiece& data) {
+void MD5Update(MD5Context* context, const std::string& data) {
         const unsigned char* inbuf = (const unsigned char*)data.data();
         size_t len = data.size();
         struct Context *ctx = (struct Context *)context;
@@ -279,14 +285,15 @@ void MD5Sum(const void* data, size_t length, MD5Digest* digest) {
   MD5Context ctx;
   MD5Init(&ctx);
   MD5Update(&ctx,
-            StringPiece(reinterpret_cast<const char*>(data), length));
+            std::string(reinterpret_cast<const char*>(data), length));
   MD5Final(digest, &ctx);
 }
 
-std::string MD5String(const StringPiece& str) {
+std::string MD5String(const std::string& str) {
   MD5Digest digest;
   MD5Sum(str.data(), str.length(), &digest);
   return MD5DigestToBase16(digest);
 }
 
-}  // namespace base
+}  // namespace addressinput
+}  // namespace i18n

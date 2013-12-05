@@ -40,6 +40,7 @@
         'src/retriever.cc',
         'src/rule.cc',
         'src/util/json.cc',
+        'src/util/md5.cc',
       ],
       'dependencies': [
         'grit.gyp:generated_messages',
@@ -62,6 +63,7 @@
         'test/retriever_test.cc',
         'test/rule_test.cc',
         'test/util/json_test.cc',
+        'test/util/md5_unittest.cc',
         'test/util/scoped_ptr_unittest.cc',
       ],
       'defines': [

@@ -1,14 +1,17 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// http://src.chromium.org/viewvc/chrome/trunk/src/base/md5.h?revision=94203
 
-#ifndef BASE_MD5_H_
-#define BASE_MD5_H_
+#ifndef I18N_ADDRESSINPUT_UTIL_MD5_H_
+#define I18N_ADDRESSINPUT_UTIL_MD5_H_
 
-#include "base/base_export.h"
-#include "base/strings/string_piece.h"
+#include <string>
 
-namespace base {
+namespace i18n {
+namespace addressinput {
 
 // MD5 stands for Message Digest algorithm 5.
 // MD5 is a robust hash function, designed for cyptography, but often used
@@ -44,26 +47,27 @@ typedef char MD5Context[88];
 
 // Computes the MD5 sum of the given data buffer with the given length.
 // The given 'digest' structure will be filled with the result data.
-BASE_EXPORT void MD5Sum(const void* data, size_t length, MD5Digest* digest);
+void MD5Sum(const void* data, size_t length, MD5Digest* digest);
 
 // Initializes the given MD5 context structure for subsequent calls to
 // MD5Update().
-BASE_EXPORT void MD5Init(MD5Context* context);
+void MD5Init(MD5Context* context);
 
 // For the given buffer of |data| as a StringPiece, updates the given MD5
 // context with the sum of the data. You can call this any number of times
 // during the computation, except that MD5Init() must have been called first.
-BASE_EXPORT void MD5Update(MD5Context* context, const StringPiece& data);
+void MD5Update(MD5Context* context, const std::string& data);
 
 // Finalizes the MD5 operation and fills the buffer with the digest.
-BASE_EXPORT void MD5Final(MD5Digest* digest, MD5Context* context);
+void MD5Final(MD5Digest* digest, MD5Context* context);
 
 // Converts a digest into human-readable hexadecimal.
-BASE_EXPORT std::string MD5DigestToBase16(const MD5Digest& digest);
+std::string MD5DigestToBase16(const MD5Digest& digest);
 
 // Returns the MD5 (in hexadecimal) of a string.
-BASE_EXPORT std::string MD5String(const StringPiece& str);
+std::string MD5String(const std::string& str);
 
-}  // namespace base
+}  // namespace addressinput
+}  // namespace i18n
 
-#endif  // BASE_MD5_H_
+#endif  // I18N_ADDRESSINPUT_UTIL_MD5_H_

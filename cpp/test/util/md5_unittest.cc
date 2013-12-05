@@ -1,16 +1,27 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// The original source code is from:
+// http://src.chromium.org/viewvc/chrome/trunk/src/base/md5_unittest.cc?revision=94203
 
-#include <string.h>
+#include "util/md5.h"
+
+#include <libaddressinput/util/scoped_ptr.h>
+
+#include <cstring>
 #include <string>
 
-#include "base/basictypes.h"
-#include "base/memory/scoped_ptr.h"
-#include "base/md5.h"
-#include "testing/gtest/include/gtest/gtest.h"
+#include <gtest/gtest.h>
 
-namespace base {
+namespace {
+
+using i18n::addressinput::MD5Context;
+using i18n::addressinput::MD5Digest;
+using i18n::addressinput::MD5Init;
+using i18n::addressinput::MD5String;
+using i18n::addressinput::MD5Update;
+using i18n::addressinput::scoped_ptr;
 
 TEST(MD5, DigestToBase16) {
   MD5Digest digest;
@@ -121,7 +132,7 @@ TEST(MD5, ContextWithLongData) {
       len = length - total;
 
     MD5Update(&ctx,
-              StringPiece(reinterpret_cast<char*>(data.get() + total), len));
+              std::string(reinterpret_cast<char*>(data.get() + total), len));
     total += len;
   }
 
@@ -204,4 +215,4 @@ TEST(MD5, ContextWithStringData) {
   EXPECT_EQ(expected, actual);
 }
 
-}  // namespace base
+}  // namespace
