@@ -52,6 +52,8 @@
         'test/address_ui_test.cc',
         'test/fake_downloader.cc',
         'test/fake_downloader_test.cc',
+        'test/fake_storage.cc',
+        'test/fake_storage_test.cc',
         'test/localization_test.cc',
         'test/region_data_constants_test.cc',
         'test/rule_test.cc',
