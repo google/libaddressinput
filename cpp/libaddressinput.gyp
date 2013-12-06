@@ -41,6 +41,8 @@
         'src/rule.cc',
         'src/util/json.cc',
         'src/util/md5.cc',
+        'src/validating_storage.cc',
+        'src/validating_util.cc',
       ],
       'dependencies': [
         'grit.gyp:generated_messages',
@@ -65,6 +67,8 @@
         'test/util/json_test.cc',
         'test/util/md5_unittest.cc',
         'test/util/scoped_ptr_unittest.cc',
+        'test/validating_storage_test.cc',
+        'test/validating_util_test.cc',
       ],
       'defines': [
         'TEST_DATA_DIR="../testdata"',
