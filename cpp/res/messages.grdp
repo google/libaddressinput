@@ -113,4 +113,84 @@ https://code.google.com/p/libaddressinput/source/browse/trunk/java/res/values/ad
       desc="Administrative Area for certain countries (e.g., US' California)">
     State
   </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_MISSING_REQUIRED_FIELD"
+      desc="Message to be shown when a required field is empty">
+    Required
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ENTRY"
+      desc="Message to be shown when the value entered by the user in a given field is invalid">
+    Invalid entry
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_LOCALITY_LABEL"
+      desc="Message to be shown when a city or town entered by the user, such as New York City, is invalid.">
+    Invalid city
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DEPENDENT_LOCALITY_LABEL"
+      desc="Message to be shown when an area of a city which is entered by the user (a neighbourhood/suburb), is invalid. Used for addresses in Korea and China, or for districts of a country such as Nauru">
+    Invalid district
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_POSTAL_CODE_LABEL"
+      desc="Message to be shown when an incorrect postal code is entered by the user. Postal codes are used in countries like New Zealand.">
+    Invalid postal code
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ZIP_CODE_LABEL"
+      desc="Message to be shown when an incorrect ZIP code is entered by the user. ZIP codes are used in countries like the US.">
+    Invalid ZIP code
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_AREA"
+      desc="Message to be shown when the administrative area for Hong Kong (e.g., Kowloon) is entered incorrectly by the user">
+    Invalid area
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_COUNTY_LABEL"
+      desc="Message to be shown when the administrative area (county) for the United Kingdom is entered incorrectly by the user">
+    Invalid county
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DEPARTMENT"
+      desc="Message to be shown when the administrative area (department) used for countries like Nicaragua (e.g., Boaco) is entered incorrectly by the user">
+    Invalid department
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DO_SI"
+      desc="Message to be shown when the administrative area for Korea (e.g., Gyeonggi-do or Busan-si) is entered incorrectly by the user">
+    Invalid do
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_EMIRATE"
+      desc="Message to be shown when the administrative area (emirate) for United Arab Emirates (e.g., Abu Dhabi) is entered incorrectly by the user">
+    Invalid emirate
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ISLAND"
+      desc="Message to be shown when the administrative area (island) for certain countries (e.g., Bahama) is entered incorrectly by the user">
+    Invalid island
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PARISH"
+      desc="Message to be shown when the administrative area (parish) for certain countries (e.g., Andorra) is entered incorrectly by the user">
+    Invalid parish
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PREFECTURE"
+      desc="Message to be shown when the administrative area (prefecture) for Japan (e.g., Hokkaido) is entered incorrectly by the user">
+    Invalid prefecture
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PROVINCE"
+      desc="Message to be shown when the administrative area (province) for certain countries (e.g., France's Champagne) is entered incorrectly by the user">
+    Invalid province
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_I18N_INVALID_STATE_LABEL"
+      desc="Message to be shown when the administrative area (state) for certain countries (e.g., the USA) is entered incorrectly by the user">
+    Invalid state
+  </message>
 </grit-part>
