@@ -14,7 +14,7 @@
 {
   'variables': {
     're2_dir%': '/usr/include',
-    're2_lib%': '/usr/lib/libre2.a',
+    're2_lib%': '-lre2',
   },
   'targets': [
     {
@@ -24,12 +24,8 @@
         'include_dirs': [
           '<(re2_dir)',
         ],
-        'conditions': [
-          ['"<(component)" != "shared_library"', {
-            'libraries': [
-              '<(re2_lib)',
-            ],
-          }],
+        'libraries': [
+          '<(re2_lib)',
         ],
       },
     },

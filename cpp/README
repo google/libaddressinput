@@ -35,6 +35,10 @@ Make sure that your version of GYP is at least 0.1~svn1395. Older versions of
 GYP do not generate the Ninja build files correctly. You can download a
 new-enough version from http://packages.ubuntu.com/saucy/gyp.
 
+Make sure that your version of RE2 is at least 20140111+dfsg-1. Older versions
+of RE2 don't support set_never_capture() and the packages don't provide shared
+libraries.
+
 If your distribution does not include the binary packages for the dependencies,
 you can download them from these locations:
 
