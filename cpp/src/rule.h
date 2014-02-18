@@ -36,6 +36,11 @@ class Rule {
   Rule();
   ~Rule();
 
+  // Returns the default rule at a country level. If a country does not specify
+  // address format, for example, then the format from this rule should be used
+  // instead.
+  static const Rule& GetDefault();
+
   // Copies all data from |rule|.
   void CopyFrom(const Rule& rule);
 

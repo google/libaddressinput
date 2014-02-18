@@ -23,6 +23,7 @@
 #include "address_field_util.h"
 #include "grit.h"
 #include "messages.h"
+#include "region_data_constants.h"
 #include "util/json.h"
 
 namespace i18n {
@@ -97,6 +98,18 @@ Rule::Rule()
       postal_code_name_message_id_(INVALID_MESSAGE_ID) {}
 
 Rule::~Rule() {}
+
+// static
+const Rule& Rule::GetDefault() {
+  // Allocated once and leaked on shutdown.
+  static Rule* default_rule = NULL;
+  if (default_rule == NULL) {
+    default_rule = new Rule;
+    default_rule->ParseSerializedRule(
+        RegionDataConstants::GetDefaultRegionData());
+  }
+  return *default_rule;
+}
 
 void Rule::CopyFrom(const Rule& rule) {
   format_ = rule.format_;

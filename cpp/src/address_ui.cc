@@ -32,24 +32,6 @@ namespace addressinput {
 
 namespace {
 
-// Parses the default region data into the static Rule object and returns a
-// constant reference to this object. Cannot return a copy of the object,
-// because Rule objects are not copyable.
-const Rule& InitDefaultRule() {
-  static Rule rule;
-  rule.ParseSerializedRule(RegionDataConstants::GetDefaultRegionData());
-  return rule;
-}
-
-// Returns the constant reference to the Rule object from InitDefaultRule(). The
-// static object is in InitDefaultRule(), but this function maintains a constant
-// static reference to it. The constant static reference avoids re-parsing the
-// default region data.
-const Rule& GetDefaultRule() {
-  static const Rule& kDefaultRule(InitDefaultRule());
-  return kDefaultRule;
-}
-
 int GetMessageIdForField(AddressField field,
                          int admin_area_name_message_id,
                          int postal_code_name_message_id) {
@@ -94,7 +76,7 @@ std::vector<AddressUiComponent> BuildComponents(
   std::vector<AddressUiComponent> result;
 
   Rule rule;
-  rule.CopyFrom(GetDefaultRule());
+  rule.CopyFrom(Rule::GetDefault());
   if (!rule.ParseSerializedRule(
            RegionDataConstants::GetRegionData(region_code))) {
     return result;
