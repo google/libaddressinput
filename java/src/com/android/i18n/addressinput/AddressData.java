@@ -54,7 +54,7 @@ import java.util.Map;
  * or a string consists of only spaces, it will not be set.
  */
 public class AddressData {
-    // ISO 3166-1-alpha-2 country code (two letter codes, as used in DNS)
+    // CLDR (Common Locale Data Repository) country code.
     // For example, "US" for United States.
     // (Note: Use "GB", not "UK", for Great Britain)
     private final String mPostalCountry;
