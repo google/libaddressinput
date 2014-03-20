@@ -1031,6 +1031,7 @@ const std::string& RegionDataConstants::GetDefaultRegionData() {
   static const std::string kDefaultRegionData(
       "{"
       "\"fmt\":\"%N%n%O%n%A%n%C\","
+      "\"require\":\"AC\","
       "\"state_name_type\":\"province\","
       "\"zip_name_type\":\"postal\""
       "}");
