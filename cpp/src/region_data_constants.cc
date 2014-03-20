@@ -91,7 +91,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("AX", "{"
       "\"name\":\"FINLAND\","
-      "\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%n\xC3\x85LAND\""  // \xC3\x85 is Å.
+      "\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%n\xC3\x85LAND\""  /* \xC3\x85 is Å. */
       "}"));
   region_data.insert(std::make_pair("AZ", "{"
       "\"name\":\"AZERBAIJAN\","
@@ -467,7 +467,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("JP", "{"
       "\"name\":\"JAPAN\","
-      "\"fmt\":\"\xE3\x80\x92%Z%n%S%C%n%A%n%O%n%N\","  // \xE3\x80\x92 is 〒.
+      "\"fmt\":\"\xE3\x80\x92%Z%n%S%C%n%A%n%O%n%N\","  /* \xE3\x80\x92 is 〒. */
       "\"state_name_type\":\"prefecture\""
       "}"));
   region_data.insert(std::make_pair("KE", "{"
