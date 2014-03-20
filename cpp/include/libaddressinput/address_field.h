@@ -35,12 +35,13 @@ enum AddressField {
   RECIPIENT            // Name.
 };
 
-// Produces human-readable output in logging, for example in unit tests. Prints
-// what you would expect for valid fields, e.g. "COUNTRY" for COUNTRY. For
-// invalid values, prints "[INVALID]".
-std::ostream& operator<<(std::ostream& o, AddressField field);
-
 }  // namespace addressinput
 }  // namespace i18n
+
+// Produces human-readable output in logging, for example in unit tests. Prints
+// what you would expect for valid fields, e.g. "COUNTRY" for COUNTRY. For
+// invalid values, prints "[INVALID ENUM VALUE x]".
+std::ostream& operator<<(std::ostream& o,
+                         i18n::addressinput::AddressField field);
 
 #endif  // I18N_ADDRESSINPUT_ADDRESS_FIELD_H_

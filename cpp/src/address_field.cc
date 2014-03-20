@@ -14,46 +14,34 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <cstddef>
 #include <ostream>
 
-namespace i18n {
-namespace addressinput {
+#include <libaddressinput/util/basictypes.h>
+
+using i18n::addressinput::AddressField;
+using i18n::addressinput::COUNTRY;
+using i18n::addressinput::RECIPIENT;
 
 std::ostream& operator<<(std::ostream& o, AddressField field) {
-  switch (field) {
-    case COUNTRY:
-      o << "COUNTRY";
-      break;
-    case ADMIN_AREA:
-      o << "ADMIN_AREA";
-      break;
-    case LOCALITY:
-      o << "LOCALITY";
-      break;
-    case DEPENDENT_LOCALITY:
-      o << "DEPENDENT_LOCALITY";
-      break;
-    case SORTING_CODE:
-      o << "SORTING_CODE";
-      break;
-    case POSTAL_CODE:
-      o << "POSTAL_CODE";
-      break;
-    case STREET_ADDRESS:
-      o << "STREET_ADDRESS";
-      break;
-    case ORGANIZATION:
-      o << "ORGANIZATION";
-      break;
-    case RECIPIENT:
-      o << "RECIPIENT";
-      break;
-    default:
-      o << "[INVALID]";
-      break;
+  static const char* const kFieldNames[] = {
+    "COUNTRY",
+    "ADMIN_AREA",
+    "LOCALITY",
+    "DEPENDENT_LOCALITY",
+    "SORTING_CODE",
+    "POSTAL_CODE",
+    "STREET_ADDRESS",
+    "ORGANIZATION",
+    "RECIPIENT"
+  };
+  COMPILE_ASSERT(COUNTRY == 0, bad_base);
+  COMPILE_ASSERT(RECIPIENT == arraysize(kFieldNames) - 1, bad_length);
+
+  if (field < 0 || static_cast<size_t>(field) >= arraysize(kFieldNames)) {
+    o << "[INVALID ENUM VALUE " << static_cast<int>(field) << "]";
+  } else {
+    o << kFieldNames[field];
   }
   return o;
 }
-
-}  // namespace addressinput
-}  // namespace i18n

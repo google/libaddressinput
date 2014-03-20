@@ -57,6 +57,7 @@
       'target_name': 'unit_tests',
       'type': 'executable',
       'sources': [
+        'test/address_field_test.cc',
         'test/address_field_util_test.cc',
         'test/address_ui_test.cc',
         'test/fake_downloader.cc',
