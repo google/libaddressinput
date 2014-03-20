@@ -965,6 +965,10 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("WS", "{"
       "\"name\":\"SAMOA\""
       "}"));
+  region_data.insert(std::make_pair("XK", "{"
+      "\"name\":\"KOSOVO\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C\""
+      "}"));
   region_data.insert(std::make_pair("YE", "{"
       "\"name\":\"YEMEN\""
       "}"));
