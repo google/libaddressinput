@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// An object to store validation rules.
+// An object to store address metadata, describing the addressing rules for
+// regions and sub-regions. The address metadata format is documented here:
+//
+// https://code.google.com/p/libaddressinput/wiki/AddressValidationMetadata
 
 #ifndef I18N_ADDRESSINPUT_RULE_H_
 #define I18N_ADDRESSINPUT_RULE_H_
@@ -26,7 +29,8 @@
 namespace i18n {
 namespace addressinput {
 
-// Stores the validation rules. Sample usage:
+// Stores address metadata addressing rules, to be used for determining the
+// layout of an address input widget or for address validation. Sample usage:
 //    Rule rule;
 //    if (rule.ParseSerializedRule("{\"fmt\": \"%A%n%C%S %Z\"}")) {
 //      Process(rule.GetFormat());
