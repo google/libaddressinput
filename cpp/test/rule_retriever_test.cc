@@ -15,6 +15,7 @@
 #include "rule_retriever.h"
 
 #include <libaddressinput/callback.h>
+#include <libaddressinput/null_storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
@@ -22,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
-#include "fake_storage.h"
 #include "retriever.h"
 #include "rule.h"
 
@@ -30,7 +30,7 @@ namespace {
 
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
-using i18n::addressinput::FakeStorage;
+using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::RuleRetriever;
@@ -42,7 +42,7 @@ class RuleRetrieverTest : public testing::Test {
   RuleRetrieverTest()
       : rule_retriever_(new Retriever(FakeDownloader::kFakeDataUrl,
                                       new FakeDownloader,
-                                      new FakeStorage)),
+                                      new NullStorage)),
         success_(false),
         key_(),
         rule_() {}

@@ -16,6 +16,7 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
+#include <libaddressinput/null_storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
@@ -23,16 +24,13 @@
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
-#include "fake_storage.h"
-#include "region_data_constants.h"
 
 namespace {
 
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
-using i18n::addressinput::FakeStorage;
-using i18n::addressinput::RegionDataConstants;
+using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::scoped_ptr;
 
@@ -47,7 +45,7 @@ class RetrieverTest : public testing::Test {
   RetrieverTest()
       : retriever_(FakeDownloader::kFakeDataUrl,
                    new FakeDownloader,
-                   new FakeStorage),
+                   new NullStorage),
         success_(false),
         key_(),
         data_() {}
@@ -123,7 +121,7 @@ class FaultyDownloader : public Downloader {
 TEST_F(RetrieverTest, FaultyDownloader) {
   Retriever bad_retriever(FakeDownloader::kFakeDataUrl,
                           new FaultyDownloader,
-                          new FakeStorage);
+                          new NullStorage);
 
   scoped_ptr<Retriever::Callback> callback(BuildCallback());
   bad_retriever.Retrieve(kKey, *callback);
