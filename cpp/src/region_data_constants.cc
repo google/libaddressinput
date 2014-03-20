@@ -57,9 +57,6 @@ std::map<std::string, std::string> InitRegionData() {
       "\"name\":\"ARMENIA\","
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C%n%S\""
       "}"));
-  region_data.insert(std::make_pair("AN", "{"
-      "\"name\":\"NETHERLANDS ANTILLES\""
-      "}"));
   region_data.insert(std::make_pair("AO", "{"
       "\"name\":\"ANGOLA\""
       "}"));
