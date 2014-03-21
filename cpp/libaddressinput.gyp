@@ -33,6 +33,7 @@
       'sources': [
         'src/address_field.cc',
         'src/address_field_util.cc',
+        'src/address_problem.cc',
         'src/address_ui.cc',
         'src/localization.cc',
         'src/lookup_key_util.cc',
@@ -59,6 +60,7 @@
       'sources': [
         'test/address_field_test.cc',
         'test/address_field_util_test.cc',
+        'test/address_problem_test.cc',
         'test/address_ui_test.cc',
         'test/fake_downloader.cc',
         'test/fake_downloader_test.cc',
