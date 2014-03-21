@@ -22,12 +22,15 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/util/basictypes.h>
+#include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
 #include <vector>
 
 namespace i18n {
 namespace addressinput {
+
+class RE2ptr;
 
 // Stores address metadata addressing rules, to be used for determining the
 // layout of an address input widget or for address validation. Sample usage:
@@ -52,9 +55,34 @@ class Rule {
   // format (JSON dictionary).
   bool ParseSerializedRule(const std::string& serialized_rule);
 
+  // Returns the ID string for this rule.
+  const std::string& GetId() const { return id_; };
+
   // Returns the address format for this rule. The format can include the
   // NEWLINE extension for AddressField enum.
   const std::vector<AddressField>& GetFormat() const { return format_; }
+
+  // Returns the required fields for this rule.
+  const std::vector<AddressField>& GetRequired() const { return required_; }
+
+  // Returns the sub-keys for this rule, which are the administrative areas of a
+  // country, the localities of an administrative area, or the dependent
+  // localities of a locality. For example, the rules for "US" have sub-keys of
+  // "CA", "NY", "TX", etc.
+  const std::vector<std::string>& GetSubKeys() const { return sub_keys_; }
+
+  // Returns all of the language codes for which this rule has custom rules, for
+  // example ["de", "fr", "it"].
+  const std::vector<std::string>& GetLanguages() const { return languages_; }
+
+  // Returns a pointer to a RE2 regular expression object created from the
+  // postal code format string, if specified, or NULL otherwise. The regular
+  // expression is anchored to the beginning of the string so that it can be
+  // used either with RE2::PartialMatch() to perform prefix matching or else
+  // with RE2::FullMatch() to perform matching against the entire string.
+  const RE2ptr* GetPostalCodeMatcher() const {
+    return postal_code_matcher_.get();
+  }
 
   // The message string identifier for admin area name. If not set, then
   // INVALID_MESSAGE_ID.
@@ -67,7 +95,12 @@ class Rule {
   }
 
  private:
+  std::string id_;
   std::vector<AddressField> format_;
+  std::vector<AddressField> required_;
+  std::vector<std::string> sub_keys_;
+  std::vector<std::string> languages_;
+  scoped_ptr<const RE2ptr> postal_code_matcher_;
   int admin_area_name_message_id_;
   int postal_code_name_message_id_;
 

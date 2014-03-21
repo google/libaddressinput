@@ -16,6 +16,7 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <cstddef>
 #include <string>
 #include <utility>
 #include <vector>
@@ -42,23 +43,42 @@ TEST(RuleTest, CopyOverwritesRule) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{"
                                        "\"fmt\":\"%S%Z\","
+                                       "\"id\":\"data/XA\","
+                                       "\"lname\":\"Testistan\","
+                                       "\"require\":\"AC\","
+                                       "\"sub_keys\":\"aa~bb~cc\","
+                                       "\"languages\":\"en~fr\","
+                                       "\"zip\":\"\\\\d{3}\","
                                        "\"state_name_type\":\"area\","
                                        "\"zip_name_type\":\"postal\""
                                        "}"));
 
   Rule copy;
   EXPECT_NE(rule.GetFormat(), copy.GetFormat());
+  EXPECT_NE(rule.GetId(), copy.GetId());
+  EXPECT_NE(rule.GetRequired(), copy.GetRequired());
+  EXPECT_NE(rule.GetSubKeys(), copy.GetSubKeys());
+  EXPECT_NE(rule.GetLanguages(), copy.GetLanguages());
   EXPECT_NE(rule.GetAdminAreaNameMessageId(),
             copy.GetAdminAreaNameMessageId());
   EXPECT_NE(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
 
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
+
   copy.CopyFrom(rule);
   EXPECT_EQ(rule.GetFormat(), copy.GetFormat());
+  EXPECT_EQ(rule.GetId(), copy.GetId());
+  EXPECT_EQ(rule.GetRequired(), copy.GetRequired());
+  EXPECT_EQ(rule.GetSubKeys(), copy.GetSubKeys());
+  EXPECT_EQ(rule.GetLanguages(), copy.GetLanguages());
   EXPECT_EQ(rule.GetAdminAreaNameMessageId(),
             copy.GetAdminAreaNameMessageId());
   EXPECT_EQ(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
+
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
 }
 
 TEST(RuleTest, ParseOverwritesRule) {
@@ -87,10 +107,53 @@ TEST(RuleTest, ParseOverwritesRule) {
 }
 
 TEST(RuleTest, ParsesFormatCorrectly) {
+  std::vector<AddressField> expected;
+  expected.push_back(ADMIN_AREA);
+  expected.push_back(LOCALITY);
   Rule rule;
-  ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S\"}"));
-  ASSERT_EQ(1, rule.GetFormat().size());
-  EXPECT_EQ(ADMIN_AREA, rule.GetFormat()[0]);
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
+  EXPECT_EQ(expected, rule.GetFormat());
+}
+
+TEST(RuleTest, ParsesRequiredCorrectly) {
+  std::vector<AddressField> expected;
+  expected.push_back(STREET_ADDRESS);
+  expected.push_back(LOCALITY);
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"require\":\"AC\"}"));
+  EXPECT_EQ(expected, rule.GetRequired());
+}
+
+TEST(RuleTest, ParsesSubKeysCorrectly) {
+  std::vector<std::string> expected;
+  expected.push_back("aa");
+  expected.push_back("bb");
+  expected.push_back("cc");
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"sub_keys\":\"aa~bb~cc\"}"));
+  EXPECT_EQ(expected, rule.GetSubKeys());
+}
+
+TEST(RuleTest, ParsesLanguagesCorrectly) {
+  std::vector<std::string> expected;
+  expected.push_back("de");
+  expected.push_back("fr");
+  expected.push_back("it");
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"de~fr~it\"}"));
+  EXPECT_EQ(expected, rule.GetLanguages());
+}
+
+TEST(RuleTest, PostalCodeMatcher) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"\\\\d{3}\"}"));
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+}
+
+TEST(RuleTest, PostalCodeMatcherInvalidRegExp) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"(\"}"));
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() == NULL);
 }
 
 TEST(RuleTest, EmptyStringIsNotValid) {
