@@ -34,11 +34,6 @@ https://code.google.com/p/libaddressinput/source/browse/trunk/java/res/values/ad
     District
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_ORGANIZATION_LABEL"
-      desc="Company/Organization of the address">
-    Company
-  </message>
-  <message
       name="IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL"
       desc="Label indicating the person to be contacted as part of this address, to be used for example as 'Contact Name: John Doe'.">
     Contact Name

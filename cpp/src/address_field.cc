@@ -32,7 +32,6 @@ std::ostream& operator<<(std::ostream& o, AddressField field) {
     "SORTING_CODE",
     "POSTAL_CODE",
     "STREET_ADDRESS",
-    "ORGANIZATION",
     "RECIPIENT"
   };
   COMPILE_ASSERT(COUNTRY == 0, bad_base);

@@ -27,7 +27,6 @@ using i18n::addressinput::AddressField;
 using i18n::addressinput::COUNTRY;
 using i18n::addressinput::LOCALITY;
 using i18n::addressinput::NEWLINE;
-using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::ParseAddressFieldsFormat;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;
@@ -38,7 +37,6 @@ TEST(AddressFieldUtilTest, ParseNewlineFormat) {
   ParseAddressFieldsFormat("%O%n%N%n%A%nAX-%Z %C%nÅLAND", &actual);
 
   std::vector<AddressField> expected;
-  expected.push_back(ORGANIZATION);
   expected.push_back(static_cast<AddressField>(NEWLINE));
   expected.push_back(RECIPIENT);
   expected.push_back(static_cast<AddressField>(NEWLINE));

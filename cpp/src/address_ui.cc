@@ -50,8 +50,6 @@ int GetMessageIdForField(AddressField field,
       return postal_code_name_message_id;
     case STREET_ADDRESS:
       return IDS_LIBADDRESSINPUT_I18N_ADDRESS_LINE1_LABEL;
-    case ORGANIZATION:
-      return IDS_LIBADDRESSINPUT_I18N_ORGANIZATION_LABEL;
     case RECIPIENT:
       return IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL;
     default:

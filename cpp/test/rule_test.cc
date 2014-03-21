@@ -32,7 +32,6 @@ using i18n::addressinput::AddressField;
 using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::LOCALITY;
 using i18n::addressinput::NEWLINE;
-using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;
 using i18n::addressinput::RegionDataConstants;
