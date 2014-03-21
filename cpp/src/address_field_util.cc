@@ -34,7 +34,7 @@ std::map<char, AddressField> InitFields() {
   fields.insert(std::make_pair('S', ADMIN_AREA));
   fields.insert(std::make_pair('C', LOCALITY));
   fields.insert(std::make_pair('D', DEPENDENT_LOCALITY));
-  fields.insert(std::make_pair('x', SORTING_CODE));
+  fields.insert(std::make_pair('X', SORTING_CODE));
   fields.insert(std::make_pair('Z', POSTAL_CODE));
   fields.insert(std::make_pair('A', STREET_ADDRESS));
   fields.insert(std::make_pair('N', RECIPIENT));
@@ -75,6 +75,18 @@ void ParseAddressFieldsFormat(const std::string& format,
        ++current, ++next) {
     if (IsTokenPrefix(*current) && IsToken(*next)) {
       fields->push_back(ParseToken(*next));
+    }
+  }
+}
+
+void ParseAddressFieldsRequired(const std::string& required,
+                                std::vector<AddressField>* fields) {
+  assert(fields != NULL);
+  fields->clear();
+  for (std::string::const_iterator it = required.begin();
+       it != required.end(); ++it) {
+    if (IsToken(*it)) {
+      fields->push_back(ParseToken(*it));
     }
   }
 }

@@ -36,6 +36,12 @@ enum {
 void ParseAddressFieldsFormat(const std::string& format,
                               std::vector<AddressField>* fields);
 
+// Clears |fields|, parses |required|, and adds the required fields to |fields|.
+// For example, parses "SCDX" into {ADMIN_AREA, LOCALITY, DEPENDENT_LOCALITY,
+// SORTING_CODE}.
+void ParseAddressFieldsRequired(const std::string& required,
+                                std::vector<AddressField>* fields);
+
 }  // namespace addressinput
 }  // namespace i18n
 

@@ -32,7 +32,7 @@ using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;
 using i18n::addressinput::STREET_ADDRESS;
 
-TEST(AddressFieldUtilTest, ParseNewlineFormat) {
+TEST(AddressFieldUtilTest, FormatParseNewline) {
   std::vector<AddressField> actual;
   ParseAddressFieldsFormat("%O%n%N%n%A%nAX-%Z %C%nÅLAND", &actual);
 
@@ -49,22 +49,39 @@ TEST(AddressFieldUtilTest, ParseNewlineFormat) {
   EXPECT_EQ(expected, actual);
 }
 
-TEST(AddressFieldUtilTest, DoubleTokenPrefixIsIgnored) {
+TEST(AddressFieldUtilTest, FormatDoubleTokenPrefixIsIgnored) {
   std::vector<AddressField> actual;
   ParseAddressFieldsFormat("%%R", &actual);
   std::vector<AddressField> expected(1, COUNTRY);
   EXPECT_EQ(expected, actual);
 }
 
-TEST(AddressFieldUtilTest, PrefixWithoutTokenIsIgnored) {
+TEST(AddressFieldUtilTest, FormatPrefixWithoutTokenIsIgnored) {
   std::vector<AddressField> actual;
   ParseAddressFieldsFormat("%", &actual);
   EXPECT_TRUE(actual.empty());
 }
 
-TEST(AddressFieldUtilTest, EmptyString) {
+TEST(AddressFieldUtilTest, FormatEmptyString) {
   std::vector<AddressField> fields;
   ParseAddressFieldsFormat(std::string(), &fields);
+  EXPECT_TRUE(fields.empty());
+}
+
+TEST(AddressFieldUtilTest, RequiredParseDefault) {
+  std::vector<AddressField> actual;
+  ParseAddressFieldsRequired("AC", &actual);
+
+  std::vector<AddressField> expected;
+  expected.push_back(STREET_ADDRESS);
+  expected.push_back(LOCALITY);
+
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(AddressFieldUtilTest, RequiredEmptyString) {
+  std::vector<AddressField> fields;
+  ParseAddressFieldsRequired(std::string(), &fields);
   EXPECT_TRUE(fields.empty());
 }
 
