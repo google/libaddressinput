@@ -31,6 +31,7 @@
       'target_name': 'libaddressinput',
       'type': '<(component)',
       'sources': [
+        'src/address_data.cc',
         'src/address_field.cc',
         'src/address_field_util.cc',
         'src/address_problem.cc',
@@ -58,6 +59,7 @@
       'target_name': 'unit_tests',
       'type': 'executable',
       'sources': [
+        'test/address_data_test.cc',
         'test/address_field_test.cc',
         'test/address_field_util_test.cc',
         'test/address_problem_test.cc',
