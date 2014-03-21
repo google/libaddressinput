@@ -36,6 +36,7 @@
         'src/address_field_util.cc',
         'src/address_problem.cc',
         'src/address_ui.cc',
+        'src/address_validator.cc',
         'src/localization.cc',
         'src/lookup_key.cc',
         'src/lookup_key_util.cc',
@@ -51,6 +52,7 @@
         'src/util/string_split.cc',
         'src/validating_storage.cc',
         'src/validating_util.cc',
+        'src/validation_task.cc',
       ],
       'dependencies': [
         'grit.gyp:generated_messages',
@@ -67,6 +69,7 @@
         'test/address_field_util_test.cc',
         'test/address_problem_test.cc',
         'test/address_ui_test.cc',
+        'test/address_validator_test.cc',
         'test/fake_downloader.cc',
         'test/fake_downloader_test.cc',
         'test/fake_storage.cc',
@@ -87,6 +90,7 @@
         'test/util/string_split_unittest.cc',
         'test/validating_storage_test.cc',
         'test/validating_util_test.cc',
+        'test/validation_task_test.cc',
       ],
       'defines': [
         'TEST_DATA_DIR="../testdata"',
