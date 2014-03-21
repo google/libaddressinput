@@ -20,10 +20,17 @@
 #include "region_data_constants.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <libaddressinput/address_field.h>
+#include <libaddressinput/util/basictypes.h>
+
+#include "address_field_util.h"
+#include "lookup_key.h"
 
 namespace i18n {
 namespace addressinput {
@@ -1010,6 +1017,31 @@ std::vector<std::string> InitRegionCodes() {
   return region_codes;
 }
 
+const std::map<std::string, size_t> InitMaxLookupKeyDepth() {
+  std::map<std::string, size_t> max_depth;
+  for (std::map<std::string, std::string>::const_iterator
+       it = GetAllRegionData().begin(); it != GetAllRegionData().end(); ++it) {
+    std::vector<AddressField> fields;
+    // Here it->second actually contains the entire JSON blob for this region,
+    // and not only the format field, but it doesn't really matter when just
+    // checking whether a particular formatting code (eg. "%C") is present, as
+    // there isn't anything else in the JSON that erroneously could match a
+    // formatting code.
+    ParseAddressFieldsFormat(it->second, &fields);
+    size_t depth = 1;
+    for (; depth < arraysize(LookupKey::kHierarchy); ++depth) {
+      AddressField field = LookupKey::kHierarchy[depth];
+      // Check to see if a particular field in the hierarchy is used by
+      // addresses in this country. If not, the maximum depth has been reached.
+      if (std::find(fields.begin(), fields.end(), field) == fields.end()) {
+        break;
+      }
+    }
+    max_depth.insert(std::make_pair(it->first, depth - 1));
+  }
+  return max_depth;
+}
+
 }  // namespace
 
 // static
@@ -1037,6 +1069,15 @@ const std::string& RegionDataConstants::GetDefaultRegionData() {
       "\"zip_name_type\":\"postal\""
       "}");
   return kDefaultRegionData;
+}
+
+// static
+size_t RegionDataConstants::GetMaxLookupKeyDepth(
+    const std::string& region_code) {
+  static const std::map<std::string, size_t> kMaxDepth(InitMaxLookupKeyDepth());
+  std::map<std::string, size_t>::const_iterator it =
+      kMaxDepth.find(region_code);
+  return it != kMaxDepth.end() ? it->second : 0;
 }
 
 }  // namespace addressinput
