@@ -72,6 +72,12 @@ class AddressValidator {
  public:
   typedef i18n::addressinput::Callback<AddressData, FieldProblemMap> Callback;
 
+  // Callback function for Is*() methods that answer yes/no questions. The
+  // |success| parameter will tell whether an answer to the question could be
+  // found, the |key| parameter will tell which item the question was answered
+  // for and the |data| parameter will tell the answer.
+  typedef i18n::addressinput::Callback<std::string, bool> BoolCallback;
+
   // Takes ownership of |downloader| and |storage|. The |validation_data_url|
   // should be a URL to an address data server that |downloader| can access.
   //
@@ -106,6 +112,30 @@ class AddressValidator {
                 const FieldProblemMap* filter,
                 FieldProblemMap* problems,
                 const Callback& validated) const;
+
+  // Checks whether |field| is a required field for |region_code|.
+  //
+  // Calls the |answered| callback when checking is done. All objects passed
+  // as parameters must be kept available until the callback has been called.
+  //
+  // The |success| parameter of the callback indicates whether it was possible
+  // to find an answer. If |success| is true, then the |data| parameter of the
+  // callback will tell the answer to the question.
+  void IsFieldRequired(AddressField field,
+                       const std::string& region_code,
+                       const BoolCallback& answered) const;
+
+  // Checks whether |field| is a field that is used for |region_code|.
+  //
+  // Calls the |answered| callback when checking is done. All objects passed
+  // as parameters must be kept available until the callback has been called.
+  //
+  // The |success| parameter of the callback indicates whether it was possible
+  // to find an answer. If |success| is true, then the |data| parameter of the
+  // callback will tell the answer to the question.
+  void IsFieldUsed(AddressField field,
+                   const std::string& region_code,
+                   const BoolCallback& answered) const;
 
  private:
   const scoped_ptr<MetadataLoader> metadata_loader_;

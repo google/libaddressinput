@@ -14,8 +14,17 @@
 
 #include <libaddressinput/address_validator.h>
 
+#include <libaddressinput/address_field.h>
+
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <string>
+
 #include "metadata_loader.h"
+#include "metadata_query_task.h"
 #include "retriever.h"
+#include "rule.h"
 #include "validation_task.h"
 
 namespace i18n {
@@ -45,6 +54,72 @@ void AddressValidator::Validate(const AddressData& address,
        filter,
        problems,
        validated))->Run(metadata_loader_.get());
+}
+
+namespace {
+
+class IsFieldRequiredTask : public MetadataQueryTask {
+ public:
+  IsFieldRequiredTask(AddressField field,
+                      const std::string& region_code,
+                      const AddressValidator::BoolCallback& answered)
+      : MetadataQueryTask(field, region_code, answered) {}
+
+  virtual ~IsFieldRequiredTask() {}
+
+ protected:
+  virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const {
+    assert(hierarchy.rule_[0] != NULL);
+    const Rule& country_rule = *hierarchy.rule_[0];
+    return std::find(country_rule.GetRequired().begin(),
+                     country_rule.GetRequired().end(),
+                     field_) != country_rule.GetRequired().end();
+  }
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(IsFieldRequiredTask);
+};
+
+class IsFieldUsedTask : public MetadataQueryTask {
+ public:
+  IsFieldUsedTask(AddressField field,
+                  const std::string& region_code,
+                  const AddressValidator::BoolCallback& answered)
+      : MetadataQueryTask(field, region_code, answered) {}
+
+  virtual ~IsFieldUsedTask() {}
+
+ protected:
+  virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const {
+    assert(hierarchy.rule_[0] != NULL);
+    const Rule& country_rule = *hierarchy.rule_[0];
+    return std::find(country_rule.GetFormat().begin(),
+                     country_rule.GetFormat().end(),
+                     field_) != country_rule.GetFormat().end();
+  }
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(IsFieldUsedTask);
+};
+
+}  // namespace
+
+void AddressValidator::IsFieldRequired(
+    AddressField field,
+    const std::string& region_code,
+    const BoolCallback& answered) const {
+  // The MetadataQueryTask object will delete itself after Run() has finished.
+  (new IsFieldRequiredTask(field, region_code, answered))
+      ->Run(metadata_loader_.get());
+}
+
+void AddressValidator::IsFieldUsed(
+    AddressField field,
+    const std::string& region_code,
+    const BoolCallback& answered) const {
+  // The MetadataQueryTask object will delete itself after Run() has finished.
+  (new IsFieldUsedTask(field, region_code, answered))
+      ->Run(metadata_loader_.get());
 }
 
 }  // namespace addressinput
