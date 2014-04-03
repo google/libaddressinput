@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "util/re2ptr.h"  // Must be the first #include statement!
+
 #include <libaddressinput/address_data.h>
 
 #include <libaddressinput/address_field.h>
@@ -56,6 +58,13 @@ const std::vector<std::string> AddressData::*kVectorStringField[] = {
 COMPILE_ASSERT(arraysize(kStringField) == arraysize(kVectorStringField),
                field_mapping_array_size_mismatch);
 
+// A string is considered to be "empty" not only if it actually is empty, but
+// also if it contains nothing but whitespace.
+bool IsStringEmpty(const std::string& str) {
+  static const RE2 kMatcher("\\S");
+  return str.empty() || !RE2::PartialMatch(str, kMatcher);
+}
+
 }  // namespace
 
 bool AddressData::IsFieldEmpty(AddressField field) const {
@@ -63,11 +72,11 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
   assert(static_cast<size_t>(field) < arraysize(kStringField));
   if (kStringField[field] != NULL) {
     const std::string& value = GetFieldValue(field);
-    return value.empty();
+    return IsStringEmpty(value);
   } else {
     const std::vector<std::string>& value = GetRepeatedFieldValue(field);
     return std::find_if(value.begin(), value.end(),
-                        std::not1(std::mem_fun_ref(&std::string::empty))) ==
+                        std::not1(std::ptr_fun(&IsStringEmpty))) ==
            value.end();
   }
 }

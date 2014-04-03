@@ -97,6 +97,16 @@ TEST(AddressDataTest, IsFieldEmpty) {
   EXPECT_FALSE(address.IsFieldEmpty(RECIPIENT));
 }
 
+TEST(AddressDataTest, IsFieldEmptyWhitespace) {
+  AddressData address;
+  address.recipient = "   ";
+  EXPECT_TRUE(address.IsFieldEmpty(RECIPIENT));
+  address.recipient = "abc";
+  EXPECT_FALSE(address.IsFieldEmpty(RECIPIENT));
+  address.recipient = " b ";
+  EXPECT_FALSE(address.IsFieldEmpty(RECIPIENT));
+}
+
 TEST(AddressDataTest, IsFieldEmptyVector) {
   AddressData address;
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
@@ -105,6 +115,22 @@ TEST(AddressDataTest, IsFieldEmptyVector) {
   address.address_line.push_back("aaa");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
   address.address_line.push_back("");
+  EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
+}
+
+TEST(AddressDataTest, IsFieldEmptyVectorWhitespace) {
+  AddressData address;
+  address.address_line.push_back("   ");
+  address.address_line.push_back("   ");
+  address.address_line.push_back("   ");
+  EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
+  address.address_line.clear();
+  address.address_line.push_back("abc");
+  EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
+  address.address_line.clear();
+  address.address_line.push_back("   ");
+  address.address_line.push_back(" b ");
+  address.address_line.push_back("   ");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
 }
 
