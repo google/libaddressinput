@@ -18,6 +18,7 @@
 #include <libaddressinput/address_ui_component.h>
 #include <libaddressinput/localization.h>
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -76,9 +77,13 @@ std::vector<AddressUiComponent> BuildComponents(
   Rule rule;
   rule.CopyFrom(Rule::GetDefault());
   if (!rule.ParseSerializedRule(
-           RegionDataConstants::GetRegionData(region_code))) {
+          RegionDataConstants::GetRegionData(region_code))) {
     return result;
   }
+
+  // For avoiding showing an input field twice, when the field is displayed
+  // twice on an envelope.
+  std::set<AddressField> fields;
 
   bool previous_field_is_newline = true;
   bool next_field_is_newline = true;
@@ -87,6 +92,9 @@ std::vector<AddressUiComponent> BuildComponents(
        field_it != rule.GetFormat().end(); ++field_it) {
     if (IsNewline(*field_it)) {
       previous_field_is_newline = true;
+      continue;
+    }
+    if (!fields.insert(*field_it).second) {
       continue;
     }
     AddressUiComponent component;

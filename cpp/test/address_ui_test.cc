@@ -18,6 +18,7 @@
 #include <libaddressinput/address_ui_component.h>
 #include <libaddressinput/localization.h>
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -76,6 +77,17 @@ TEST_P(AddressUiTest, RegionCodeHasTwoCharacters) {
 // code.
 TEST_P(AddressUiTest, ComponentsAreValid) {
   EXPECT_TRUE(ComponentsAreValid(BuildComponents(GetParam(), localization_)));
+}
+
+// Verifies that BuildComponents() returns at most one input field of each type.
+TEST_P(AddressUiTest, UniqueFieldTypes) {
+  std::set<AddressField> fields;
+  const std::vector<AddressUiComponent>& components =
+      BuildComponents(GetParam(), localization_);
+  for (std::vector<AddressUiComponent>::const_iterator it = components.begin();
+       it != components.end(); ++it) {
+    EXPECT_TRUE(fields.insert(it->field).second);
+  }
 }
 
 // Test all regions codes.
