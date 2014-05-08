@@ -69,12 +69,6 @@ TEST_P(RegionDataTest, RegionDataHasCurlyBraces) {
   EXPECT_TRUE(HasCurlyBraces(GetData()));
 }
 
-// Verifies that a region data value contains a "name" key, for example
-// "{\"name\":\"SOUTH AFRICA\"}".
-TEST_P(RegionDataTest, RegionDataHasName) {
-  EXPECT_NE(std::string::npos, GetData().find("\"name\":"));
-}
-
 // Test all region data.
 INSTANTIATE_TEST_CASE_P(
     AllRegionData, RegionDataTest,
