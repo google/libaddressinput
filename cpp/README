@@ -79,3 +79,9 @@ Test
 This command will execute the unit tests for the library:
 
 $ out/Default/unit_tests
+
+Discussion
+==========
+
+Do you need help with libaddressinput?
+https://groups.google.com/forum/#!forum/libaddressinput-discuss
