@@ -86,7 +86,6 @@ void ValidationTask::Validate(bool success,
   }
 
   validated_(success, address_, *problems_);
-  delete &hierarchy;
   delete this;
 }
 

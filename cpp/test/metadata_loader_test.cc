@@ -22,6 +22,7 @@
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <cstring>
 #include <map>
 #include <string>
 #include <utility>
@@ -67,7 +68,7 @@ class MetadataLoaderTest : public testing::Test {
  protected:
   MetadataLoaderTest()
       : address_(),
-        hierarchy_(),
+        rule_(),
         called_(false),
         lookup_key_(),
         loader_(
@@ -84,7 +85,7 @@ class MetadataLoaderTest : public testing::Test {
   }
 
   AddressData address_;
-  scoped_ptr<const MetadataLoader::RuleHierarchy> hierarchy_;
+  const Rule* rule_[arraysize(LookupKey::kHierarchy)];
   bool called_;
 
  private:
@@ -93,7 +94,7 @@ class MetadataLoaderTest : public testing::Test {
               const MetadataLoader::RuleHierarchy& hierarchy) {
     ASSERT_TRUE(success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
-    hierarchy_.reset(&hierarchy);
+    std::memcpy(rule_, hierarchy.rule_, sizeof rule_);
     called_ = true;
   }
 
@@ -109,10 +110,10 @@ TEST_F(MetadataLoaderTest, Invalid) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] == NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, Valid) {
@@ -120,14 +121,14 @@ TEST_F(MetadataLoaderTest, Valid) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
-  EXPECT_EQ("data/SE", hierarchy_->rule_[0]->GetId());
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetRequired().empty());
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetFormat().empty());
-  EXPECT_TRUE(hierarchy_->rule_[0]->GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_EQ("data/SE", rule_[0]->GetId());
+  EXPECT_FALSE(rule_[0]->GetRequired().empty());
+  EXPECT_FALSE(rule_[0]->GetFormat().empty());
+  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() != NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepthEqualsMaxDepth) {
@@ -136,10 +137,10 @@ TEST_F(MetadataLoaderTest, KeyDepthEqualsMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepthLargerThanMaxDepth) {
@@ -149,10 +150,10 @@ TEST_F(MetadataLoaderTest, KeyDepthLargerThanMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepthSmallerThanMaxDepth) {
@@ -160,10 +161,10 @@ TEST_F(MetadataLoaderTest, KeyDepthSmallerThanMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepth0) {
@@ -171,10 +172,10 @@ TEST_F(MetadataLoaderTest, KeyDepth0) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepth1) {
@@ -183,10 +184,10 @@ TEST_F(MetadataLoaderTest, KeyDepth1) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepth2) {
@@ -196,10 +197,10 @@ TEST_F(MetadataLoaderTest, KeyDepth2) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] != NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(MetadataLoaderTest, KeyDepth3) {
@@ -210,10 +211,10 @@ TEST_F(MetadataLoaderTest, KeyDepth3) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] != NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] != NULL);
+  EXPECT_TRUE(rule_[3] != NULL);
 }
 
 TEST_F(MetadataLoaderTest, RuleCache) {
@@ -222,27 +223,26 @@ TEST_F(MetadataLoaderTest, RuleCache) {
 
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 
-  // Keep a pointer to the current RuleHierarchy object and then verify that
-  // calling Load() again with the same LookupKey returns a new RuleHierarchy
-  // object which points to the same Rule objects stored in the MetadataLoader
-  // cache as the old RuleHierarchy object pointed to.
+  // Make a copy of the currently returned pointers to the Rule objects (stored
+  // in the MetadataLoader cache) and verify that calling Load() again with the
+  // same LookupKey returns the same pointers again (and doesn't create any new
+  // Rule objects instead).
 
-  const scoped_ptr<const MetadataLoader::RuleHierarchy> hierarchy(
-      hierarchy_.release());
+  const Rule* rule[arraysize(LookupKey::kHierarchy)];
+  std::memcpy(rule, rule_, sizeof rule);
 
   called_ = false;
   ASSERT_NO_FATAL_FAILURE(Load());
   ASSERT_TRUE(called_);
-  EXPECT_NE(hierarchy.get(), hierarchy_.get());
-  EXPECT_EQ(hierarchy->rule_[0], hierarchy_->rule_[0]);
-  EXPECT_EQ(hierarchy->rule_[1], hierarchy_->rule_[1]);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_EQ(rule[0], rule_[0]);
+  EXPECT_EQ(rule[1], rule_[1]);
+  EXPECT_EQ(rule[2], rule_[2]);
+  EXPECT_EQ(rule[3], rule_[3]);
 }
 
 class RuleHierarchyTest : public testing::Test {
@@ -287,10 +287,11 @@ class RuleHierarchyTest : public testing::Test {
         loaded_(BuildCallback(this, &RuleHierarchyTest::Loaded)),
         success_(true),
         lookup_key_(),
+        rule_(),
+        called_(false),
         hierarchy_(
             new MetadataLoader::RuleHierarchy(
-                lookup_key_, &rule_cache_, *loaded_)),
-        called_(false) {}
+                lookup_key_, &rule_cache_, *loaded_)) {}
 
   virtual ~RuleHierarchyTest() {
     for (std::map<std::string, const Rule*>::const_iterator
@@ -299,13 +300,17 @@ class RuleHierarchyTest : public testing::Test {
     }
   }
 
+  void Queue(const std::string& key) {
+    hierarchy_->Queue(key);
+  }
+
   void Retrieve() {
     hierarchy_->Retrieve(*retriever_);
   }
 
   bool success_;  // Expected status from MockDownloader.
   LookupKey lookup_key_;  // Stub.
-  const scoped_ptr<MetadataLoader::RuleHierarchy> hierarchy_;
+  const Rule* rule_[arraysize(LookupKey::kHierarchy)];
   bool called_;
 
  private:
@@ -314,9 +319,12 @@ class RuleHierarchyTest : public testing::Test {
               const MetadataLoader::RuleHierarchy& hierarchy) {
     ASSERT_EQ(success_, success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
-    ASSERT_EQ(hierarchy_.get(), &hierarchy);
+    ASSERT_EQ(hierarchy_, &hierarchy);
+    std::memcpy(rule_, hierarchy.rule_, sizeof rule_);
     called_ = true;
   }
+
+  MetadataLoader::RuleHierarchy* const hierarchy_;
 
   DISALLOW_COPY_AND_ASSIGN(RuleHierarchyTest);
 };
@@ -329,14 +337,14 @@ const size_t RuleHierarchyTest::MockDownloader::kMockDataUrlLength =
 TEST_F(RuleHierarchyTest, Empty) {
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] == NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 }
 
 TEST_F(RuleHierarchyTest, Invalid) {
-  hierarchy_->Queue("data/XA");
+  Queue("data/XA");
 
   success_ = false;
 
@@ -347,21 +355,21 @@ TEST_F(RuleHierarchyTest, Invalid) {
 TEST_F(RuleHierarchyTest, Valid) {
   downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
 
-  hierarchy_->Queue("data/XA");
+  Queue("data/XA");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 
-  EXPECT_EQ("data/XA", hierarchy_->rule_[0]->GetId());
+  EXPECT_EQ("data/XA", rule_[0]->GetId());
 
   // All rules on the COUNTRY level inherit from the default rule.
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetFormat().empty());
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetRequired().empty());
-  EXPECT_TRUE(hierarchy_->rule_[0]->GetPostalCodeMatcher() == NULL);
+  EXPECT_FALSE(rule_[0]->GetFormat().empty());
+  EXPECT_FALSE(rule_[0]->GetRequired().empty());
+  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() == NULL);
 }
 
 TEST_F(RuleHierarchyTest, ValidHierarchy) {
@@ -374,83 +382,34 @@ TEST_F(RuleHierarchyTest, ValidHierarchy) {
   downloader_->data_.insert(
       std::make_pair("data/XA/aa/bb/cc", "{\"id\":\"data/XA/aa/bb/cc\"}"));
 
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/aa");
-  hierarchy_->Queue("data/XA/aa/bb");
-  hierarchy_->Queue("data/XA/aa/bb/cc");
+  Queue("data/XA");
+  Queue("data/XA/aa");
+  Queue("data/XA/aa/bb");
+  Queue("data/XA/aa/bb/cc");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] != NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] != NULL);
+  EXPECT_TRUE(rule_[2] != NULL);
+  EXPECT_TRUE(rule_[3] != NULL);
 
-  EXPECT_EQ("data/XA", hierarchy_->rule_[0]->GetId());
-  EXPECT_EQ("data/XA/aa", hierarchy_->rule_[1]->GetId());
-  EXPECT_EQ("data/XA/aa/bb", hierarchy_->rule_[2]->GetId());
-  EXPECT_EQ("data/XA/aa/bb/cc", hierarchy_->rule_[3]->GetId());
+  EXPECT_EQ("data/XA", rule_[0]->GetId());
+  EXPECT_EQ("data/XA/aa", rule_[1]->GetId());
+  EXPECT_EQ("data/XA/aa/bb", rule_[2]->GetId());
+  EXPECT_EQ("data/XA/aa/bb/cc", rule_[3]->GetId());
 
   // All rules on the COUNTRY level inherit from the default rule.
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetFormat().empty());
-  EXPECT_FALSE(hierarchy_->rule_[0]->GetRequired().empty());
+  EXPECT_FALSE(rule_[0]->GetFormat().empty());
+  EXPECT_FALSE(rule_[0]->GetRequired().empty());
 
   // Only rules on the COUNTRY level inherit from the default rule.
-  EXPECT_TRUE(hierarchy_->rule_[1]->GetFormat().empty());
-  EXPECT_TRUE(hierarchy_->rule_[1]->GetRequired().empty());
-  EXPECT_TRUE(hierarchy_->rule_[2]->GetFormat().empty());
-  EXPECT_TRUE(hierarchy_->rule_[2]->GetRequired().empty());
-  EXPECT_TRUE(hierarchy_->rule_[3]->GetFormat().empty());
-  EXPECT_TRUE(hierarchy_->rule_[3]->GetRequired().empty());
-}
-
-TEST_F(RuleHierarchyTest, Alias) {
-  downloader_->data_.insert(
-      std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
-  downloader_->data_.insert(
-      std::make_pair("data/XA/aa", "{\"id\":\"data/XA/aa\"}"));
-  downloader_->data_.insert(
-      std::make_pair("data/XA/alias", "{\"id\":\"data/XA/aa\"}"));
-
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/aa");
-
-  ASSERT_NO_FATAL_FAILURE(Retrieve());
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
-
-  EXPECT_EQ("data/XA", hierarchy_->rule_[0]->GetId());
-  EXPECT_EQ("data/XA/aa", hierarchy_->rule_[1]->GetId());
-
-  // Keep pointers to the existing Rule objects but overwrite the pointers in
-  // RuleHierarchy and then verify that calling Retrieve() again with idential
-  // or aliased keys returns pointers to the existing objects.
-
-  const Rule* const rule0 = hierarchy_->rule_[0];
-  const Rule* const rule1 = hierarchy_->rule_[1];
-
-  hierarchy_->rule_[0] = NULL;
-  hierarchy_->rule_[1] = NULL;
-
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/alias");
-
-  called_ = false;
-  ASSERT_NO_FATAL_FAILURE(Retrieve());
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
-
-  EXPECT_EQ("data/XA", hierarchy_->rule_[0]->GetId());
-  EXPECT_EQ("data/XA/aa", hierarchy_->rule_[1]->GetId());
-
-  EXPECT_EQ(rule0, hierarchy_->rule_[0]);
-  EXPECT_EQ(rule1, hierarchy_->rule_[1]);
+  EXPECT_TRUE(rule_[1]->GetFormat().empty());
+  EXPECT_TRUE(rule_[1]->GetRequired().empty());
+  EXPECT_TRUE(rule_[2]->GetFormat().empty());
+  EXPECT_TRUE(rule_[2]->GetRequired().empty());
+  EXPECT_TRUE(rule_[3]->GetFormat().empty());
+  EXPECT_TRUE(rule_[3]->GetRequired().empty());
 }
 
 TEST_F(RuleHierarchyTest, InvalidJson1) {
@@ -458,7 +417,7 @@ TEST_F(RuleHierarchyTest, InvalidJson1) {
 
   success_ = false;
 
-  hierarchy_->Queue("data/XA");
+  Queue("data/XA");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
@@ -470,8 +429,8 @@ TEST_F(RuleHierarchyTest, InvalidJson2) {
 
   success_ = false;
 
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/aa");
+  Queue("data/XA");
+  Queue("data/XA/aa");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
@@ -481,17 +440,17 @@ TEST_F(RuleHierarchyTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
   downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
   downloader_->data_.insert(std::make_pair("data/XA/aa", "{}"));
 
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/aa");
+  Queue("data/XA");
+  Queue("data/XA/aa");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(hierarchy_->rule_[0] != NULL);
-  EXPECT_TRUE(hierarchy_->rule_[1] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[2] == NULL);
-  EXPECT_TRUE(hierarchy_->rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != NULL);
+  EXPECT_TRUE(rule_[1] == NULL);
+  EXPECT_TRUE(rule_[2] == NULL);
+  EXPECT_TRUE(rule_[3] == NULL);
 
-  EXPECT_EQ("data/XA", hierarchy_->rule_[0]->GetId());
+  EXPECT_EQ("data/XA", rule_[0]->GetId());
 }
 
 TEST_F(RuleHierarchyTest, IfCountryFailsAllFails) {
@@ -500,8 +459,8 @@ TEST_F(RuleHierarchyTest, IfCountryFailsAllFails) {
 
   success_ = false;
 
-  hierarchy_->Queue("data/XA");
-  hierarchy_->Queue("data/XA/aa");
+  Queue("data/XA");
+  Queue("data/XA/aa");
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);

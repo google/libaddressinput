@@ -66,7 +66,6 @@ void MetadataQueryTask::ExecuteQuery(
   }
 
   answered_(success, region_code_, answer);
-  delete &hierarchy;
   delete this;
 }
 

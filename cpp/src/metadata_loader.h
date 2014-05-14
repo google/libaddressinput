@@ -39,9 +39,6 @@ class Rule;
 class MetadataLoader {
  public:
   class RuleHierarchy;
-
-  // This callback will be called with a reference to a heap-allocated
-  // RuleHierarchy object, which it will be responsible for delete'ing.
   typedef i18n::addressinput::Callback<LookupKey, RuleHierarchy> Callback;
 
   // Takes ownership of |retriever|.
@@ -71,6 +68,7 @@ class MetadataLoader {
 
    private:
     void Load(bool success, const std::string& key, const std::string& data);
+    void Loaded();
 
     std::set<std::string> pending_;
     const LookupKey& lookup_key_;
