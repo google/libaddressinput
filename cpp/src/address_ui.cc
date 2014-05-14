@@ -156,7 +156,7 @@ std::vector<AddressUiComponent> BuildComponents(
     AddressUiComponent component;
     std::vector<AddressField>::const_iterator next_field_it = field_it + 1;
     next_field_is_newline =
-        next_field_it == rule.GetFormat().end() || IsNewline(*next_field_it);
+        next_field_it == format.end() || IsNewline(*next_field_it);
     component.length_hint = previous_field_is_newline && next_field_is_newline
                                 ? AddressUiComponent::HINT_LONG
                                 : AddressUiComponent::HINT_SHORT;
