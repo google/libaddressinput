@@ -97,9 +97,20 @@ void MetadataLoader::RuleHierarchy::Retrieve(const Retriever& retriever) {
   if (pending_.empty()) {
     loaded_(true, lookup_key_, *this);
   } else {
+    // When the final pending rule has been retrieved, the retrieved_ callback
+    // will finish by calling the loaded_ callback, which when finished will
+    // delete this RuleHierarchy object. So after the final call to
+    // retriever.Retrieve() no attributes of this object can be accessed (as the
+    // object then no longer exists), and the condition statement of the loop
+    // must therefore not use the otherwise obvious it != pending_.end() but
+    // instead test a local variable that isn't affected by the object being
+    // deleted.
+    bool done = false;
     for (std::set<std::string>::const_iterator
-         it = pending_.begin(); it != pending_.end(); ) {
-      retriever.Retrieve(*it++, *retrieved_);
+         it = pending_.begin(); !done; ) {
+      const std::string& key = *it++;
+      done = it == pending_.end();
+      retriever.Retrieve(key, *retrieved_);
     }
   }
 }
