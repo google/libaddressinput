@@ -14,6 +14,8 @@
 
 #include "json.h"
 
+#include <libaddressinput/util/scoped_ptr.h>
+
 #include <cassert>
 #include <cstddef>
 #include <string>
@@ -24,25 +26,44 @@
 namespace i18n {
 namespace addressinput {
 
-Json::Json() : document_(new rapidjson::Document), valid_(false) {}
+class Json::JsonImpl {
+ public:
+  JsonImpl() : document_(new rapidjson::Document), valid_(false) {}
+
+  ~JsonImpl() {}
+
+  // JSON document.
+  scoped_ptr<rapidjson::Document> document_;
+
+  // True if the parsed string is a valid JSON object.
+  bool valid_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(JsonImpl);
+};
+
+Json::Json() : impl_(new JsonImpl) {}
 
 Json::~Json() {}
 
 bool Json::ParseObject(const std::string& json) {
-  document_->Parse<rapidjson::kParseValidateEncodingFlag>(json.c_str());
-  valid_ = !document_->HasParseError() && document_->IsObject();
-  return valid_;
+  impl_->document_->Parse<rapidjson::kParseValidateEncodingFlag>(json.c_str());
+  impl_->valid_ =
+      !impl_->document_->HasParseError() && impl_->document_->IsObject();
+  return impl_->valid_;
 }
 
 bool Json::HasStringValueForKey(const std::string& key) const {
-  assert(valid_);
-  const rapidjson::Value::Member* member = document_->FindMember(key.c_str());
+  assert(impl_->valid_);
+  const rapidjson::Value::Member* member =
+      impl_->document_->FindMember(key.c_str());
   return member != NULL && member->value.IsString();
 }
 
 std::string Json::GetStringValueForKey(const std::string& key) const {
-  assert(valid_);
-  const rapidjson::Value::Member* member = document_->FindMember(key.c_str());
+  assert(impl_->valid_);
+  const rapidjson::Value::Member* member =
+      impl_->document_->FindMember(key.c_str());
   assert(member != NULL);
   assert(member->value.IsString());
   return std::string(member->value.GetString(),

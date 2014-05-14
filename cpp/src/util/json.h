@@ -20,18 +20,6 @@
 
 #include <string>
 
-// Forward declaration for |Document|.
-namespace rapidjson {
-
-class CrtAllocator;
-template <typename> class MemoryPoolAllocator;
-template <typename> struct UTF8;
-template <typename, typename> class GenericDocument;
-typedef GenericDocument<UTF8<char>, MemoryPoolAllocator<CrtAllocator> >
-    Document;
-
-}  // namespace rapidjson
-
 namespace i18n {
 namespace addressinput {
 
@@ -61,11 +49,8 @@ class Json {
   std::string GetStringValueForKey(const std::string& key) const;
 
  private:
-  // JSON document.
-  scoped_ptr<rapidjson::Document> document_;
-
-  // True if the parsed string is a valid JSON object.
-  bool valid_;
+  class JsonImpl;
+  scoped_ptr<JsonImpl> impl_;
 
   DISALLOW_COPY_AND_ASSIGN(Json);
 };
