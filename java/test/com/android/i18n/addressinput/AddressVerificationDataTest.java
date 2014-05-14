@@ -58,9 +58,9 @@ public class AddressVerificationDataTest extends TestCase {
         assertEquals("data/CA", nodeData.get(AddressDataKey.ID));
         assertEquals("en", nodeData.get(AddressDataKey.LANG));
 
-        assertEquals("AB~BC~MB~NB~NL~NS~NU~NT~ON~PE~QC~SK~YT", keys);
+        assertEquals("AB~BC~MB~NB~NL~NT~NS~NU~ON~PE~QC~SK~YT", keys);
         assertEquals("Alberta~British Columbia~Manitoba~New Brunswick" +
-                     "~Newfoundland and Labrador~Nova Scotia~Nunavut~Northwest Territories" +
+                     "~Newfoundland and Labrador~Northwest Territories~Nova Scotia~Nunavut" +
                      "~Ontario~Prince Edward Island~Quebec~Saskatchewan~Yukon",
                      names);
     }
