@@ -40,10 +40,11 @@ typedef std::map<std::string, int> NameMessageIdMap;
 const char kAdminAreaNameTypeKey[] = "state_name_type";
 const char kFormatKey[] = "fmt";
 const char kIdKey[] = "id";
+const char kLanguagesKey[] = "languages";
+const char kLatinFormatKey[] = "lfmt";
 const char kPostalCodeNameTypeKey[] = "zip_name_type";
 const char kRequireKey[] = "require";
 const char kSubKeysKey[] = "sub_keys";
-const char kLanguagesKey[] = "languages";
 const char kZipKey[] = "zip";
 
 // Used as a separator in a list of items. For example, the list of supported
@@ -108,6 +109,7 @@ int GetMessageIdFromName(const std::string& name,
 Rule::Rule()
     : id_(),
       format_(),
+      latin_format_(),
       required_(),
       sub_keys_(),
       languages_(),
@@ -132,6 +134,7 @@ const Rule& Rule::GetDefault() {
 void Rule::CopyFrom(const Rule& rule) {
   id_ = rule.id_;
   format_ = rule.format_;
+  latin_format_ = rule.latin_format_;
   required_ = rule.required_;
   sub_keys_ = rule.sub_keys_;
   languages_ = rule.languages_;
@@ -156,6 +159,11 @@ bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
 
   if (json.HasStringValueForKey(kFormatKey)) {
     ParseAddressFieldsFormat(json.GetStringValueForKey(kFormatKey), &format_);
+  }
+
+  if (json.HasStringValueForKey(kLatinFormatKey)) {
+    ParseAddressFieldsFormat(
+        json.GetStringValueForKey(kLatinFormatKey), &latin_format_);
   }
 
   if (json.HasStringValueForKey(kRequireKey)) {

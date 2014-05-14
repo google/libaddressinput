@@ -23,7 +23,9 @@ namespace addressinput {
 
 namespace {
 
-// For each language code XX with translations:
+static const char kDefaultLanguage[] = "en";
+
+// For each language XX with translations:
 //    (1) Add a namespace XX here with an include of "XX_messages.cc".
 //    (2) Add a wrapper that converts the char pointer to std::string. (GRIT
 //        generated functions return char pointers.)
@@ -41,7 +43,8 @@ std::string GetStdString(int message_id) {
 
 }  // namespace
 
-Localization::Localization() : get_string_(&en::GetStdString) {}
+Localization::Localization() : get_string_(&en::GetStdString),
+                               language_tag_(kDefaultLanguage) {}
 
 Localization::~Localization() {}
 
@@ -49,17 +52,20 @@ std::string Localization::GetString(int message_id) const {
   return get_string_(message_id);
 }
 
-void Localization::SetLanguage(const std::string& language_code) {
-  if (language_code == "en") {
+void Localization::SetLanguage(const std::string& language_tag) {
+  if (language_tag == kDefaultLanguage) {
     get_string_ = &en::GetStdString;
   } else {
     assert(false);
   }
+  language_tag_ = language_tag;
 }
 
-void Localization::SetGetter(std::string (*getter)(int)) {
+void Localization::SetGetter(std::string (*getter)(int),
+                             const std::string& language_tag) {
   assert(getter != NULL);
   get_string_ = getter;
+  language_tag_ = language_tag;
 }
 
 }  // namespace addressinput

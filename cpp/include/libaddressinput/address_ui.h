@@ -28,10 +28,19 @@ struct AddressUiComponent;
 const std::vector<std::string>& GetRegionCodes();
 
 // Returns the UI components for the CLDR |region_code|. Uses the strings from
-// |localization|. Returns an empty vector on error.
+// |localization|. The components can be in default or Latin order, depending on
+// the language of |localization|.
+//
+// Sets the |best_address_language_tag| to the BCP 47 language tag that should
+// be saved with this address. This language will be used to get drop-downs to
+// help users fill in their address, and to format the address that the user
+// entered. The parameter should not be NULL.
+//
+// Returns an empty vector on error.
 std::vector<AddressUiComponent> BuildComponents(
     const std::string& region_code,
-    const Localization& localization);
+    const Localization& localization,
+    std::string* best_address_language_tag);
 
 }  // namespace addressinput
 }  // namespace i18n

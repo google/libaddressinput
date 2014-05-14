@@ -18,12 +18,15 @@
 #include <libaddressinput/address_ui_component.h>
 #include <libaddressinput/localization.h>
 
+#include <cassert>
+#include <cstddef>
 #include <set>
 #include <string>
 #include <vector>
 
 #include "address_field_util.h"
 #include "grit.h"
+#include "language.h"
 #include "messages.h"
 #include "region_data_constants.h"
 #include "rule.h"
@@ -32,6 +35,41 @@ namespace i18n {
 namespace addressinput {
 
 namespace {
+
+Language ChooseBestAddressLanguage(
+    const std::vector<Language>& available_languages,
+    bool has_latin_format,
+    const Language& ui_language) {
+  if (available_languages.empty()) {
+    return ui_language;
+  }
+
+  if (ui_language.tag.empty()) {
+    return available_languages.front();
+  }
+
+  // The conventionally formatted BCP 47 Latin script with a preceding subtag
+  // separator.
+  static const char kLatinScriptSuffix[] = "-Latn";
+  Language latin_script_language(
+      available_languages.front().base + kLatinScriptSuffix);
+  if (has_latin_format && ui_language.has_latin_script) {
+    return latin_script_language;
+  }
+
+  for (std::vector<Language>::const_iterator
+       available_lang_it = available_languages.begin();
+       available_lang_it != available_languages.end(); ++available_lang_it) {
+    // Base language comparison works because no region supports the same base
+    // language with different scripts, for now. For example, no region supports
+    // "zh-Hant" and "zh-Hans" at the same time.
+    if (ui_language.base == available_lang_it->base) {
+      return *available_lang_it;
+    }
+  }
+
+  return has_latin_format ? latin_script_language : available_languages.front();
+}
 
 int GetMessageIdForField(AddressField field,
                          int admin_area_name_message_id,
@@ -71,7 +109,9 @@ const std::vector<std::string>& GetRegionCodes() {
 
 std::vector<AddressUiComponent> BuildComponents(
     const std::string& region_code,
-    const Localization& localization) {
+    const Localization& localization,
+    std::string* best_address_language_tag) {
+  assert(best_address_language_tag != NULL);
   std::vector<AddressUiComponent> result;
 
   Rule rule;
@@ -81,15 +121,31 @@ std::vector<AddressUiComponent> BuildComponents(
     return result;
   }
 
+  std::vector<Language> available_languages;
+  for (std::vector<std::string>::const_iterator language_tag_it =
+       rule.GetLanguages().begin();
+       language_tag_it != rule.GetLanguages().end(); ++language_tag_it) {
+    available_languages.push_back(Language(*language_tag_it));
+  }
+
+  const Language& best_address_language = ChooseBestAddressLanguage(
+      available_languages, !rule.GetLatinFormat().empty(),
+      Language(localization.GetLanguage()));
+  *best_address_language_tag = best_address_language.tag;
+
+  const std::vector<AddressField>& format =
+      !rule.GetLatinFormat().empty() &&
+      best_address_language.has_latin_script
+          ? rule.GetLatinFormat() : rule.GetFormat();
+
   // For avoiding showing an input field twice, when the field is displayed
   // twice on an envelope.
   std::set<AddressField> fields;
 
   bool previous_field_is_newline = true;
   bool next_field_is_newline = true;
-  for (std::vector<AddressField>::const_iterator field_it =
-       rule.GetFormat().begin();
-       field_it != rule.GetFormat().end(); ++field_it) {
+  for (std::vector<AddressField>::const_iterator field_it = format.begin();
+       field_it != format.end(); ++field_it) {
     if (IsNewline(*field_it)) {
       previous_field_is_newline = true;
       continue;

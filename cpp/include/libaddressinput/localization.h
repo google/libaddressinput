@@ -23,12 +23,14 @@ namespace addressinput {
 // The object to retrieve localized strings based on message IDs. Sample usage:
 //    Localization localization;
 //    localization.SetLanguage("en");
-//    Process(BuildComponents("CA", localization));
+//    std::string best_language_tag;
+//    Process(BuildComponents("CA", localization, &best_language_tag));
 //
 // Alternative usage:
 //    Localization localization;
-//    localization.SetGetter(&MyStringGetter);
-//    Process(BuildComponents("CA", localization));
+//    localization.SetGetter(&MyStringGetter, "fr");
+//    std::string best_language_tag;
+//    Process(BuildComponents("CA", localization, &best_language_tag));
 class Localization {
  public:
   // Initializes with English messages by default.
@@ -41,15 +43,22 @@ class Localization {
 
   // Sets the language for the strings. The only supported language is "en"
   // until we have translations.
-  void SetLanguage(const std::string& language_code);
+  void SetLanguage(const std::string& language_tag);
 
   // Sets the string getter that takes a message identifier and returns the
-  // corresponding localized string.
-  void SetGetter(std::string (*getter)(int));
+  // corresponding localized string. The |language_tag| parameter is used only
+  // for information purposes here.
+  void SetGetter(std::string (*getter)(int), const std::string& language_tag);
+
+  // Returns the current language tag.
+  const std::string& GetLanguage() const { return language_tag_; }
 
  private:
   // The string getter.
   std::string (*get_string_)(int);
+
+  // The current language tag.
+  std::string language_tag_;
 };
 
 }  // namespace addressinput

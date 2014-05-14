@@ -16,14 +16,13 @@
 
 #include "post_box_matchers.h"
 
-#include <algorithm>
-#include <cctype>
 #include <cstddef>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "language.h"
 #include "rule.h"
 
 namespace i18n {
@@ -97,15 +96,6 @@ std::map<std::string, const RE2ptr*> InitMatchers() {
   return matchers;
 }
 
-std::string GetBaseLanguage(const std::string& language) {
-  // Be lenient in parsing, allow underscore separators and uppercase letters.
-  std::string::size_type end = language.find_first_of("-_");
-  std::string base(
-      end == std::string::npos ? language : language.substr(0, end));
-  std::transform(base.begin(), base.end(), base.begin(), tolower);
-  return base;
-}
-
 } // namespace
 
 // static
@@ -118,7 +108,8 @@ std::vector<const RE2ptr*> PostBoxMatchers::GetMatchers(
   for (std::vector<std::string>::const_iterator
        it = country_rule.GetLanguages().begin();
        it != country_rule.GetLanguages().end(); ++it) {
-    languages.push_back(GetBaseLanguage(*it));
+    Language language(*it);
+    languages.push_back(language.base);
   }
 
   std::vector<const RE2ptr*> result;

@@ -58,9 +58,15 @@ class Rule {
   // Returns the ID string for this rule.
   const std::string& GetId() const { return id_; };
 
-  // Returns the address format for this rule. The format can include the
-  // NEWLINE extension for AddressField enum.
+  // Returns the approximate address format with the default order of fields.
+  // The format can include the NEWLINE extension for AddressField enum.
   const std::vector<AddressField>& GetFormat() const { return format_; }
+
+  // Returns the approximate address format with the Latin order of fields. The
+  // format can include the NEWLINE extension for AddressField enum.
+  const std::vector<AddressField>& GetLatinFormat() const {
+    return latin_format_;
+  }
 
   // Returns the required fields for this rule.
   const std::vector<AddressField>& GetRequired() const { return required_; }
@@ -71,8 +77,8 @@ class Rule {
   // "CA", "NY", "TX", etc.
   const std::vector<std::string>& GetSubKeys() const { return sub_keys_; }
 
-  // Returns all of the language codes for which this rule has custom rules, for
-  // example ["de", "fr", "it"].
+  // Returns all of the language tags supported by this rule, for example ["de",
+  // "fr", "it"].
   const std::vector<std::string>& GetLanguages() const { return languages_; }
 
   // Returns a pointer to a RE2 regular expression object created from the
@@ -97,6 +103,7 @@ class Rule {
  private:
   std::string id_;
   std::vector<AddressField> format_;
+  std::vector<AddressField> latin_format_;
   std::vector<AddressField> required_;
   std::vector<std::string> sub_keys_;
   std::vector<std::string> languages_;

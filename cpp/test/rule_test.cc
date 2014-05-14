@@ -43,6 +43,7 @@ TEST(RuleTest, CopyOverwritesRule) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{"
                                        "\"fmt\":\"%S%Z\","
+                                       "\"lfmt\":\"%Z%S\","
                                        "\"id\":\"data/XA\","
                                        "\"lname\":\"Testistan\","
                                        "\"require\":\"AC\","
@@ -55,6 +56,7 @@ TEST(RuleTest, CopyOverwritesRule) {
 
   Rule copy;
   EXPECT_NE(rule.GetFormat(), copy.GetFormat());
+  EXPECT_NE(rule.GetLatinFormat(), copy.GetLatinFormat());
   EXPECT_NE(rule.GetId(), copy.GetId());
   EXPECT_NE(rule.GetRequired(), copy.GetRequired());
   EXPECT_NE(rule.GetSubKeys(), copy.GetSubKeys());
@@ -69,6 +71,7 @@ TEST(RuleTest, CopyOverwritesRule) {
 
   copy.CopyFrom(rule);
   EXPECT_EQ(rule.GetFormat(), copy.GetFormat());
+  EXPECT_EQ(rule.GetLatinFormat(), copy.GetLatinFormat());
   EXPECT_EQ(rule.GetId(), copy.GetId());
   EXPECT_EQ(rule.GetRequired(), copy.GetRequired());
   EXPECT_EQ(rule.GetSubKeys(), copy.GetSubKeys());
@@ -113,6 +116,15 @@ TEST(RuleTest, ParsesFormatCorrectly) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
   EXPECT_EQ(expected, rule.GetFormat());
+}
+
+TEST(RuleTest, ParsesLatinFormatCorrectly) {
+  std::vector<AddressField> expected;
+  expected.push_back(LOCALITY);
+  expected.push_back(ADMIN_AREA);
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"lfmt\":\"%C%S\"}"));
+  EXPECT_EQ(expected, rule.GetLatinFormat());
 }
 
 TEST(RuleTest, ParsesRequiredCorrectly) {
