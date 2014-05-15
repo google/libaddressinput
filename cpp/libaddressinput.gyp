@@ -17,12 +17,6 @@
   },
   'includes': ['libaddressinput.gypi'],
   'target_defaults': {
-    'conditions': [
-      ['OS == "linux" and "<(component)" == "shared_library"', {
-        # https://code.google.com/p/gyp/issues/detail?id=374
-        'cflags': ['-fPIC'],
-      }],
-    ],
     'include_dirs': [
       'include',
     ],
@@ -38,6 +32,12 @@
         'grit.gyp:generated_messages',
         'rapidjson.gyp:rapidjson',
         're2.gyp:re2',
+      ],
+      'conditions': [
+        ['OS == "linux" and _type == "shared_library"', {
+          # https://code.google.com/p/gyp/issues/detail?id=374
+          'cflags': ['-fPIC'],
+        }],
       ],
     },
     {
