@@ -26,7 +26,7 @@
       'target_name': 'libaddressinput',
       'type': '<(component)',
       'sources': [
-        '<@(libaddressinput_sources)',
+        '<@(libaddressinput_files)',
       ],
       'dependencies': [
         'grit.gyp:generated_messages',
@@ -44,7 +44,7 @@
       'target_name': 'unit_tests',
       'type': 'executable',
       'sources': [
-        '<@(libaddressinput_test_sources)',
+        '<@(libaddressinput_test_files)',
       ],
       'defines': [
         'TEST_DATA_DIR="../testdata"',
