@@ -39,6 +39,14 @@ public enum AddressField {
 
     COUNTRY('R');
 
+    /**
+     * Enum for width types of address input fields.
+     */
+    public enum WidthType {
+        LONG,
+        SHORT;
+    }
+
     private static final Map<Character, AddressField> FIELD_MAPPING
             = new HashMap<Character, AddressField>();
 
@@ -87,5 +95,11 @@ public enum AddressField {
      */
     char getChar() {
         return mField;
+    }
+
+    /** Returns default width type of the address field. */
+    WidthType getDefaulWidthType() {
+        return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE)
+                ? WidthType.SHORT : WidthType.LONG;
     }
 }

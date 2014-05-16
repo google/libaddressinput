@@ -27,12 +27,12 @@ import java.util.List;
  * Represents a component in the address widget UI. It could be either a text box (when there is no
  * candidate) or a spinner.
  */
-class AddressUIComponent {
+class AddressUiComponent {
     // The label for the UI component
     private String mFieldName;
 
     // The type of the UI component
-    private UIComponent mUiType;
+    private UiComponent mUiType;
 
     // The list of elements in the UI component
     private List<RegionData> mCandidatesList = new ArrayList<RegionData>();
@@ -50,15 +50,15 @@ class AddressUIComponent {
     /**
      * Type of UI component. There are only EDIT (text-box) and SPINNER (drop-down) components.
      */
-    enum UIComponent {
+    enum UiComponent {
         EDIT, SPINNER,
     }
 
-    AddressUIComponent(AddressField id) {
+    AddressUiComponent(AddressField id) {
         mId = id;
-        // By default, an AddressUIComponent doesn't depend on anything else.
+        // By default, an AddressUiComponent doesn't depend on anything else.
         mParentId = null;
-        mUiType = UIComponent.EDIT;
+        mUiType = UiComponent.EDIT;
     }
 
     /**
@@ -68,7 +68,7 @@ class AddressUIComponent {
     void initializeCandidatesList(List<RegionData> candidatesList) {
         mCandidatesList = candidatesList;
         if (candidatesList.size() > 1) {
-            mUiType = UIComponent.SPINNER;
+            mUiType = UiComponent.SPINNER;
             switch (mId) {
                 case DEPENDENT_LOCALITY:
                     mParentId = AddressField.LOCALITY;
@@ -114,11 +114,11 @@ class AddressUIComponent {
         mFieldName = fieldName;
     }
 
-    UIComponent getUIType() {
+    UiComponent getUiType() {
         return mUiType;
     }
 
-    void setUIType(UIComponent uiType) {
+    void setUiType(UiComponent uiType) {
         mUiType = uiType;
     }
 

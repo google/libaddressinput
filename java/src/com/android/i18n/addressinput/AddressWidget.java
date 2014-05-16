@@ -32,12 +32,13 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.i18n.addressinput.AddressUIComponent.UIComponent;
+import com.android.i18n.addressinput.AddressField.WidthType;
+import com.android.i18n.addressinput.AddressUiComponent.UiComponent;
 import com.android.i18n.addressinput.LookupKey.KeyType;
 import com.android.i18n.addressinput.LookupKey.ScriptType;
 
-import java.util.ArrayList;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -59,8 +60,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     private CacheData mCacheData;
 
     // A map for all address fields except for country.
-    private final EnumMap<AddressField, AddressUIComponent> mInputWidgets =
-        new EnumMap<AddressField, AddressUIComponent>(AddressField.class);
+    private final EnumMap<AddressField, AddressUiComponent> mInputWidgets =
+        new EnumMap<AddressField, AddressUiComponent>(AddressField.class);
 
     private FormController mFormController;
 
@@ -161,16 +162,12 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
         private List<RegionData> mCurrentRegions;
 
+        @SuppressWarnings("unchecked")
         public AddressSpinnerInfo(Spinner view, AddressField id, AddressField parentId) {
             mView = view;
             mId = id;
             mParentId = parentId;
-        }
-
-        // Initializes the adapter that manages the Spinner.
-        public void initAdapter(Context context, int textViewId, int dropDownId) {
-            mAdapter = new ArrayAdapter<String>(context, textViewId);
-            mAdapter.setDropDownViewResource(dropDownId);
+            mAdapter = (ArrayAdapter<String>) view.getAdapter();
         }
 
         public void setSpinnerList(List<RegionData> list, String defaultKey) {
@@ -208,37 +205,41 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         }
     }
 
-    private ArrayList<AddressSpinnerInfo> mSpinners = new ArrayList<AddressSpinnerInfo>();
+    private final ArrayList<AddressSpinnerInfo> mSpinners = new ArrayList<AddressSpinnerInfo>();
 
-    private void createView(ViewGroup rootView, AddressUIComponent field, String defaultKey,
+    private AddressWidgetUiComponentProvider mComponentProvider;
+
+    /** TODO: Add region-dependent width types for address fields. */
+    private WidthType getFieldWidthType(AddressUiComponent field) {
+        return field.getId().getDefaulWidthType();
+    }
+
+    private void createView(ViewGroup rootView, AddressUiComponent field, String defaultKey,
             boolean readOnly) {
         @SuppressWarnings("deprecation")  // FILL_PARENT renamed MATCH_PARENT in API Level 8.
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT);
         String fieldText = field.getFieldName();
+        WidthType widthType = getFieldWidthType(field);
 
         if (fieldText.length() > 0) {
-            TextView textView = (TextView) mInflater.inflate(R.layout.address_textview, rootView,
-                    false);
+            TextView textView = mComponentProvider.createUiLabel(fieldText, widthType);
             rootView.addView(textView, lp);
-            textView.setText(fieldText);
         }
-        if (field.getUIType().equals(UIComponent.EDIT)) {
-            View view = mInflater.inflate(R.layout.address_edittext, rootView, false);
-            field.setView(view);
-            EditText editText = (EditText) view;
+        if (field.getUiType().equals(UiComponent.EDIT)) {
+            EditText editText = mComponentProvider.createUiTextField(widthType);
+            field.setView(editText);
             editText.setEnabled(!readOnly);
             rootView.addView(editText, lp);
-        } else if (field.getUIType().equals(UIComponent.SPINNER)) {
-            View view = mInflater.inflate(R.layout.address_spinner, rootView, false);
-            field.setView(view);
-            Spinner spinner = (Spinner) view;
+        } else if (field.getUiType().equals(UiComponent.SPINNER)) {
+            ArrayAdapter<String> adapter = mComponentProvider.createUiPickerAdapter(widthType);
+            Spinner spinner = mComponentProvider.createUiPickerSpinner(widthType);
+
+            field.setView(spinner);
             rootView.addView(spinner, lp);
+            spinner.setAdapter(adapter);
             AddressSpinnerInfo spinnerInfo =
-                new AddressSpinnerInfo(spinner, field.getId(), field.getParentId());
-            spinnerInfo.initAdapter(mContext, android.R.layout.simple_spinner_item,
-                    android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(spinnerInfo.mAdapter);
+                    new AddressSpinnerInfo(spinner, field.getId(), field.getParentId());
             spinnerInfo.setSpinnerList(field.getCandidatesList(), defaultKey);
 
             if (fieldText.length() > 0) {
@@ -250,7 +251,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
 
     /**
-     *  Associates each field with its corresponding AddressUIComponent.
+     *  Associates each field with its corresponding AddressUiComponent.
      */
     private void buildFieldWidgets() {
         AddressData data = new AddressData.Builder().setCountry(mCurrentRegion).build();
@@ -259,59 +260,59 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
             (new ClientData(mCacheData)).getDefaultData(key.toString());
 
         // Set up AddressField.ADMIN_AREA
-        AddressUIComponent adminAreaUI = new AddressUIComponent(AddressField.ADMIN_AREA);
-        adminAreaUI.setFieldName(getAdminAreaFieldName(countryNode));
-        mInputWidgets.put(AddressField.ADMIN_AREA, adminAreaUI);
+        AddressUiComponent adminAreaUi = new AddressUiComponent(AddressField.ADMIN_AREA);
+        adminAreaUi.setFieldName(getAdminAreaFieldName(countryNode));
+        mInputWidgets.put(AddressField.ADMIN_AREA, adminAreaUi);
 
         // Set up AddressField.LOCALITY
-        AddressUIComponent localityUI = new AddressUIComponent(AddressField.LOCALITY);
-        localityUI.setFieldName(mContext.getString(R.string.i18n_locality_label));
-        mInputWidgets.put(AddressField.LOCALITY, localityUI);
+        AddressUiComponent localityUi = new AddressUiComponent(AddressField.LOCALITY);
+        localityUi.setFieldName(mContext.getString(R.string.i18n_locality_label));
+        mInputWidgets.put(AddressField.LOCALITY, localityUi);
 
         // Set up AddressField.DEPENDENT_LOCALITY
-        AddressUIComponent subLocalityUI = new AddressUIComponent(AddressField.DEPENDENT_LOCALITY);
-        subLocalityUI.setFieldName(mContext.getString(R.string.i18n_dependent_locality_label));
-        mInputWidgets.put(AddressField.DEPENDENT_LOCALITY, subLocalityUI);
+        AddressUiComponent subLocalityUi = new AddressUiComponent(AddressField.DEPENDENT_LOCALITY);
+        subLocalityUi.setFieldName(mContext.getString(R.string.i18n_dependent_locality_label));
+        mInputWidgets.put(AddressField.DEPENDENT_LOCALITY, subLocalityUi);
 
         // Set up AddressField.ADDRESS_LINE_1
-        AddressUIComponent addressLine1UI = new AddressUIComponent(AddressField.ADDRESS_LINE_1);
-        addressLine1UI.setFieldName(mContext.getString(R.string.i18n_address_line1_label));
-        mInputWidgets.put(AddressField.ADDRESS_LINE_1, addressLine1UI);
+        AddressUiComponent addressLine1Ui = new AddressUiComponent(AddressField.ADDRESS_LINE_1);
+        addressLine1Ui.setFieldName(mContext.getString(R.string.i18n_address_line1_label));
+        mInputWidgets.put(AddressField.ADDRESS_LINE_1, addressLine1Ui);
 
         // Set up AddressField.ADDRESS_LINE_2
-        AddressUIComponent addressLine2UI = new AddressUIComponent(AddressField.ADDRESS_LINE_2);
-        addressLine2UI.setFieldName("");
-        mInputWidgets.put(AddressField.ADDRESS_LINE_2, addressLine2UI);
+        AddressUiComponent addressLine2Ui = new AddressUiComponent(AddressField.ADDRESS_LINE_2);
+        addressLine2Ui.setFieldName("");
+        mInputWidgets.put(AddressField.ADDRESS_LINE_2, addressLine2Ui);
 
         // Set up AddressField.ORGANIZATION
-        AddressUIComponent organizationUI = new AddressUIComponent(AddressField.ORGANIZATION);
-        organizationUI.setFieldName(mContext.getString(R.string.i18n_organization_label));
-        mInputWidgets.put(AddressField.ORGANIZATION, organizationUI);
+        AddressUiComponent organizationUi = new AddressUiComponent(AddressField.ORGANIZATION);
+        organizationUi.setFieldName(mContext.getString(R.string.i18n_organization_label));
+        mInputWidgets.put(AddressField.ORGANIZATION, organizationUi);
 
         // Set up AddressField.RECIPIENT
-        AddressUIComponent recipientUI = new AddressUIComponent(AddressField.RECIPIENT);
-        recipientUI.setFieldName(mContext.getString(R.string.i18n_recipient_label));
-        mInputWidgets.put(AddressField.RECIPIENT, recipientUI);
+        AddressUiComponent recipientUi = new AddressUiComponent(AddressField.RECIPIENT);
+        recipientUi.setFieldName(mContext.getString(R.string.i18n_recipient_label));
+        mInputWidgets.put(AddressField.RECIPIENT, recipientUi);
 
         // Set up AddressField.POSTAL_CODE
-        AddressUIComponent postalCodeUI = new AddressUIComponent(AddressField.POSTAL_CODE);
-        postalCodeUI.setFieldName(getZipFieldName(countryNode));
-        mInputWidgets.put(AddressField.POSTAL_CODE, postalCodeUI);
+        AddressUiComponent postalCodeUi = new AddressUiComponent(AddressField.POSTAL_CODE);
+        postalCodeUi.setFieldName(getZipFieldName(countryNode));
+        mInputWidgets.put(AddressField.POSTAL_CODE, postalCodeUi);
 
         // Set up AddressField.SORTING_CODE
-        AddressUIComponent sortingCodeUI = new AddressUIComponent(AddressField.SORTING_CODE);
-        sortingCodeUI.setFieldName("CEDEX");
-        mInputWidgets.put(AddressField.SORTING_CODE, sortingCodeUI);
+        AddressUiComponent sortingCodeUi = new AddressUiComponent(AddressField.SORTING_CODE);
+        sortingCodeUi.setFieldName("CEDEX");
+        mInputWidgets.put(AddressField.SORTING_CODE, sortingCodeUi);
     }
 
     private void initializeDropDowns() {
-        AddressUIComponent adminAreaUI = mInputWidgets.get(AddressField.ADMIN_AREA);
+        AddressUiComponent adminAreaUi = mInputWidgets.get(AddressField.ADMIN_AREA);
         List<RegionData> adminAreaList = getRegionData(AddressField.COUNTRY);
-        adminAreaUI.initializeCandidatesList(adminAreaList);
+        adminAreaUi.initializeCandidatesList(adminAreaList);
 
-        AddressUIComponent localityUI = mInputWidgets.get(AddressField.LOCALITY);
+        AddressUiComponent localityUi = mInputWidgets.get(AddressField.LOCALITY);
         List<RegionData> localityList = getRegionData(AddressField.ADMIN_AREA);
-        localityUI.initializeCandidatesList(localityList);
+        localityUi.initializeCandidatesList(localityList);
     }
 
     // Zip code is called postal code in some countries. This method returns the appropriate name
@@ -342,8 +343,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private void buildCountryListBox() {
         // Set up AddressField.COUNTRY
-        AddressUIComponent countryUI = new AddressUIComponent(AddressField.COUNTRY);
-        countryUI.setFieldName(mContext.getString(R.string.i18n_country_label));
+        AddressUiComponent countryUi = new AddressUiComponent(AddressField.COUNTRY);
+        countryUi.setFieldName(mContext.getString(R.string.i18n_country_label));
         ArrayList<RegionData> countries = new ArrayList<RegionData>();
         for (RegionData regionData : mFormController.getRegionData(new LookupKey.Builder(
                 KeyType.DATA).build())) {
@@ -356,8 +357,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
                 countries.add(country);
             }
         }
-        countryUI.initializeCandidatesList(countries);
-        mInputWidgets.put(AddressField.COUNTRY, countryUI);
+        countryUi.initializeCandidatesList(countries);
+        mInputWidgets.put(AddressField.COUNTRY, countryUi);
     }
 
     private String getLocalCountryName(String regionCode) {
@@ -463,8 +464,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         mFormController.requestDataForAddress(data, new DataLoadListener() {
             @Override
             public void dataLoadingBegin() {
-                mProgressDialog = ProgressDialog.show(mContext, "",
-                        mContext.getString(R.string.address_data_loading));
+                mProgressDialog = mComponentProvider.getUiActivityIndicatorView();
+                mProgressDialog.setMessage(mContext.getString(R.string.address_data_loading));
                 Log.d(this.toString(), "Progress dialog started.");
             }
             @Override
@@ -514,10 +515,22 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
 
     /**
-     * Creates an AddressWidget to be attached to rootView for the specific context.
+     * Creates an AddressWidget to be attached to rootView for the specific context using the
+     * default UI component provider.
      */
     public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
             ClientCacheManager cacheManager) {
+        this(context, rootView, formOptions, cacheManager,
+                new AddressWidgetUiComponentProvider(context));
+    }
+
+    /**
+     * Creates an AddressWidget to be attached to rootView for the specific context using UI
+     * component provided by the provider.
+     */
+    public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
+            ClientCacheManager cacheManager, AddressWidgetUiComponentProvider provider) {
+        mComponentProvider = provider;
         mCurrentRegion =
             ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE))
                     .getSimCountryIso().toUpperCase(Locale.US);
@@ -529,11 +542,23 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
 
     /**
-     * Creates an AddressWidget to be attached to rootView for the specific context, and fill out
-     * the address form with savedAddress.
+     * Creates an AddressWidget to be attached to rootView for the specific context using the
+     * default UI component provider, and fill out the address form with savedAddress.
      */
     public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
             ClientCacheManager cacheManager, AddressData savedAddress) {
+        this(context, rootView, formOptions, cacheManager, savedAddress,
+                new AddressWidgetUiComponentProvider(context));
+    }
+
+    /**
+     * Creates an AddressWidget to be attached to rootView for the specific context using UI
+     * component provided by the provider, and fill out the address form with savedAddress.
+     */
+    public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
+            ClientCacheManager cacheManager, AddressData savedAddress,
+            AddressWidgetUiComponentProvider provider) {
+        mComponentProvider = provider;
         mCurrentRegion = savedAddress.getPostalCountry();
         // Postal country must be 2 letter country code. Otherwise default to US.
         if (mCurrentRegion == null || mCurrentRegion.length() != 2) {
@@ -558,7 +583,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
             if (value == null) {
                 value = "";
             }
-            AddressUIComponent uiComponent = mInputWidgets.get(field);
+            AddressUiComponent uiComponent = mInputWidgets.get(field);
             EditText view = (EditText) uiComponent.getView();
             if (view != null) {
                view.setText(value);
@@ -604,10 +629,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         builder.setCountry(mCurrentRegion);
         for (AddressField field : mFormatInterpreter.getAddressFieldOrder(mScript,
                 mCurrentRegion)) {
-            AddressUIComponent addressUIComponent = mInputWidgets.get(field);
-            if (addressUIComponent != null) {
-                String value = addressUIComponent.getValue();
-                if (addressUIComponent.getUIType() == UIComponent.SPINNER) {
+            AddressUiComponent addressUiComponent = mInputWidgets.get(field);
+            if (addressUiComponent != null) {
+                String value = addressUiComponent.getValue();
+                if (addressUiComponent.getUiType() == UiComponent.SPINNER) {
                      // For drop-downs, return the key of the region selected instead of the value.
                      View view = getViewForField(field);
                      AddressSpinnerInfo spinnerInfo = findSpinnerByView(view);
@@ -666,10 +691,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
      */
     public View displayErrorMessageForInvalidEntryIn(AddressField field) {
         Log.d(this.toString(), "Display error message for the field: " + field.toString());
-        AddressUIComponent addressUIComponent = mInputWidgets.get(field);
-        if (addressUIComponent != null && addressUIComponent.getUIType() == UIComponent.EDIT) {
+        AddressUiComponent addressUiComponent = mInputWidgets.get(field);
+        if (addressUiComponent != null && addressUiComponent.getUiType() == UiComponent.EDIT) {
             int errorMessageId = getErrorMessageIdForInvalidEntryIn(field);
-            EditText view = (EditText) addressUIComponent.getView();
+            EditText view = (EditText) addressUiComponent.getView();
             view.setError(mContext.getString(errorMessageId));
             return view;
         }
@@ -699,10 +724,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     public void clearErrorMessage() {
         for (AddressField field : mFormatInterpreter.getAddressFieldOrder(mScript,
                 mCurrentRegion)) {
-            AddressUIComponent addressUIComponent = mInputWidgets.get(field);
+            AddressUiComponent addressUiComponent = mInputWidgets.get(field);
 
-            if (addressUIComponent != null && addressUIComponent.getUIType() == UIComponent.EDIT) {
-                EditText view = (EditText) addressUIComponent.getView();
+            if (addressUiComponent != null && addressUiComponent.getUiType() == UiComponent.EDIT) {
+                EditText view = (EditText) addressUiComponent.getView();
                 if (view != null) {
                     view.setError(null);
                 }
@@ -711,7 +736,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
 
     public View getViewForField(AddressField field) {
-      AddressUIComponent component = mInputWidgets.get(field);
+      AddressUiComponent component = mInputWidgets.get(field);
       if (component == null) {
         return null;
       }

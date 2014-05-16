@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.i18n.addressinput.test"
+    package="com.android.i18n.addressinput"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,13 +10,15 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.android.i18n.addressinput.test" />
+        android:targetPackage="com.android.i18n.addressinput" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
-        android:icon="@android:drawable/sym_def_app_icon">
+        android:icon="@android:drawable/sym_def_app_icon" >
         <uses-library android:name="android.test.runner" />
+        <activity android:name=".testing.TestActivity" />
     </application>
 
 </manifest>
