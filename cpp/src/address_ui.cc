@@ -71,29 +71,40 @@ Language ChooseBestAddressLanguage(
   return has_latin_format ? latin_script_language : available_languages.front();
 }
 
-int GetMessageIdForField(AddressField field,
-                         int admin_area_name_message_id,
-                         int postal_code_name_message_id) {
+std::string GetString(const Localization& localization,
+                      AddressField field,
+                      int admin_area_name_message_id,
+                      int postal_code_name_message_id) {
+  int messageId;
   switch (field) {
-    case COUNTRY:
-      return IDS_LIBADDRESSINPUT_I18N_COUNTRY_LABEL;
-    case ADMIN_AREA:
-      return admin_area_name_message_id;
-    case LOCALITY:
-      return IDS_LIBADDRESSINPUT_I18N_LOCALITY_LABEL;
-    case DEPENDENT_LOCALITY:
-      return IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL;
     case SORTING_CODE:
-      return IDS_LIBADDRESSINPUT_I18N_CEDEX_LABEL;
+      // This needs no translation as it's used only in one locale.
+      return "CEDEX";
+    case COUNTRY:
+      messageId = IDS_LIBADDRESSINPUT_COUNTRY_OR_REGION_LABEL;
+      break;
+    case ADMIN_AREA:
+      messageId = admin_area_name_message_id;
+      break;
+    case LOCALITY:
+      messageId = IDS_LIBADDRESSINPUT_LOCALITY_LABEL;
+      break;
+    case DEPENDENT_LOCALITY:
+      messageId = IDS_LIBADDRESSINPUT_DISTRICT;
+      break;
     case POSTAL_CODE:
-      return postal_code_name_message_id;
+      messageId = postal_code_name_message_id;
+      break;
     case STREET_ADDRESS:
-      return IDS_LIBADDRESSINPUT_I18N_ADDRESS_LINE1_LABEL;
+      messageId = IDS_LIBADDRESSINPUT_ADDRESS_LINE_1_LABEL;
+      break;
     case RECIPIENT:
-      return IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL;
+      messageId = IDS_LIBADDRESSINPUT_RECIPIENT_LABEL;
+      break;
     default:
-      return INVALID_MESSAGE_ID;
+      messageId = INVALID_MESSAGE_ID;
   }
+  return localization.GetString(messageId);
 }
 
 bool IsNewline(AddressField field) {
@@ -162,9 +173,8 @@ std::vector<AddressUiComponent> BuildComponents(
                                 : AddressUiComponent::HINT_SHORT;
     previous_field_is_newline = false;
     component.field = *field_it;
-    component.name = localization.GetString(
-        GetMessageIdForField(*field_it, rule.GetAdminAreaNameMessageId(),
-                             rule.GetPostalCodeNameMessageId()));
+    component.name = GetString(localization, *field_it,
+        rule.GetAdminAreaNameMessageId(), rule.GetPostalCodeNameMessageId());
     result.push_back(component);
   }
 

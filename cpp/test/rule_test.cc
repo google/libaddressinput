@@ -92,9 +92,9 @@ TEST(RuleTest, ParseOverwritesRule) {
                                        "\"zip_name_type\":\"postal\""
                                        "}"));
   EXPECT_FALSE(rule.GetFormat().empty());
-  EXPECT_EQ(IDS_LIBADDRESSINPUT_I18N_AREA,
+  EXPECT_EQ(IDS_LIBADDRESSINPUT_AREA,
             rule.GetAdminAreaNameMessageId());
-  EXPECT_EQ(IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL,
+  EXPECT_EQ(IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
 
   ASSERT_TRUE(rule.ParseSerializedRule("{"
@@ -103,9 +103,9 @@ TEST(RuleTest, ParseOverwritesRule) {
                                        "\"zip_name_type\":\"zip\""
                                        "}"));
   EXPECT_TRUE(rule.GetFormat().empty());
-  EXPECT_EQ(IDS_LIBADDRESSINPUT_I18N_DO_SI,
+  EXPECT_EQ(IDS_LIBADDRESSINPUT_DO_SI,
             rule.GetAdminAreaNameMessageId());
-  EXPECT_EQ(IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL,
+  EXPECT_EQ(IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
 }
 
@@ -196,9 +196,9 @@ INSTANTIATE_TEST_CASE_P(
     AllPostalCodeNames, PostalCodeNameParseTest,
     testing::Values(
         std::make_pair("{\"zip_name_type\":\"postal\"}",
-                       IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL),
+                       IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL),
         std::make_pair("{\"zip_name_type\":\"zip\"}",
-                       IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL)));
+                       IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL)));
 
 // Tests for parsing the administrative area name.
 class AdminAreaNameParseTest
@@ -218,27 +218,27 @@ INSTANTIATE_TEST_CASE_P(
     AllAdminAreaNames, AdminAreaNameParseTest,
     testing::Values(
         std::make_pair("{\"state_name_type\":\"area\"}",
-                       IDS_LIBADDRESSINPUT_I18N_AREA),
+                       IDS_LIBADDRESSINPUT_AREA),
         std::make_pair("{\"state_name_type\":\"county\"}",
-                       IDS_LIBADDRESSINPUT_I18N_COUNTY_LABEL),
+                       IDS_LIBADDRESSINPUT_COUNTY),
         std::make_pair("{\"state_name_type\":\"department\"}",
-                       IDS_LIBADDRESSINPUT_I18N_DEPARTMENT),
+                       IDS_LIBADDRESSINPUT_DEPARTMENT),
         std::make_pair("{\"state_name_type\":\"district\"}",
-                       IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL),
+                       IDS_LIBADDRESSINPUT_DISTRICT),
         std::make_pair("{\"state_name_type\":\"do_si\"}",
-                       IDS_LIBADDRESSINPUT_I18N_DO_SI),
+                       IDS_LIBADDRESSINPUT_DO_SI),
         std::make_pair("{\"state_name_type\":\"emirate\"}",
-                       IDS_LIBADDRESSINPUT_I18N_EMIRATE),
+                       IDS_LIBADDRESSINPUT_EMIRATE),
         std::make_pair("{\"state_name_type\":\"island\"}",
-                       IDS_LIBADDRESSINPUT_I18N_ISLAND),
+                       IDS_LIBADDRESSINPUT_ISLAND),
         std::make_pair("{\"state_name_type\":\"parish\"}",
-                       IDS_LIBADDRESSINPUT_I18N_PARISH),
+                       IDS_LIBADDRESSINPUT_PARISH),
         std::make_pair("{\"state_name_type\":\"prefecture\"}",
-                       IDS_LIBADDRESSINPUT_I18N_PREFECTURE),
+                       IDS_LIBADDRESSINPUT_PREFECTURE),
         std::make_pair("{\"state_name_type\":\"province\"}",
-                       IDS_LIBADDRESSINPUT_I18N_PROVINCE),
+                       IDS_LIBADDRESSINPUT_PROVINCE),
         std::make_pair("{\"state_name_type\":\"state\"}",
-                       IDS_LIBADDRESSINPUT_I18N_STATE_LABEL)));
+                       IDS_LIBADDRESSINPUT_STATE)));
 
 // Tests for rule parsing.
 class RuleParseTest : public testing::TestWithParam<std::string> {

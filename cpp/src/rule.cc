@@ -54,27 +54,27 @@ const char kSeparator = '~';
 NameMessageIdMap InitAdminAreaMessageIds() {
   NameMessageIdMap message_ids;
   message_ids.insert(std::make_pair(
-      "area", IDS_LIBADDRESSINPUT_I18N_AREA));
+      "area", IDS_LIBADDRESSINPUT_AREA));
   message_ids.insert(std::make_pair(
-      "county", IDS_LIBADDRESSINPUT_I18N_COUNTY_LABEL));
+      "county", IDS_LIBADDRESSINPUT_COUNTY));
   message_ids.insert(std::make_pair(
-      "department", IDS_LIBADDRESSINPUT_I18N_DEPARTMENT));
+      "department", IDS_LIBADDRESSINPUT_DEPARTMENT));
   message_ids.insert(std::make_pair(
-      "district", IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL));
+      "district", IDS_LIBADDRESSINPUT_DISTRICT));
   message_ids.insert(std::make_pair(
-      "do_si", IDS_LIBADDRESSINPUT_I18N_DO_SI));
+      "do_si", IDS_LIBADDRESSINPUT_DO_SI));
   message_ids.insert(std::make_pair(
-      "emirate", IDS_LIBADDRESSINPUT_I18N_EMIRATE));
+      "emirate", IDS_LIBADDRESSINPUT_EMIRATE));
   message_ids.insert(std::make_pair(
-      "island", IDS_LIBADDRESSINPUT_I18N_ISLAND));
+      "island", IDS_LIBADDRESSINPUT_ISLAND));
   message_ids.insert(std::make_pair(
-      "parish", IDS_LIBADDRESSINPUT_I18N_PARISH));
+      "parish", IDS_LIBADDRESSINPUT_PARISH));
   message_ids.insert(std::make_pair(
-      "prefecture", IDS_LIBADDRESSINPUT_I18N_PREFECTURE));
+      "prefecture", IDS_LIBADDRESSINPUT_PREFECTURE));
   message_ids.insert(std::make_pair(
-      "province", IDS_LIBADDRESSINPUT_I18N_PROVINCE));
+      "province", IDS_LIBADDRESSINPUT_PROVINCE));
   message_ids.insert(std::make_pair(
-      "state", IDS_LIBADDRESSINPUT_I18N_STATE_LABEL));
+      "state", IDS_LIBADDRESSINPUT_STATE));
   return message_ids;
 }
 
@@ -86,9 +86,9 @@ const NameMessageIdMap& GetAdminAreaMessageIds() {
 NameMessageIdMap InitPostalCodeMessageIds() {
   NameMessageIdMap message_ids;
   message_ids.insert(std::make_pair(
-      "postal", IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL));
+      "postal", IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL));
   message_ids.insert(std::make_pair(
-      "zip", IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL));
+      "zip", IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL));
   return message_ids;
 }
 

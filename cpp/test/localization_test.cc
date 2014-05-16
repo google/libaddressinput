@@ -57,24 +57,23 @@ TEST_P(LocalizationTest, DefaultStringIsEnglish) {
 // Tests all message identifiers.
 INSTANTIATE_TEST_CASE_P(
     AllMessages, LocalizationTest,
-    testing::Values(IDS_LIBADDRESSINPUT_I18N_COUNTRY_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_LOCALITY_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_ADDRESS_LINE1_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_CEDEX_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_AREA,
-                    IDS_LIBADDRESSINPUT_I18N_COUNTY_LABEL,
-                    IDS_LIBADDRESSINPUT_I18N_DEPARTMENT,
-                    IDS_LIBADDRESSINPUT_I18N_DO_SI,
-                    IDS_LIBADDRESSINPUT_I18N_EMIRATE,
-                    IDS_LIBADDRESSINPUT_I18N_ISLAND,
-                    IDS_LIBADDRESSINPUT_I18N_PARISH,
-                    IDS_LIBADDRESSINPUT_I18N_PREFECTURE,
-                    IDS_LIBADDRESSINPUT_I18N_PROVINCE,
-                    IDS_LIBADDRESSINPUT_I18N_STATE_LABEL));
+    testing::Values(IDS_LIBADDRESSINPUT_COUNTRY_OR_REGION_LABEL,
+                    IDS_LIBADDRESSINPUT_LOCALITY_LABEL,
+                    IDS_LIBADDRESSINPUT_DISTRICT,
+                    IDS_LIBADDRESSINPUT_RECIPIENT_LABEL,
+                    IDS_LIBADDRESSINPUT_ADDRESS_LINE_1_LABEL,
+                    IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL,
+                    IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL,
+                    IDS_LIBADDRESSINPUT_AREA,
+                    IDS_LIBADDRESSINPUT_COUNTY,
+                    IDS_LIBADDRESSINPUT_DEPARTMENT,
+                    IDS_LIBADDRESSINPUT_DO_SI,
+                    IDS_LIBADDRESSINPUT_EMIRATE,
+                    IDS_LIBADDRESSINPUT_ISLAND,
+                    IDS_LIBADDRESSINPUT_PARISH,
+                    IDS_LIBADDRESSINPUT_PREFECTURE,
+                    IDS_LIBADDRESSINPUT_PROVINCE,
+                    IDS_LIBADDRESSINPUT_STATE));
 
 // Verifies that an invalid message identifier results in an empty string in the
 // default configuration.

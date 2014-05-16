@@ -13,179 +13,254 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-The original messages are from:
-https://code.google.com/p/libaddressinput/source/browse/trunk/java/res/values/address_strings.xml?r=124
 -->
 <grit-part>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_COUNTRY_LABEL"
-      desc="A country or a political region (countries like the United States or regions like Hong Kong)">
+      name="IDS_LIBADDRESSINPUT_COUNTRY_OR_REGION_LABEL"
+      desc="A country or a political region (Countries like the United States or
+            regions like Hong Kong or Macao, or places like Taiwan, where
+            whether it is a country or not is a politically sensitive
+            question).">
     Country / Region
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_LOCALITY_LABEL"
-      desc="A city or town, such as New York City">
+      name="IDS_LIBADDRESSINPUT_LOCALITY_LABEL"
+      desc="E.g., New York City.">
     City
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_DEPENDENT_LOCALITY_LABEL"
-      desc="Area of a town (a neighbourhood/suburb) used for addresses in Korea and China, or a district of a country such as Nauru">
-    District
+      name="IDS_LIBADDRESSINPUT_ADDRESS_LINE_1_LABEL"
+      desc="E.g., 18th Street, Unit 3.">
+    Street address
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_RECIPIENT_LABEL"
-      desc="Label indicating the person to be contacted as part of this address, to be used for example as 'Contact Name: John Doe'.">
-    Contact Name
+      name="IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL"
+      desc="Postal Code. Values are frequently alphanumeric. Used in countries
+            such as Switzerland.">
+    Postal code
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_ADDRESS_LINE1_LABEL"
-      desc="Street-level part of an address, e.g., 18th Street, Unit 3">
-    Street Address
+      name="IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL"
+      desc="ZIP code. Values are frequently alphanumeric. Used in countries such
+            as the US.">
+    ZIP code
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_POSTAL_CODE_LABEL"
-      desc="Postal Code. Values are frequently alphanumeric.">
-    Postal Code
-  </message>
-  <message
-      name="IDS_LIBADDRESSINPUT_I18N_ZIP_CODE_LABEL"
-      desc="Label to represent ZIP codes, used in countries like the US.">
-    ZIP Code
-  </message>
-  <message
-      name="IDS_LIBADDRESSINPUT_I18N_CEDEX_LABEL"
-      desc="Sorting code designed for recipients of large volumes of mail. Used mostly in France.">
-    CEDEX
-  </message>
-  <message
-      name="IDS_LIBADDRESSINPUT_I18N_AREA"
-      desc="Administrative Area for Hong Kong (e.g., Kowloon)">
+      name="IDS_LIBADDRESSINPUT_AREA"
+      desc="Administrative Area for Hong Kong (e.g., Kowloon).">
     Area
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_COUNTY_LABEL"
-      desc="Administrative Area for the United Kingdom (e.g., Yorkshire)">
+      name="IDS_LIBADDRESSINPUT_COUNTY"
+      desc="Administrative Area for United Kingdoms (e.g. York) or for the
+            United States (e.g. Orange County).">
     County
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_DEPARTMENT"
-      desc="Administrative Area, as used for countries like Nicaragua (e.g., Boaco)">
+      name="IDS_LIBADDRESSINPUT_DEPARTMENT"
+      desc="Administrative Area for Nicaragua (e.g., Boaco) or France.">
     Department
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_DO_SI"
-      desc="Administrative Area for Korea (e.g., Gyeonggi-do or Busan-si)">
-    Do
+      name="IDS_LIBADDRESSINPUT_DISTRICT"
+      desc="Administrative Area for Nauru Central Pacific (e.g., Aiwo district),
+            or area of a town (a neighbourhood/suburb) used for addresses in
+            Korea and China.">
+    District
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_EMIRATE"
-      desc="Administrative Area for United Arab Emirates (e.g., Abu Dhabi)">
+      name="IDS_LIBADDRESSINPUT_DO_SI"
+      desc="Administrative Area for Korea (e.g., Gyeonggi-do or Busan-si).">
+    Do/Si
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_EMIRATE"
+      desc="Administrative Area for United Arab Emirates (e.g., Abu Dhabi).">
     Emirate
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_ISLAND"
-      desc="Administrative Area for certain countries (e.g., Bahama's Cat Island)">
+      name="IDS_LIBADDRESSINPUT_ISLAND"
+      desc="Administrative Area for certain countries (e.g., Bahama's Cat
+            Island).">
     Island
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_PARISH"
-      desc="Administrative Area for certain countries (e.g., Andorra's Canillo)">
+      name="IDS_LIBADDRESSINPUT_PARISH"
+      desc="Administrative Area for certain countries (e.g., Andorra's
+            Canillo).">
     Parish
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_PREFECTURE"
-      desc="Administrative Area for Japan (e.g., Hokkaido)">
+      name="IDS_LIBADDRESSINPUT_PREFECTURE"
+      desc="Administrative Area for Japan (e.g., Hokkaido).">
     Prefecture
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_PROVINCE"
-      desc="Administrative Area for certain countries (e.g., France's Champagne)">
+      name="IDS_LIBADDRESSINPUT_PROVINCE"
+      desc="Administrative Area for certain countries (e.g., France's
+            Champagne).">
     Province
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_STATE_LABEL"
-      desc="Administrative Area for certain countries (e.g., US' California)">
+      name="IDS_LIBADDRESSINPUT_STATE"
+      desc="Administrative Area for certain countries (e.g., US' California).">
     State
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_MISSING_REQUIRED_FIELD"
-      desc="Message to be shown when a required field is empty">
-    Required
+      name="IDS_LIBADDRESSINPUT_RECIPIENT_LABEL"
+      desc="Label for the field for a person's name in an address.">
+    Name
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ENTRY"
-      desc="Message to be shown when the value entered by the user in a given field is invalid">
-    Invalid entry
+      name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_FIELD"
+      desc="Error message shown with a UI field when it is a required field and
+            the user has not filled it out.">
+    You can't leave this empty.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_LOCALITY_LABEL"
-      desc="Message to be shown when a city or town entered by the user, such as New York City, is invalid.">
-    Invalid city
+      name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE_AND_URL"
+      desc="Error message shown with the postal code field when it is a required
+            field and the user has not filled it out, providing an example
+            postal code and a link to this country's postal service that a user
+            can use to look up their postal code.">
+    You must provide a postal code, for example
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    Don't know your postal code? Find it out
+    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DEPENDENT_LOCALITY_LABEL"
-      desc="Message to be shown when an area of a city which is entered by the user (a neighbourhood/suburb), is invalid. Used for addresses in Korea and China, or for districts of a country such as Nauru">
-    Invalid district
+      name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE"
+      desc="Error message shown with the postal code field when it is a required
+            field and the user has not filled it out, providing an example
+            postal code.">
+    You must provide a postal code, for example
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_POSTAL_CODE_LABEL"
-      desc="Message to be shown when an incorrect postal code is entered by the user. Postal codes are used in countries like New Zealand.">
-    Invalid postal code
+      name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE_AND_URL"
+      desc="Error message shown with the ZIP code field when it is a required
+            field and the user has not filled it out, providing an example ZIP
+            code and a link to this country's postal service that a user can use
+            to look up their ZIP code. This is specifically for countries using
+            ZIP codes instead of Postal codes, such as America.">
+    You must provide a ZIP code, for example
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    Don't know your ZIP code? Find it out
+    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ZIP_CODE_LABEL"
-      desc="Message to be shown when an incorrect ZIP code is entered by the user. ZIP codes are used in countries like the US.">
-    Invalid ZIP code
+      name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE"
+      desc="Error message shown with the ZIP code field when it is a required
+            field and the user has not filled it out, providing an example ZIP
+            code.">
+    You must provide a ZIP code, for example
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_AREA"
-      desc="Message to be shown when the administrative area for Hong Kong (e.g., Kowloon) is entered incorrectly by the user">
-    Invalid area
+      name="IDS_LIBADDRESSINPUT_UNKNOWN_VALUE"
+      desc="Occurs when the user fills out the wrong value for an address field.
+            For example, this would be shown when putting 'Cupertino' in United
+            States' State field.">
+    <ph name="FIELD_VALUE">$1<ex>Cupertino</ex></ph>
+    is not recognized as a known value for this field.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_COUNTY_LABEL"
-      desc="Message to be shown when the administrative area (county) for the United Kingdom is entered incorrectly by the user">
-    Invalid county
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE_AND_URL"
+      desc="Occurs when the user fills out a postal code that does not conform
+            to the country's postal code format. For example, this would be
+            shown when using '80' as a Swiss postal code, which is normally 4
+            digits long. Provides an example postal code and a link to this
+            country's postal service that a user can use to look up their postal
+            code.">
+    This postal code format is not recognized. Example of a valid postal code:
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    Don't know your postal code? Find it out
+    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DEPARTMENT"
-      desc="Message to be shown when the administrative area (department) used for countries like Nicaragua (e.g., Boaco) is entered incorrectly by the user">
-    Invalid department
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE"
+      desc="Occurs when the user fills out a postal code that does not conform
+            to the country's postal code format. For example, this would be
+            shown when using '80' as a Swiss postal code, which is normally 4
+            digits long. Provides an example postal code.">
+    This postal code format is not recognized. Example of a valid postal code:
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_DO_SI"
-      desc="Message to be shown when the administrative area for Korea (e.g., Gyeonggi-do or Busan-si) is entered incorrectly by the user">
-    Invalid do
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE"
+      desc="Occurs when the user fills out a postal code that does not conform
+            to the country's postal code format. For example, this would be
+            shown when using '80' as a Swiss postal code, which is normally 4
+            digits long.">
+    This postal code format is not recognized.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_EMIRATE"
-      desc="Message to be shown when the administrative area (emirate) for United Arab Emirates (e.g., Abu Dhabi) is entered incorrectly by the user">
-    Invalid emirate
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP_CODE_EXAMPLE_AND_URL"
+      desc="Occurs when the user fills out a ZIP code that does not conform to
+            the country's ZIP code format. For example, this would be shown when
+            using '901' as a ZIP code for the United States. Provides an example
+            ZIP code and a link to this country's postal service that a user can
+            use to look up their ZIP code.">
+    This ZIP code format is not recognized. Example of a valid ZIP code:
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    Don't know your ZIP code? Find it out
+    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_ISLAND"
-      desc="Message to be shown when the administrative area (island) for certain countries (e.g., Bahama) is entered incorrectly by the user">
-    Invalid island
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP_CODE_EXAMPLE"
+      desc="Occurs when the user fills out a ZIP code that does not conform to
+            the country's ZIP code format. For example, this would be shown when
+            using '901' as a ZIP code for the United States. Provides an example
+            ZIP code.">
+    This ZIP code format is not recognized. Example of a valid ZIP code:
+    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PARISH"
-      desc="Message to be shown when the administrative area (parish) for certain countries (e.g., Andorra) is entered incorrectly by the user">
-    Invalid parish
+      name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP"
+      desc="Occurs when the user fills out a ZIP code that does not conform to
+            the country's ZIP code format. For example, this would be shown when
+            using '901' as a ZIP code for the United States.">
+    This ZIP code format is not recognized.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PREFECTURE"
-      desc="Message to be shown when the administrative area (prefecture) for Japan (e.g., Hokkaido) is entered incorrectly by the user">
-    Invalid prefecture
+      name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE_URL"
+      desc="Occurs when the user fills out the wrong postal code for a certain
+      location. For example, this would be shown when using Z3Z 2Y7 for
+      Alberta, Canada. Provides a link to this country's postal service
+      that a user can use to look up their postal code.">
+    This postal code does not appear to match the rest of this address.
+    Don't know your postal code? Find it out
+    <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_PROVINCE"
-      desc="Message to be shown when the administrative area (province) for certain countries (e.g., France's Champagne) is entered incorrectly by the user">
-    Invalid province
+      name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE"
+      desc="Occurs when the user fills out the wrong postal code for a certain
+      location. For example, this would be shown when using Z3Z 2Y7 for
+      Alberta, Canada.">
+    This postal code does not appear to match the rest of this address.
   </message>
   <message
-      name="IDS_LIBADDRESSINPUT_I18N_INVALID_STATE_LABEL"
-      desc="Message to be shown when the administrative area (state) for certain countries (e.g., the USA) is entered incorrectly by the user">
-    Invalid state
+      name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_ZIP_URL"
+      desc="Occurs when the user fills out the wrong ZIP code for a certain
+      location. For example, this would be shown when using 10001 for
+      Arizona state. Provides a link to this country's postal service that
+      a user can use to look up their ZIP code.">
+    This ZIP code does not appear to match the rest of this address.
+    Don't know your ZIP code? Find it out
+    <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_ZIP"
+      desc="Occurs when the user fills out the wrong ZIP code for a certain
+      location. For example, this would be shown when using 10001 for
+      Arizona state.">
+    This ZIP code does not appear to match the rest of this address.
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_PO_BOX_FORBIDDEN_VALUE"
+      desc="Occurs when the user fills out a P.O. box as part of a physical
+      address.">
+    This address line appears to contain a post office box. Please use a street
+    or building address.
   </message>
 </grit-part>
