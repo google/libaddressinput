@@ -101,6 +101,54 @@ TEST(LookupKeyTest, RequestDepth) {
   EXPECT_EQ("data/111/222/333/444", lookup_key.ToKeyString(3));
 }
 
+TEST(LookupKeyTest, WithLanguageCodeDefaultLanguage) {
+  AddressData address;
+  // Use real data here as the choice of adding a language requires metadata.
+  address.region_code = "CA";
+  address.administrative_area = "ON";
+  address.language_code = "en";
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+  EXPECT_EQ("data/CA", lookup_key.ToKeyString(0));
+  EXPECT_EQ("data/CA/ON", lookup_key.ToKeyString(1));
+}
+
+TEST(LookupKeyTest, WithLanguageCodeAlternateLanguage) {
+  AddressData address;
+  // Use real data here as the choice of adding a language requires metadata.
+  address.region_code = "CA";
+  address.administrative_area = "ON";
+  address.language_code = "fr";
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+  EXPECT_EQ("data/CA--fr", lookup_key.ToKeyString(0));
+  EXPECT_EQ("data/CA/ON--fr", lookup_key.ToKeyString(1));
+}
+
+TEST(LookupKeyTest, WithLanguageCodeInvalidLanguage) {
+  AddressData address;
+  // Use real data here as the choice of adding a language requires metadata.
+  address.region_code = "CA";
+  address.administrative_area = "ON";
+  address.language_code = "de";
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+  EXPECT_EQ("data/CA", lookup_key.ToKeyString(0));
+  EXPECT_EQ("data/CA/ON", lookup_key.ToKeyString(1));
+}
+
+TEST(LookupKeyTest, WithLanguageCodeAlternateLanguageNoState) {
+  AddressData address;
+  // Use real data here as the choice of adding a language requires metadata.
+  // Afgahnistan has multiple languages (including Pashto as an alternative)
+  // but no subregions.
+  address.region_code = "AF";
+  address.language_code = "ps";
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+  EXPECT_EQ("data/AF", lookup_key.ToKeyString(0));
+}
+
 TEST(LookupKeyTest, GetRegionCode) {
   AddressData address;
   address.region_code = "rrr";

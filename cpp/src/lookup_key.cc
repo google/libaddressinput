@@ -19,10 +19,15 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/util/basictypes.h>
+
+#include "language.h"
+#include "region_data_constants.h"
+#include "rule.h"
 
 namespace i18n {
 namespace addressinput {
@@ -30,8 +35,45 @@ namespace addressinput {
 namespace {
 
 const char kSlashDelim[] = "/";
+const char kDashDelim[] = "--";
 const char kData[] = "data";
 const char kUnknown[] = "ZZ";
+
+// Case insensitive matcher for language tags.
+struct LanguageMatcher {
+  LanguageMatcher(const std::string& tag) : tag(tag) { }
+  std::string tag;
+  bool operator() (const std::string& s) {
+    return strcasecmp(tag.c_str(), s.c_str()) == 0;
+  }
+};
+
+// Assume the language_tag has had "Latn" script removed when this is called.
+bool ShouldSetLanguageForKey(const std::string& language_tag,
+                             const std::string& region_code) {
+  // We only need a language in the key if there is subregion data at all.
+  if (RegionDataConstants::GetMaxLookupKeyDepth(region_code) == 0) {
+    return false;
+  }
+  Rule rule;
+  rule.CopyFrom(Rule::GetDefault());
+  // TODO: Pre-parse the rules and have a map from region code to rule.
+  if (!rule.ParseSerializedRule(
+          RegionDataConstants::GetRegionData(region_code))) {
+    return false;
+  }
+  const std::vector<std::string>& languages = rule.GetLanguages();
+  // Do not add the default language (we want "data/US", not "data/US--en").
+  // (empty should not happen here because we have some sub-region data).
+  if (languages.empty() || languages[0] == language_tag) {
+    return false;
+  }
+  // Finally, only return true if the language is one of the remaining ones.
+  return std::find_if(languages.begin() + 1,
+                      languages.end(),
+                      LanguageMatcher(language_tag))
+      != languages.end();
+}
 
 }  // namespace
 
@@ -50,7 +92,6 @@ LookupKey::~LookupKey() {
 
 void LookupKey::FromAddress(const AddressData& address) {
   nodes_.clear();
-
   if (address.region_code.empty()) {
     nodes_.insert(std::make_pair(COUNTRY, kUnknown));
   } else {
@@ -63,12 +104,15 @@ void LookupKey::FromAddress(const AddressData& address) {
       nodes_.insert(std::make_pair(field, value));
     }
   }
+  Language address_language(address.language_code);
+  std::string language_tag_no_latn = address_language.has_latin_script ?
+      address_language.base : address_language.tag;
+  if (ShouldSetLanguageForKey(language_tag_no_latn, address.region_code)) {
+    language_ = language_tag_no_latn;
+  }
 }
 
 std::string LookupKey::ToKeyString(size_t max_depth) const {
-  // TODO: For use by the address input widget, this key string would need to
-  // also include a language tag to request data in the appropriate language.
-
   assert(max_depth < arraysize(kHierarchy));
   std::string key_string(kData);
 
@@ -81,7 +125,10 @@ std::string LookupKey::ToKeyString(size_t max_depth) const {
     key_string.append(kSlashDelim);
     key_string.append(it->second);
   }
-
+  if (!language_.empty()) {
+    key_string.append(kDashDelim);
+    key_string.append(language_);
+  }
   return key_string;
 }
 

@@ -52,6 +52,9 @@ class LookupKey {
 
  private:
   std::map<AddressField, std::string> nodes_;
+  // The language of the key, obtained from the address (empty for default
+  // language).
+  std::string language_;
 
   DISALLOW_COPY_AND_ASSIGN(LookupKey);
 };
