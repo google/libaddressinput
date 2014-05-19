@@ -15,6 +15,7 @@
 #include "rule.h"
 
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/localization.h>
 
 #include <cstddef>
 #include <string>
@@ -24,6 +25,7 @@
 #include <gtest/gtest.h>
 
 #include "address_field_util.h"
+#include "grit.h"
 #include "messages.h"
 #include "region_data_constants.h"
 
@@ -31,7 +33,9 @@ namespace {
 
 using i18n::addressinput::AddressField;
 using i18n::addressinput::ADMIN_AREA;
+using i18n::addressinput::INVALID_MESSAGE_ID;
 using i18n::addressinput::LOCALITY;
+using i18n::addressinput::Localization;
 using i18n::addressinput::NEWLINE;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;
@@ -243,18 +247,53 @@ INSTANTIATE_TEST_CASE_P(
 // Tests for rule parsing.
 class RuleParseTest : public testing::TestWithParam<std::string> {
  protected:
+  const std::string& GetRegionData() const {
+    // GetParam() is either a region code or the region data itself.
+    // RegionDataContants::GetRegionData() returns an empty string for anything
+    // that's not a reigon code.
+    const std::string& data = RegionDataConstants::GetRegionData(GetParam());
+    return !data.empty() ? data : GetParam();
+  }
+
   Rule rule_;
+  Localization localization_;
 };
 
 // Verifies that a region data can be parsed successfully.
 TEST_P(RuleParseTest, RegionDataParsedSuccessfully) {
-  EXPECT_TRUE(rule_.ParseSerializedRule(
-      RegionDataConstants::GetRegionData(GetParam())));
+  EXPECT_TRUE(rule_.ParseSerializedRule(GetRegionData()));
+}
+
+// Verifies that the admin area name type corresponds to a UI string.
+TEST_P(RuleParseTest, AdminAreaNameTypeHasUiString) {
+  const std::string& region_data = GetRegionData();
+  rule_.ParseSerializedRule(region_data);
+  if (region_data.find("state_name_type") != std::string::npos) {
+    EXPECT_NE(INVALID_MESSAGE_ID, rule_.GetAdminAreaNameMessageId());
+    EXPECT_FALSE(
+        localization_.GetString(rule_.GetAdminAreaNameMessageId()).empty());
+  }
+}
+
+// Verifies that the postal code name type corresponds to a UI string.
+TEST_P(RuleParseTest, PostalCodeNameTypeHasUiString) {
+  const std::string& region_data = GetRegionData();
+  rule_.ParseSerializedRule(region_data);
+  if (region_data.find("zip_name_type") != std::string::npos) {
+    EXPECT_NE(INVALID_MESSAGE_ID, rule_.GetPostalCodeNameMessageId());
+    EXPECT_FALSE(
+        localization_.GetString(rule_.GetPostalCodeNameMessageId()).empty());
+  }
 }
 
 // Test parsing all region data.
 INSTANTIATE_TEST_CASE_P(
     AllRulesTest, RuleParseTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
+
+// Test parsing the default rule.
+INSTANTIATE_TEST_CASE_P(
+    DefaultRuleTest, RuleParseTest,
+    testing::Values(RegionDataConstants::GetDefaultRegionData()));
 
 }  // namespace
