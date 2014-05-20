@@ -17,29 +17,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-
-// Used by ReplaceStringPlaceholders to track the position in the string of
-// replaced parameters.
-struct ReplacementOffset {
-  ReplacementOffset(uintptr_t parameter, size_t offset)
-      : parameter(parameter),
-        offset(offset) {}
-
-  // Index of the parameter.
-  uintptr_t parameter;
-
-  // Starting position in the string.
-  size_t offset;
-};
-
-static bool CompareParameter(const ReplacementOffset& elem1,
-                             const ReplacementOffset& elem2) {
-  return elem1.parameter < elem2.parameter;
-}
-
-}  // namespace
-
 namespace i18n {
 namespace addressinput {
 
@@ -48,7 +25,7 @@ std::string DoReplaceStringPlaceholders(const std::string& format_string,
   size_t substitutions = subst.size();
 
   size_t sub_length = 0;
-  for (typename std::vector<std::string>::const_iterator iter = subst.begin();
+  for (std::vector<std::string>::const_iterator iter = subst.begin();
        iter != subst.end(); ++iter) {
     sub_length += iter->length();
   }
@@ -56,8 +33,7 @@ std::string DoReplaceStringPlaceholders(const std::string& format_string,
   std::string formatted;
   formatted.reserve(format_string.length() + sub_length);
 
-  std::vector<ReplacementOffset> r_offsets;
-  for (typename std::string::const_iterator i = format_string.begin();
+  for (std::string::const_iterator i = format_string.begin();
        i != format_string.end(); ++i) {
     if ('$' == *i) {
       if (i + 1 != format_string.end()) {

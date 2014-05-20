@@ -13,7 +13,6 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_STRING_UTIL_H_
 #define I18N_ADDRESSINPUT_UTIL_STRING_UTIL_H_
 
-#include <cstddef>
 #include <string>
 #include <vector>
 
