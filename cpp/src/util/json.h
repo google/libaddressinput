@@ -48,6 +48,16 @@ class Json {
   // true before invoking this method.
   std::string GetStringValueForKey(const std::string& key) const;
 
+  // Returns true if the parsed JSON contains a dicitonary value for |key|. The
+  // JSON object must be parsed successfully in ParseObject() beforing invoking
+  // this method.
+  bool HasDictionaryValueForKey(const std::string& key) const;
+
+  // Returns the dictionary value for the |key|. The |key| must be present and
+  // its value must be of the dictionary type, i.e., HasDictionaryValueForKey()
+  // must return true before invoking this method.
+  const Json& GetDictionaryValueForKey(const std::string& key) const;
+
  private:
   class JsonImpl;
   scoped_ptr<JsonImpl> impl_;

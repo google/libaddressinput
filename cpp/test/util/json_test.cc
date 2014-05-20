@@ -21,6 +21,7 @@
 namespace {
 
 using i18n::addressinput::Json;
+using i18n::addressinput::scoped_ptr;
 
 TEST(JsonTest, EmptyStringIsNotValid) {
   Json json;
@@ -107,6 +108,21 @@ TEST(JsonTest, StringIsNotValid) {
 TEST(JsonTest, NumberIsNotValid) {
   Json json;
   EXPECT_FALSE(json.ParseObject("3"));
+}
+
+TEST(JsonTest, NoDictionaryFound) {
+  Json json;
+  EXPECT_TRUE(json.ParseObject("{\"key\":\"value\"}"));
+  EXPECT_FALSE(json.HasDictionaryValueForKey("key"));
+}
+
+TEST(JsonTest, DictionaryFound) {
+  Json json;
+  EXPECT_TRUE(json.ParseObject("{\"key\":{\"inner_key\":\"value\"}}"));
+  ASSERT_TRUE(json.HasDictionaryValueForKey("key"));
+  const Json& sub_json = json.GetDictionaryValueForKey("key");
+  ASSERT_TRUE(sub_json.HasStringValueForKey("inner_key"));
+  EXPECT_EQ("value", sub_json.GetStringValueForKey("inner_key"));
 }
 
 }  // namespace

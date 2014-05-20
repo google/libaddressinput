@@ -14,11 +14,14 @@
 
 #include "json.h"
 
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cassert>
 #include <cstddef>
+#include <map>
 #include <string>
+#include <utility>
 
 #include <rapidjson/document.h>
 #include <rapidjson/reader.h>
@@ -26,48 +29,145 @@
 namespace i18n {
 namespace addressinput {
 
+using rapidjson::Document;
+using rapidjson::kParseValidateEncodingFlag;
+using rapidjson::Value;
+
 class Json::JsonImpl {
  public:
-  JsonImpl() : document_(new rapidjson::Document), valid_(false) {}
+  // Takes ownership of |document|.
+  explicit JsonImpl(const Document* document)
+      : document_(document), value_(document), dictionaries_() {
+    assert(value_ != NULL);
+    assert(value_->IsObject());
+  }
 
-  ~JsonImpl() {}
+  // Does not take ownership of |value|.
+  explicit JsonImpl(const Value* value)
+      : document_(), value_(value), dictionaries_() {
+    assert(value_ != NULL);
+    assert(value_->IsObject());
+  }
 
-  // JSON document.
-  scoped_ptr<rapidjson::Document> document_;
+  ~JsonImpl() {
+    for (std::map<std::string, const Json*>::const_iterator
+         it = dictionaries_.begin();
+         it != dictionaries_.end(); ++it) {
+      delete it->second;
+    }
+  }
 
-  // True if the parsed string is a valid JSON object.
-  bool valid_;
+  // The caller does not own the result.
+  const Value::Member* FindMember(const std::string& key) {
+    return value_->FindMember(key.c_str());
+  }
+
+  // The caller does not own the result. The result can be NULL if there's no
+  // dictionary for |key|.
+  const Json* FindDictionary(const std::string& key) const {
+    std::map<std::string, const Json*>::const_iterator it =
+        dictionaries_.find(key);
+    return it != dictionaries_.end() ? it->second : NULL;
+  }
+
+  // Takes ownership of |dictionary|. Should be called only once per |key| and
+  // per |dictionary|.
+  void AddDictionary(const std::string& key, const Json* dictionary) {
+    bool inserted =
+        dictionaries_.insert(std::make_pair(key, dictionary)).second;
+    // Cannot do work inside of assert(), because the compiler can optimize it
+    // away.
+    assert(inserted);
+    // Avoid unused variable warning when assert() is optimized away.
+    (void)inserted;
+  }
 
  private:
+  // An owned JSON document. Can be NULL if the JSON document is not owned.
+  //
+  // When a JsonImpl object is constructed using a Document object, then
+  // JsonImpl is supposed to take ownership of that object, making sure to
+  // delete it in its own destructor. But when a JsonImpl object is constructed
+  // using a Value object, then that object is owned by a Member object which is
+  // owned by a Document object, and should therefore not be deleted by
+  // JsonImpl.
+  const scoped_ptr<const Document> document_;
+
+  // A JSON document that is not owned. Cannot be NULL. Can point to document_.
+  const Value* const value_;
+
+  // Owned JSON objects.
+  std::map<std::string, const Json*> dictionaries_;
+
   DISALLOW_COPY_AND_ASSIGN(JsonImpl);
 };
 
-Json::Json() : impl_(new JsonImpl) {}
+Json::Json() {}
 
 Json::~Json() {}
 
 bool Json::ParseObject(const std::string& json) {
-  impl_->document_->Parse<rapidjson::kParseValidateEncodingFlag>(json.c_str());
-  impl_->valid_ =
-      !impl_->document_->HasParseError() && impl_->document_->IsObject();
-  return impl_->valid_;
+  assert(impl_ == NULL);
+  scoped_ptr<Document> document(new Document);
+  document->Parse<kParseValidateEncodingFlag>(json.c_str());
+  bool valid = !document->HasParseError() && document->IsObject();
+  if (valid) {
+    impl_.reset(new JsonImpl(document.release()));
+  }
+  return valid;
 }
 
 bool Json::HasStringValueForKey(const std::string& key) const {
-  assert(impl_->valid_);
-  const rapidjson::Value::Member* member =
-      impl_->document_->FindMember(key.c_str());
+  assert(impl_ != NULL);
+
+  // Member is owned by impl_.
+  const Value::Member* member = impl_->FindMember(key);
   return member != NULL && member->value.IsString();
 }
 
 std::string Json::GetStringValueForKey(const std::string& key) const {
-  assert(impl_->valid_);
-  const rapidjson::Value::Member* member =
-      impl_->document_->FindMember(key.c_str());
+  assert(impl_ != NULL);
+
+  // Member is owned by impl_.
+  const Value::Member* member = impl_->FindMember(key.c_str());
   assert(member != NULL);
   assert(member->value.IsString());
   return std::string(member->value.GetString(),
                      member->value.GetStringLength());
+}
+
+bool Json::HasDictionaryValueForKey(const std::string& key) const {
+  assert(impl_ != NULL);
+
+  // The value returned by FindDictionary() is owned by impl_.
+  if (impl_->FindDictionary(key) != NULL) {
+    return true;
+  }
+
+  // Member is owned by impl_.
+  const Value::Member* member = impl_->FindMember(key);
+  return member != NULL && member->value.IsObject();
+}
+
+const Json& Json::GetDictionaryValueForKey(const std::string& key) const {
+  assert(impl_ != NULL);
+
+  // Existing_dictionary is owned by impl_.
+  const Json* existing_dictionary = impl_->FindDictionary(key);
+  if (existing_dictionary != NULL) {
+    return *existing_dictionary;
+  }
+
+  // Member is owned by impl_.
+  const Value::Member* member = impl_->FindMember(key);
+  assert(member != NULL);
+  assert(member->value.IsObject());
+
+  // Dictionary is owned by impl_.
+  Json* dictionary = new Json;
+  dictionary->impl_.reset(new JsonImpl(&member->value));
+  impl_->AddDictionary(key, dictionary);
+  return *dictionary;
 }
 
 }  // namespace addressinput
