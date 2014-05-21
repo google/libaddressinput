@@ -19,6 +19,7 @@
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
+#include <vector>
 
 namespace i18n {
 namespace addressinput {
@@ -38,6 +39,10 @@ class Json {
   // object.
   bool ParseObject(const std::string& json);
 
+  // Returns the list of keys in the parsed JSON. The JSON object must be parsed
+  // successfully in ParseObject() before invoking this method.
+  const std::vector<std::string>& GetKeys() const;
+
   // Returns true if the parsed JSON contains a string value for |key|. The JSON
   // object must be parsed successfully in ParseObject() before invoking this
   // method.
@@ -48,8 +53,8 @@ class Json {
   // true before invoking this method.
   std::string GetStringValueForKey(const std::string& key) const;
 
-  // Returns true if the parsed JSON contains a dicitonary value for |key|. The
-  // JSON object must be parsed successfully in ParseObject() beforing invoking
+  // Returns true if the parsed JSON contains a dictionary value for |key|. The
+  // JSON object must be parsed successfully in ParseObject() before invoking
   // this method.
   bool HasDictionaryValueForKey(const std::string& key) const;
 

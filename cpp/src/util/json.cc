@@ -22,6 +22,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <rapidjson/document.h>
 #include <rapidjson/reader.h>
@@ -40,6 +41,7 @@ class Json::JsonImpl {
       : document_(document), value_(document), dictionaries_() {
     assert(value_ != NULL);
     assert(value_->IsObject());
+    BuildKeyList();
   }
 
   // Does not take ownership of |value|.
@@ -47,6 +49,7 @@ class Json::JsonImpl {
       : document_(), value_(value), dictionaries_() {
     assert(value_ != NULL);
     assert(value_->IsObject());
+    BuildKeyList();
   }
 
   ~JsonImpl() {
@@ -82,7 +85,19 @@ class Json::JsonImpl {
     (void)inserted;
   }
 
+  const std::vector<std::string>& GetKeys() const {
+    return keys_;
+  }
+
  private:
+  void BuildKeyList() {
+    assert(keys_.empty());
+    for (Value::ConstMemberIterator it = value_->MemberBegin();
+         it != value_->MemberEnd(); ++it) {
+      keys_.push_back(it->name.GetString());
+    }
+  }
+
   // An owned JSON document. Can be NULL if the JSON document is not owned.
   //
   // When a JsonImpl object is constructed using a Document object, then
@@ -98,6 +113,8 @@ class Json::JsonImpl {
 
   // Owned JSON objects.
   std::map<std::string, const Json*> dictionaries_;
+
+  std::vector<std::string> keys_;
 
   DISALLOW_COPY_AND_ASSIGN(JsonImpl);
 };
@@ -115,6 +132,11 @@ bool Json::ParseObject(const std::string& json) {
     impl_.reset(new JsonImpl(document.release()));
   }
   return valid;
+}
+
+const std::vector<std::string>& Json::GetKeys() const {
+  assert(impl_ != NULL);
+  return impl_->GetKeys();
 }
 
 bool Json::HasStringValueForKey(const std::string& key) const {
