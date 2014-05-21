@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include "format_element.h"
+
 namespace i18n {
 namespace addressinput {
 
@@ -56,15 +58,17 @@ class Rule {
   bool ParseSerializedRule(const std::string& serialized_rule);
 
   // Returns the ID string for this rule.
-  const std::string& GetId() const { return id_; };
+  const std::string& GetId() const { return id_; }
 
-  // Returns the approximate address format with the default order of fields.
-  // The format can include the NEWLINE extension for AddressField enum.
-  const std::vector<AddressField>& GetFormat() const { return format_; }
+  // Returns the format elements for this rule. The format can include the
+  // relevant address fields, but also strings used for formatting, or newline
+  // information.
+  const std::vector<FormatElement>& GetFormat() const { return format_; }
 
   // Returns the approximate address format with the Latin order of fields. The
-  // format can include the NEWLINE extension for AddressField enum.
-  const std::vector<AddressField>& GetLatinFormat() const {
+  // format can include the relevant address fields, but also strings used for
+  // formatting, or newline information.
+  const std::vector<FormatElement>& GetLatinFormat() const {
     return latin_format_;
   }
 
@@ -102,8 +106,8 @@ class Rule {
 
  private:
   std::string id_;
-  std::vector<AddressField> format_;
-  std::vector<AddressField> latin_format_;
+  std::vector<FormatElement> format_;
+  std::vector<FormatElement> latin_format_;
   std::vector<AddressField> required_;
   std::vector<std::string> sub_keys_;
   std::vector<std::string> languages_;

@@ -1132,19 +1132,20 @@ const std::map<std::string, size_t> InitMaxLookupKeyDepth() {
   std::map<std::string, size_t> max_depth;
   for (std::map<std::string, std::string>::const_iterator
        it = GetAllRegionData().begin(); it != GetAllRegionData().end(); ++it) {
-    std::vector<AddressField> fields;
+    std::vector<FormatElement> fields;
     // Here it->second actually contains the entire JSON blob for this region,
     // and not only the format field, but it doesn't really matter when just
     // checking whether a particular formatting code (eg. "%C") is present, as
     // there isn't anything else in the JSON that erroneously could match a
     // formatting code.
-    ParseAddressFieldsFormat(it->second, &fields);
+    ParseFormatRule(it->second, &fields);
     size_t depth = 1;
     for (; depth < arraysize(LookupKey::kHierarchy); ++depth) {
       AddressField field = LookupKey::kHierarchy[depth];
       // Check to see if a particular field in the hierarchy is used by
       // addresses in this country. If not, the maximum depth has been reached.
-      if (std::find(fields.begin(), fields.end(), field) == fields.end()) {
+      if (std::find(fields.begin(), fields.end(), FormatElement(field)) ==
+          fields.end()) {
         break;
       }
     }

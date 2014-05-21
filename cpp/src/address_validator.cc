@@ -95,7 +95,7 @@ class IsFieldUsedTask : public MetadataQueryTask {
     const Rule& country_rule = *hierarchy.rule_[0];
     return std::find(country_rule.GetFormat().begin(),
                      country_rule.GetFormat().end(),
-                     field_) != country_rule.GetFormat().end();
+                     FormatElement(field_)) != country_rule.GetFormat().end();
   }
 
  private:

@@ -25,6 +25,7 @@
 #include <gtest/gtest.h>
 
 #include "address_field_util.h"
+#include "format_element.h"
 #include "grit.h"
 #include "messages.h"
 #include "region_data_constants.h"
@@ -33,12 +34,10 @@ namespace {
 
 using i18n::addressinput::AddressField;
 using i18n::addressinput::ADMIN_AREA;
+using i18n::addressinput::FormatElement;
 using i18n::addressinput::INVALID_MESSAGE_ID;
 using i18n::addressinput::LOCALITY;
 using i18n::addressinput::Localization;
-using i18n::addressinput::NEWLINE;
-using i18n::addressinput::POSTAL_CODE;
-using i18n::addressinput::RECIPIENT;
 using i18n::addressinput::RegionDataConstants;
 using i18n::addressinput::Rule;
 using i18n::addressinput::STREET_ADDRESS;
@@ -114,18 +113,18 @@ TEST(RuleTest, ParseOverwritesRule) {
 }
 
 TEST(RuleTest, ParsesFormatCorrectly) {
-  std::vector<AddressField> expected;
-  expected.push_back(ADMIN_AREA);
-  expected.push_back(LOCALITY);
+  std::vector<FormatElement> expected;
+  expected.push_back(FormatElement(ADMIN_AREA));
+  expected.push_back(FormatElement(LOCALITY));
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
   EXPECT_EQ(expected, rule.GetFormat());
 }
 
 TEST(RuleTest, ParsesLatinFormatCorrectly) {
-  std::vector<AddressField> expected;
-  expected.push_back(LOCALITY);
-  expected.push_back(ADMIN_AREA);
+  std::vector<FormatElement> expected;
+  expected.push_back(FormatElement(LOCALITY));
+  expected.push_back(FormatElement(ADMIN_AREA));
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"lfmt\":\"%C%S\"}"));
   EXPECT_EQ(expected, rule.GetLatinFormat());
@@ -250,7 +249,7 @@ class RuleParseTest : public testing::TestWithParam<std::string> {
   const std::string& GetRegionData() const {
     // GetParam() is either a region code or the region data itself.
     // RegionDataContants::GetRegionData() returns an empty string for anything
-    // that's not a reigon code.
+    // that's not a region code.
     const std::string& data = RegionDataConstants::GetRegionData(GetParam());
     return !data.empty() ? data : GetParam();
   }

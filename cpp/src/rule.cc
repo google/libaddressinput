@@ -158,12 +158,11 @@ bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
   }
 
   if (json.HasStringValueForKey(kFormatKey)) {
-    ParseAddressFieldsFormat(json.GetStringValueForKey(kFormatKey), &format_);
+    ParseFormatRule(json.GetStringValueForKey(kFormatKey), &format_);
   }
 
   if (json.HasStringValueForKey(kLatinFormatKey)) {
-    ParseAddressFieldsFormat(
-        json.GetStringValueForKey(kLatinFormatKey), &latin_format_);
+    ParseFormatRule(json.GetStringValueForKey(kLatinFormatKey), &latin_format_);
   }
 
   if (json.HasStringValueForKey(kRequireKey)) {

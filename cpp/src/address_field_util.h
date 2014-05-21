@@ -20,21 +20,17 @@
 #include <string>
 #include <vector>
 
+#include "format_element.h"
+
 namespace i18n {
 namespace addressinput {
-
-// An extension of AddressField enum used only internally. The values are
-// negative to avoid clashing with the values in AddressField.
-enum {
-  NEWLINE = -1
-};
 
 // Clears |fields|, parses |format|, and adds the format address fields to
 // |fields|. The |fields| may also contain NEWLINE elements. For example, parses
 // "%S%C%n%D%X" into {ADMIN_AREA, LOCALITY, NEWLINE, DEPENDENT_LOCALITY,
 // SORTING_CODE}.
-void ParseAddressFieldsFormat(const std::string& format,
-                              std::vector<AddressField>* fields);
+void ParseFormatRule(const std::string& format,
+                     std::vector<FormatElement>* fields);
 
 // Clears |fields|, parses |required|, and adds the required fields to |fields|.
 // For example, parses "SCDX" into {ADMIN_AREA, LOCALITY, DEPENDENT_LOCALITY,

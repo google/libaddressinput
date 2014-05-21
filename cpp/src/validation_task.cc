@@ -246,8 +246,11 @@ bool ValidationTask::ShouldReport(AddressField field,
 
 // static
 bool ValidationTask::IsUnexpected(const Rule& rule, AddressField field) {
-  return std::find(rule.GetFormat().begin(),
-                   rule.GetFormat().end(), field) == rule.GetFormat().end();
+  // TODO: This and IsFieldUsedTask seem to do the opposite of each other.
+  // CheckMissingRequiredField and IsFieldRequired also seem to have duplicated
+  // code. We should address this.
+  return std::find(rule.GetFormat().begin(), rule.GetFormat().end(),
+                   FormatElement(field)) == rule.GetFormat().end();
 }
 
 }  // namespace addressinput

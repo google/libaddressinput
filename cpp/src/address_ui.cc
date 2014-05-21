@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "address_field_util.h"
+#include "format_element.h"
 #include "grit.h"
 #include "language.h"
 #include "messages.h"
@@ -107,11 +108,6 @@ std::string GetString(const Localization& localization,
   return localization.GetString(messageId);
 }
 
-bool IsNewline(AddressField field) {
-  // NEWLINE is an extension for AddressField enum that's used only internally.
-  return field == static_cast<AddressField>(NEWLINE);
-}
-
 }  // namespace
 
 const std::vector<std::string>& GetRegionCodes() {
@@ -144,7 +140,7 @@ std::vector<AddressUiComponent> BuildComponents(
       Language(localization.GetLanguage()));
   *best_address_language_tag = best_address_language.tag;
 
-  const std::vector<AddressField>& format =
+  const std::vector<FormatElement>& format =
       !rule.GetLatinFormat().empty() &&
       best_address_language.has_latin_script
           ? rule.GetLatinFormat() : rule.GetFormat();
@@ -153,27 +149,27 @@ std::vector<AddressUiComponent> BuildComponents(
   // twice on an envelope.
   std::set<AddressField> fields;
 
-  bool previous_field_is_newline = true;
-  bool next_field_is_newline = true;
-  for (std::vector<AddressField>::const_iterator field_it = format.begin();
-       field_it != format.end(); ++field_it) {
-    if (IsNewline(*field_it)) {
-      previous_field_is_newline = true;
+  bool preceded_by_newline = true;
+  bool followed_by_newline = true;
+  for (std::vector<FormatElement>::const_iterator format_it = format.begin();
+       format_it != format.end(); ++format_it) {
+    if (format_it->IsNewline()) {
+      preceded_by_newline = true;
       continue;
-    }
-    if (!fields.insert(*field_it).second) {
+    } else if (!format_it->IsField() ||
+               !fields.insert(format_it->GetField()).second) {
       continue;
     }
     AddressUiComponent component;
-    std::vector<AddressField>::const_iterator next_field_it = field_it + 1;
-    next_field_is_newline =
-        next_field_it == format.end() || IsNewline(*next_field_it);
-    component.length_hint = previous_field_is_newline && next_field_is_newline
+    std::vector<FormatElement>::const_iterator next_format_it = format_it + 1;
+    followed_by_newline =
+        next_format_it == format.end() || next_format_it->IsNewline();
+    component.length_hint = preceded_by_newline && followed_by_newline
                                 ? AddressUiComponent::HINT_LONG
                                 : AddressUiComponent::HINT_SHORT;
-    previous_field_is_newline = false;
-    component.field = *field_it;
-    component.name = GetString(localization, *field_it,
+    preceded_by_newline = false;
+    component.field = format_it->GetField();
+    component.name = GetString(localization, format_it->GetField(),
         rule.GetAdminAreaNameMessageId(), rule.GetPostalCodeNameMessageId());
     result.push_back(component);
   }
