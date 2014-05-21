@@ -25,6 +25,7 @@
 #include <string>
 
 #include "lookup_key_util.h"
+#include "validating_storage.h"
 
 namespace i18n {
 namespace addressinput {
@@ -38,29 +39,35 @@ class Helper {
          const Retriever::Callback& retrieved,
          const LookupKeyUtil& lookup_key_util,
          const Downloader& downloader,
-         Storage* storage)
+         ValidatingStorage* storage)
       : retrieved_(retrieved),
         lookup_key_util_(lookup_key_util),
         downloader_(downloader),
         storage_(storage),
         downloaded_(BuildCallback(this, &Helper::OnDownloaded)),
-        data_ready_(BuildCallback(this, &Helper::OnDataReady)) {
+        validated_data_ready_(
+            BuildCallback(this, &Helper::OnValidatedDataReady)),
+        stale_data_() {
     assert(storage_ != NULL);
-    storage_->Get(key, *data_ready_);
+    storage_->Get(key, *validated_data_ready_);
   }
 
  private:
   ~Helper() {}
 
-  void OnDataReady(bool success,
-                   const std::string& key,
-                   const std::string& data) {
+  void OnValidatedDataReady(bool success,
+                            const std::string& key,
+                            const std::string& data) {
     if (success) {
       retrieved_(success, key, data);
       delete this;
     } else {
-      downloader_.Download(lookup_key_util_.GetUrlForKey(key),
-                           *downloaded_);
+      // Validating storage returns (false, key, stale-data) for valid but stale
+      // data. If |data| is empty, however, then it's either missing or invalid.
+      if (!data.empty()) {
+        stale_data_ = data;
+      }
+      downloader_.Download(lookup_key_util_.GetUrlForKey(key), *downloaded_);
     }
   }
 
@@ -70,17 +77,24 @@ class Helper {
     const std::string& key = lookup_key_util_.GetKeyForUrl(url);
     if (success) {
       storage_->Put(key, data);
+      retrieved_(true, key, data);
+    } else if (!stale_data_.empty()) {
+      // Reuse the stale data if a download fails. It's better to have slightly
+      // outdated validation rules than to suddenly lose validation ability.
+      retrieved_(true, key, stale_data_);
+    } else {
+      retrieved_(false, key, std::string());
     }
-    retrieved_(success, key, success ? data : std::string());
     delete this;
   }
 
   const Retriever::Callback& retrieved_;
   const LookupKeyUtil& lookup_key_util_;
   const Downloader& downloader_;
-  Storage* storage_;
+  ValidatingStorage* storage_;
   scoped_ptr<Downloader::Callback> downloaded_;
-  scoped_ptr<Storage::Callback> data_ready_;
+  scoped_ptr<Storage::Callback> validated_data_ready_;
+  std::string stale_data_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };
@@ -92,7 +106,7 @@ Retriever::Retriever(const std::string& validation_data_url,
                      Storage* storage)
     : lookup_key_util_(validation_data_url),
       downloader_(downloader),
-      storage_(storage) {
+      storage_(new ValidatingStorage(storage)) {
   assert(storage_ != NULL);
   assert(downloader_ != NULL);
 }

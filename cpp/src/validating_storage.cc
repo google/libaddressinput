@@ -37,7 +37,7 @@ namespace {
 class Helper {
  public:
   Helper(const std::string& key,
-         const Storage::Callback& data_ready,
+         const ValidatingStorage::Callback& data_ready,
          const Storage& wrapped_storage)
       : data_ready_(data_ready),
         wrapped_data_ready_(BuildCallback(this, &Helper::OnWrappedDataReady)) {
@@ -51,12 +51,14 @@ class Helper {
                           const std::string& key,
                           const std::string& wrapped_data) {
     std::string data(wrapped_data);
-    if (!success ||
-        !ValidatingUtil::UnwrapTimestamp(&data, time(NULL)) ||
-        !ValidatingUtil::UnwrapChecksum(&data)) {
-      data_ready_(false, key, std::string());
+    if (success) {
+      bool is_stale = !ValidatingUtil::UnwrapTimestamp(&data, time(NULL));
+      bool is_corrupted = !ValidatingUtil::UnwrapChecksum(&data);
+      data_ready_(!is_corrupted && !is_stale,
+                  key,
+                  is_corrupted ? std::string() : data);
     } else {
-      data_ready_(true, key, data);
+      data_ready_(false, key, std::string());
     }
     delete this;
   }

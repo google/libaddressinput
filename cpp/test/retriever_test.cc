@@ -17,6 +17,7 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
@@ -25,6 +26,10 @@
 
 #include "fake_downloader.h"
 
+#define CHECKSUM "dd63dafcbd4d5b28badfcaf86fb6fcdb"
+#define DATA "{'foo': 'bar'}"
+#define OLD_TIMESTAMP "0"
+
 namespace {
 
 using i18n::addressinput::BuildCallback;
@@ -32,12 +37,21 @@ using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
+using i18n::addressinput::Storage;
 using i18n::addressinput::scoped_ptr;
 
 const char kKey[] = "data/CA/AB--fr";
 
 // Empty data that the downloader can return.
 const char kEmptyData[] = "{}";
+
+// The value of the data that the stale storage returns.
+const char kStaleData[] = DATA;
+
+// The actual data that the stale storage returns.
+const char kStaleWrappedData[] = "timestamp=" OLD_TIMESTAMP "\n"
+                                 "checksum=" CHECKSUM "\n"
+                                 DATA;
 
 // Tests for Retriever object.
 class RetrieverTest : public testing::Test {
@@ -116,6 +130,9 @@ class FaultyDownloader : public Downloader {
                         const Callback& downloaded) const {
     downloaded(false, url, "garbage");
   }
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(FaultyDownloader);
 };
 
 TEST_F(RetrieverTest, FaultyDownloader) {
@@ -129,6 +146,59 @@ TEST_F(RetrieverTest, FaultyDownloader) {
   EXPECT_FALSE(success_);
   EXPECT_EQ(kKey, key_);
   EXPECT_TRUE(data_.empty());
+}
+
+// The storage that always returns stale data.
+class StaleStorage : public Storage {
+ public:
+  StaleStorage() : data_updated_(false) {}
+  virtual ~StaleStorage() {}
+
+  // Storage implementation.
+  virtual void Get(const std::string& key, const Callback& data_ready) const {
+    data_ready(true, key, kStaleWrappedData);
+  }
+
+  virtual void Put(const std::string& key, const std::string& value) {
+    data_updated_ = true;
+  }
+
+  bool data_updated_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(StaleStorage);
+};
+
+TEST_F(RetrieverTest, UseStaleDataWhenDownloaderFails) {
+  // Owned by |resilient_retriver|.
+  StaleStorage* stale_storage = new StaleStorage;
+  Retriever resilient_retriever(
+      FakeDownloader::kFakeDataUrl, new FaultyDownloader, stale_storage);
+
+  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  resilient_retriever.Retrieve(kKey, *callback);
+
+  EXPECT_TRUE(success_);
+  EXPECT_EQ(kKey, key_);
+  EXPECT_EQ(kStaleData, data_);
+  EXPECT_FALSE(stale_storage->data_updated_);
+}
+
+TEST_F(RetrieverTest, DoNotUseStaleDataWhenDownloaderSucceeds) {
+  // Owned by |resilient_retriver|.
+  StaleStorage* stale_storage = new StaleStorage;
+  Retriever resilient_retriever(
+      FakeDownloader::kFakeDataUrl, new FakeDownloader, stale_storage);
+
+  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  resilient_retriever.Retrieve(kKey, *callback);
+
+  EXPECT_TRUE(success_);
+  EXPECT_EQ(kKey, key_);
+  EXPECT_FALSE(data_.empty());
+  EXPECT_NE(kEmptyData, data_);
+  EXPECT_NE(kStaleData, data_);
+  EXPECT_TRUE(stale_storage->data_updated_);
 }
 
 }  // namespace
