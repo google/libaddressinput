@@ -29,6 +29,7 @@
 #include "grit.h"
 #include "messages.h"
 #include "region_data_constants.h"
+#include "util/json.h"
 
 namespace {
 
@@ -36,6 +37,7 @@ using i18n::addressinput::AddressField;
 using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::FormatElement;
 using i18n::addressinput::INVALID_MESSAGE_ID;
+using i18n::addressinput::Json;
 using i18n::addressinput::LOCALITY;
 using i18n::addressinput::Localization;
 using i18n::addressinput::RegionDataConstants;
@@ -169,6 +171,14 @@ TEST(RuleTest, PostalCodeMatcherInvalidRegExp) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"(\"}"));
   EXPECT_TRUE(rule.GetPostalCodeMatcher() == NULL);
+}
+
+TEST(RuleTest, ParsesJsonRuleCorrectly) {
+  Json json;
+  ASSERT_TRUE(json.ParseObject("{\"zip\":\"\\\\d{3}\"}"));
+  Rule rule;
+  rule.ParseJsonRule(json);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
 }
 
 TEST(RuleTest, EmptyStringIsNotValid) {

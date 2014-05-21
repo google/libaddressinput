@@ -152,7 +152,11 @@ bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
   if (!json.ParseObject(serialized_rule)) {
     return false;
   }
+  ParseJsonRule(json);
+  return true;
+}
 
+void Rule::ParseJsonRule(const Json& json) {
   if (json.HasStringValueForKey(kIdKey)) {
     id_ = json.GetStringValueForKey(kIdKey);
   }
@@ -215,8 +219,6 @@ bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
         GetMessageIdFromName(json.GetStringValueForKey(kPostalCodeNameTypeKey),
                              GetPostalCodeMessageIds());
   }
-
-  return true;
 }
 
 }  // namespace addressinput

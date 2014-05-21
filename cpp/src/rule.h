@@ -32,6 +32,7 @@
 namespace i18n {
 namespace addressinput {
 
+class Json;
 class RE2ptr;
 
 // Stores address metadata addressing rules, to be used for determining the
@@ -56,6 +57,9 @@ class Rule {
   // Parses |serialized_rule|. Returns |true| if the |serialized_rule| has valid
   // format (JSON dictionary).
   bool ParseSerializedRule(const std::string& serialized_rule);
+
+  // Reads data from |json|, which must already have parsed a serialized rule.
+  void ParseJsonRule(const Json& json);
 
   // Returns the ID string for this rule.
   const std::string& GetId() const { return id_; }
