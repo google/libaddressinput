@@ -52,8 +52,13 @@ namespace addressinput {
 //    };
 class FakeDownloader : public Downloader {
  public:
-  // The fake data URL to be used in tests.
+  // The fake data URL to be used in tests for retrieving one key at a time.
   static const char kFakeDataUrl[];
+
+  // The fake data URL to be used in tests for retrieving aggregate data, which
+  // is a JSON dictionary that maps from keys to dictionaries of what you would
+  // normally get from kFakeDataUrl.
+  static const char kFakeAggregateDataUrl[];
 
   FakeDownloader();
   virtual ~FakeDownloader();
