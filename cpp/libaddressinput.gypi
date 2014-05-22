@@ -69,6 +69,7 @@
       'test/retriever_test.cc',
       'test/rule_retriever_test.cc',
       'test/rule_test.cc',
+      'test/supplier_test.cc',
       'test/util/json_test.cc',
       'test/util/md5_unittest.cc',
       'test/util/scoped_ptr_unittest.cc',
