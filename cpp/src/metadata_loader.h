@@ -81,9 +81,6 @@ class MetadataLoader {
   };
 
  private:
-  // A set of all the region codes known to RegionDataConstants.
-  static const std::set<std::string> region_codes_;
-
   const scoped_ptr<const Retriever> retriever_;
   std::map<std::string, const Rule*> rule_cache_;
 

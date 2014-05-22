@@ -51,7 +51,7 @@ void MetadataLoader::Load(const LookupKey& lookup_key, const Callback& loaded) {
   RuleHierarchy* hierarchy =
       new RuleHierarchy(lookup_key, &rule_cache_, loaded);
 
-  if (region_codes_.find(lookup_key.GetRegionCode()) != region_codes_.end()) {
+  if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
     size_t max_depth = std::min(
         lookup_key.GetDepth(),
         RegionDataConstants::GetMaxLookupKeyDepth(lookup_key.GetRegionCode()));
@@ -171,11 +171,6 @@ void MetadataLoader::RuleHierarchy::Loaded() {
   loaded_(success_, lookup_key_, *this);
   delete this;
 }
-
-// static
-const std::set<std::string> MetadataLoader::region_codes_(
-    RegionDataConstants::GetRegionCodes().begin(),
-    RegionDataConstants::GetRegionCodes().end());
 
 }  // namespace addressinput
 }  // namespace i18n

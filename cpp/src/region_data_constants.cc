@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <map>
+#include <set>
 #include <string>
 #include <utility>
 #include <vector>
@@ -1155,6 +1156,13 @@ const std::map<std::string, size_t> InitMaxLookupKeyDepth() {
 }
 
 }  // namespace
+
+// static
+const bool RegionDataConstants::IsSupported(const std::string& region_code) {
+  static const std::set<std::string> kRegionCodes(GetRegionCodes().begin(),
+                                                  GetRegionCodes().end());
+  return kRegionCodes.find(region_code) != kRegionCodes.end();
+}
 
 // static
 const std::vector<std::string>& RegionDataConstants::GetRegionCodes() {
