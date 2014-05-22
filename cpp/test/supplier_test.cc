@@ -31,7 +31,7 @@
 
 #include "fake_downloader.h"
 #include "lookup_key.h"
-#include "metadata_loader.h"
+#include "ondemand_supplier.h"
 #include "retriever.h"
 #include "rule.h"
 
@@ -59,8 +59,8 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::LookupKey;
-using i18n::addressinput::MetadataLoader;
 using i18n::addressinput::NullStorage;
+using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
@@ -83,17 +83,17 @@ class OndemandSupplierWrapper : public SupplierWrapper {
 
   virtual void Supply(const LookupKey& lookup_key,
                       const Supplier::Callback& supplied) {
-    metadata_loader_.Supply(lookup_key, supplied);
+    ondemand_supplier_.Supply(lookup_key, supplied);
   }
 
  private:
   OndemandSupplierWrapper()
-      : metadata_loader_(
+      : ondemand_supplier_(
             new Retriever(FakeDownloader::kFakeDataUrl,
                           new FakeDownloader,
                           new NullStorage)) {}
 
-  MetadataLoader metadata_loader_;
+  OndemandSupplier ondemand_supplier_;
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplierWrapper);
 };
 
@@ -166,7 +166,7 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
   DISALLOW_COPY_AND_ASSIGN(SupplierTest);
 };
 
-INSTANTIATE_TEST_CASE_P(MetadataLoader,
+INSTANTIATE_TEST_CASE_P(OndemandSupplier,
                         SupplierTest,
                         testing::Values(&OndemandSupplierWrapper::Build));
 
@@ -298,7 +298,7 @@ TEST_P(SupplierTest, RuleCache) {
   EXPECT_TRUE(rule_[3] == NULL);
 
   // Make a copy of the currently returned pointers to the Rule objects (stored
-  // in the MetadataLoader cache) and verify that calling Supply() again with
+  // in the OndemandSupplier cache) and verify that calling Supply() again with
   // the same LookupKey returns the same pointers again (and doesn't create any
   // new Rule objects instead).
 

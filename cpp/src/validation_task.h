@@ -44,7 +44,7 @@ class ValidationTask {
 
   ~ValidationTask();
 
-  // Calls metadata->Load(), with Validate() as callback.
+  // Calls supplier->Load(), with Validate() as callback.
   void Run(Supplier* supplier) const;
 
  private:

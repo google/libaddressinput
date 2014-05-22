@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "metadata_loader.h"
+#include "ondemand_supplier.h"
 
 #include <algorithm>
 #include <cassert>
@@ -36,20 +36,20 @@
 namespace i18n {
 namespace addressinput {
 
-MetadataLoader::MetadataLoader(const Retriever* retriever)
+OndemandSupplier::OndemandSupplier(const Retriever* retriever)
     : retriever_(retriever) {
   assert(retriever_ != NULL);
 }
 
-MetadataLoader::~MetadataLoader() {
+OndemandSupplier::~OndemandSupplier() {
   for (std::map<std::string, const Rule*>::const_iterator
        it = rule_cache_.begin(); it != rule_cache_.end(); ++it) {
     delete it->second;
   }
 }
 
-void MetadataLoader::Supply(const LookupKey& lookup_key,
-                            const Callback& supplied) {
+void OndemandSupplier::Supply(const LookupKey& lookup_key,
+                              const Callback& supplied) {
   RuleHierarchy* hierarchy =
       new RuleHierarchy(lookup_key, &rule_cache_, supplied);
 
@@ -73,28 +73,28 @@ void MetadataLoader::Supply(const LookupKey& lookup_key,
   hierarchy->Retrieve(*retriever_);
 }
 
-MetadataLoader::RuleHierarchy::RuleHierarchy(
+OndemandSupplier::RuleHierarchy::RuleHierarchy(
     const LookupKey& lookup_key,
     std::map<std::string, const Rule*>* rules,
     const Callback& supplied)
     : lookup_key_(lookup_key),
       rule_cache_(rules),
       supplied_(supplied),
-      retrieved_(BuildCallback(this, &MetadataLoader::RuleHierarchy::Load)),
+      retrieved_(BuildCallback(this, &OndemandSupplier::RuleHierarchy::Load)),
       success_(true) {
   assert(rule_cache_ != NULL);
   assert(retrieved_ != NULL);
 }
 
-MetadataLoader::RuleHierarchy::~RuleHierarchy() {
+OndemandSupplier::RuleHierarchy::~RuleHierarchy() {
 }
 
-void MetadataLoader::RuleHierarchy::Queue(const std::string& key) {
+void OndemandSupplier::RuleHierarchy::Queue(const std::string& key) {
   assert(pending_.find(key) == pending_.end());
   pending_.insert(key);
 }
 
-void MetadataLoader::RuleHierarchy::Retrieve(const Retriever& retriever) {
+void OndemandSupplier::RuleHierarchy::Retrieve(const Retriever& retriever) {
   if (pending_.empty()) {
     Loaded();
   } else {
@@ -116,9 +116,9 @@ void MetadataLoader::RuleHierarchy::Retrieve(const Retriever& retriever) {
   }
 }
 
-void MetadataLoader::RuleHierarchy::Load(bool success,
-                                         const std::string& key,
-                                         const std::string& data) {
+void OndemandSupplier::RuleHierarchy::Load(bool success,
+                                           const std::string& key,
+                                           const std::string& data) {
   // Sanity check: This key should be present in the set of pending requests.
   size_t status = pending_.erase(key);
   assert(status == 1);  // There will always be one item erased from the set.
@@ -168,7 +168,7 @@ void MetadataLoader::RuleHierarchy::Load(bool success,
   }
 }
 
-void MetadataLoader::RuleHierarchy::Loaded() {
+void OndemandSupplier::RuleHierarchy::Loaded() {
   supplied_(success_, lookup_key_, *this);
   delete this;
 }

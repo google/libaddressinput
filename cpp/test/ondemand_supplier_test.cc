@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "metadata_loader.h"
+#include "ondemand_supplier.h"
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
@@ -38,8 +38,8 @@ namespace {
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Downloader;
 using i18n::addressinput::LookupKey;
-using i18n::addressinput::MetadataLoader;
 using i18n::addressinput::NullStorage;
+using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
@@ -90,7 +90,7 @@ class RuleHierarchyTest : public testing::Test {
         rule_(),
         called_(false),
         hierarchy_(
-            new MetadataLoader::RuleHierarchy(
+            new OndemandSupplier::RuleHierarchy(
                 lookup_key_, &rule_cache_, *supplied_)) {}
 
   virtual ~RuleHierarchyTest() {
@@ -124,7 +124,7 @@ class RuleHierarchyTest : public testing::Test {
     called_ = true;
   }
 
-  MetadataLoader::RuleHierarchy* const hierarchy_;
+  OndemandSupplier::RuleHierarchy* const hierarchy_;
 
   DISALLOW_COPY_AND_ASSIGN(RuleHierarchyTest);
 };

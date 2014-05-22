@@ -188,7 +188,7 @@ class AddressValidatorTest
   DISALLOW_COPY_AND_ASSIGN(AddressValidatorTest);
 };
 
-INSTANTIATE_TEST_CASE_P(MetadataLoader,
+INSTANTIATE_TEST_CASE_P(OndemandSupplier,
                         AddressValidatorTest,
                         testing::Values(&OndemandValidatorWrapper::Build));
 

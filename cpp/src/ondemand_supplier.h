@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef I18N_ADDRESSINPUT_METADATA_LOADER_H_
-#define I18N_ADDRESSINPUT_METADATA_LOADER_H_
+#ifndef I18N_ADDRESSINPUT_ONDEMAND_SUPPLIER_H_
+#define I18N_ADDRESSINPUT_ONDEMAND_SUPPLIER_H_
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
@@ -36,7 +36,7 @@ class Rule;
 // through which it loads address metadata as needed, creating Rule objects and
 // caching these.
 //
-// When using a MetadataLoader, address validation will benefit from address
+// When using an OndemandSupplier, address validation will benefit from address
 // metadata server synonym resolution, because the server will be contacted for
 // every new LookupKey (ie. every LookupKey that isn't on canonical form and
 // isn't already cached).
@@ -44,11 +44,11 @@ class Rule;
 // The maximum size of this cache is naturally limited to the amount of data
 // available from the data server. (Currently this is less than 12,000 items of
 // in total less than 2 MB of JSON data.)
-class MetadataLoader : public Supplier {
+class OndemandSupplier : public Supplier {
  public:
   // Takes ownership of |retriever|.
-  MetadataLoader(const Retriever* retriever);
-  virtual ~MetadataLoader();
+  OndemandSupplier(const Retriever* retriever);
+  virtual ~OndemandSupplier();
 
   // Loads the metadata needed for |lookup_key|, then calls |supplied|.
   virtual void Supply(const LookupKey& lookup_key, const Callback& supplied);
@@ -87,10 +87,10 @@ class MetadataLoader : public Supplier {
   const scoped_ptr<const Retriever> retriever_;
   std::map<std::string, const Rule*> rule_cache_;
 
-  DISALLOW_COPY_AND_ASSIGN(MetadataLoader);
+  DISALLOW_COPY_AND_ASSIGN(OndemandSupplier);
 };
 
 }  // namespace addressinput
 }  // namespace i18n
 
-#endif  // I18N_ADDRESSINPUT_METADATA_LOADER_H_
+#endif  // I18N_ADDRESSINPUT_ONDEMAND_SUPPLIER_H_

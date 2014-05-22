@@ -23,7 +23,7 @@
 #include <string>
 
 #include "lookup_key.h"
-#include "metadata_loader.h"
+#include "ondemand_supplier.h"
 
 namespace i18n {
 namespace addressinput {

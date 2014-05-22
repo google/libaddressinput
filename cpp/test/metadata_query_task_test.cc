@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include "metadata_loader.h"
+#include "ondemand_supplier.h"
 #include "rule.h"
 
 namespace i18n {

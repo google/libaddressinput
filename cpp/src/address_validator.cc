@@ -23,8 +23,8 @@
 #include <cstddef>
 #include <string>
 
-#include "metadata_loader.h"
 #include "metadata_query_task.h"
+#include "ondemand_supplier.h"
 #include "retriever.h"
 #include "rule.h"
 #include "validation_task.h"
@@ -35,7 +35,7 @@ namespace addressinput {
 AddressValidator::AddressValidator(const std::string& validation_data_url,
                                    const Downloader* downloader,
                                    Storage* storage)
-    : own_supplier_(new MetadataLoader(
+    : own_supplier_(new OndemandSupplier(
           new Retriever(validation_data_url, downloader, storage))),
       supplier_(own_supplier_.get()) {
   assert(supplier_ != NULL);
