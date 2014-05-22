@@ -15,7 +15,6 @@
 #include <libaddressinput/address_validator.h>
 
 #include <libaddressinput/address_data.h>
-#include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
@@ -327,87 +326,6 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
-}
-
-class AddressMetadataQueryTest : public testing::Test {
- protected:
-  AddressMetadataQueryTest()
-      : success_(false),
-        region_code_(),
-        answer_(false),
-        called_(false),
-        validator_(FakeDownloader::kFakeDataUrl,
-                   new FakeDownloader,
-                   new NullStorage),
-        answered_(BuildCallback(this, &AddressMetadataQueryTest::Answered)) {}
-
-  virtual ~AddressMetadataQueryTest() {}
-
-  bool success_;
-  std::string region_code_;
-  bool answer_;
-  bool called_;
-
-  const AddressValidator validator_;
-  const scoped_ptr<const AddressValidator::BoolCallback> answered_;
-
- private:
-  void Answered(bool success,
-                const std::string& region_code,
-                const bool& answer) {
-    success_ = success;
-    ASSERT_EQ(&region_code_, &region_code);
-    answer_ = answer;
-    called_ = true;
-  }
-
-  DISALLOW_COPY_AND_ASSIGN(AddressMetadataQueryTest);
-};
-
-TEST_F(AddressMetadataQueryTest, IsFieldRequiredAdminAreaUS) {
-  region_code_ = "US";
-  validator_.IsFieldRequired(ADMIN_AREA, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(success_);
-  EXPECT_TRUE(answer_);
-}
-
-TEST_F(AddressMetadataQueryTest, IsFieldRequiredAdminAreaAT) {
-  region_code_ = "AT";
-  validator_.IsFieldRequired(ADMIN_AREA, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(success_);
-  EXPECT_FALSE(answer_);
-}
-
-TEST_F(AddressMetadataQueryTest, IsFieldRequiredAdminAreaSU) {
-  region_code_ = "SU";  // Unsupported region.
-  validator_.IsFieldRequired(ADMIN_AREA, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_FALSE(success_);
-}
-
-TEST_F(AddressMetadataQueryTest, IsFieldUsedDependentLocalityUS) {
-  region_code_ = "US";
-  validator_.IsFieldUsed(DEPENDENT_LOCALITY, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(success_);
-  EXPECT_FALSE(answer_);
-}
-
-TEST_F(AddressMetadataQueryTest, IsFieldUsedDependentLocalityCN) {
-  region_code_ = "CN";
-  validator_.IsFieldUsed(DEPENDENT_LOCALITY, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_TRUE(success_);
-  EXPECT_TRUE(answer_);
-}
-
-TEST_F(AddressMetadataQueryTest, IsFieldUsedDependentLocalitySU) {
-  region_code_ = "SU";  // Unsupported region.
-  validator_.IsFieldUsed(DEPENDENT_LOCALITY, region_code_, *answered_);
-  ASSERT_TRUE(called_);
-  EXPECT_FALSE(success_);
 }
 
 }  // namespace
