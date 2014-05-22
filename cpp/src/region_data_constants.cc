@@ -42,12 +42,15 @@ namespace {
 std::map<std::string, std::string> InitRegionData() {
   std::map<std::string, std::string> region_data;
   region_data.insert(std::make_pair("AC", "{"
+      "\"zipex\":\"ASCN 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("AD", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %S\","
       "\"require\":\"AS\","
       "\"state_name_type\":\"parish\","
+      "\"zipex\":\"AD100,AD501,AD700\","
+      "\"posturl\":\"http://www.correos.es/comun/CodigosPostales/1010_s-CodPostal.asp\?Provincia=\","
       "\"languages\":\"ca\""
       "}"));
   region_data.insert(std::make_pair("AE", "{"
@@ -56,6 +59,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("AF", "{"
+      "\"zipex\":\"1001,2601,3801\","
+      "\"posturl\":\"http://afghanpost.gov.af/Postal%20Code/\","
       "\"languages\":\"fa~ps\""
       "}"));
   region_data.insert(std::make_pair("AG", "{"
@@ -63,24 +68,30 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("AI", "{"
+      "\"zipex\":\"2640\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("AL", "{"
+      "\"zipex\":\"1001,1017,3501\","
       "\"languages\":\"sq\""
       "}"));
   region_data.insert(std::make_pair("AM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C%n%S\","
       "\"lfmt\":\"%N%n%O%n%A%n%Z%n%C%n%S\","
+      "\"zipex\":\"375010,0002,0010\","
       "\"languages\":\"hy\""
       "}"));
   region_data.insert(std::make_pair("AO", "{"
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("AQ", "{"
+      "\"languages\":\"\""
       "}"));
   region_data.insert(std::make_pair("AR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"C1070AAM,C1000WAM,B1000TBU,X5187XAB\","
+      "\"posturl\":\"http://www.correoargentino.com.ar/cpa\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("AS", "{"
@@ -88,17 +99,23 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96799\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"sm~en\""
       "}"));
   region_data.insert(std::make_pair("AT", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"1010,3741\","
+      "\"posturl\":\"http://www.post.at/post_subsite_postleitzahlfinder.php\","
       "\"languages\":\"de\""
       "}"));
   region_data.insert(std::make_pair("AU", "{"
       "\"fmt\":\"%O%n%N%n%A%n%C %S %Z\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"2060,3171,6430,4000,4006,3001\","
+      "\"posturl\":\"http://www1.auspost.com.au/postcodes/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("AW", "{"
@@ -107,27 +124,38 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("AX", "{"
       "\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%n\u00c5LAND\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"22150,22550,22240,22710,22270,22730,22430\","
+      "\"posturl\":\"http://www.posten.ax/department.con\?iPage=123\","
       "\"languages\":\"sv\""
       "}"));
   region_data.insert(std::make_pair("AZ", "{"
       "\"fmt\":\"%N%n%O%n%A%nAZ %Z %C\","
+      "\"zipex\":\"1000\","
       "\"languages\":\"az-Latn~az-Cyrl\""
       "}"));
   region_data.insert(std::make_pair("BA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"71000\","
+      "\"posturl\":\"http://www.post.ba/postanski_brojevi.php\","
       "\"languages\":\"bs-Cyrl~bs-Latn~hr~sr-Cyrl~sr-Latn\""
       "}"));
   region_data.insert(std::make_pair("BB", "{"
       "\"state_name_type\":\"parish\","
+      "\"zipex\":\"BB23026,BB22025\","
+      "\"posturl\":\"http://barbadospostal.com/zipcodes.html\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("BD", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C - %Z\","
+      "\"zipex\":\"1340,1000\","
+      "\"posturl\":\"http://www.bangladeshpost.gov.bd/PostCode.asp\","
       "\"languages\":\"bn\""
       "}"));
   region_data.insert(std::make_pair("BE", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"4000,1000\","
+      "\"posturl\":\"http://www.post.be/site/nl/residential/customerservice/search/postal_codes.html\","
       "\"languages\":\"nl~fr~de\""
       "}"));
   region_data.insert(std::make_pair("BF", "{"
@@ -136,10 +164,13 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("BG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1000,1700\","
+      "\"posturl\":\"http://www.bgpost.bg/\?cid=5\","
       "\"languages\":\"bg\""
       "}"));
   region_data.insert(std::make_pair("BH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"317\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("BI", "{"
@@ -151,14 +182,20 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("BL", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97100\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("BM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"FL 07,HM GX,HM 12\","
+      "\"posturl\":\"http://www.landvaluation.bm/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("BN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"BT2328,KA1131,BA1511\","
+      "\"posturl\":\"http://www.post.gov.bn/index.php/extensions/postcode-guide\","
       "\"languages\":\"ms-Latn~ms-Arab\""
       "}"));
   region_data.insert(std::make_pair("BO", "{"
@@ -168,6 +205,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%O%n%N%n%A%n%C-%S%n%Z\","
       "\"require\":\"ASCZ\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"40301-110,70002-900\","
+      "\"posturl\":\"http://www.correios.com.br/servicos/cep/cep_default.cfm\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("BS", "{"
@@ -176,15 +215,20 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("BT", "{"
+      "\"zipex\":\"11001,31101,35003\","
+      "\"posturl\":\"http://www.bhutanpost.com.bt/postcode/postcode.php\","
       "\"languages\":\"dz\""
       "}"));
   region_data.insert(std::make_pair("BV", "{"
+      "\"languages\":\"\""
       "}"));
   region_data.insert(std::make_pair("BW", "{"
       "\"languages\":\"en~tn\""
       "}"));
   region_data.insert(std::make_pair("BY", "{"
       "\"fmt\":\"%S%n%Z %C %X%n%A%n%O%n%N\","
+      "\"zipex\":\"20050,223016,225860,220050\","
+      "\"posturl\":\"http://zip.belpost.by\","
       "\"languages\":\"be~ru\""
       "}"));
   region_data.insert(std::make_pair("BZ", "{"
@@ -193,6 +237,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("CA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %S %Z\","
       "\"require\":\"ACSZ\","
+      "\"zipex\":\"H3Z 2Y7,V8X 3X4,T0L 1K0,T0H 1A0,K1A 0B1\","
+      "\"posturl\":\"http://www.canadapost.ca/cpotools/apps/fpc/personal/findByCity\?execution=e2s1\","
       "\"languages\":\"en~fr\""
       "}"));
   region_data.insert(std::make_pair("CC", "{"
@@ -212,6 +258,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("CH", "{"
       "\"fmt\":\"%O%n%N%n%A%nCH-%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"2544,1211,1556,3030\","
+      "\"posturl\":\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\","
       "\"languages\":\"de~fr~it\""
       "}"));
   region_data.insert(std::make_pair("CI", "{"
@@ -225,6 +273,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("CL", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"8340457,8720019,1230000,8329100\","
+      "\"posturl\":\"http://www.correos.cl/SitePages/home.aspx\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("CM", "{"
@@ -234,19 +284,26 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%Z%n%S%C%D%n%A%n%O%n%N\","
       "\"lfmt\":\"%N%n%O%n%A, %D%n%C%n%S, %Z\","
       "\"require\":\"ACSZ\","
+      "\"zipex\":\"266033,317204,100096,100808\","
+      "\"posturl\":\"http://www.cpdc.com.cn/postcdQueryAction.do\?reqCode=gotoQueryPostAddr\","
       "\"languages\":\"zh-Hans\""
       "}"));
   region_data.insert(std::make_pair("CO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S\","
+      "\"zipex\":\"111221,130001,760011\","
+      "\"posturl\":\"http://www.codigopostal4-72.com.co/codigosPostales/\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("CR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1000,2010,1001\","
+      "\"posturl\":\"https://www.correos.go.cr/nosotros/codigopostal/busqueda.html\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("CV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
       "\"state_name_type\":\"island\","
+      "\"zipex\":\"7600\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("CX", "{"
@@ -255,15 +312,20 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("CY", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"2008,3304,1900\","
       "\"languages\":\"el~tr\""
       "}"));
   region_data.insert(std::make_pair("CZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"100 00,251 66,530 87,110 00,225 99\","
+      "\"posturl\":\"http://psc.ceskaposta.cz/CleanForm.action\","
       "\"languages\":\"cs\""
       "}"));
   region_data.insert(std::make_pair("DE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"26133,53225\","
+      "\"posturl\":\"http://www.postdirekt.de/plzserver/\","
       "\"languages\":\"de\""
       "}"));
   region_data.insert(std::make_pair("DJ", "{"
@@ -272,6 +334,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("DK", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"8660,1566\","
+      "\"posturl\":\"http://www.postdanmark.dk/da/Privat/Kundeservice/postnummerkort/Sider/Find-postnummer.aspx\","
       "\"languages\":\"da\""
       "}"));
   region_data.insert(std::make_pair("DM", "{"
@@ -279,27 +343,35 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("DO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"11903,10101\","
+      "\"posturl\":\"http://inposdom.gob.do/servicios/codigo-postal.html#buscar_codigo\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("DZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"40304,16027\","
       "\"languages\":\"ar~fr\""
       "}"));
   region_data.insert(std::make_pair("EC", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
+      "\"zipex\":\"EC090112,090105,H0103C,P0133B,P0133A,P0133V\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("EE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"69501,11212,1001\","
+      "\"posturl\":\"http://www.post.ee/\?op=sihtnumbriotsing\","
       "\"languages\":\"et\""
       "}"));
   region_data.insert(std::make_pair("EG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
+      "\"zipex\":\"12411,11599\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("EH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"70000,72000\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("ER", "{"
@@ -308,15 +380,20 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("ES", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C %S\","
       "\"require\":\"ACSZ\","
+      "\"zipex\":\"28039,28300,28070\","
+      "\"posturl\":\"http://www.correos.es/contenido/13-MenuRec2/04-MenuRec24/1010_s-CodPostal.asp\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("ET", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1000\","
       "\"languages\":\"am\""
       "}"));
   region_data.insert(std::make_pair("FI", "{"
       "\"fmt\":\"%O%n%N%n%A%nFI-%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"00550,00011\","
+      "\"posturl\":\"http://www.verkkoposti.com/e3/postinumeroluettelo\","
       "\"languages\":\"fi~sv\""
       "}"));
   region_data.insert(std::make_pair("FJ", "{"
@@ -325,6 +402,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("FK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"FIQQ 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("FM", "{"
@@ -332,15 +410,21 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96941,96944\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"chk~pon~kos~yap~en~uli\""
       "}"));
   region_data.insert(std::make_pair("FO", "{"
       "\"fmt\":\"%N%n%O%n%A%nFO%Z %C\","
+      "\"zipex\":\"100\","
+      "\"posturl\":\"http://www.postur.fo/\","
       "\"languages\":\"fo\""
       "}"));
   region_data.insert(std::make_pair("FR", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"33380,34092,33506\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("GA", "{"
@@ -350,6 +434,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"county\","
+      "\"zipex\":\"EC1Y 8SY,GIR 0AA,M2 5BQ,M34 4AB,CR0 2YR,DN16 9AA,W1A 4ZZ,EC1A 1HQ,OX14 4PG,BS18 8HF,NR25 7HG,RH6 OHP,BH23 6AA,B6 5BA,RH6 0HP,SO23 9AP,PO1 3AX,BFPO 61\","
+      "\"posturl\":\"http://www.royalmail.com/postcode-finder\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("GD", "{"
@@ -357,16 +443,22 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("GE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"0101\","
+      "\"posturl\":\"http://www.georgianpost.ge/index.php\?page=10\","
       "\"languages\":\"ka\""
       "}"));
   region_data.insert(std::make_pair("GF", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97300\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("GG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%nGUERNSEY%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"GY1 1AA,GY2 2BT\","
+      "\"posturl\":\"http://www.guernseypost.com/postcode_finder/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("GH", "{"
@@ -375,11 +467,13 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("GI", "{"
       "\"fmt\":\"%N%n%O%n%A\","
       "\"require\":\"A\","
+      "\"zipex\":\"GX11 1AA\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("GL", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"3900,3950,3911\","
       "\"languages\":\"kl~da\""
       "}"));
   region_data.insert(std::make_pair("GM", "{"
@@ -387,11 +481,14 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("GN", "{"
       "\"fmt\":\"%N%n%O%n%Z %A %C\","
+      "\"zipex\":\"001,200,100\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("GP", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97100\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("GQ", "{"
@@ -400,14 +497,19 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("GR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"151 24,151 10,101 88\","
+      "\"posturl\":\"http://www.elta.gr/findapostcode.aspx\","
       "\"languages\":\"el\""
       "}"));
   region_data.insert(std::make_pair("GS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
-      "\"require\":\"ACZ\""
+      "\"require\":\"ACZ\","
+      "\"zipex\":\"SIQQ 1ZZ\","
+      "\"languages\":\"\""
       "}"));
   region_data.insert(std::make_pair("GT", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z- %C\","
+      "\"zipex\":\"09001,01501\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("GU", "{"
@@ -415,10 +517,13 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96910,96931\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"en~ch\""
       "}"));
   region_data.insert(std::make_pair("GW", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1000,1011\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("GY", "{"
@@ -432,7 +537,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"zh-Hant~en\""
       "}"));
   region_data.insert(std::make_pair("HM", "{"
-      "\"fmt\":\"%O%n%N%n%A%n%C %S %Z\""
+      "\"fmt\":\"%O%n%N%n%A%n%C %S %Z\","
+      "\"languages\":\"\""
       "}"));
   region_data.insert(std::make_pair("HN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S%n%Z\","
@@ -441,19 +547,25 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("HR", "{"
       "\"fmt\":\"%N%n%O%n%A%nHR-%Z %C\","
+      "\"zipex\":\"10000,21001,10002\","
+      "\"posturl\":\"http://www.posta.hr/default.aspx\?pretpum\","
       "\"languages\":\"hr\""
       "}"));
   region_data.insert(std::make_pair("HT", "{"
       "\"fmt\":\"%N%n%O%n%A%nHT%Z %C %X\","
+      "\"zipex\":\"6120,5310,6110,8510\","
       "\"languages\":\"ht~fr\""
       "}"));
   region_data.insert(std::make_pair("HU", "{"
       "\"fmt\":\"%N%n%O%n%C%n%A%n%Z\","
+      "\"zipex\":\"1037,2380,1540\","
+      "\"posturl\":\"http://posta.hu/ugyfelszolgalat/iranyitoszam_kereso\","
       "\"languages\":\"hu\""
       "}"));
   region_data.insert(std::make_pair("ID", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\","
       "\"state_name_type\":\"district\","
+      "\"zipex\":\"40115\","
       "\"languages\":\"id\""
       "}"));
   region_data.insert(std::make_pair("IE", "{"
@@ -463,22 +575,29 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("IL", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"9614303\","
+      "\"posturl\":\"http://www.israelpost.co.il/zipcode.nsf/demozip\?openform\","
       "\"languages\":\"iw~ar\""
       "}"));
   region_data.insert(std::make_pair("IM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"IM2 1AA,IM99 1PS\","
+      "\"posturl\":\"http://www.gov.im/post/postal/fr_main.asp\","
       "\"languages\":\"en~gv\""
       "}"));
   region_data.insert(std::make_pair("IN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"110034,110001\","
+      "\"posturl\":\"http://www.indiapost.gov.in/pin/pinsearch.aspx\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("IO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"BBND 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("IQ", "{"
@@ -488,16 +607,22 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("IS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"320,121,220,110\","
+      "\"posturl\":\"http://www.postur.is/cgi-bin/hsrun.exe/Distributed/vefur/vefur.htx;start=HS_landakort_postnumer\","
       "\"languages\":\"is\""
       "}"));
   region_data.insert(std::make_pair("IT", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C %S\","
       "\"require\":\"ACSZ\","
+      "\"zipex\":\"00144,47037,39049\","
+      "\"posturl\":\"http://www.poste.it/online/cercacap/\","
       "\"languages\":\"it\""
       "}"));
   region_data.insert(std::make_pair("JE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%nJERSEY%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"JE1 1AA,JE2 2BT\","
+      "\"posturl\":\"http://www.jerseypost.com/tools/postcode-address-finder/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("JM", "{"
@@ -508,6 +633,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("JO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"11937,11190\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("JP", "{"
@@ -515,18 +641,23 @@ std::map<std::string, std::string> InitRegionData() {
       "\"lfmt\":\"%N%n%O%n%A%n%C, %S%n%Z\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"prefecture\","
+      "\"zipex\":\"154-0023,350-1106,951-8073,112-0001,208-0032,231-0012\","
+      "\"posturl\":\"http://search.post.japanpost.jp/zipcode/\","
       "\"languages\":\"ja\""
       "}"));
   region_data.insert(std::make_pair("KE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
+      "\"zipex\":\"20100,00100\","
       "\"languages\":\"en~sw\""
       "}"));
   region_data.insert(std::make_pair("KG", "{"
       "\"fmt\":\"%Z %C %X%n%A%n%O%n%N\","
+      "\"zipex\":\"720001\","
       "\"languages\":\"ky-Cyrl~ru\""
       "}"));
   region_data.insert(std::make_pair("KH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"12203,14206,12000\","
       "\"languages\":\"km\""
       "}"));
   region_data.insert(std::make_pair("KI", "{"
@@ -548,28 +679,36 @@ std::map<std::string, std::string> InitRegionData() {
       "\"lfmt\":\"%N%n%O%n%A%n%D%n%C%n%S%n%Z\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"do_si\","
+      "\"zipex\":\"110-110,699-800\","
+      "\"posturl\":\"http://www.epost.go.kr/search/zipcode/search5.jsp\","
       "\"languages\":\"ko\""
       "}"));
   region_data.insert(std::make_pair("KW", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"54541,54551,54404,13009\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("KY", "{"
       "\"fmt\":\"%N%n%O%n%A%n%S\","
       "\"require\":\"AS\","
       "\"state_name_type\":\"island\","
+      "\"zipex\":\"KY1-1100,KY1-1702,KY2-2101\","
+      "\"posturl\":\"http://www.caymanpost.gov.ky/portal/page\?_pageid=3561,1&_dad=portal&_schema=PORTAL\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("KZ", "{"
       "\"fmt\":\"%Z%n%S%n%C%n%A%n%O%n%N\","
+      "\"zipex\":\"040900,050012\","
       "\"languages\":\"ru~kk-Cyrl\""
       "}"));
   region_data.insert(std::make_pair("LA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"01160,01000\","
       "\"languages\":\"lo\""
       "}"));
   region_data.insert(std::make_pair("LB", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"2038 3054,1107 2810,1000\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("LC", "{"
@@ -578,31 +717,43 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("LI", "{"
       "\"fmt\":\"%O%n%N%n%A%nFL-%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"9496,9491,9490,9485\","
+      "\"posturl\":\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\","
       "\"languages\":\"de~gsw\""
       "}"));
   region_data.insert(std::make_pair("LK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
+      "\"zipex\":\"20000,00100\","
+      "\"posturl\":\"http://www.slpost.gov.lk/\","
       "\"languages\":\"si~ta\""
       "}"));
   region_data.insert(std::make_pair("LR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C %X\","
+      "\"zipex\":\"1000\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("LS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"100\","
       "\"languages\":\"st~en\""
       "}"));
   region_data.insert(std::make_pair("LT", "{"
       "\"fmt\":\"%O%n%N%n%A%nLT-%Z %C\","
+      "\"zipex\":\"04340,03500\","
+      "\"posturl\":\"http://www.post.lt/lt/\?id=316\","
       "\"languages\":\"lt\""
       "}"));
   region_data.insert(std::make_pair("LU", "{"
       "\"fmt\":\"%O%n%N%n%A%nL-%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"4750,2998\","
+      "\"posturl\":\"http://www.pt.lu/portal/services_en_ligne/recherche_codes_postaux\","
       "\"languages\":\"fr~lb~de\""
       "}"));
   region_data.insert(std::make_pair("LV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %Z\","
+      "\"zipex\":\"LV-1073,LV-1000\","
+      "\"posturl\":\"http://www.pasts.lv/lv/uzzinas/nodalas/\","
       "\"languages\":\"lv\""
       "}"));
   region_data.insert(std::make_pair("LY", "{"
@@ -610,27 +761,34 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("MA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"53000,10000,20050,16052\","
       "\"languages\":\"ar~fr~tzm-Latn\""
       "}"));
   region_data.insert(std::make_pair("MC", "{"
       "\"fmt\":\"%N%n%O%n%A%nMC-%Z %C %X\","
+      "\"zipex\":\"98000,98020,98011,98001\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("MD", "{"
       "\"fmt\":\"%N%n%O%n%A%nMD-%Z %C\","
+      "\"zipex\":\"2012,2019\","
       "\"languages\":\"ro\""
       "}"));
   region_data.insert(std::make_pair("ME", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"81257,81258,81217,84314,85366\","
       "\"languages\":\"sr-Latn\""
       "}"));
   region_data.insert(std::make_pair("MF", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97100\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("MG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"501,101\","
       "\"languages\":\"mg~fr~en\""
       "}"));
   region_data.insert(std::make_pair("MH", "{"
@@ -638,10 +796,13 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96960,96970\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"en~mh\""
       "}"));
   region_data.insert(std::make_pair("MK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1314,1321,1443,1062\","
       "\"languages\":\"mk~sq\""
       "}"));
   region_data.insert(std::make_pair("ML", "{"
@@ -649,6 +810,8 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("MN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%S %C-%X%n%Z\","
+      "\"zipex\":\"65030,65270\","
+      "\"posturl\":\"http://www.zipcode.mn/\","
       "\"languages\":\"mn-Cyrl\""
       "}"));
   region_data.insert(std::make_pair("MO", "{"
@@ -662,11 +825,15 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96950,96951,96952\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("MQ", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97220\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("MR", "{"
@@ -677,14 +844,19 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("MT", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"NXR 01,ZTN 05,GPO 01,BZN 1130,SPB 6031,VCT 1753\","
+      "\"posturl\":\"http://postcodes.maltapost.com/\","
       "\"languages\":\"mt~en\""
       "}"));
   region_data.insert(std::make_pair("MU", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
+      "\"zipex\":\"742CU001\","
       "\"languages\":\"en~fr\""
       "}"));
   region_data.insert(std::make_pair("MV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"20026\","
+      "\"posturl\":\"http://www.maldivespost.com/\?lid=10\","
       "\"languages\":\"dv\""
       "}"));
   region_data.insert(std::make_pair("MW", "{"
@@ -695,16 +867,21 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C, %S\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"02860,77520,06082\","
+      "\"posturl\":\"http://www.correosdemexico.gob.mx/ServiciosLinea/Paginas/ccpostales.aspx\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("MY", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C, %S\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"43000,50754,88990,50670\","
+      "\"posturl\":\"http://www.pos.com.my/pos/homepage.aspx\","
       "\"languages\":\"ms\""
       "}"));
   region_data.insert(std::make_pair("MZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C\","
+      "\"zipex\":\"1102,1119,3212\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("NA", "{"
@@ -713,10 +890,13 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("NC", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"98814,98800,98810\","
+      "\"posturl\":\"http://poste.opt.nc/index.php\?option=com_content&view=article&id=80&Itemid=131\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("NE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"8001\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("NF", "{"
@@ -726,25 +906,35 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("NG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"930283,300001,931104\","
+      "\"posturl\":\"http://www.nigeriapostcodes.com/views/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("NI", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C, %S\","
       "\"state_name_type\":\"department\","
+      "\"zipex\":\"52000\","
+      "\"posturl\":\"http://www.correos.gob.ni/index.php/codigo-postal-2\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("NL", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"1234 AB,2490 AA\","
+      "\"posturl\":\"http://www.tntpost.nl/voorthuis/\","
       "\"languages\":\"nl\""
       "}"));
   region_data.insert(std::make_pair("NO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"0025,0107,6631\","
+      "\"posturl\":\"http://adressesok.posten.no/nb/postal_codes/search\","
       "\"languages\":\"no~nn\""
       "}"));
   region_data.insert(std::make_pair("NP", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"44601\","
+      "\"posturl\":\"http://www.gpo.gov.np/postalcode.aspx\","
       "\"languages\":\"ne\""
       "}"));
   region_data.insert(std::make_pair("NR", "{"
@@ -759,10 +949,13 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("NZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"6001,6015,6332,8252,1030\","
+      "\"posturl\":\"http://www.nzpost.co.nz/Cultures/en-NZ/OnlineTools/PostCodeFinder/\","
       "\"languages\":\"en~mi\""
       "}"));
   region_data.insert(std::make_pair("OM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
+      "\"zipex\":\"133,112,111\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("PA", "{"
@@ -770,6 +963,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("PE", "{"
+      "\"zipex\":\"LIMA 23,LIMA 42,CALLAO 2,02001\","
+      "\"posturl\":\"http://www.serpost.com.pe/cpostal/codigo\","
       "\"languages\":\"es~qu\""
       "}"));
   region_data.insert(std::make_pair("PF", "{"
@@ -781,35 +976,46 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("PG", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z %S\","
       "\"require\":\"ACS\","
+      "\"zipex\":\"111\","
       "\"languages\":\"tpi~en~ho\""
       "}"));
   region_data.insert(std::make_pair("PH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
+      "\"zipex\":\"1008,1050,1135,1207,2000,1000\","
+      "\"posturl\":\"http://www.philpost.gov.ph/\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("PK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C-%Z\","
+      "\"zipex\":\"44000\","
+      "\"posturl\":\"http://www.pakpost.gov.pk/postcode/postcode.html\","
       "\"languages\":\"ur~en\""
       "}"));
   region_data.insert(std::make_pair("PL", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"00-950,05-470,48-300,32-015,00-940\","
+      "\"posturl\":\"http://www.poczta-polska.pl/kody.php\","
       "\"languages\":\"pl\""
       "}"));
   region_data.insert(std::make_pair("PM", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97500\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("PN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"PCRN 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("PR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C PR %Z\","
       "\"require\":\"ACZ\","
       "\"zip_name_type\":\"zip\","
+      "\"zipex\":\"00930\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"es~en\""
       "}"));
   region_data.insert(std::make_pair("PS", "{"
@@ -818,6 +1024,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("PT", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"2725-079,1250-096,1201-950,2860-571,1208-148\","
+      "\"posturl\":\"http://www.ctt.pt/feapl_2/app/open/tools.jspx\?tool=1\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("PW", "{"
@@ -825,10 +1033,13 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96940\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"pau~en\""
       "}"));
   region_data.insert(std::make_pair("PY", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1536,1538,1209\","
       "\"languages\":\"gn~es\""
       "}"));
   region_data.insert(std::make_pair("QA", "{"
@@ -837,19 +1048,27 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("RE", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97400\","
+      "\"posturl\":\"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("RO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"060274,061357,200716\","
+      "\"posturl\":\"http://www.posta-romana.ro/zip_codes\","
       "\"languages\":\"ro\""
       "}"));
   region_data.insert(std::make_pair("RS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"106314\","
+      "\"posturl\":\"http://www.posta.rs/struktura/lat/aplikacije/pronadji/nadji-postu.asp\","
       "\"languages\":\"sr-Cyrl~sr-Latn\""
       "}"));
   region_data.insert(std::make_pair("RU", "{"
       "\"fmt\":\"%Z %C  %n%A%n%O%n%N\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"125075,247112,103375\","
+      "\"posturl\":\"http://info.russianpost.ru/servlet/department\","
       "\"languages\":\"ru\""
       "}"));
   region_data.insert(std::make_pair("RW", "{"
@@ -857,6 +1076,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("SA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z\","
+      "\"zipex\":\"11564,11187,11142\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("SB", "{"
@@ -870,29 +1090,39 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("SE", "{"
       "\"fmt\":\"%O%n%N%n%A%nSE-%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"11455,12345,10500\","
+      "\"posturl\":\"http://www.posten.se/sv/Kundservice/Sidor/Sok-postnummer-resultat.aspx\","
       "\"languages\":\"sv\""
       "}"));
   region_data.insert(std::make_pair("SG", "{"
       "\"fmt\":\"%N%n%O%n%A%nSINGAPORE %Z\","
       "\"require\":\"AZ\","
+      "\"zipex\":\"546080,308125,408600\","
+      "\"posturl\":\"http://www.singpost.com.sg/quick_services/index.htm\","
       "\"languages\":\"en~zh-Hans~ms-Latn~ta\""
       "}"));
   region_data.insert(std::make_pair("SH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"STHL 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("SI", "{"
       "\"fmt\":\"%N%n%O%n%A%nSI- %Z %C\","
+      "\"zipex\":\"4000,1001,2500\","
       "\"languages\":\"sl\""
       "}"));
   region_data.insert(std::make_pair("SJ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"9170\","
+      "\"posturl\":\"http://epab.posten.no/\","
       "\"languages\":\"no\""
       "}"));
   region_data.insert(std::make_pair("SK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"010 01,023 14,972 48,921 01,975 99\","
+      "\"posturl\":\"http://psc.posta.sk\","
       "\"languages\":\"sk\""
       "}"));
   region_data.insert(std::make_pair("SL", "{"
@@ -901,15 +1131,19 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("SM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"AZ\","
+      "\"zipex\":\"47890,47891,47895,47899\","
+      "\"posturl\":\"http://www.poste.it/online/cercacap/\","
       "\"languages\":\"it\""
       "}"));
   region_data.insert(std::make_pair("SN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"12500,46024,16556,10000\","
       "\"languages\":\"fr~wo\""
       "}"));
   region_data.insert(std::make_pair("SO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S %Z\","
       "\"require\":\"ACS\","
+      "\"zipex\":\"09010,11010\","
       "\"languages\":\"so\""
       "}"));
   region_data.insert(std::make_pair("SR", "{"
@@ -923,18 +1157,23 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("SV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z-%C%n%S\","
       "\"require\":\"ACS\","
+      "\"zipex\":\"CP 1101\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("SZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
+      "\"zipex\":\"H100\","
+      "\"posturl\":\"http://www.sptc.co.sz/swazipost/codes.php\","
       "\"languages\":\"en~ss\""
       "}"));
   region_data.insert(std::make_pair("TA", "{"
+      "\"zipex\":\"TDCU 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("TC", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"TKCA 1ZZ\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("TD", "{"
@@ -949,10 +1188,12 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("TH", "{"
       "\"fmt\":\"%N%n%O%n%A%n%D %C%n%S %Z\","
       "\"lfmt\":\"%N%n%O%n%A%n%D, %C%n%S %Z\","
+      "\"zipex\":\"10150,10210\","
       "\"languages\":\"th\""
       "}"));
   region_data.insert(std::make_pair("TJ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"735450,734025\","
       "\"languages\":\"tg-Cyrl\""
       "}"));
   region_data.insert(std::make_pair("TK", "{"
@@ -963,10 +1204,13 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("TM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"744000\","
       "\"languages\":\"tk-Latn\""
       "}"));
   region_data.insert(std::make_pair("TN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"1002,8129,3100,1030\","
+      "\"posturl\":\"http://www.poste.tn/codes.php\","
       "\"languages\":\"ar~fr\""
       "}"));
   region_data.insert(std::make_pair("TO", "{"
@@ -975,6 +1219,8 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("TR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"01960,06101\","
+      "\"posturl\":\"http://postakodu.ptt.gov.tr/\","
       "\"languages\":\"tr\""
       "}"));
   region_data.insert(std::make_pair("TT", "{"
@@ -990,13 +1236,18 @@ std::map<std::string, std::string> InitRegionData() {
       "\"lfmt\":\"%N%n%O%n%A%n%C, %S %Z\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"county\","
+      "\"zipex\":\"104,106,10603,40867\","
+      "\"posturl\":\"http://www.post.gov.tw/post/internet/f_searchzone/index.jsp\?ID=190102\","
       "\"languages\":\"zh-Hant\""
       "}"));
   region_data.insert(std::make_pair("TZ", "{"
+      "\"zipex\":\"6090\","
       "\"languages\":\"sw~en\""
       "}"));
   region_data.insert(std::make_pair("UA", "{"
       "\"fmt\":\"%Z %C%n%A%n%O%n%N\","
+      "\"zipex\":\"15432,01055,01001\","
+      "\"posturl\":\"http://services.ukrposhta.com/postindex_new/\","
       "\"languages\":\"uk~ru\""
       "}"));
   region_data.insert(std::make_pair("UG", "{"
@@ -1007,6 +1258,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACS\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"96898\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("US", "{"
@@ -1014,30 +1267,42 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"95014,22162-1010\","
+      "\"posturl\":\"https://tools.usps.com/go/ZipLookupAction!input.action\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("UY", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C %S\","
+      "\"zipex\":\"11600\","
+      "\"posturl\":\"http://www.correo.com.uy/index.asp\?codPag=codPost&switchMapa=codPost\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("UZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
+      "\"zipex\":\"702100,700000\","
+      "\"posturl\":\"http://www.pochta.uz/index.php/uz/pochta-indekslari/9\","
       "\"languages\":\"uz-Latn~uz-Cyrl\""
       "}"));
   region_data.insert(std::make_pair("VA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"00120\","
       "\"languages\":\"la\""
       "}"));
   region_data.insert(std::make_pair("VC", "{"
+      "\"zipex\":\"VC0100,VC0110,VC0400\","
+      "\"posturl\":\"http://www.svgpost.gov.vc/\?option=com_content&view=article&id=3&Itemid=16\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("VE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z, %S\","
       "\"require\":\"ACS\","
+      "\"zipex\":\"1010,3001,8011,1020\","
+      "\"posturl\":\"http://www.ipostel.gob.ve/nlinea/codigo_postal.php\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("VG", "{"
       "\"require\":\"A\","
+      "\"zipex\":\"VG1110,VG1150,VG1160\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("VI", "{"
@@ -1045,12 +1310,16 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACSZ\","
       "\"zip_name_type\":\"zip\","
       "\"state_name_type\":\"state\","
+      "\"zipex\":\"00802-1222,00850-9802\","
+      "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("VN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S\","
       "\"lfmt\":\"%N%n%O%n%A%n%C%n%S\","
       "\"require\":\"AC\","
+      "\"zipex\":\"119415,136065,720344\","
+      "\"posturl\":\"http://postcode.vnpost.vn/services/search.aspx\","
       "\"languages\":\"vi\""
       "}"));
   region_data.insert(std::make_pair("VU", "{"
@@ -1059,6 +1328,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("WF", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"98600\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("WS", "{"
@@ -1066,6 +1336,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("XK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"zipex\":\"10000\","
       "\"languages\":\"sq~sr-Cyrl~sr-Latn\""
       "}"));
   region_data.insert(std::make_pair("YE", "{"
@@ -1075,16 +1346,20 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("YT", "{"
       "\"fmt\":\"%O%n%N%n%A%n%Z %C %X\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"97600\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("ZA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
+      "\"zipex\":\"0083,1451,0001\","
+      "\"posturl\":\"http://www.postoffice.co.za/tools/postalcode.html\","
       "\"languages\":\"en~zu~xh~af~nso~tn~st~ts~ss~ve~nr\""
       "}"));
   region_data.insert(std::make_pair("ZM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"AC\","
+      "\"zipex\":\"50100,50101\","
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("ZW", "{"
