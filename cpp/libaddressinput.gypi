@@ -30,6 +30,7 @@
       'src/metadata_query_task.cc',
       'src/null_storage.cc',
       'src/post_box_matchers.cc',
+      'src/preload_supplier.cc',
       'src/region_data_constants.cc',
       'src/retriever.cc',
       'src/rule.cc',
