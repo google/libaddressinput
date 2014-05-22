@@ -44,7 +44,7 @@ class FormatElement {
   // Returns true if this element represents a new line.
   bool IsNewline() const { return literal_ == "\n"; }
 
-  const AddressField& GetField() const { return field_; }
+  AddressField GetField() const { return field_; }
   const std::string& GetLiteral() const { return literal_; }
 
   bool operator==(const FormatElement& other) const;
