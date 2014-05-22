@@ -17,12 +17,11 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_validator.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
-
-#include "metadata_loader.h"
 
 namespace i18n {
 namespace addressinput {
@@ -45,12 +44,12 @@ class MetadataQueryTask {
 
   virtual ~MetadataQueryTask();
 
-  // Calls metadata->Load(), with ExecuteQuery() as callback.
-  void Run(MetadataLoader* metadata) const;
+  // Calls supplier->Supply(), with ExecuteQuery() as callback.
+  void Run(Supplier* supplier) const;
 
  protected:
   // Uses the address metadata of |hierarchy| to answer a yes/no question.
-  virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const = 0;
+  virtual bool Query(const Supplier::RuleHierarchy& hierarchy) const = 0;
 
   const AddressField field_;
 
@@ -61,11 +60,11 @@ class MetadataQueryTask {
   // calls the |answered_| callback and deletes this MetadataQueryTask object.
   void ExecuteQuery(bool success,
                     const LookupKey& lookup_key,
-                    const MetadataLoader::RuleHierarchy& hierarchy);
+                    const Supplier::RuleHierarchy& hierarchy);
 
   const std::string& region_code_;
   const AddressValidator::BoolCallback& answered_;
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;
+  const scoped_ptr<const Supplier::Callback> supplied_;
   const scoped_ptr<LookupKey> lookup_key_;
 
   DISALLOW_COPY_AND_ASSIGN(MetadataQueryTask);

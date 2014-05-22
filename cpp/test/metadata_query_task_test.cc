@@ -48,7 +48,7 @@ class MetadataQueryTaskTest : public testing::Test {
     virtual ~MockTask() {}
 
    protected:
-    virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const {
+    virtual bool Query(const Supplier::RuleHierarchy& hierarchy) const {
       return answer_;
     }
 
@@ -64,24 +64,20 @@ class MetadataQueryTaskTest : public testing::Test {
         region_code_(),
         answer_(),
         called_(false),
-        loaded_(BuildCallback(this, &MetadataQueryTaskTest::Loaded)),
         answered_(BuildCallback(this, &MetadataQueryTaskTest::Answered)) {}
 
   virtual ~MetadataQueryTaskTest() {}
 
   void Run() {
-    std::map<std::string, const Rule*> rules;  // Stub.
-
     MetadataQueryTask* task = new MockTask(answer_, region_code_, *answered_);
 
-    MetadataLoader::RuleHierarchy* hierarchy =
-        new MetadataLoader::RuleHierarchy(*task->lookup_key_, &rules, *loaded_);
+    Supplier::RuleHierarchy* hierarchy = new Supplier::RuleHierarchy();
 
     if (use_default_rule_) {
       hierarchy->rule_[0] = &Rule::GetDefault();
     }
 
-    (*task->loaded_)(success_, *task->lookup_key_, *hierarchy);
+    (*task->supplied_)(success_, *task->lookup_key_, *hierarchy);
   }
 
   bool use_default_rule_;
@@ -91,10 +87,6 @@ class MetadataQueryTaskTest : public testing::Test {
   bool called_;
 
  private:
-  void Loaded(bool, const LookupKey&, const MetadataLoader::RuleHierarchy&) {
-    FAIL();  // RuleHierarchy::Retrieve() shouldn't be called in this test.
-  }
-
   void Answered(bool success,
                 const std::string& region_code,
                 const bool& answer) {
@@ -104,7 +96,6 @@ class MetadataQueryTaskTest : public testing::Test {
     called_ = true;
   }
 
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;  // Stub.
   const scoped_ptr<const AddressValidator::BoolCallback> answered_;
 
   DISALLOW_COPY_AND_ASSIGN(MetadataQueryTaskTest);

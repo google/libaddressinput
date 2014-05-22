@@ -18,10 +18,9 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/address_validator.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
-
-#include "metadata_loader.h"
 
 namespace i18n {
 namespace addressinput {
@@ -46,7 +45,7 @@ class ValidationTask {
   ~ValidationTask();
 
   // Calls metadata->Load(), with Validate() as callback.
-  void Run(MetadataLoader* metadata) const;
+  void Run(Supplier* supplier) const;
 
  private:
   friend class ValidationTaskTest;
@@ -56,27 +55,27 @@ class ValidationTask {
   // deletes this ValidationTask object.
   void Validate(bool success,
                 const LookupKey& lookup_key,
-                const MetadataLoader::RuleHierarchy& hierarchy);
+                const Supplier::RuleHierarchy& hierarchy);
 
   // Checks all fields for UNEXPECTED_FIELD problems.
   void CheckUnexpectedField(
-      const MetadataLoader::RuleHierarchy& hierarchy) const;
+      const Supplier::RuleHierarchy& hierarchy) const;
 
   // Checks all fields for MISSING_REQUIRED_FIELD problems.
   void CheckMissingRequiredField(
-      const MetadataLoader::RuleHierarchy& hierarchy) const;
+      const Supplier::RuleHierarchy& hierarchy) const;
 
   // Checks the hierarchical fields for UNKNOWN_VALUE problems.
   void CheckUnknownValue(
-      const MetadataLoader::RuleHierarchy& hierarchy) const;
+      const Supplier::RuleHierarchy& hierarchy) const;
 
   // Checks the POSTAL_CODE field for problems.
   void CheckPostalCodeFormatAndValue(
-      const MetadataLoader::RuleHierarchy& hierarchy) const;
+      const Supplier::RuleHierarchy& hierarchy) const;
 
   // Checks the STREET_ADDRESS field for USES_P_O_BOX problems.
   void CheckUsesPoBox(
-      const MetadataLoader::RuleHierarchy& hierarchy) const;
+      const Supplier::RuleHierarchy& hierarchy) const;
 
   // Writes (|field|,|problem|) to |problems_|.
   void ReportProblem(AddressField field, AddressProblem problem) const;
@@ -96,7 +95,7 @@ class ValidationTask {
   const FieldProblemMap* filter_;
   FieldProblemMap* const problems_;
   const AddressValidator::Callback& validated_;
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;
+  const scoped_ptr<const Supplier::Callback> supplied_;
   const scoped_ptr<LookupKey> lookup_key_;
 
   DISALLOW_COPY_AND_ASSIGN(ValidationTask);

@@ -24,6 +24,7 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/callback.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -47,9 +48,10 @@ MetadataLoader::~MetadataLoader() {
   }
 }
 
-void MetadataLoader::Load(const LookupKey& lookup_key, const Callback& loaded) {
+void MetadataLoader::Supply(const LookupKey& lookup_key,
+                            const Callback& supplied) {
   RuleHierarchy* hierarchy =
-      new RuleHierarchy(lookup_key, &rule_cache_, loaded);
+      new RuleHierarchy(lookup_key, &rule_cache_, supplied);
 
   if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
     size_t max_depth = std::min(
@@ -74,11 +76,10 @@ void MetadataLoader::Load(const LookupKey& lookup_key, const Callback& loaded) {
 MetadataLoader::RuleHierarchy::RuleHierarchy(
     const LookupKey& lookup_key,
     std::map<std::string, const Rule*>* rules,
-    const Callback& loaded)
-    : rule_(),
-      lookup_key_(lookup_key),
+    const Callback& supplied)
+    : lookup_key_(lookup_key),
       rule_cache_(rules),
-      loaded_(loaded),
+      supplied_(supplied),
       retrieved_(BuildCallback(this, &MetadataLoader::RuleHierarchy::Load)),
       success_(true) {
   assert(rule_cache_ != NULL);
@@ -168,7 +169,7 @@ void MetadataLoader::RuleHierarchy::Load(bool success,
 }
 
 void MetadataLoader::RuleHierarchy::Loaded() {
-  loaded_(success_, lookup_key_, *this);
+  supplied_(success_, lookup_key_, *this);
   delete this;
 }
 

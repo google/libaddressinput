@@ -35,7 +35,7 @@ MetadataQueryTask::MetadataQueryTask(
     : field_(field),
       region_code_(region_code),
       answered_(answered),
-      loaded_(BuildCallback(this, &MetadataQueryTask::ExecuteQuery)),
+      supplied_(BuildCallback(this, &MetadataQueryTask::ExecuteQuery)),
       lookup_key_(new LookupKey) {
   AddressData address;
   address.region_code = region_code;
@@ -45,15 +45,15 @@ MetadataQueryTask::MetadataQueryTask(
 MetadataQueryTask::~MetadataQueryTask() {
 }
 
-void MetadataQueryTask::Run(MetadataLoader* metadata) const {
-  assert(metadata != NULL);
-  metadata->Load(*lookup_key_, *loaded_);
+void MetadataQueryTask::Run(Supplier* supplier) const {
+  assert(supplier != NULL);
+  supplier->Supply(*lookup_key_, *supplied_);
 }
 
 void MetadataQueryTask::ExecuteQuery(
     bool success,
     const LookupKey& lookup_key,
-    const MetadataLoader::RuleHierarchy& hierarchy) {
+    const Supplier::RuleHierarchy& hierarchy) {
   assert(&lookup_key == lookup_key_.get());  // Sanity check.
   bool answer = false;
 

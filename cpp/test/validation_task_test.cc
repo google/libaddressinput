@@ -19,17 +19,16 @@
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/address_validator.h>
 #include <libaddressinput/callback.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
-#include <map>
-#include <string>
 #include <utility>
 
 #include <gtest/gtest.h>
 
-#include "metadata_loader.h"
+#include "lookup_key.h"
 #include "rule.h"
 
 namespace i18n {
@@ -49,14 +48,12 @@ class ValidationTaskTest : public testing::Test {
         problems_(),
         expected_(),
         called_(false),
-        loaded_(BuildCallback(this, &ValidationTaskTest::Loaded)),
         validated_(BuildCallback(this, &ValidationTaskTest::Validated)) {}
 
   virtual ~ValidationTaskTest() {}
 
   void Validate() {
     Rule rule[arraysize(json_)];
-    std::map<std::string, const Rule*> rules;  // Stub.
 
     ValidationTask* task = new ValidationTask(
         address_,
@@ -66,15 +63,14 @@ class ValidationTaskTest : public testing::Test {
         &problems_,
         *validated_);
 
-    MetadataLoader::RuleHierarchy* hierarchy =
-        new MetadataLoader::RuleHierarchy(*task->lookup_key_, &rules, *loaded_);
+    Supplier::RuleHierarchy* hierarchy = new Supplier::RuleHierarchy();
 
     for (size_t i = 0; i < arraysize(json_) && json_[i] != NULL; ++i) {
       ASSERT_TRUE(rule[i].ParseSerializedRule(json_[i]));
       hierarchy->rule_[i] = &rule[i];
     }
 
-    (*task->loaded_)(success_, *task->lookup_key_, *hierarchy);
+    (*task->supplied_)(success_, *task->lookup_key_, *hierarchy);
   }
 
   const char* json_[arraysize(LookupKey::kHierarchy)];
@@ -88,10 +84,6 @@ class ValidationTaskTest : public testing::Test {
   bool called_;
 
  private:
-  void Loaded(bool, const LookupKey&, const MetadataLoader::RuleHierarchy&) {
-    FAIL();  // RuleHierarchy::Retrieve() shouldn't be called in this test.
-  }
-
   void Validated(bool success,
                  const AddressData& address,
                  const FieldProblemMap& problems) {
@@ -101,7 +93,6 @@ class ValidationTaskTest : public testing::Test {
     called_ = true;
   }
 
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;  // Stub.
   const scoped_ptr<const AddressValidator::Callback> validated_;
 
   DISALLOW_COPY_AND_ASSIGN(ValidationTaskTest);

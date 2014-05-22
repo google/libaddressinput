@@ -33,7 +33,7 @@ namespace addressinput {
 AddressValidator::AddressValidator(const std::string& validation_data_url,
                                    const Downloader* downloader,
                                    Storage* storage)
-    : metadata_loader_(new MetadataLoader(
+    : supplier_(new MetadataLoader(
           new Retriever(validation_data_url, downloader, storage))) {
 }
 
@@ -53,7 +53,7 @@ void AddressValidator::Validate(const AddressData& address,
        require_name,
        filter,
        problems,
-       validated))->Run(metadata_loader_.get());
+       validated))->Run(supplier_.get());
 }
 
 namespace {
@@ -68,7 +68,7 @@ class IsFieldRequiredTask : public MetadataQueryTask {
   virtual ~IsFieldRequiredTask() {}
 
  protected:
-  virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const {
+  virtual bool Query(const Supplier::RuleHierarchy& hierarchy) const {
     assert(hierarchy.rule_[0] != NULL);
     const Rule& country_rule = *hierarchy.rule_[0];
     return std::find(country_rule.GetRequired().begin(),
@@ -90,7 +90,7 @@ class IsFieldUsedTask : public MetadataQueryTask {
   virtual ~IsFieldUsedTask() {}
 
  protected:
-  virtual bool Query(const MetadataLoader::RuleHierarchy& hierarchy) const {
+  virtual bool Query(const Supplier::RuleHierarchy& hierarchy) const {
     assert(hierarchy.rule_[0] != NULL);
     const Rule& country_rule = *hierarchy.rule_[0];
     return std::find(country_rule.GetFormat().begin(),
@@ -109,8 +109,7 @@ void AddressValidator::IsFieldRequired(
     const std::string& region_code,
     const BoolCallback& answered) const {
   // The MetadataQueryTask object will delete itself after Run() has finished.
-  (new IsFieldRequiredTask(field, region_code, answered))
-      ->Run(metadata_loader_.get());
+  (new IsFieldRequiredTask(field, region_code, answered))->Run(supplier_.get());
 }
 
 void AddressValidator::IsFieldUsed(
@@ -118,8 +117,7 @@ void AddressValidator::IsFieldUsed(
     const std::string& region_code,
     const BoolCallback& answered) const {
   // The MetadataQueryTask object will delete itself after Run() has finished.
-  (new IsFieldUsedTask(field, region_code, answered))
-      ->Run(metadata_loader_.get());
+  (new IsFieldUsedTask(field, region_code, answered))->Run(supplier_.get());
 }
 
 }  // namespace addressinput

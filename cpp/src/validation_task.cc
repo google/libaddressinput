@@ -20,6 +20,7 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/address_validator.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
@@ -30,7 +31,6 @@
 #include <vector>
 
 #include "lookup_key.h"
-#include "metadata_loader.h"
 #include "post_box_matchers.h"
 #include "rule.h"
 
@@ -49,26 +49,26 @@ ValidationTask::ValidationTask(const AddressData& address,
       filter_(filter),
       problems_(problems),
       validated_(validated),
-      loaded_(BuildCallback(this, &ValidationTask::Validate)),
+      supplied_(BuildCallback(this, &ValidationTask::Validate)),
       lookup_key_(new LookupKey) {
   assert(problems_ != NULL);
-  assert(loaded_ != NULL);
+  assert(supplied_ != NULL);
   assert(lookup_key_ != NULL);
 }
 
 ValidationTask::~ValidationTask() {
 }
 
-void ValidationTask::Run(MetadataLoader* metadata) const {
-  assert(metadata != NULL);
+void ValidationTask::Run(Supplier* supplier) const {
+  assert(supplier != NULL);
   problems_->clear();
   lookup_key_->FromAddress(address_);
-  metadata->Load(*lookup_key_, *loaded_);
+  supplier->Supply(*lookup_key_, *supplied_);
 }
 
 void ValidationTask::Validate(bool success,
                               const LookupKey& lookup_key,
-                              const MetadataLoader::RuleHierarchy& hierarchy) {
+                              const Supplier::RuleHierarchy& hierarchy) {
   assert(&lookup_key == lookup_key_.get());  // Sanity check.
 
   if (success) {
@@ -92,7 +92,7 @@ void ValidationTask::Validate(bool success,
 // A field is UNEXPECTED_FIELD if it is not used in the fmt string in the
 // metadata and the current value of that field is not empty.
 void ValidationTask::CheckUnexpectedField(
-    const MetadataLoader::RuleHierarchy& hierarchy) const {
+    const Supplier::RuleHierarchy& hierarchy) const {
   assert(hierarchy.rule_[0] != NULL);
   const Rule& country_rule = *hierarchy.rule_[0];
 
@@ -118,7 +118,7 @@ void ValidationTask::CheckUnexpectedField(
 // A field is MISSING_REQUIRED_FIELD if it is listed as a required field in the
 // metadata and the current value of that field is empty.
 void ValidationTask::CheckMissingRequiredField(
-    const MetadataLoader::RuleHierarchy& hierarchy) const {
+    const Supplier::RuleHierarchy& hierarchy) const {
   assert(hierarchy.rule_[0] != NULL);
   const Rule& country_rule = *hierarchy.rule_[0];
 
@@ -139,7 +139,7 @@ void ValidationTask::CheckMissingRequiredField(
 // for the field and the address data server could not match the current value
 // of that field to one of those possible values, therefore returning NULL.
 void ValidationTask::CheckUnknownValue(
-    const MetadataLoader::RuleHierarchy& hierarchy) const {
+    const Supplier::RuleHierarchy& hierarchy) const {
   for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
     AddressField field = LookupKey::kHierarchy[depth];
     if (!(address_.IsFieldEmpty(field) ||
@@ -152,7 +152,7 @@ void ValidationTask::CheckUnknownValue(
 }
 
 void ValidationTask::CheckPostalCodeFormatAndValue(
-    const MetadataLoader::RuleHierarchy& hierarchy) const {
+    const Supplier::RuleHierarchy& hierarchy) const {
   assert(hierarchy.rule_[0] != NULL);
   const Rule& country_rule = *hierarchy.rule_[0];
 
@@ -198,7 +198,7 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 }
 
 void ValidationTask::CheckUsesPoBox(
-    const MetadataLoader::RuleHierarchy& hierarchy) const {
+    const Supplier::RuleHierarchy& hierarchy) const {
   assert(hierarchy.rule_[0] != NULL);
   const Rule& country_rule = *hierarchy.rule_[0];
 

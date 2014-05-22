@@ -32,8 +32,8 @@ namespace i18n {
 namespace addressinput {
 
 class Downloader;
-class MetadataLoader;
 class Storage;
+class Supplier;
 struct AddressData;
 
 typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
@@ -138,7 +138,7 @@ class AddressValidator {
                    const BoolCallback& answered) const;
 
  private:
-  const scoped_ptr<MetadataLoader> metadata_loader_;
+  const scoped_ptr<Supplier> supplier_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressValidator);
 };

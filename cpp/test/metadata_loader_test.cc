@@ -18,6 +18,7 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -63,6 +64,7 @@ using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::Supplier;
 
 class MetadataLoaderTest : public testing::Test {
  protected:
@@ -75,13 +77,13 @@ class MetadataLoaderTest : public testing::Test {
             new Retriever(FakeDownloader::kFakeDataUrl,
                           new FakeDownloader,
                           new NullStorage)),
-        loaded_(BuildCallback(this, &MetadataLoaderTest::Loaded)) {}
+        supplied_(BuildCallback(this, &MetadataLoaderTest::Supplied)) {}
 
   virtual ~MetadataLoaderTest() {}
 
-  void Load() {
+  void Supply() {
     lookup_key_.FromAddress(address_);
-    loader_.Load(lookup_key_, *loaded_);
+    loader_.Supply(lookup_key_, *supplied_);
   }
 
   AddressData address_;
@@ -89,9 +91,9 @@ class MetadataLoaderTest : public testing::Test {
   bool called_;
 
  private:
-  void Loaded(bool success,
-              const LookupKey& lookup_key,
-              const MetadataLoader::RuleHierarchy& hierarchy) {
+  void Supplied(bool success,
+                const LookupKey& lookup_key,
+                const Supplier::RuleHierarchy& hierarchy) {
     ASSERT_TRUE(success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
     std::memcpy(rule_, hierarchy.rule_, sizeof rule_);
@@ -100,7 +102,7 @@ class MetadataLoaderTest : public testing::Test {
 
   LookupKey lookup_key_;
   MetadataLoader loader_;
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;
+  const scoped_ptr<Supplier::Callback> supplied_;
 
   DISALLOW_COPY_AND_ASSIGN(MetadataLoaderTest);
 };
@@ -108,7 +110,7 @@ class MetadataLoaderTest : public testing::Test {
 TEST_F(MetadataLoaderTest, Invalid) {
   address_.region_code = "QZ";
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] == NULL);
   EXPECT_TRUE(rule_[1] == NULL);
@@ -119,7 +121,7 @@ TEST_F(MetadataLoaderTest, Invalid) {
 TEST_F(MetadataLoaderTest, Valid) {
   address_.region_code = "SE";
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] == NULL);
@@ -135,7 +137,7 @@ TEST_F(MetadataLoaderTest, KeyDepthEqualsMaxDepth) {
   address_.region_code = "HK";
   address_.administrative_area = kKowloon;
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -148,7 +150,7 @@ TEST_F(MetadataLoaderTest, KeyDepthLargerThanMaxDepth) {
   address_.administrative_area = kKowloon;
   address_.locality = "bbb";  // Ignored!
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -159,7 +161,7 @@ TEST_F(MetadataLoaderTest, KeyDepthLargerThanMaxDepth) {
 TEST_F(MetadataLoaderTest, KeyDepthSmallerThanMaxDepth) {
   address_.region_code = "HK";
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] == NULL);
@@ -170,7 +172,7 @@ TEST_F(MetadataLoaderTest, KeyDepthSmallerThanMaxDepth) {
 TEST_F(MetadataLoaderTest, KeyDepth0) {
   address_.region_code = "CN";
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] == NULL);
@@ -182,7 +184,7 @@ TEST_F(MetadataLoaderTest, KeyDepth1) {
   address_.region_code = "CN";
   address_.administrative_area = kXinJiang;
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -195,7 +197,7 @@ TEST_F(MetadataLoaderTest, KeyDepth2) {
   address_.administrative_area = kXinJiang;
   address_.locality = kKashiDiqu;
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -209,7 +211,7 @@ TEST_F(MetadataLoaderTest, KeyDepth3) {
   address_.locality = kKashiDiqu;
   address_.dependent_locality = kKashiShi;
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -221,7 +223,7 @@ TEST_F(MetadataLoaderTest, RuleCache) {
   address_.region_code = "US";
   address_.administrative_area = "CA";
 
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] != NULL);
   EXPECT_TRUE(rule_[1] != NULL);
@@ -229,15 +231,15 @@ TEST_F(MetadataLoaderTest, RuleCache) {
   EXPECT_TRUE(rule_[3] == NULL);
 
   // Make a copy of the currently returned pointers to the Rule objects (stored
-  // in the MetadataLoader cache) and verify that calling Load() again with the
-  // same LookupKey returns the same pointers again (and doesn't create any new
-  // Rule objects instead).
+  // in the MetadataLoader cache) and verify that calling Supply() again with
+  // the same LookupKey returns the same pointers again (and doesn't create any
+  // new Rule objects instead).
 
   const Rule* rule[arraysize(LookupKey::kHierarchy)];
   std::memcpy(rule, rule_, sizeof rule);
 
   called_ = false;
-  ASSERT_NO_FATAL_FAILURE(Load());
+  ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
   EXPECT_EQ(rule[0], rule_[0]);
   EXPECT_EQ(rule[1], rule_[1]);
@@ -275,7 +277,7 @@ class RuleHierarchyTest : public testing::Test {
  private:
   std::map<std::string, const Rule*> rule_cache_;
   const scoped_ptr<Retriever> retriever_;
-  const scoped_ptr<const MetadataLoader::Callback> loaded_;
+  const scoped_ptr<const Supplier::Callback> supplied_;
 
  protected:
   RuleHierarchyTest()
@@ -284,14 +286,14 @@ class RuleHierarchyTest : public testing::Test {
         retriever_(
             new Retriever(
                 MockDownloader::kMockDataUrl, downloader_, new NullStorage)),
-        loaded_(BuildCallback(this, &RuleHierarchyTest::Loaded)),
+        supplied_(BuildCallback(this, &RuleHierarchyTest::Supplied)),
         success_(true),
         lookup_key_(),
         rule_(),
         called_(false),
         hierarchy_(
             new MetadataLoader::RuleHierarchy(
-                lookup_key_, &rule_cache_, *loaded_)) {}
+                lookup_key_, &rule_cache_, *supplied_)) {}
 
   virtual ~RuleHierarchyTest() {
     for (std::map<std::string, const Rule*>::const_iterator
@@ -314,9 +316,9 @@ class RuleHierarchyTest : public testing::Test {
   bool called_;
 
  private:
-  void Loaded(bool success,
-              const LookupKey& lookup_key,
-              const MetadataLoader::RuleHierarchy& hierarchy) {
+  void Supplied(bool success,
+                const LookupKey& lookup_key,
+                const Supplier::RuleHierarchy& hierarchy) {
     ASSERT_EQ(success_, success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
     ASSERT_EQ(hierarchy_, &hierarchy);
