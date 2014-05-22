@@ -24,9 +24,9 @@
 namespace {
 
 using i18n::addressinput::AddressData;
-using i18n::addressinput::GetStreetAddressLinesAsSingleLine;
 using i18n::addressinput::GetFormattedNationalAddress;
 using i18n::addressinput::GetFormattedNationalAddressLine;
+using i18n::addressinput::GetStreetAddressLinesAsSingleLine;
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_1Line) {
   AddressData address;
@@ -123,13 +123,13 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLocalLanguage) {
 
 TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
   /* 大安區 */
-  const char kTaiwanCity[] = "\xE5\xA4\xA7\xE5\xAE\x89\xE5\x8D\x80";
+  static const char kTaiwanCity[] = "\xE5\xA4\xA7\xE5\xAE\x89\xE5\x8D\x80";
   /* 台北市 */
-  const char kTaiwanAdmin[] = "\xE5\x8F\xB0\xE5\x8C\x97\xE5\xB8\x82";
+  static const char kTaiwanAdmin[] = "\xE5\x8F\xB0\xE5\x8C\x97\xE5\xB8\x82";
   /* 台灣信義路三段33號 */
-  const char kTaiwanStreetLine[]= "\xE5\x8F\xB0\xE7\x81\xA3\xE4\xBF\xA1\xE7";
-    "\xBE\xA9\xE8\xB7\xAF\xE4\xB8\x89\xE6\xAE\xB5" "33" "\xE8\x99\x9F";
-  const char kPostalCode[] = "106";
+  static const char kTaiwanStreetLine[]= "\xE5\x8F\xB0\xE7\x81\xA3\xE4\xBF\xA1"
+    "\xE7\xBE\xA9\xE8\xB7\xAF\xE4\xB8\x89\xE6\xAE\xB5" "33" "\xE8\x99\x9F";
+  static const char kPostalCode[] = "106";
 
   AddressData address;
   address.region_code = "TW";

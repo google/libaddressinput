@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <libaddressinput/address_formatter.h>
+
+#include <strings.h>
+
+#include <algorithm>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -78,7 +84,7 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
   }
 
   // Now guess something appropriate based on the base language.
-  std::string base_language = address_language.base;
+  const std::string& base_language = address_language.base;
   if (std::find_if(kLanguagesThatUseSpace,
                    kLanguagesThatUseSpace + arraysize(kLanguagesThatUseSpace),
                    LanguageMatcher(base_language)) !=
