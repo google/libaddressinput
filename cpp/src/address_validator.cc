@@ -15,6 +15,8 @@
 #include <libaddressinput/address_validator.h>
 
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/supplier.h>
+#include <libaddressinput/util/scoped_ptr.h>
 
 #include <algorithm>
 #include <cassert>
@@ -33,8 +35,16 @@ namespace addressinput {
 AddressValidator::AddressValidator(const std::string& validation_data_url,
                                    const Downloader* downloader,
                                    Storage* storage)
-    : supplier_(new MetadataLoader(
-          new Retriever(validation_data_url, downloader, storage))) {
+    : own_supplier_(new MetadataLoader(
+          new Retriever(validation_data_url, downloader, storage))),
+      supplier_(own_supplier_.get()) {
+  assert(supplier_ != NULL);
+}
+
+AddressValidator::AddressValidator(Supplier* supplier)
+    : own_supplier_(),
+      supplier_(supplier) {
+  assert(supplier_ != NULL);
 }
 
 AddressValidator::~AddressValidator() {
@@ -53,7 +63,7 @@ void AddressValidator::Validate(const AddressData& address,
        require_name,
        filter,
        problems,
-       validated))->Run(supplier_.get());
+       validated))->Run(supplier_);
 }
 
 namespace {
@@ -109,7 +119,7 @@ void AddressValidator::IsFieldRequired(
     const std::string& region_code,
     const BoolCallback& answered) const {
   // The MetadataQueryTask object will delete itself after Run() has finished.
-  (new IsFieldRequiredTask(field, region_code, answered))->Run(supplier_.get());
+  (new IsFieldRequiredTask(field, region_code, answered))->Run(supplier_);
 }
 
 void AddressValidator::IsFieldUsed(
@@ -117,7 +127,7 @@ void AddressValidator::IsFieldUsed(
     const std::string& region_code,
     const BoolCallback& answered) const {
   // The MetadataQueryTask object will delete itself after Run() has finished.
-  (new IsFieldUsedTask(field, region_code, answered))->Run(supplier_.get());
+  (new IsFieldUsedTask(field, region_code, answered))->Run(supplier_);
 }
 
 }  // namespace addressinput

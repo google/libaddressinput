@@ -19,6 +19,7 @@
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -36,6 +37,7 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::FieldProblemMap;
 using i18n::addressinput::NullStorage;
+using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::scoped_ptr;
 
 using i18n::addressinput::COUNTRY;
@@ -51,7 +53,93 @@ using i18n::addressinput::UNKNOWN_VALUE;
 using i18n::addressinput::INVALID_FORMAT;
 using i18n::addressinput::MISMATCHING_VALUE;
 
-class AddressValidatorTest : public testing::Test {
+class ValidatorWrapper {
+ public:
+  virtual ~ValidatorWrapper() {}
+  virtual void Validate(const AddressData& address,
+                        bool allow_postal,
+                        bool require_name,
+                        const FieldProblemMap* filter,
+                        FieldProblemMap* problems,
+                        const AddressValidator::Callback& validated) = 0;
+};
+
+class OndemandValidatorWrapper : public ValidatorWrapper {
+ public:
+  static ValidatorWrapper* Build() { return new OndemandValidatorWrapper; }
+
+  virtual ~OndemandValidatorWrapper() {}
+
+  virtual void Validate(const AddressData& address,
+                        bool allow_postal,
+                        bool require_name,
+                        const FieldProblemMap* filter,
+                        FieldProblemMap* problems,
+                        const AddressValidator::Callback& validated) {
+    validator_.Validate(
+        address,
+        allow_postal,
+        require_name,
+        filter,
+        problems,
+        validated);
+  }
+
+ private:
+  OndemandValidatorWrapper()
+      : validator_(FakeDownloader::kFakeDataUrl,
+                   new FakeDownloader,
+                   new NullStorage) {}
+
+  const AddressValidator validator_;
+  DISALLOW_COPY_AND_ASSIGN(OndemandValidatorWrapper);
+};
+
+class PreloadValidatorWrapper : public ValidatorWrapper {
+ public:
+  static ValidatorWrapper* Build() { return new PreloadValidatorWrapper; }
+
+  virtual ~PreloadValidatorWrapper() {}
+
+  virtual void Validate(const AddressData& address,
+                        bool allow_postal,
+                        bool require_name,
+                        const FieldProblemMap* filter,
+                        FieldProblemMap* problems,
+                        const AddressValidator::Callback& validated) {
+    const std::string& region_code = address.region_code;
+    if (!region_code.empty() && !supplier_.IsLoaded(region_code)) {
+      supplier_.LoadRules(region_code, *loaded_);
+    }
+    validator_.Validate(
+        address,
+        allow_postal,
+        require_name,
+        filter,
+        problems,
+        validated);
+  }
+
+ private:
+  PreloadValidatorWrapper()
+      : supplier_(FakeDownloader::kFakeAggregateDataUrl,
+                  new FakeDownloader,
+                  new NullStorage),
+        validator_(&supplier_),
+        loaded_(BuildCallback(this, &PreloadValidatorWrapper::Loaded)) {}
+
+  void Loaded(bool success, const std::string&, const int&) {
+    ASSERT_TRUE(success);
+  }
+
+  PreloadSupplier supplier_;
+  const AddressValidator validator_;
+  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  DISALLOW_COPY_AND_ASSIGN(PreloadValidatorWrapper);
+};
+
+class AddressValidatorTest
+    : public testing::TestWithParam<ValidatorWrapper* (*)()> {
  protected:
   AddressValidatorTest()
       : address_(),
@@ -61,15 +149,13 @@ class AddressValidatorTest : public testing::Test {
         problems_(),
         expected_(),
         called_(false),
-        validator_(FakeDownloader::kFakeDataUrl,
-                   new FakeDownloader,
-                   new NullStorage),
+        validator_wrapper_((*GetParam())()),
         validated_(BuildCallback(this, &AddressValidatorTest::Validated)) {}
 
   virtual ~AddressValidatorTest() {}
 
   void Validate() {
-    validator_.Validate(
+    validator_wrapper_->Validate(
         address_,
         allow_postal_,
         require_name_,
@@ -96,13 +182,21 @@ class AddressValidatorTest : public testing::Test {
     called_ = true;
   }
 
-  const AddressValidator validator_;
+  const scoped_ptr<ValidatorWrapper> validator_wrapper_;
   const scoped_ptr<const AddressValidator::Callback> validated_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressValidatorTest);
 };
 
-TEST_F(AddressValidatorTest, EmptyAddress) {
+INSTANTIATE_TEST_CASE_P(MetadataLoader,
+                        AddressValidatorTest,
+                        testing::Values(&OndemandValidatorWrapper::Build));
+
+INSTANTIATE_TEST_CASE_P(PreloadSupplier,
+                        AddressValidatorTest,
+                        testing::Values(&PreloadValidatorWrapper::Build));
+
+TEST_P(AddressValidatorTest, EmptyAddress) {
   expected_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -110,7 +204,7 @@ TEST_F(AddressValidatorTest, EmptyAddress) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, InvalidCountry) {
+TEST_P(AddressValidatorTest, InvalidCountry) {
   address_.region_code = "QZ";
 
   expected_.insert(std::make_pair(COUNTRY, UNKNOWN_VALUE));
@@ -120,7 +214,7 @@ TEST_F(AddressValidatorTest, InvalidCountry) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, ValidAddressUS) {
+TEST_P(AddressValidatorTest, ValidAddressUS) {
   address_.region_code = "US";
   address_.administrative_area = "CA";  // California
   address_.locality = "Mountain View";
@@ -133,7 +227,7 @@ TEST_F(AddressValidatorTest, ValidAddressUS) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, InvalidAddressUS) {
+TEST_P(AddressValidatorTest, InvalidAddressUS) {
   address_.region_code = "US";
   address_.postal_code = "123";
 
@@ -147,7 +241,7 @@ TEST_F(AddressValidatorTest, InvalidAddressUS) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, ValidAddressCH) {
+TEST_P(AddressValidatorTest, ValidAddressCH) {
   address_.region_code = "CH";
   address_.locality = "ZH";  /* Zürich */
   address_.postal_code = "8002";
@@ -159,7 +253,7 @@ TEST_F(AddressValidatorTest, ValidAddressCH) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, InvalidAddressCH) {
+TEST_P(AddressValidatorTest, InvalidAddressCH) {
   address_.region_code = "CH";
   address_.postal_code = "123";
 
@@ -172,7 +266,7 @@ TEST_F(AddressValidatorTest, InvalidAddressCH) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, ValidPostalCodeMX) {
+TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
   address_.region_code = "MX";
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
@@ -187,7 +281,7 @@ TEST_F(AddressValidatorTest, ValidPostalCodeMX) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, MismatchingPostalCodeMX) {
+TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
   address_.region_code = "MX";
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
@@ -204,7 +298,7 @@ TEST_F(AddressValidatorTest, MismatchingPostalCodeMX) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, ValidateFilter) {
+TEST_P(AddressValidatorTest, ValidateFilter) {
   address_.region_code = "CH";
   address_.postal_code = "123";
 
@@ -217,7 +311,7 @@ TEST_F(AddressValidatorTest, ValidateFilter) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(AddressValidatorTest, ValidateClearsProblems) {
+TEST_P(AddressValidatorTest, ValidateClearsProblems) {
   address_.region_code = "CH";
   address_.locality = "ZH";  /* Zürich */
   address_.postal_code = "123";

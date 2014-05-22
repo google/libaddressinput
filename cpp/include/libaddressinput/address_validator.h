@@ -86,6 +86,10 @@ class AddressValidator {
   AddressValidator(const std::string& validation_data_url,
                    const Downloader* downloader,
                    Storage* storage);
+
+  // Does not take ownership of |supplier|.
+  AddressValidator(Supplier* supplier);
+
   ~AddressValidator();
 
   // Validates the |address| and populates |problems| with the validation
@@ -138,7 +142,10 @@ class AddressValidator {
                    const BoolCallback& answered) const;
 
  private:
-  const scoped_ptr<Supplier> supplier_;
+  // AddressValidator objects can either use an already existing Supplier
+  // object, or create its own Supplier object to use.
+  const scoped_ptr<Supplier> own_supplier_;
+  Supplier* const supplier_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressValidator);
 };
