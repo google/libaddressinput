@@ -24,13 +24,12 @@
 #include <set>
 #include <string>
 
-#include "retriever.h"
-
 namespace i18n {
 namespace addressinput {
 
 class Downloader;
 class LookupKey;
+class Retriever;
 class Rule;
 class Storage;
 
@@ -85,7 +84,8 @@ class OndemandSupplier : public Supplier {
     const LookupKey& lookup_key_;
     std::map<std::string, const Rule*>* const rule_cache_;
     const Callback& supplied_;
-    const scoped_ptr<const Retriever::Callback> retrieved_;
+    const scoped_ptr<const i18n::addressinput::Callback<  // Retriever::Callback
+        std::string, std::string> > retrieved_;
     bool success_;
 
     DISALLOW_COPY_AND_ASSIGN(RuleHierarchy);

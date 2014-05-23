@@ -15,12 +15,12 @@
 #include <libaddressinput/address_validator.h>
 
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
 
-#include "ondemand_supplier.h"
 #include "retriever.h"
 #include "validation_task.h"
 

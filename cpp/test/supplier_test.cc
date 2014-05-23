@@ -18,6 +18,7 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
@@ -31,7 +32,6 @@
 
 #include "fake_downloader.h"
 #include "lookup_key.h"
-#include "ondemand_supplier.h"
 #include "rule.h"
 
 namespace {

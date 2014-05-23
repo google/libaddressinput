@@ -18,6 +18,7 @@
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
@@ -27,7 +28,6 @@
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
-#include "ondemand_supplier.h"
 
 namespace {
 
