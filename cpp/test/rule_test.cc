@@ -57,7 +57,9 @@ TEST(RuleTest, CopyOverwritesRule) {
                                        "\"languages\":\"en~fr\","
                                        "\"zip\":\"\\\\d{3}\","
                                        "\"state_name_type\":\"area\","
-                                       "\"zip_name_type\":\"postal\""
+                                       "\"zip_name_type\":\"postal\","
+                                       "\"zipex\":\"1234\","
+                                       "\"posturl\":\"http://www.testpost.com\""
                                        "}"));
 
   Rule copy;
@@ -73,6 +75,8 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetPostalCodeNameMessageId());
   EXPECT_NE(rule.GetName(), copy.GetName());
   EXPECT_NE(rule.GetLatinName(), copy.GetLatinName());
+  EXPECT_NE(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
+  EXPECT_NE(rule.GetPostServiceUrl(), copy.GetPostServiceUrl());
 
   EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
   EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
@@ -90,6 +94,8 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetPostalCodeNameMessageId());
   EXPECT_EQ(rule.GetName(), copy.GetName());
   EXPECT_EQ(rule.GetLatinName(), copy.GetLatinName());
+  EXPECT_EQ(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
+  EXPECT_EQ(rule.GetPostServiceUrl(), copy.GetPostServiceUrl());
 
   EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
 }
@@ -99,24 +105,32 @@ TEST(RuleTest, ParseOverwritesRule) {
   ASSERT_TRUE(rule.ParseSerializedRule("{"
                                        "\"fmt\":\"%S%Z\","
                                        "\"state_name_type\":\"area\","
-                                       "\"zip_name_type\":\"postal\""
+                                       "\"zip_name_type\":\"postal\","
+                                       "\"zipex\":\"1234\","
+                                       "\"posturl\":\"http://www.testpost.com\""
                                        "}"));
   EXPECT_FALSE(rule.GetFormat().empty());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_AREA,
             rule.GetAdminAreaNameMessageId());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
+  EXPECT_EQ("1234", rule.GetPostalCodeExample());
+  EXPECT_EQ("http://www.testpost.com", rule.GetPostServiceUrl());
 
   ASSERT_TRUE(rule.ParseSerializedRule("{"
                                        "\"fmt\":\"\","
                                        "\"state_name_type\":\"do_si\","
-                                       "\"zip_name_type\":\"zip\""
+                                       "\"zip_name_type\":\"zip\","
+                                       "\"zipex\":\"5678\","
+                                       "\"posturl\":\"http://www.fakepost.com\""
                                        "}"));
   EXPECT_TRUE(rule.GetFormat().empty());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_DO_SI,
             rule.GetAdminAreaNameMessageId());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
+  EXPECT_EQ("5678", rule.GetPostalCodeExample());
+  EXPECT_EQ("http://www.fakepost.com", rule.GetPostServiceUrl());
 }
 
 TEST(RuleTest, ParsesFormatCorrectly) {
@@ -176,6 +190,19 @@ TEST(RuleTest, ParsesLanguagesCorrectly) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"de~fr~it\"}"));
   EXPECT_EQ(expected, rule.GetLanguages());
+}
+
+TEST(RuleTest, ParsesPostalCodeExampleCorrectly) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"zipex\":\"1234,12345-6789\"}"));
+  EXPECT_EQ("1234,12345-6789", rule.GetPostalCodeExample());
+}
+
+TEST(RuleTest, ParsesPostServiceUrlCorrectly) {
+  Rule rule;
+  ASSERT_TRUE(
+      rule.ParseSerializedRule("{\"posturl\":\"http://www.testpost.com\"}"));
+  EXPECT_EQ("http://www.testpost.com", rule.GetPostServiceUrl());
 }
 
 TEST(RuleTest, PostalCodeMatcher) {

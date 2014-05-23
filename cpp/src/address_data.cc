@@ -97,5 +97,10 @@ const std::vector<std::string>& AddressData::GetRepeatedFieldValue(
   return this->*kVectorStringField[field];
 }
 
+// static
+bool AddressData::IsRepeatedFieldValue(AddressField field) {
+  return field == STREET_ADDRESS;
+}
+
 }  // namespace addressinput
 }  // namespace i18n

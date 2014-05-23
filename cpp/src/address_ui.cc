@@ -37,10 +37,10 @@ namespace addressinput {
 
 namespace {
 
-std::string GetString(const Localization& localization,
-                      AddressField field,
-                      int admin_area_name_message_id,
-                      int postal_code_name_message_id) {
+std::string GetLabelForField(const Localization& localization,
+                             AddressField field,
+                             int admin_area_name_message_id,
+                             int postal_code_name_message_id) {
   int messageId;
   switch (field) {
     case SORTING_CODE:
@@ -126,7 +126,7 @@ std::vector<AddressUiComponent> BuildComponents(
                                 : AddressUiComponent::HINT_SHORT;
     preceded_by_newline = false;
     component.field = format_it->GetField();
-    component.name = GetString(localization, format_it->GetField(),
+    component.name = GetLabelForField(localization, format_it->GetField(),
         rule.GetAdminAreaNameMessageId(), rule.GetPostalCodeNameMessageId());
     result.push_back(component);
   }

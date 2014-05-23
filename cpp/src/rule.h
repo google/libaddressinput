@@ -116,6 +116,16 @@ class Rule {
   // rule, if there is one.
   const std::string& GetLatinName() const { return latin_name_; }
 
+  // Returns the postal code example string for this rule.
+  const std::string& GetPostalCodeExample() const {
+    return postal_code_example_;
+  }
+
+  // Returns the post service URL string for this rule.
+  const std::string& GetPostServiceUrl() const {
+    return post_service_url_;
+  }
+
  private:
   std::string id_;
   std::vector<FormatElement> format_;
@@ -128,6 +138,8 @@ class Rule {
   int postal_code_name_message_id_;
   std::string name_;
   std::string latin_name_;
+  std::string postal_code_example_;
+  std::string post_service_url_;
 
   DISALLOW_COPY_AND_ASSIGN(Rule);
 };

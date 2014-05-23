@@ -48,6 +48,8 @@ const char kPostalCodeNameTypeKey[] = "zip_name_type";
 const char kRequireKey[] = "require";
 const char kSubKeysKey[] = "sub_keys";
 const char kZipKey[] = "zip";
+const char kPostalCodeExampleKey[] = "zipex";
+const char kPostServiceUrlKey[] = "posturl";
 
 // Used as a separator in a list of items. For example, the list of supported
 // languages can be "de~fr~it".
@@ -119,7 +121,9 @@ Rule::Rule()
       admin_area_name_message_id_(INVALID_MESSAGE_ID),
       postal_code_name_message_id_(INVALID_MESSAGE_ID),
       name_(),
-      latin_name_() {}
+      latin_name_(),
+      postal_code_example_(),
+      post_service_url_() {}
 
 Rule::~Rule() {}
 
@@ -151,6 +155,8 @@ void Rule::CopyFrom(const Rule& rule) {
   postal_code_name_message_id_ = rule.postal_code_name_message_id_;
   name_ = rule.name_;
   latin_name_ = rule.latin_name_;
+  postal_code_example_ = rule.postal_code_example_;
+  post_service_url_ = rule.post_service_url_;
 }
 
 bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
@@ -232,6 +238,14 @@ void Rule::ParseJsonRule(const Json& json) {
 
   if (json.HasStringValueForKey(kLatinNameKey)) {
     latin_name_ = json.GetStringValueForKey(kLatinNameKey);
+  }
+
+  if (json.HasStringValueForKey(kPostalCodeExampleKey)) {
+    postal_code_example_ = json.GetStringValueForKey(kPostalCodeExampleKey);
+  }
+
+  if (json.HasStringValueForKey(kPostServiceUrlKey)) {
+    post_service_url_ = json.GetStringValueForKey(kPostServiceUrlKey);
   }
 }
 

@@ -68,6 +68,11 @@ struct AddressData {
   // which comprises multiple fields (will crash otherwise).
   const std::vector<std::string>& GetRepeatedFieldValue(
       AddressField field) const;
+
+  // Returns true if the parameter comprises multiple fields, false otherwise.
+  // Use it to determine whether to call |GetFieldValue| or
+  // |GetRepeatedFieldValue|.
+  static bool IsRepeatedFieldValue(AddressField field);
 };
 
 }  // namespace addressinput
