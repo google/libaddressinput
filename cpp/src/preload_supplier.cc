@@ -17,6 +17,7 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/callback.h>
+#include <libaddressinput/region_data.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
@@ -29,6 +30,7 @@
 #include <utility>
 #include <vector>
 
+#include "language.h"
 #include "lookup_key.h"
 #include "region_data_constants.h"
 #include "retriever.h"
@@ -132,18 +134,84 @@ class Helper {
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };
 
+// Does not take ownership of |supplier| or |parent_region|, neither of which is
+// allowed to be NULL.
+void BuildRegionTreeRecursively(PreloadSupplier* supplier,
+                                const LookupKey& parent_key,
+                                RegionData* parent_region,
+                                const std::vector<std::string>& keys,
+                                bool prefer_latin_name) {
+  assert(supplier != NULL);
+  assert(parent_region != NULL);
+
+  LookupKey lookup_key;
+  for (std::vector<std::string>::const_iterator key_it = keys.begin();
+       key_it != keys.end(); ++key_it) {
+    lookup_key.FromLookupKey(parent_key, *key_it);
+    const Rule* rule = supplier->GetRule(lookup_key);
+    if (rule == NULL) {
+      return;
+    }
+    const std::string& local_name = rule->GetName().empty()
+        ? *key_it : rule->GetName();
+    const std::string& name =
+        prefer_latin_name && !rule->GetLatinName().empty()
+            ? rule->GetLatinName() : local_name;
+    RegionData* region = parent_region->AddSubRegion(*key_it, name);
+    if (!rule->GetSubKeys().empty()) {
+      BuildRegionTreeRecursively(supplier, lookup_key, region,
+                                 rule->GetSubKeys(), prefer_latin_name);
+    }
+  }
+}
+
+// Does not take ownership of |supplier|, which cannot be NULL. The caller owns
+// the result.
+RegionData* BuildRegion(PreloadSupplier* supplier,
+                        const std::string& region_code,
+                        const Language& language) {
+  assert(supplier != NULL);
+
+  AddressData address;
+  address.region_code = region_code;
+
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+
+  const Rule* const rule = supplier->GetRule(lookup_key);
+  assert(rule != NULL);
+
+  RegionData* region = new RegionData(region_code);
+  BuildRegionTreeRecursively(supplier, lookup_key, region,
+                             rule->GetSubKeys(), language.has_latin_script);
+
+  return region;
+}
+
 }  // namespace
 
 PreloadSupplier::PreloadSupplier(const std::string& validation_data_url,
                                  const Downloader* downloader,
                                  Storage* storage)
-    : retriever_(new Retriever(validation_data_url, downloader, storage)) {
-}
+    : retriever_(new Retriever(validation_data_url, downloader, storage)),
+      pending_(),
+      rule_cache_(),
+      region_data_cache_() {}
 
 PreloadSupplier::~PreloadSupplier() {
   for (std::map<std::string, const Rule*>::const_iterator
-       it = rule_cache_.begin(); it != rule_cache_.end(); ++it) {
-    delete it->second;
+       rule_it = rule_cache_.begin(); rule_it != rule_cache_.end(); ++rule_it) {
+    delete rule_it->second;
+  }
+
+  for (RegionCodeDataMap::const_iterator region_it = region_data_cache_.begin();
+       region_it != region_data_cache_.end(); ++region_it) {
+    for (LanguageRegionMap::const_iterator
+         language_it = region_it->second->begin();
+         language_it != region_it->second->end(); ++language_it) {
+      delete language_it->second;
+    }
+    delete region_it->second;
   }
 }
 
@@ -191,6 +259,42 @@ bool PreloadSupplier::IsLoaded(const std::string& region_code) const {
 
 bool PreloadSupplier::IsPending(const std::string& region_code) const {
   return IsPendingKey(KeyFromRegionCode(region_code));
+}
+
+const RegionData& PreloadSupplier::BuildRegionTree(
+    const std::string& region_code,
+    const std::string& ui_language_tag,
+    std::string* best_region_tree_language_tag) {
+  assert(IsLoaded(region_code));
+  assert(best_region_tree_language_tag != NULL);
+
+  // Look up the region tree in cache first before building it.
+  RegionCodeDataMap::const_iterator region_it =
+      region_data_cache_.find(region_code);
+  if (region_it == region_data_cache_.end()) {
+    region_it = region_data_cache_.insert(
+        std::make_pair(region_code, new LanguageRegionMap)).first;
+  }
+
+  // No need to copy from default rule first, because only languages and Latin
+  // format are going to be used, which do not exist in the default rule.
+  Rule rule;
+  rule.ParseSerializedRule(RegionDataConstants::GetRegionData(region_code));
+  static const Language kUndefinedLanguage("und");
+  const Language& best_language = rule.GetLanguages().empty()
+      ? kUndefinedLanguage
+      : ChooseBestAddressLanguage(rule, Language(ui_language_tag));
+  *best_region_tree_language_tag = best_language.tag;
+
+  LanguageRegionMap::const_iterator language_it =
+      region_it->second->find(best_language.tag);
+  if (language_it == region_it->second->end()) {
+    language_it = region_it->second->insert(
+        std::make_pair(best_language.tag,
+                       BuildRegion(this, region_code, best_language))).first;
+  }
+
+  return *language_it->second;
 }
 
 bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
