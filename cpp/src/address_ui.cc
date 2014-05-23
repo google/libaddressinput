@@ -37,41 +37,6 @@ namespace addressinput {
 
 namespace {
 
-Language ChooseBestAddressLanguage(
-    const std::vector<Language>& available_languages,
-    bool has_latin_format,
-    const Language& ui_language) {
-  if (available_languages.empty()) {
-    return ui_language;
-  }
-
-  if (ui_language.tag.empty()) {
-    return available_languages.front();
-  }
-
-  // The conventionally formatted BCP 47 Latin script with a preceding subtag
-  // separator.
-  static const char kLatinScriptSuffix[] = "-Latn";
-  Language latin_script_language(
-      available_languages.front().base + kLatinScriptSuffix);
-  if (has_latin_format && ui_language.has_latin_script) {
-    return latin_script_language;
-  }
-
-  for (std::vector<Language>::const_iterator
-       available_lang_it = available_languages.begin();
-       available_lang_it != available_languages.end(); ++available_lang_it) {
-    // Base language comparison works because no region supports the same base
-    // language with different scripts, for now. For example, no region supports
-    // "zh-Hant" and "zh-Hans" at the same time.
-    if (ui_language.base == available_lang_it->base) {
-      return *available_lang_it;
-    }
-  }
-
-  return has_latin_format ? latin_script_language : available_languages.front();
-}
-
 std::string GetString(const Localization& localization,
                       AddressField field,
                       int admin_area_name_message_id,
@@ -128,16 +93,8 @@ std::vector<AddressUiComponent> BuildComponents(
     return result;
   }
 
-  std::vector<Language> available_languages;
-  for (std::vector<std::string>::const_iterator language_tag_it =
-       rule.GetLanguages().begin();
-       language_tag_it != rule.GetLanguages().end(); ++language_tag_it) {
-    available_languages.push_back(Language(*language_tag_it));
-  }
-
   const Language& best_address_language = ChooseBestAddressLanguage(
-      available_languages, !rule.GetLatinFormat().empty(),
-      Language(localization.GetLanguage()));
+      rule, Language(localization.GetLanguage()));
   *best_address_language_tag = best_address_language.tag;
 
   const std::vector<FormatElement>& format =

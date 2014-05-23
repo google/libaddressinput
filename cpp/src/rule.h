@@ -108,6 +108,14 @@ class Rule {
     return postal_code_name_message_id_;
   }
 
+  // Returns the name for the most specific place described by this rule, if
+  // there is one. This is typically set when it differs from the key.
+  const std::string& GetName() const { return name_; }
+
+  // Returns the Latin-script name for the most specific place described by this
+  // rule, if there is one.
+  const std::string& GetLatinName() const { return latin_name_; }
+
  private:
   std::string id_;
   std::vector<FormatElement> format_;
@@ -118,6 +126,8 @@ class Rule {
   scoped_ptr<const RE2ptr> postal_code_matcher_;
   int admin_area_name_message_id_;
   int postal_code_name_message_id_;
+  std::string name_;
+  std::string latin_name_;
 
   DISALLOW_COPY_AND_ASSIGN(Rule);
 };

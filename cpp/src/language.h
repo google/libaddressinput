@@ -20,6 +20,8 @@
 namespace i18n {
 namespace addressinput {
 
+class Rule;
+
 // Helper for working with a BCP 47 language tag.
 // http://tools.ietf.org/html/bcp47
 struct Language {
@@ -37,6 +39,9 @@ struct Language {
   // positions are supported for script.
   bool has_latin_script;
 };
+
+Language ChooseBestAddressLanguage(const Rule& address_region_rule,
+                                   const Language& ui_language);
 
 }  // namespace addressinput
 }  // namespace i18n

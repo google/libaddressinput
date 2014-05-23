@@ -41,6 +41,16 @@ class LookupKey {
   // Initializes this object by parsing |address|.
   void FromAddress(const AddressData& address);
 
+  // Initializes this object to be a copy of |parent| key that's one level
+  // deeper with the next level node being |child_node|.
+  //
+  // For example, if |parent| is "data/US" and |child_node| is "CA", then this
+  // key becomes "data/US/CA".
+  //
+  // The |parent| can be at most LOCALITY level. The |child_node| cannot be
+  // empty.
+  void FromLookupKey(const LookupKey& parent, const std::string& child_node);
+
   // Returns the lookup key string (of |max_depth|).
   std::string ToKeyString(size_t max_depth) const;
 

@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 
+#include "rule.h"
 #include "util/string_split.h"
 
 namespace i18n {
@@ -53,6 +54,49 @@ Language::Language(const std::string& language_tag) : tag(language_tag),
 }
 
 Language::~Language() {}
+
+Language ChooseBestAddressLanguage(const Rule& address_region_rule,
+                                   const Language& ui_language) {
+  if (address_region_rule.GetLanguages().empty()) {
+    return ui_language;
+  }
+
+  std::vector<Language> available_languages;
+  for (std::vector<std::string>::const_iterator
+       language_tag_it = address_region_rule.GetLanguages().begin();
+       language_tag_it != address_region_rule.GetLanguages().end();
+       ++language_tag_it) {
+    available_languages.push_back(Language(*language_tag_it));
+  }
+
+  if (ui_language.tag.empty()) {
+    return available_languages.front();
+  }
+
+  bool has_latin_format = !address_region_rule.GetLatinFormat().empty();
+
+  // The conventionally formatted BCP 47 Latin script with a preceding subtag
+  // separator.
+  static const char kLatinScriptSuffix[] = "-Latn";
+  Language latin_script_language(
+      available_languages.front().base + kLatinScriptSuffix);
+  if (has_latin_format && ui_language.has_latin_script) {
+    return latin_script_language;
+  }
+
+  for (std::vector<Language>::const_iterator
+       available_lang_it = available_languages.begin();
+       available_lang_it != available_languages.end(); ++available_lang_it) {
+    // Base language comparison works because no region supports the same base
+    // language with different scripts, for now. For example, no region supports
+    // "zh-Hant" and "zh-Hans" at the same time.
+    if (ui_language.base == available_lang_it->base) {
+      return *available_lang_it;
+    }
+  }
+
+  return has_latin_format ? latin_script_language : available_languages.front();
+}
 
 }  // namespace addressinput
 }  // namespace i18n

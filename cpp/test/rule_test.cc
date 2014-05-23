@@ -50,6 +50,7 @@ TEST(RuleTest, CopyOverwritesRule) {
                                        "\"fmt\":\"%S%Z\","
                                        "\"lfmt\":\"%Z%S\","
                                        "\"id\":\"data/XA\","
+                                       "\"name\":\"Le Test\","
                                        "\"lname\":\"Testistan\","
                                        "\"require\":\"AC\","
                                        "\"sub_keys\":\"aa~bb~cc\","
@@ -70,6 +71,8 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetAdminAreaNameMessageId());
   EXPECT_NE(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
+  EXPECT_NE(rule.GetName(), copy.GetName());
+  EXPECT_NE(rule.GetLatinName(), copy.GetLatinName());
 
   EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
   EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
@@ -85,6 +88,8 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetAdminAreaNameMessageId());
   EXPECT_EQ(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
+  EXPECT_EQ(rule.GetName(), copy.GetName());
+  EXPECT_EQ(rule.GetLatinName(), copy.GetLatinName());
 
   EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
 }
@@ -121,6 +126,18 @@ TEST(RuleTest, ParsesFormatCorrectly) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
   EXPECT_EQ(expected, rule.GetFormat());
+}
+
+TEST(RuleTest, ParsesNameCorrectly) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"name\":\"Le Test\"}"));
+  EXPECT_EQ("Le Test", rule.GetName());
+}
+
+TEST(RuleTest, ParsesLatinNameCorrectly) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"lname\":\"Testistan\"}"));
+  EXPECT_EQ("Testistan", rule.GetLatinName());
 }
 
 TEST(RuleTest, ParsesLatinFormatCorrectly) {

@@ -42,6 +42,8 @@ const char kFormatKey[] = "fmt";
 const char kIdKey[] = "id";
 const char kLanguagesKey[] = "languages";
 const char kLatinFormatKey[] = "lfmt";
+const char kLatinNameKey[] = "lname";
+const char kNameKey[] = "name";
 const char kPostalCodeNameTypeKey[] = "zip_name_type";
 const char kRequireKey[] = "require";
 const char kSubKeysKey[] = "sub_keys";
@@ -115,7 +117,9 @@ Rule::Rule()
       languages_(),
       postal_code_matcher_(NULL),
       admin_area_name_message_id_(INVALID_MESSAGE_ID),
-      postal_code_name_message_id_(INVALID_MESSAGE_ID) {}
+      postal_code_name_message_id_(INVALID_MESSAGE_ID),
+      name_(),
+      latin_name_() {}
 
 Rule::~Rule() {}
 
@@ -145,6 +149,8 @@ void Rule::CopyFrom(const Rule& rule) {
                                rule.postal_code_matcher_->ptr->options())));
   admin_area_name_message_id_ = rule.admin_area_name_message_id_;
   postal_code_name_message_id_ = rule.postal_code_name_message_id_;
+  name_ = rule.name_;
+  latin_name_ = rule.latin_name_;
 }
 
 bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
@@ -218,6 +224,14 @@ void Rule::ParseJsonRule(const Json& json) {
     postal_code_name_message_id_ =
         GetMessageIdFromName(json.GetStringValueForKey(kPostalCodeNameTypeKey),
                              GetPostalCodeMessageIds());
+  }
+
+  if (json.HasStringValueForKey(kNameKey)) {
+    name_ = json.GetStringValueForKey(kNameKey);
+  }
+
+  if (json.HasStringValueForKey(kLatinNameKey)) {
+    latin_name_ = json.GetStringValueForKey(kLatinNameKey);
   }
 }
 

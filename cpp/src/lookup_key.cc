@@ -112,6 +112,16 @@ void LookupKey::FromAddress(const AddressData& address) {
   }
 }
 
+void LookupKey::FromLookupKey(const LookupKey& parent,
+                              const std::string& child_node) {
+  assert(parent.nodes_.size() < arraysize(kHierarchy));
+  assert(!child_node.empty());
+
+  nodes_ = parent.nodes_;
+  AddressField child_field = kHierarchy[nodes_.size()];
+  nodes_.insert(std::make_pair(child_field, child_node));
+}
+
 std::string LookupKey::ToKeyString(size_t max_depth) const {
   assert(max_depth < arraysize(kHierarchy));
   std::string key_string(kData);
