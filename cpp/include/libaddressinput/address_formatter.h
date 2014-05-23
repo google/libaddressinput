@@ -14,8 +14,8 @@
 //
 // Utility functions for formatting the addresses represented as AddressData.
 
-#ifndef I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H
-#define I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H
+#ifndef I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H_
+#define I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H_
 
 #include <string>
 #include <vector>
@@ -44,4 +44,4 @@ void GetStreetAddressLinesAsSingleLine(
 }  // namespace addressinput
 }  // namespace i18n
 
-#endif  // I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H
+#endif  // I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H_
