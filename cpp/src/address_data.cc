@@ -32,7 +32,7 @@ namespace addressinput {
 namespace {
 
 // Mapping from AddressField value to pointer to AddressData member.
-const std::string AddressData::*kStringField[] = {
+std::string AddressData::*kStringField[] = {
   &AddressData::region_code,
   &AddressData::administrative_area,
   &AddressData::locality,
@@ -87,6 +87,13 @@ const std::string& AddressData::GetFieldValue(
   assert(static_cast<size_t>(field) < arraysize(kStringField));
   assert(kStringField[field] != NULL);
   return this->*kStringField[field];
+}
+
+void AddressData::SetFieldValue(AddressField field, const std::string& value) {
+  assert(field >= 0);
+  assert(static_cast<size_t>(field) < arraysize(kStringField));
+  assert(kStringField[field] != NULL);
+  (this->*kStringField[field]).assign(value);
 }
 
 const std::vector<std::string>& AddressData::GetRepeatedFieldValue(

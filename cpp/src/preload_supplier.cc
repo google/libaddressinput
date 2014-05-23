@@ -222,7 +222,7 @@ void PreloadSupplier::Supply(const LookupKey& lookup_key,
   supplied(success, lookup_key, hierarchy);
 }
 
-const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) {
+const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) const {
   assert(IsLoaded(lookup_key.GetRegionCode()));
   Supplier::RuleHierarchy hierarchy;
   if (!GetRuleHierarchy(lookup_key, &hierarchy)) {
@@ -298,7 +298,7 @@ const RegionData& PreloadSupplier::BuildRegionTree(
 }
 
 bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
-                                       RuleHierarchy* hierarchy) {
+                                       RuleHierarchy* hierarchy) const {
   assert(hierarchy != NULL);
 
   if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {

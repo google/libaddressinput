@@ -64,6 +64,10 @@ struct AddressData {
   // which comprises multiple fields (will crash otherwise).
   const std::string& GetFieldValue(AddressField field) const;
 
+  // Copies |value| into the |field|. The parameter must not be STREET_ADDRESS,
+  // which comprises multiple fields (will crash otherwise).
+  void SetFieldValue(AddressField field, const std::string& value);
+
   // Returns the value of the |field|. The parameter must be STREET_ADDRESS,
   // which comprises multiple fields (will crash otherwise).
   const std::vector<std::string>& GetRepeatedFieldValue(

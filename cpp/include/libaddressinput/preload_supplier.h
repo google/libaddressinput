@@ -71,7 +71,7 @@ class PreloadSupplier : public Supplier {
   // Should be called only when IsLoaded() returns true for the region code of
   // the |lookup_key|. Can return NULL if the |lookup_key| does not correspond
   // to any rule data. The caller does not own the result.
-  const Rule* GetRule(const LookupKey& lookup_key);
+  const Rule* GetRule(const LookupKey& lookup_key) const;
 
   // Loads all address metadata available for |region_code|. (A typical data
   // size is 10 kB. The largest is 250 kB.)
@@ -119,7 +119,8 @@ class PreloadSupplier : public Supplier {
   typedef std::map<std::string, const RegionData*> LanguageRegionMap;
   typedef std::map<std::string, LanguageRegionMap*> RegionCodeDataMap;
 
-  bool GetRuleHierarchy(const LookupKey& lookup_key, RuleHierarchy* hierarchy);
+  bool GetRuleHierarchy(const LookupKey& lookup_key,
+                        RuleHierarchy* hierarchy) const;
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
   static std::string KeyFromRegionCode(const std::string& region_code);
