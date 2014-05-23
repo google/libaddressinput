@@ -27,6 +27,7 @@
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
+#include "ondemand_supplier.h"
 
 namespace {
 
@@ -36,6 +37,7 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::FieldProblemMap;
 using i18n::addressinput::NullStorage;
+using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::scoped_ptr;
 
@@ -86,10 +88,12 @@ class OndemandValidatorWrapper : public ValidatorWrapper {
 
  private:
   OndemandValidatorWrapper()
-      : validator_(FakeDownloader::kFakeDataUrl,
-                   new FakeDownloader,
-                   new NullStorage) {}
+      : supplier_(FakeDownloader::kFakeDataUrl,
+                  new FakeDownloader,
+                  new NullStorage),
+        validator_(&supplier_) {}
 
+  OndemandSupplier supplier_;
   const AddressValidator validator_;
   DISALLOW_COPY_AND_ASSIGN(OndemandValidatorWrapper);
 };

@@ -72,11 +72,7 @@ class AddressValidator {
  public:
   typedef i18n::addressinput::Callback<AddressData, FieldProblemMap> Callback;
 
-  // Takes ownership of |downloader| and |storage|. The |validation_data_url|
-  // should be a URL to an address data server that |downloader| can access.
-  //
-  // (See the documentation for the Downloader implementation used for
-  // information about what URLs are useable with that Downloader.)
+  // DEPRECATED! TODO: Delete when libaddressinput users have been updated.
   AddressValidator(const std::string& validation_data_url,
                    const Downloader* downloader,
                    Storage* storage);

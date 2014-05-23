@@ -29,8 +29,10 @@
 namespace i18n {
 namespace addressinput {
 
+class Downloader;
 class LookupKey;
 class Rule;
+class Storage;
 
 // An implementation of the Supplier interface that owns a Retriever object,
 // through which it loads address metadata as needed, creating Rule objects and
@@ -46,8 +48,14 @@ class Rule;
 // in total less than 2 MB of JSON data.)
 class OndemandSupplier : public Supplier {
  public:
-  // Takes ownership of |retriever|.
-  OndemandSupplier(const Retriever* retriever);
+  // Takes ownership of |downloader| and |storage|. The |validation_data_url|
+  // should be a URL to an address data server that |downloader| can access.
+  //
+  // (See the documentation for the Downloader implementation used for
+  // information about what URLs are useable with that Downloader.)
+  OndemandSupplier(const std::string& validation_data_url,
+                   const Downloader* downloader,
+                   Storage* storage);
   virtual ~OndemandSupplier();
 
   // Loads the metadata needed for |lookup_key|, then calls |supplied|.

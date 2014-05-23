@@ -36,9 +36,10 @@
 namespace i18n {
 namespace addressinput {
 
-OndemandSupplier::OndemandSupplier(const Retriever* retriever)
-    : retriever_(retriever) {
-  assert(retriever_ != NULL);
+OndemandSupplier::OndemandSupplier(const std::string& validation_data_url,
+                                   const Downloader* downloader,
+                                   Storage* storage)
+    : retriever_(new Retriever(validation_data_url, downloader, storage)) {
 }
 
 OndemandSupplier::~OndemandSupplier() {

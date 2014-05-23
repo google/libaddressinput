@@ -25,8 +25,6 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
-#include <libaddressinput/storage.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>

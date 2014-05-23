@@ -32,7 +32,6 @@
 #include "fake_downloader.h"
 #include "lookup_key.h"
 #include "ondemand_supplier.h"
-#include "retriever.h"
 #include "rule.h"
 
 namespace {
@@ -62,7 +61,6 @@ using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
-using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
@@ -88,10 +86,9 @@ class OndemandSupplierWrapper : public SupplierWrapper {
 
  private:
   OndemandSupplierWrapper()
-      : ondemand_supplier_(
-            new Retriever(FakeDownloader::kFakeDataUrl,
-                          new FakeDownloader,
-                          new NullStorage)) {}
+      : ondemand_supplier_(FakeDownloader::kFakeDataUrl,
+                           new FakeDownloader,
+                           new NullStorage) {}
 
   OndemandSupplier ondemand_supplier_;
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplierWrapper);
