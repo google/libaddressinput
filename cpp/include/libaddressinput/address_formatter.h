@@ -17,8 +17,6 @@
 #ifndef I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H
 #define I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H
 
-#include <libaddressinput/address_formatter.h>
-
 #include <string>
 #include <vector>
 
