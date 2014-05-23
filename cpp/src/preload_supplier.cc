@@ -14,6 +14,13 @@
 
 #include <libaddressinput/preload_supplier.h>
 
+#include <libaddressinput/address_data.h>
+#include <libaddressinput/address_field.h>
+#include <libaddressinput/callback.h>
+#include <libaddressinput/supplier.h>
+#include <libaddressinput/util/basictypes.h>
+#include <libaddressinput/util/scoped_ptr.h>
+
 #include <cassert>
 #include <cstddef>
 #include <map>
@@ -21,13 +28,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <libaddressinput/address_data.h>
-#include <libaddressinput/address_field.h>
-#include <libaddressinput/callback.h>
-#include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include "lookup_key.h"
 #include "region_data_constants.h"
@@ -150,26 +150,17 @@ PreloadSupplier::~PreloadSupplier() {
 void PreloadSupplier::Supply(const LookupKey& lookup_key,
                              const Supplier::Callback& supplied) {
   Supplier::RuleHierarchy hierarchy;
-  bool success = true;
-
-  if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
-    size_t max_depth = std::min(
-        lookup_key.GetDepth(),
-        RegionDataConstants::GetMaxLookupKeyDepth(lookup_key.GetRegionCode()));
-
-    for (size_t depth = 0; depth <= max_depth; ++depth) {
-      const std::string& key = lookup_key.ToKeyString(depth);
-      std::map<std::string, const Rule*>::const_iterator it =
-          rule_cache_.find(key);
-      if (it == rule_cache_.end()) {
-        success = depth > 0;  // No data on COUNTRY level is failure.
-        break;
-      }
-      hierarchy.rule_[depth] = it->second;
-    }
-  }
-
+  bool success = GetRuleHierarchy(lookup_key, &hierarchy);
   supplied(success, lookup_key, hierarchy);
+}
+
+const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) {
+  assert(IsLoaded(lookup_key.GetRegionCode()));
+  Supplier::RuleHierarchy hierarchy;
+  if (!GetRuleHierarchy(lookup_key, &hierarchy)) {
+    return NULL;
+  }
+  return hierarchy.rule_[lookup_key.GetDepth()];
 }
 
 void PreloadSupplier::LoadRules(const std::string& region_code,
@@ -200,6 +191,29 @@ bool PreloadSupplier::IsLoaded(const std::string& region_code) const {
 
 bool PreloadSupplier::IsPending(const std::string& region_code) const {
   return IsPendingKey(KeyFromRegionCode(region_code));
+}
+
+bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
+                                       RuleHierarchy* hierarchy) {
+  assert(hierarchy != NULL);
+
+  if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
+    size_t max_depth = std::min(
+        lookup_key.GetDepth(),
+        RegionDataConstants::GetMaxLookupKeyDepth(lookup_key.GetRegionCode()));
+
+    for (size_t depth = 0; depth <= max_depth; ++depth) {
+      const std::string& key = lookup_key.ToKeyString(depth);
+      std::map<std::string, const Rule*>::const_iterator it =
+          rule_cache_.find(key);
+      if (it == rule_cache_.end()) {
+        return depth > 0;  // No data on COUNTRY level is failure.
+      }
+      hierarchy->rule_[depth] = it->second;
+    }
+  }
+
+  return true;
 }
 
 bool PreloadSupplier::IsLoadedKey(const std::string& key) const {

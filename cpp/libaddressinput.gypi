@@ -65,6 +65,7 @@
       'test/null_storage_test.cc',
       'test/ondemand_supplier_test.cc',
       'test/post_box_matchers_test.cc',
+      'test/preload_supplier_test.cc',
       'test/region_data_constants_test.cc',
       'test/retriever_test.cc',
       'test/rule_retriever_test.cc',

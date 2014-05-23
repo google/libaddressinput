@@ -67,6 +67,11 @@ class PreloadSupplier : public Supplier {
   virtual void Supply(const LookupKey& lookup_key,
                       const Supplier::Callback& supplied);
 
+  // Should be called only when IsLoaded() returns true for the region code of
+  // the |lookup_key|. Can return NULL if the |lookup_key| does not correspond
+  // to any rule data. The caller does not own the result.
+  const Rule* GetRule(const LookupKey& lookup_key);
+
   // Loads all address metadata available for |region_code|. (A typical data
   // size is 10 kB. The largest is 250 kB.)
   //
@@ -78,6 +83,7 @@ class PreloadSupplier : public Supplier {
   bool IsPending(const std::string& region_code) const;
 
  private:
+  bool GetRuleHierarchy(const LookupKey& lookup_key, RuleHierarchy* hierarchy);
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
   static std::string KeyFromRegionCode(const std::string& region_code);
