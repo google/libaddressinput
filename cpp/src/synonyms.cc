@@ -21,7 +21,6 @@
 #include <cassert>
 #include <cstddef>
 
-#include "language.h"
 #include "lookup_key.h"
 #include "region_data_constants.h"
 #include "rule.h"
@@ -48,9 +47,6 @@ void Synonyms::NormalizeForDisplay(AddressData* address) const {
   parent_key.FromAddress(region_address);
   const Rule* parent_rule = supplier_->GetRule(parent_key);
   assert(parent_rule != NULL);
-
-  const Language& best_language =
-      ChooseBestAddressLanguage(*parent_rule, Language(address->language_code));
 
   LookupKey lookup_key;
   for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
