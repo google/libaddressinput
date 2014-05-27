@@ -23,16 +23,12 @@
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <map>
-#include <string>
 
 namespace i18n {
 namespace addressinput {
 
-class Downloader;
-class Storage;
 class Supplier;
 struct AddressData;
 
@@ -72,11 +68,6 @@ class AddressValidator {
  public:
   typedef i18n::addressinput::Callback<AddressData, FieldProblemMap> Callback;
 
-  // DEPRECATED! TODO: Delete when libaddressinput users have been updated.
-  AddressValidator(const std::string& validation_data_url,
-                   const Downloader* downloader,
-                   Storage* storage);
-
   // Does not take ownership of |supplier|.
   AddressValidator(Supplier* supplier);
 
@@ -108,9 +99,6 @@ class AddressValidator {
                 const Callback& validated) const;
 
  private:
-  // AddressValidator objects can either use an already existing Supplier
-  // object, or create its own Supplier object to use.
-  const scoped_ptr<Supplier> own_supplier_;
   Supplier* const supplier_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressValidator);
