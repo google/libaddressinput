@@ -27,6 +27,16 @@
 #include "rule.h"
 #include "util/string_util.h"
 
+namespace {
+
+void PushBackUrl(std::vector<std::string>& parameters, const std::string url) {
+  // TODO: HTML-escape the "url".
+  parameters.push_back("<a href=\"" + url + "\">");
+  parameters.push_back("</a>");
+}
+
+}  // namespace
+
 namespace i18n {
 namespace addressinput {
 
@@ -65,7 +75,7 @@ std::string Localization::GetErrorMessage(const AddressData& address,
                                           AddressField field,
                                           AddressProblem problem,
                                           bool enable_examples,
-                                          bool enable_links) {
+                                          bool enable_links) const {
   if (field == POSTAL_CODE) {
     Rule rule;
     rule.CopyFrom(Rule::GetDefault());
@@ -78,6 +88,8 @@ std::string Localization::GetErrorMessage(const AddressData& address,
       if (enable_links) {
         post_service_url = rule.GetPostServiceUrl();
       }
+    } else {
+      assert(false);
     }
     // If we can't parse the serialized rule |uses_postal_code_as_label| will be
     // determined from the default rule.
@@ -133,7 +145,7 @@ std::string Localization::GetErrorMessageForPostalCode(
     AddressProblem problem,
     bool uses_postal_code_as_label,
     std::string postal_code_example,
-    std::string post_service_url) {
+    std::string post_service_url) const {
   int message_id;
   std::vector<std::string> parameters;
   if (problem == MISSING_REQUIRED_FIELD) {
@@ -142,7 +154,7 @@ std::string Localization::GetErrorMessageForPostalCode(
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE_AND_URL :
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE_AND_URL;
       parameters.push_back(postal_code_example);
-      Localization::PushBackUrl(parameters, post_service_url);
+      PushBackUrl(parameters, post_service_url);
     } else if (!postal_code_example.empty()) {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE :
@@ -158,7 +170,7 @@ std::string Localization::GetErrorMessageForPostalCode(
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE_AND_URL :
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP_CODE_EXAMPLE_AND_URL;
       parameters.push_back(postal_code_example);
-      Localization::PushBackUrl(parameters, post_service_url);
+      PushBackUrl(parameters, post_service_url);
     } else if (!postal_code_example.empty()) {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE :
@@ -175,7 +187,7 @@ std::string Localization::GetErrorMessageForPostalCode(
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE_URL :
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_ZIP_URL;
-      Localization::PushBackUrl(parameters, post_service_url);
+      PushBackUrl(parameters, post_service_url);
     } else {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE :
@@ -188,13 +200,6 @@ std::string Localization::GetErrorMessageForPostalCode(
     assert(false);
     return "";
   }
-}
-
-void Localization::PushBackUrl(std::vector<std::string>& parameters,
-                               const std::string url) {
-  // TODO: HTML-escape the "url".
-  parameters.push_back("<a href=\"" + url + "\">");
-  parameters.push_back("</a>");
 }
 
 }  // namespace addressinput

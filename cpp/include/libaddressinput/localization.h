@@ -61,7 +61,7 @@ class Localization {
                               AddressField field,
                               AddressProblem problem,
                               bool enable_examples,
-                              bool enable_links);
+                              bool enable_links) const;
 
   // Sets the language for the strings. The only supported language is "en"
   // until we have translations.
@@ -86,11 +86,7 @@ class Localization {
                                            AddressProblem problem,
                                            bool uses_postal_code_as_label,
                                            std::string postal_code_example,
-                                           std::string post_service_url);
-
-  // Calls |parameters.push_back| with 2 strings: the opening and closing tags
-  // of the given URL's HTML link.
-  void PushBackUrl(std::vector<std::string>& parameters, const std::string url);
+                                           std::string post_service_url) const;
 
   // The string getter.
   std::string (*get_string_)(int);
