@@ -29,7 +29,6 @@ namespace addressinput {
 
 class Downloader;
 class LookupKey;
-class RegionData;
 class Retriever;
 class Rule;
 class Storage;
@@ -83,52 +82,15 @@ class PreloadSupplier : public Supplier {
   bool IsLoaded(const std::string& region_code) const;
   bool IsPending(const std::string& region_code) const;
 
-  // Returns a tree of administrative subdivisions for the |region_code|.
-  // Examples:
-  //   US with en-US UI language.
-  //   |______________________
-  //   |           |          |
-  //   v           v          v
-  // AL:Alabama  AK:Alaska  AS:American Samoa  ...
-  //
-  //   KR with ko-Latn UI language.
-  //   |______________________________________
-  //       |               |                  |
-  //       v               v                  v
-  // 강원도:Gangwon  경기도:Gyeonggi  경상남도:Gyeongnam  ...
-  //
-  //   KR with ko-KR UI language.
-  //   |_______________________________
-  //       |            |              |
-  //       v            v              v
-  // 강원도:강원  경기도:경기  경상남도:경남  ...
-  //
-  // The BCP 47 |ui_language_tag| is used to choose the best supported language
-  // tag for this region (assigned to |best_region_tree_language_tag|). For
-  // example, Canada has both English and French names for its administrative
-  // subdivisions. If the UI language is French, then the French names are used.
-  // The |best_region_tree_language_tag| value may be an empty string.
-  //
-  // Should be called only if IsLoaded(region_code) returns true. The
-  // |best_region_tree_language_tag| parameter should not be NULL.
-  const RegionData& BuildRegionTree(const std::string& region_code,
-                                    const std::string& ui_language_tag,
-                                    std::string* best_region_tree_language_tag);
-
  private:
-  typedef std::map<std::string, const RegionData*> LanguageRegionMap;
-  typedef std::map<std::string, LanguageRegionMap*> RegionCodeDataMap;
-
   bool GetRuleHierarchy(const LookupKey& lookup_key,
                         RuleHierarchy* hierarchy) const;
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
-  static std::string KeyFromRegionCode(const std::string& region_code);
 
   const scoped_ptr<const Retriever> retriever_;
   std::set<std::string> pending_;
   std::map<std::string, const Rule*> rule_cache_;
-  RegionCodeDataMap region_data_cache_;
 
   DISALLOW_COPY_AND_ASSIGN(PreloadSupplier);
 };

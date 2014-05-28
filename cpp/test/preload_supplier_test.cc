@@ -17,7 +17,6 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
-#include <libaddressinput/region_data.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -38,7 +37,6 @@ using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
-using i18n::addressinput::RegionData;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
 
@@ -48,22 +46,20 @@ class PreloadSupplierTest : public testing::Test {
       : supplier_(FakeDownloader::kFakeAggregateDataUrl,
                   new FakeDownloader,
                   new NullStorage),
-        loaded_callback_(BuildCallback(this, &PreloadSupplierTest::OnLoaded)),
-        best_language_() {}
+        loaded_callback_(BuildCallback(this, &PreloadSupplierTest::OnLoaded)) {}
 
-  ~PreloadSupplierTest() {}
+  virtual ~PreloadSupplierTest() {}
 
   PreloadSupplier supplier_;
   scoped_ptr<PreloadSupplier::Callback> loaded_callback_;
-  std::string best_language_;
 
  private:
   void OnLoaded(bool success,
                 const std::string& region_code,
                 const int& num_rules) {
-    EXPECT_TRUE(success);
-    EXPECT_FALSE(region_code.empty());
-    EXPECT_LT(0, num_rules);
+    ASSERT_TRUE(success);
+    ASSERT_FALSE(region_code.empty());
+    ASSERT_LT(0, num_rules);
     ASSERT_TRUE(supplier_.IsLoaded(region_code));
   }
 
@@ -125,38 +121,6 @@ TEST_F(PreloadSupplierTest, GetTooPreciseRule) {
   precise_key.FromAddress(precise_address);
   const Rule* rule = supplier_.GetRule(precise_key);
   EXPECT_TRUE(rule == NULL);
-}
-
-TEST_F(PreloadSupplierTest, BuildUsRegionTree) {
-  supplier_.LoadRules("US", *loaded_callback_);
-  const RegionData& tree =
-      supplier_.BuildRegionTree("US", "en-US", &best_language_);
-  EXPECT_FALSE(tree.sub_regions().empty());
-}
-
-TEST_F(PreloadSupplierTest, BuildCnRegionTree) {
-  supplier_.LoadRules("CN", *loaded_callback_);
-  const RegionData& tree =
-      supplier_.BuildRegionTree("CN", "zh-Hans", &best_language_);
-  ASSERT_FALSE(tree.sub_regions().empty());
-  EXPECT_FALSE(tree.sub_regions().front()->sub_regions().empty());
-}
-
-TEST_F(PreloadSupplierTest, BuildChRegionTree) {
-  supplier_.LoadRules("CH", *loaded_callback_);
-  const RegionData& tree =
-      supplier_.BuildRegionTree("CH", "de-CH", &best_language_);
-  // Although "CH" has information for its administrative divisions, the
-  // administrative area field is not used, which results in an empty tree of
-  // sub-regions.
-  EXPECT_TRUE(tree.sub_regions().empty());
-}
-
-TEST_F(PreloadSupplierTest, BuildZwRegionTree) {
-  supplier_.LoadRules("ZW", *loaded_callback_);
-  const RegionData& tree =
-      supplier_.BuildRegionTree("ZW", "en-ZW", &best_language_);
-  EXPECT_TRUE(tree.sub_regions().empty());
 }
 
 }  // namespace
