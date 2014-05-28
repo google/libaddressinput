@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "util/re2ptr.h"  // Must be the first #include statement!
-
 #include "validation_task.h"
 
 #include <libaddressinput/address_data.h>
@@ -33,6 +31,9 @@
 #include "lookup_key.h"
 #include "post_box_matchers.h"
 #include "rule.h"
+#include "util/re2ptr.h"
+
+#include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "util/re2ptr.h"  // Must be the first #include statement!
-
 #include <libaddressinput/address_data.h>
 
 #include <libaddressinput/address_field.h>
@@ -25,6 +23,8 @@
 #include <functional>
 #include <string>
 #include <vector>
+
+#include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {

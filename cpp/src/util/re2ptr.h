@@ -26,26 +26,10 @@
 // Because of that, it's impossible to write a portable forward declaration of
 // class RE2.
 //
-// In some environments, the #include <re2/re2.h> statement will bring in its
-// own definitions of arraysize et al., which in that case would clash with the
-// same definitions that libaddressinput has in the util/basictypes.h header
-// file.
-//
-// Because of that, it's undesirable to #include <re2/re2.h> in libaddressinput
-// header files (even internal ones).
-//
-// The work-around in this file works by having #include <re2/re2.h> as the
-// first #include statement in the compilation unit, then test whether the
-// arraysize macro has been defined by that header file, in which case an
-// include guard is defined to prevent util/basictypes.h from getting included
-// later, and then wrap pointers to RE2 object in the simple struct RE2ptr,
-// which is trivial to forward declare.
+// The work-around in this file works by wrapping pointers to RE2 object in the
+// simple struct RE2ptr, which is trivial to forward declare.
 
 #include <re2/re2.h>
-
-#ifdef arraysize
-#define I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
-#endif
 
 namespace i18n {
 namespace addressinput {

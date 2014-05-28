@@ -5,6 +5,18 @@
 // The original source code is from:
 // https://code.google.com/p/libphonenumber/source/browse/trunk/cpp/src/phonenumbers/base/basictypes.h?r=621
 
+#if I18N_ADDRESSINPUT_USE_BASICTYPES_OVERRIDE
+
+// If building libaddressinput in an environment where there already is another
+// implementation of the basictypes.h header file (like in Chromium), then pass
+// the command line flag -DI18N_ADDRESSINPUT_USE_BASICTYPES_OVERRIDE=1 to the
+// compiler and provide a file named basictypes_override.h, in a location where
+// the compiler will look for it, which provides the desired implementation.
+
+#include "basictypes_override.h"
+
+#else
+
 #ifndef I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 #define I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 
@@ -199,3 +211,4 @@ struct CompileAssert {
 #endif
 
 #endif  // I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
+#endif  // I18N_ADDRESSINPUT_USE_BASICTYPES_OVERRIDE
