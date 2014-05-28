@@ -123,18 +123,14 @@ limitations under the License.
             field and the user has not filled it out, providing an example
             postal code and a link to this country's postal service that a user
             can use to look up their postal code.">
-    You must provide a postal code, for example
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
-    Don't know your postal code? Find it out
-    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
+    You must provide a postal code, for example <ph name="EXAMPLE">$1<ex>90291</ex></ph>. Don't know your postal code? Find it out <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE"
       desc="Error message shown with the postal code field when it is a required
             field and the user has not filled it out, providing an example
             postal code.">
-    You must provide a postal code, for example
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    You must provide a postal code, for example <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE_AND_URL"
@@ -143,26 +139,21 @@ limitations under the License.
             code and a link to this country's postal service that a user can use
             to look up their ZIP code. This is specifically for countries using
             ZIP codes instead of Postal codes, such as America.">
-    You must provide a ZIP code, for example
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
-    Don't know your ZIP code? Find it out
-    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
+    You must provide a ZIP code, for example <ph name="EXAMPLE">$1<ex>90291</ex></ph>. Don't know your ZIP code? Find it out <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE"
       desc="Error message shown with the ZIP code field when it is a required
             field and the user has not filled it out, providing an example ZIP
             code.">
-    You must provide a ZIP code, for example
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    You must provide a ZIP code, for example <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNKNOWN_VALUE"
       desc="Occurs when the user fills out the wrong value for an address field.
             For example, this would be shown when putting 'Cupertino' in United
             States' State field.">
-    <ph name="FIELD_VALUE">$1<ex>Cupertino</ex></ph>
-    is not recognized as a known value for this field.
+    <ph name="FIELD_VALUE">$1<ex>Cupertino</ex></ph> is not recognized as a known value for this field.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE_AND_URL"
@@ -172,10 +163,7 @@ limitations under the License.
             digits long. Provides an example postal code and a link to this
             country's postal service that a user can use to look up their postal
             code.">
-    This postal code format is not recognized. Example of a valid postal code:
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
-    Don't know your postal code? Find it out
-    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
+    This postal code format is not recognized. Example of a valid postal code: <ph name="EXAMPLE">$1<ex>90291</ex></ph>. Don't know your postal code? Find it out <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE"
@@ -183,8 +171,7 @@ limitations under the License.
             to the country's postal code format. For example, this would be
             shown when using '80' as a Swiss postal code, which is normally 4
             digits long. Provides an example postal code.">
-    This postal code format is not recognized. Example of a valid postal code:
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    This postal code format is not recognized. Example of a valid postal code: <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE"
@@ -201,10 +188,7 @@ limitations under the License.
             using '901' as a ZIP code for the United States. Provides an example
             ZIP code and a link to this country's postal service that a user can
             use to look up their ZIP code.">
-    This ZIP code format is not recognized. Example of a valid ZIP code:
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
-    Don't know your ZIP code? Find it out
-    <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
+    This ZIP code format is not recognized. Example of a valid ZIP code: <ph name="EXAMPLE">$1<ex>90291</ex></ph>. Don't know your ZIP code? Find it out <ph name="BEGIN_LINK">$2</ph>here<ph name="END_LINK">$3</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP_CODE_EXAMPLE"
@@ -212,8 +196,7 @@ limitations under the License.
             the country's ZIP code format. For example, this would be shown when
             using '901' as a ZIP code for the United States. Provides an example
             ZIP code.">
-    This ZIP code format is not recognized. Example of a valid ZIP code:
-    <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
+    This ZIP code format is not recognized. Example of a valid ZIP code: <ph name="EXAMPLE">$1<ex>90291</ex></ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP"
@@ -228,9 +211,7 @@ limitations under the License.
       location. For example, this would be shown when using Z3Z 2Y7 for
       Alberta, Canada. Provides a link to this country's postal service
       that a user can use to look up their postal code.">
-    This postal code does not appear to match the rest of this address.
-    Don't know your postal code? Find it out
-    <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
+    This postal code does not appear to match the rest of this address. Don't know your postal code? Find it out <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE"
@@ -245,9 +226,7 @@ limitations under the License.
       location. For example, this would be shown when using 10001 for
       Arizona state. Provides a link to this country's postal service that
       a user can use to look up their ZIP code.">
-    This ZIP code does not appear to match the rest of this address.
-    Don't know your ZIP code? Find it out
-    <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
+    This ZIP code does not appear to match the rest of this address. Don't know your ZIP code? Find it out <ph name="BEGIN_LINK">$1</ph>here<ph name="END_LINK">$2</ph>.
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_ZIP"
@@ -260,7 +239,6 @@ limitations under the License.
       name="IDS_LIBADDRESSINPUT_PO_BOX_FORBIDDEN_VALUE"
       desc="Occurs when the user fills out a P.O. box as part of a physical
       address.">
-    This address line appears to contain a post office box. Please use a street
-    or building address.
+    This address line appears to contain a post office box. Please use a street or building address.
   </message>
 </grit-part>

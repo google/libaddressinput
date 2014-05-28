@@ -67,6 +67,17 @@ TEST_P(LocalizationTest, DefaultStringIsNotEmpty) {
   EXPECT_FALSE(localization_.GetString(GetParam()).empty());
 }
 
+// Verifies that the messages do not have newlines.
+TEST_P(LocalizationTest, NoNewline) {
+  EXPECT_EQ(std::string::npos, localization_.GetString(GetParam()).find('\n'));
+}
+
+// Verifies that the messages do not have double spaces.
+TEST_P(LocalizationTest, NoDoubleSpace) {
+  EXPECT_EQ(std::string::npos,
+            localization_.GetString(GetParam()).find(std::string(2U, ' ')));
+}
+
 // Verifies that the default string is English.
 TEST_P(LocalizationTest, DefaultStringIsEnglish) {
   std::string default_string = localization_.GetString(GetParam());
@@ -128,15 +139,15 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredPostalCode) {
   Localization localization;
   AddressData address;
   address.region_code = "CH";
-  EXPECT_EQ(std::string("You must provide a postal code, for example\n") +
-            "    2544,1211,1556,3030.\n" +
-            "    Don't know your postal code? Find it out\n" +
-            "    <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
+  EXPECT_EQ(std::string("You must provide a postal code, for example") +
+            " 2544,1211,1556,3030." +
+            " Don't know your postal code? Find it out" +
+            " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, true));
-  EXPECT_EQ(std::string("You must provide a postal code, for example\n") +
-            "    2544,1211,1556,3030.",
+  EXPECT_EQ(std::string("You must provide a postal code, for example") +
+            " 2544,1211,1556,3030.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, false));
   EXPECT_EQ("You can't leave this empty.",
@@ -151,15 +162,15 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredZipCode) {
   Localization localization;
   AddressData address;
   address.region_code = "US";
-  EXPECT_EQ(std::string("You must provide a ZIP code, for example\n") +
-            "    95014,22162-1010.\n" +
-            "    Don't know your ZIP code? Find it out\n" +
-            "    <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
+  EXPECT_EQ(std::string("You must provide a ZIP code, for example") +
+            " 95014,22162-1010." +
+            " Don't know your ZIP code? Find it out" +
+            " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, true));
-  EXPECT_EQ(std::string("You must provide a ZIP code, for example\n") +
-            "    95014,22162-1010.",
+  EXPECT_EQ(std::string("You must provide a ZIP code, for example") +
+            " 95014,22162-1010.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, false));
   EXPECT_EQ("You can't leave this empty.",
@@ -212,115 +223,115 @@ TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
   address_line.push_back("bad address line 2");
   address.address_line = address_line;
   address.recipient = "bad recipient";
-  EXPECT_EQ(std::string("US\n    ") +
+  EXPECT_EQ(std::string("US ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, COUNTRY, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("US\n    ") +
+  EXPECT_EQ(std::string("US ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, COUNTRY, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("US\n    ") +
+  EXPECT_EQ(std::string("US ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, COUNTRY, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("US\n    ") +
+  EXPECT_EQ(std::string("US ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, COUNTRY, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad admin area\n    ") +
+  EXPECT_EQ(std::string("bad admin area ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, ADMIN_AREA, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad admin area\n    ") +
+  EXPECT_EQ(std::string("bad admin area ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, ADMIN_AREA, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad admin area\n    ") +
+  EXPECT_EQ(std::string("bad admin area ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, ADMIN_AREA, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad admin area\n    ") +
+  EXPECT_EQ(std::string("bad admin area ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, ADMIN_AREA, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad locality\n    ") +
+  EXPECT_EQ(std::string("bad locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, LOCALITY, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad locality\n    ") +
+  EXPECT_EQ(std::string("bad locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, LOCALITY, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad locality\n    ") +
+  EXPECT_EQ(std::string("bad locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, LOCALITY, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad locality\n    ") +
+  EXPECT_EQ(std::string("bad locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, LOCALITY, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad dependent locality\n    ") +
+  EXPECT_EQ(std::string("bad dependent locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, DEPENDENT_LOCALITY, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad dependent locality\n    ") +
+  EXPECT_EQ(std::string("bad dependent locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, DEPENDENT_LOCALITY, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad dependent locality\n    ") +
+  EXPECT_EQ(std::string("bad dependent locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, DEPENDENT_LOCALITY, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad dependent locality\n    ") +
+  EXPECT_EQ(std::string("bad dependent locality ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, DEPENDENT_LOCALITY, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad sorting code\n    ") +
+  EXPECT_EQ(std::string("bad sorting code ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, SORTING_CODE, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad sorting code\n    ") +
+  EXPECT_EQ(std::string("bad sorting code ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, SORTING_CODE, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad sorting code\n    ") +
+  EXPECT_EQ(std::string("bad sorting code ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, SORTING_CODE, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad sorting code\n    ") +
+  EXPECT_EQ(std::string("bad sorting code ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, SORTING_CODE, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad address line 1\n    ") +
+  EXPECT_EQ(std::string("bad address line 1 ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, STREET_ADDRESS, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad address line 1\n    ") +
+  EXPECT_EQ(std::string("bad address line 1 ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, STREET_ADDRESS, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad address line 1\n    ") +
+  EXPECT_EQ(std::string("bad address line 1 ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, STREET_ADDRESS, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad address line 1\n    ") +
+  EXPECT_EQ(std::string("bad address line 1 ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, STREET_ADDRESS, UNKNOWN_VALUE, false, true));
-  EXPECT_EQ(std::string("bad recipient\n    ") +
+  EXPECT_EQ(std::string("bad recipient ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, RECIPIENT, UNKNOWN_VALUE, true, true));
-  EXPECT_EQ(std::string("bad recipient\n    ") +
+  EXPECT_EQ(std::string("bad recipient ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, RECIPIENT, UNKNOWN_VALUE, true, false));
-  EXPECT_EQ(std::string("bad recipient\n    ") +
+  EXPECT_EQ(std::string("bad recipient ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, RECIPIENT, UNKNOWN_VALUE, false, false));
-  EXPECT_EQ(std::string("bad recipient\n    ") +
+  EXPECT_EQ(std::string("bad recipient ") +
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, RECIPIENT, UNKNOWN_VALUE, false, true));
@@ -331,16 +342,16 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatPostalCode) {
   AddressData address;
   address.region_code = "CH";
   EXPECT_EQ(std::string("This postal code format is not recognized. Example ") +
-            "of a valid postal code:\n" +
-            "    2544,1211,1556,3030.\n" +
-            "    Don't know your postal code? Find it out\n" +
-            "    <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
+            "of a valid postal code:" +
+            " 2544,1211,1556,3030." +
+            " Don't know your postal code? Find it out" +
+            " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, true));
   EXPECT_EQ(std::string("This postal code format is not recognized. Example ") +
-            "of a valid postal code:\n" +
-            "    2544,1211,1556,3030.",
+            "of a valid postal code:" +
+            " 2544,1211,1556,3030.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, false));
   EXPECT_EQ("This postal code format is not recognized.",
@@ -356,16 +367,16 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatZipCode) {
   AddressData address;
   address.region_code = "US";
   EXPECT_EQ(std::string("This ZIP code format is not recognized. Example of ") +
-            "a valid ZIP code:\n" +
-            "    95014,22162-1010.\n" +
-            "    Don't know your ZIP code? Find it out\n" +
-            "    <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
+            "a valid ZIP code:" +
+            " 95014,22162-1010." +
+            " Don't know your ZIP code? Find it out" +
+            " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, true));
   EXPECT_EQ(std::string("This ZIP code format is not recognized. Example of ") +
-            "a valid ZIP code:\n" +
-            "    95014,22162-1010.",
+            "a valid ZIP code:" +
+            " 95014,22162-1010.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, false));
   EXPECT_EQ("This ZIP code format is not recognized.",
@@ -381,9 +392,9 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValuePostalCode) {
   AddressData address;
   address.region_code = "CH";
   EXPECT_EQ(std::string("This postal code does not appear to match the rest ") +
-            "of this address.\n" +
-            "    Don't know your postal code? Find it out\n" +
-            "    <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
+            "of this address." +
+            " Don't know your postal code? Find it out" +
+            " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, true, true));
@@ -396,9 +407,9 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValuePostalCode) {
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, false, false));
   EXPECT_EQ(std::string("This postal code does not appear to match the rest ") +
-            "of this address.\n" +
-            "    Don't know your postal code? Find it out\n" +
-            "    <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
+            "of this address." +
+            " Don't know your postal code? Find it out" +
+            " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, false, true));
@@ -409,9 +420,9 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValueZipCode) {
   AddressData address;
   address.region_code = "US";
   EXPECT_EQ(std::string("This ZIP code does not appear to match the rest of ") +
-            "this address.\n" +
-            "    Don't know your ZIP code? Find it out\n" +
-            "    <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
+            "this address." +
+            " Don't know your ZIP code? Find it out" +
+            " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, true, true));
@@ -424,9 +435,9 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValueZipCode) {
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, false, false));
   EXPECT_EQ(std::string("This ZIP code does not appear to match the rest of ") +
-            "this address.\n" +
-            "    Don't know your ZIP code? Find it out\n" +
-            "    <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
+            "this address." +
+            " Don't know your ZIP code? Find it out" +
+            " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISMATCHING_VALUE, false, true));
@@ -447,23 +458,23 @@ TEST(LocalizationGetErrorMessageTest, UsesPOBoxOtherFields) {
   for (std::vector<AddressField>::iterator it = other_fields.begin();
        it != other_fields.end(); it++) {
     EXPECT_EQ(std::string("This address line appears to contain a post ") +
-              "office box. Please use a street\n" +
-              "    or building address.",
+              "office box. Please use a street" +
+              " or building address.",
               localization.GetErrorMessage(
                   address, *it, USES_P_O_BOX, true, true));
     EXPECT_EQ(std::string("This address line appears to contain a post ") +
-              "office box. Please use a street\n" +
-              "    or building address.",
+              "office box. Please use a street" +
+              " or building address.",
               localization.GetErrorMessage(
                   address, *it, USES_P_O_BOX, true, false));
     EXPECT_EQ(std::string("This address line appears to contain a post ") +
-              "office box. Please use a street\n" +
-              "    or building address.",
+              "office box. Please use a street" +
+              " or building address.",
               localization.GetErrorMessage(
                   address, *it, USES_P_O_BOX, false, false));
     EXPECT_EQ(std::string("This address line appears to contain a post ") +
-              "office box. Please use a street\n" +
-              "    or building address.",
+              "office box. Please use a street" +
+              " or building address.",
               localization.GetErrorMessage(
                   address, *it, USES_P_O_BOX, false, true));
   }
