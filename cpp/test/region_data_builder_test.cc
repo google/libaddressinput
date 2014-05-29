@@ -95,4 +95,32 @@ TEST_F(RegionDataBuilderTest, BuildZwRegionTree) {
   EXPECT_TRUE(tree.sub_regions().empty());
 }
 
+TEST_F(RegionDataBuilderTest, UsTreeHasStateAbbreviationsAndNames) {
+  supplier_.LoadRules("US", *loaded_callback_);
+  const RegionData& tree = builder_.Build("US", "en-US", &best_language_);
+  EXPECT_EQ("en", best_language_);
+  ASSERT_FALSE(tree.sub_regions().empty());
+  EXPECT_EQ("AL", tree.sub_regions().front()->key());
+  EXPECT_EQ("Alabama", tree.sub_regions().front()->name());
+}
+
+TEST_F(RegionDataBuilderTest,
+       KrWithKoLatnLanguageHasKoreanKeysAndLatinScriptNames) {
+  supplier_.LoadRules("KR", *loaded_callback_);
+  const RegionData& tree = builder_.Build("KR", "ko-Latn", &best_language_);
+  EXPECT_EQ("ko-Latn", best_language_);
+  ASSERT_FALSE(tree.sub_regions().empty());
+  EXPECT_EQ("강원도", tree.sub_regions().front()->key());
+  EXPECT_EQ("Gangwon", tree.sub_regions().front()->name());
+}
+
+TEST_F(RegionDataBuilderTest, KrWithKoKrLanguageHasKoreanKeysAndNames) {
+  supplier_.LoadRules("KR", *loaded_callback_);
+  const RegionData& tree = builder_.Build("KR", "ko-KR", &best_language_);
+  EXPECT_EQ("ko", best_language_);
+  ASSERT_FALSE(tree.sub_regions().empty());
+  EXPECT_EQ("강원도", tree.sub_regions().front()->key());
+  EXPECT_EQ("강원", tree.sub_regions().front()->name());
+}
+
 }  // namespace
