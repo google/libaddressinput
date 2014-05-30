@@ -98,15 +98,15 @@ void AddressData::SetFieldValue(AddressField field, const std::string& value) {
 
 const std::vector<std::string>& AddressData::GetRepeatedFieldValue(
     AddressField field) const {
-  assert(field >= 0);
-  assert(static_cast<size_t>(field) < arraysize(kVectorStringField));
-  assert(kVectorStringField[field] != NULL);
+  assert(IsRepeatedFieldValue(field));
   return this->*kVectorStringField[field];
 }
 
 // static
 bool AddressData::IsRepeatedFieldValue(AddressField field) {
-  return field == STREET_ADDRESS;
+  assert(field >= 0);
+  assert(static_cast<size_t>(field) < arraysize(kVectorStringField));
+  return kVectorStringField[field] != NULL;
 }
 
 }  // namespace addressinput
