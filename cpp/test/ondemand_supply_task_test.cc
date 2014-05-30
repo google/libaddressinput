@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <libaddressinput/ondemand_supplier.h>
+#include "ondemand_supply_task.h"
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
@@ -39,13 +39,13 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Downloader;
 using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
-using i18n::addressinput::OndemandSupplier;
+using i18n::addressinput::OndemandSupplyTask;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Supplier;
 
-class RuleHierarchyTest : public testing::Test {
+class OndemandSupplyTaskTest : public testing::Test {
  protected:
   class MockDownloader : public Downloader {
    public:
@@ -78,22 +78,20 @@ class RuleHierarchyTest : public testing::Test {
   const scoped_ptr<const Supplier::Callback> supplied_;
 
  protected:
-  RuleHierarchyTest()
+  OndemandSupplyTaskTest()
       : downloader_(new MockDownloader),
         rule_cache_(),
         retriever_(
             new Retriever(
                 MockDownloader::kMockDataUrl, downloader_, new NullStorage)),
-        supplied_(BuildCallback(this, &RuleHierarchyTest::Supplied)),
+        supplied_(BuildCallback(this, &OndemandSupplyTaskTest::Supplied)),
         success_(true),
         lookup_key_(),
         rule_(),
         called_(false),
-        hierarchy_(
-            new OndemandSupplier::RuleHierarchy(
-                lookup_key_, &rule_cache_, *supplied_)) {}
+        task_(new OndemandSupplyTask(lookup_key_, &rule_cache_, *supplied_)) {}
 
-  virtual ~RuleHierarchyTest() {
+  virtual ~OndemandSupplyTaskTest() {
     for (std::map<std::string, const Rule*>::const_iterator
          it = rule_cache_.begin(); it != rule_cache_.end(); ++it) {
       delete it->second;
@@ -101,11 +99,11 @@ class RuleHierarchyTest : public testing::Test {
   }
 
   void Queue(const std::string& key) {
-    hierarchy_->Queue(key);
+    task_->Queue(key);
   }
 
   void Retrieve() {
-    hierarchy_->Retrieve(*retriever_);
+    task_->Retrieve(*retriever_);
   }
 
   bool success_;  // Expected status from MockDownloader.
@@ -119,22 +117,22 @@ class RuleHierarchyTest : public testing::Test {
                 const Supplier::RuleHierarchy& hierarchy) {
     ASSERT_EQ(success_, success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
-    ASSERT_EQ(hierarchy_, &hierarchy);
-    std::memcpy(rule_, hierarchy.rule_, sizeof rule_);
+    ASSERT_EQ(&task_->hierarchy_, &hierarchy);
+    std::memcpy(rule_, hierarchy.rule, sizeof rule_);
     called_ = true;
   }
 
-  OndemandSupplier::RuleHierarchy* const hierarchy_;
+  OndemandSupplyTask* const task_;
 
-  DISALLOW_COPY_AND_ASSIGN(RuleHierarchyTest);
+  DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTaskTest);
 };
 
-const char RuleHierarchyTest::MockDownloader::kMockDataUrl[] = "mock:///";
+const char OndemandSupplyTaskTest::MockDownloader::kMockDataUrl[] = "mock:///";
 
-const size_t RuleHierarchyTest::MockDownloader::kMockDataUrlLength =
-    sizeof RuleHierarchyTest::MockDownloader::kMockDataUrl - 1;
+const size_t OndemandSupplyTaskTest::MockDownloader::kMockDataUrlLength =
+    sizeof OndemandSupplyTaskTest::MockDownloader::kMockDataUrl - 1;
 
-TEST_F(RuleHierarchyTest, Empty) {
+TEST_F(OndemandSupplyTaskTest, Empty) {
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
   EXPECT_TRUE(rule_[0] == NULL);
@@ -143,7 +141,7 @@ TEST_F(RuleHierarchyTest, Empty) {
   EXPECT_TRUE(rule_[3] == NULL);
 }
 
-TEST_F(RuleHierarchyTest, Invalid) {
+TEST_F(OndemandSupplyTaskTest, Invalid) {
   Queue("data/XA");
 
   success_ = false;
@@ -152,7 +150,7 @@ TEST_F(RuleHierarchyTest, Invalid) {
   ASSERT_TRUE(called_);
 }
 
-TEST_F(RuleHierarchyTest, Valid) {
+TEST_F(OndemandSupplyTaskTest, Valid) {
   downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
 
   Queue("data/XA");
@@ -172,7 +170,7 @@ TEST_F(RuleHierarchyTest, Valid) {
   EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() == NULL);
 }
 
-TEST_F(RuleHierarchyTest, ValidHierarchy) {
+TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
   downloader_->data_.insert(
       std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
   downloader_->data_.insert(
@@ -212,7 +210,7 @@ TEST_F(RuleHierarchyTest, ValidHierarchy) {
   EXPECT_TRUE(rule_[3]->GetRequired().empty());
 }
 
-TEST_F(RuleHierarchyTest, InvalidJson1) {
+TEST_F(OndemandSupplyTaskTest, InvalidJson1) {
   downloader_->data_.insert(std::make_pair("data/XA", ":"));
 
   success_ = false;
@@ -223,7 +221,7 @@ TEST_F(RuleHierarchyTest, InvalidJson1) {
   ASSERT_TRUE(called_);
 }
 
-TEST_F(RuleHierarchyTest, InvalidJson2) {
+TEST_F(OndemandSupplyTaskTest, InvalidJson2) {
   downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
   downloader_->data_.insert(std::make_pair("data/XA/aa", ":"));
 
@@ -236,7 +234,7 @@ TEST_F(RuleHierarchyTest, InvalidJson2) {
   ASSERT_TRUE(called_);
 }
 
-TEST_F(RuleHierarchyTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
+TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
   downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
   downloader_->data_.insert(std::make_pair("data/XA/aa", "{}"));
 
@@ -253,7 +251,7 @@ TEST_F(RuleHierarchyTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
   EXPECT_EQ("data/XA", rule_[0]->GetId());
 }
 
-TEST_F(RuleHierarchyTest, IfCountryFailsAllFails) {
+TEST_F(OndemandSupplyTaskTest, IfCountryFailsAllFails) {
   downloader_->data_.insert(
       std::make_pair("data/XA/aa", "{\"id\":\"data/XA/aa\"}"));
 

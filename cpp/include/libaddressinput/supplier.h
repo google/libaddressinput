@@ -42,11 +42,9 @@ class Supplier {
 
   // A RuleHierarchy object encapsulates the hierarchical list of Rule objects
   // that corresponds to a particular LookupKey.
-  class RuleHierarchy {
-   public:
-    RuleHierarchy() : rule_() {}
-    virtual ~RuleHierarchy() {}
-    const Rule* rule_[4];  // Cf. LookupKey::kHierarchy.
+  struct RuleHierarchy {
+    RuleHierarchy() : rule() {}
+    const Rule* rule[4];  // Cf. LookupKey::kHierarchy.
   };
 };
 

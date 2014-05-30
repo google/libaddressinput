@@ -21,7 +21,6 @@
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <map>
-#include <set>
 #include <string>
 
 namespace i18n {
@@ -59,37 +58,6 @@ class OndemandSupplier : public Supplier {
 
   // Loads the metadata needed for |lookup_key|, then calls |supplied|.
   virtual void Supply(const LookupKey& lookup_key, const Callback& supplied);
-
-  // A RuleHierarchy object encapsulates the set of Rule objects corresponding
-  // to a LookupKey, together with methods for retrieving and parsing data as
-  // necessary from a Retriever object.
-  class RuleHierarchy : public Supplier::RuleHierarchy {
-   public:
-    RuleHierarchy(const LookupKey& lookup_key,
-                  std::map<std::string, const Rule*>* rules,
-                  const Callback& supplied);
-    virtual ~RuleHierarchy();
-
-    // Adds lookup key string |key| to the queue of data to be retrieved.
-    void Queue(const std::string& key);
-
-    // Retrieves and parses data for all queued keys, then calls |supplied_|.
-    void Retrieve(const Retriever& retriever);
-
-   private:
-    void Load(bool success, const std::string& key, const std::string& data);
-    void Loaded();
-
-    std::set<std::string> pending_;
-    const LookupKey& lookup_key_;
-    std::map<std::string, const Rule*>* const rule_cache_;
-    const Callback& supplied_;
-    const scoped_ptr<const i18n::addressinput::Callback<  // Retriever::Callback
-        std::string, std::string> > retrieved_;
-    bool success_;
-
-    DISALLOW_COPY_AND_ASSIGN(RuleHierarchy);
-  };
 
  private:
   const scoped_ptr<const Retriever> retriever_;

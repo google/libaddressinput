@@ -67,7 +67,7 @@ class ValidationTaskTest : public testing::Test {
 
     for (size_t i = 0; i < arraysize(json_) && json_[i] != NULL; ++i) {
       ASSERT_TRUE(rule[i].ParseSerializedRule(json_[i]));
-      hierarchy->rule_[i] = &rule[i];
+      hierarchy->rule[i] = &rule[i];
     }
 
     (*task->supplied_)(success_, *task->lookup_key_, *hierarchy);

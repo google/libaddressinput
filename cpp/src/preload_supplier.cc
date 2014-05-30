@@ -170,7 +170,7 @@ const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) const {
   if (!GetRuleHierarchy(lookup_key, &hierarchy)) {
     return NULL;
   }
-  return hierarchy.rule_[lookup_key.GetDepth()];
+  return hierarchy.rule[lookup_key.GetDepth()];
 }
 
 void PreloadSupplier::LoadRules(const std::string& region_code,
@@ -219,7 +219,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
       if (it == rule_cache_.end()) {
         return depth > 0;  // No data on COUNTRY level is failure.
       }
-      hierarchy->rule_[depth] = it->second;
+      hierarchy->rule[depth] = it->second;
     }
   }
 

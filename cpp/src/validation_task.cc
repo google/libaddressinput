@@ -75,7 +75,7 @@ void ValidationTask::Validate(bool success,
   if (success) {
     if (address_.IsFieldEmpty(COUNTRY)) {
       ReportProblemMaybe(COUNTRY, MISSING_REQUIRED_FIELD);
-    } else if (hierarchy.rule_[0] == NULL) {
+    } else if (hierarchy.rule[0] == NULL) {
       ReportProblemMaybe(COUNTRY, UNKNOWN_VALUE);
     } else {
       CheckUnexpectedField(hierarchy);
@@ -94,8 +94,8 @@ void ValidationTask::Validate(bool success,
 // metadata and the current value of that field is not empty.
 void ValidationTask::CheckUnexpectedField(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule_[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule_[0];
+  assert(hierarchy.rule[0] != NULL);
+  const Rule& country_rule = *hierarchy.rule[0];
 
   static const AddressField kFields[] = {
     // COUNTRY is never unexpected.
@@ -120,8 +120,8 @@ void ValidationTask::CheckUnexpectedField(
 // metadata and the current value of that field is empty.
 void ValidationTask::CheckMissingRequiredField(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule_[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule_[0];
+  assert(hierarchy.rule[0] != NULL);
+  const Rule& country_rule = *hierarchy.rule[0];
 
   for (std::vector<AddressField>::const_iterator
        it = country_rule.GetRequired().begin();
@@ -144,9 +144,9 @@ void ValidationTask::CheckUnknownValue(
   for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
     AddressField field = LookupKey::kHierarchy[depth];
     if (!(address_.IsFieldEmpty(field) ||
-          hierarchy.rule_[depth - 1] == NULL ||
-          hierarchy.rule_[depth - 1]->GetSubKeys().empty() ||
-          hierarchy.rule_[depth] != NULL)) {
+          hierarchy.rule[depth - 1] == NULL ||
+          hierarchy.rule[depth - 1]->GetSubKeys().empty() ||
+          hierarchy.rule[depth] != NULL)) {
       ReportProblemMaybe(field, UNKNOWN_VALUE);
     }
   }
@@ -154,8 +154,8 @@ void ValidationTask::CheckUnknownValue(
 
 void ValidationTask::CheckPostalCodeFormatAndValue(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule_[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule_[0];
+  assert(hierarchy.rule[0] != NULL);
+  const Rule& country_rule = *hierarchy.rule[0];
 
   if (!(ShouldReport(POSTAL_CODE, INVALID_FORMAT) ||
         ShouldReport(POSTAL_CODE, MISMATCHING_VALUE))) {
@@ -184,10 +184,10 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 
   for (size_t depth = arraysize(LookupKey::kHierarchy) - 1;
        depth > 0; --depth) {
-    if (hierarchy.rule_[depth] != NULL) {
+    if (hierarchy.rule[depth] != NULL) {
       // Validate sub-region specific postal code format. A sub-region specifies
       // the regular expression for a prefix of the postal code.
-      const RE2ptr* prefix_ptr = hierarchy.rule_[depth]->GetPostalCodeMatcher();
+      const RE2ptr* prefix_ptr = hierarchy.rule[depth]->GetPostalCodeMatcher();
       if (prefix_ptr != NULL) {
         if (!RE2::PartialMatch(address_.postal_code, *prefix_ptr->ptr)) {
           ReportProblem(POSTAL_CODE, MISMATCHING_VALUE);
@@ -200,8 +200,8 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 
 void ValidationTask::CheckUsesPoBox(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule_[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule_[0];
+  assert(hierarchy.rule[0] != NULL);
+  const Rule& country_rule = *hierarchy.rule[0];
 
   if (allow_postal_ ||
       !ShouldReport(STREET_ADDRESS, USES_P_O_BOX) ||

@@ -152,7 +152,7 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
                 const Supplier::RuleHierarchy& hierarchy) {
     ASSERT_TRUE(success);
     ASSERT_EQ(&lookup_key_, &lookup_key);
-    std::memcpy(rule_, hierarchy.rule_, sizeof rule_);
+    std::memcpy(rule_, hierarchy.rule, sizeof rule_);
     called_ = true;
   }
 
