@@ -48,7 +48,42 @@ class ValidationTaskTest : public testing::Test {
         problems_(),
         expected_(),
         called_(false),
-        validated_(BuildCallback(this, &ValidationTaskTest::Validated)) {}
+        validated_(BuildCallback(this, &ValidationTaskTest::Validated)) {
+    // Add all problems to the filter except those affected by the metadata
+    // in region_data_constants.cc.
+    static const AddressField kFields[] = {
+      COUNTRY,
+      ADMIN_AREA,
+      LOCALITY,
+      DEPENDENT_LOCALITY,
+      SORTING_CODE,
+      POSTAL_CODE,
+      STREET_ADDRESS,
+      RECIPIENT
+    };
+
+    static const AddressProblem kProblems[] = {
+      // UNEXPECTED_FIELD is validated using IsFieldUsed().
+      // MISSING_REQUIRED_FIELD is validated using IsFieldRequired().
+      UNKNOWN_VALUE,
+      INVALID_FORMAT,
+      MISMATCHING_VALUE,
+      USES_P_O_BOX
+    };
+
+    for (size_t i = 0; i < arraysize(kFields); ++i) {
+      AddressField field = kFields[i];
+      for (size_t j = 0; j < arraysize(kProblems); ++j) {
+        AddressProblem problem = kProblems[j];
+        filter_.insert(std::make_pair(field, problem));
+      }
+    }
+
+    filter_.insert(std::make_pair(COUNTRY, UNEXPECTED_FIELD));
+    filter_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
+    filter_.insert(std::make_pair(RECIPIENT, UNEXPECTED_FIELD));
+    filter_.insert(std::make_pair(RECIPIENT, MISSING_REQUIRED_FIELD));
+  }
 
   virtual ~ValidationTaskTest() {}
 
@@ -155,38 +190,53 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameNotEmpty) {
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(ValidationTaskTest, MissingRequiredFieldAll) {
-  json_[0] = "{\"require\":\"RSCDXZAON\"}";
+TEST_F(ValidationTaskTest, MissingRequiredFieldsUS) {
+  json_[0] = "{}";
 
-  address_.region_code = "rrr";
+  address_.region_code = "US";
 
+  filter_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
   expected_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
   expected_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(DEPENDENT_LOCALITY, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(SORTING_CODE, MISSING_REQUIRED_FIELD));
   expected_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
   expected_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
-
-  // With "N" in the require string, RECIPIENT will be required regardless of
-  // the value of |require_name_|.
-  expected_.insert(std::make_pair(RECIPIENT, MISSING_REQUIRED_FIELD));
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
 }
 
-TEST_F(ValidationTaskTest, MissingRequiredFieldNone) {
-  json_[0] = "{\"require\":\"RSCDXZAON\",\"fmt\":\"%R%S%C%D%X%Z%A%O%N\"}";
+TEST_F(ValidationTaskTest, MissingNoRequiredFieldsUS) {
+  json_[0] = "{}";
 
-  address_.region_code = "rrr";
+  address_.region_code = "US";
   address_.administrative_area = "sss";
   address_.locality = "ccc";
-  address_.dependent_locality = "ddd";
-  address_.sorting_code = "xxx";
   address_.postal_code = "zzz";
   address_.address_line.push_back("aaa");
   address_.recipient = "nnn";
+
+  filter_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
+TEST_F(ValidationTaskTest, UnexpectedFieldUS) {
+  json_[0] = "{}";
+
+  address_.region_code = "US";
+  address_.dependent_locality = "ddd";
+
+  filter_.insert(std::make_pair(DEPENDENT_LOCALITY, UNEXPECTED_FIELD));
+  expected_.insert(std::make_pair(DEPENDENT_LOCALITY, UNEXPECTED_FIELD));
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -335,6 +385,7 @@ TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
   address_.region_code = "rrr";
   address_.postal_code = "000";
 
+  filter_.erase(POSTAL_CODE);
   filter_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
 
   // (POSTAL_CODE, MISMATCHING_VALUE) should not be reported.

@@ -58,12 +58,10 @@ class ValidationTask {
                 const Supplier::RuleHierarchy& hierarchy);
 
   // Checks all fields for UNEXPECTED_FIELD problems.
-  void CheckUnexpectedField(
-      const Supplier::RuleHierarchy& hierarchy) const;
+  void CheckUnexpectedField(const std::string& region_code) const;
 
   // Checks all fields for MISSING_REQUIRED_FIELD problems.
-  void CheckMissingRequiredField(
-      const Supplier::RuleHierarchy& hierarchy) const;
+  void CheckMissingRequiredField(const std::string& region_code) const;
 
   // Checks the hierarchical fields for UNKNOWN_VALUE problems.
   void CheckUnknownValue(
@@ -85,9 +83,6 @@ class ValidationTask {
 
   // Returns whether (|field|,|problem|) should be reported.
   bool ShouldReport(AddressField field, AddressProblem problem) const;
-
-  // Returns whether |field| is expected according to |rule|.
-  static bool IsUnexpected(const Rule& rule, AddressField field);
 
   const AddressData& address_;
   const bool allow_postal_;

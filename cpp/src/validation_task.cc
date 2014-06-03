@@ -16,6 +16,7 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/address_metadata.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/address_validator.h>
 #include <libaddressinput/supplier.h>
@@ -78,8 +79,14 @@ void ValidationTask::Validate(bool success,
     } else if (hierarchy.rule[0] == NULL) {
       ReportProblemMaybe(COUNTRY, UNKNOWN_VALUE);
     } else {
-      CheckUnexpectedField(hierarchy);
-      CheckMissingRequiredField(hierarchy);
+      // Checks which use statically linked metadata.
+      const std::string& region_code = address_.region_code;
+      CheckUnexpectedField(region_code);
+      CheckMissingRequiredField(region_code);
+
+      // Checks which use data from the metadata server. Note that
+      // CheckPostalCodeFormatAndValue assumes CheckUnexpectedField has already
+      // been called.
       CheckUnknownValue(hierarchy);
       CheckPostalCodeFormatAndValue(hierarchy);
       CheckUsesPoBox(hierarchy);
@@ -90,13 +97,10 @@ void ValidationTask::Validate(bool success,
   delete this;
 }
 
-// A field is UNEXPECTED_FIELD if it is not used in the fmt string in the
-// metadata and the current value of that field is not empty.
+// A field will return an UNEXPECTED_FIELD problem type if the current value of
+// that field is not empty and the field should not be used by that region.
 void ValidationTask::CheckUnexpectedField(
-    const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule[0];
-
+    const std::string& region_code) const {
   static const AddressField kFields[] = {
     // COUNTRY is never unexpected.
     ADMIN_AREA,
@@ -110,24 +114,31 @@ void ValidationTask::CheckUnexpectedField(
 
   for (size_t i = 0; i < arraysize(kFields); ++i) {
     AddressField field = kFields[i];
-    if (!address_.IsFieldEmpty(field) && IsUnexpected(country_rule, field)) {
+    if (!address_.IsFieldEmpty(field) && !IsFieldUsed(field, region_code)) {
       ReportProblemMaybe(field, UNEXPECTED_FIELD);
     }
   }
 }
 
-// A field is MISSING_REQUIRED_FIELD if it is listed as a required field in the
-// metadata and the current value of that field is empty.
+// A field will return an MISSING_REQUIRED_FIELD problem type if the current
+// value of that field is empty and the field is required by that region.
 void ValidationTask::CheckMissingRequiredField(
-    const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule[0] != NULL);
-  const Rule& country_rule = *hierarchy.rule[0];
+    const std::string& region_code) const {
+  static const AddressField kFields[] = {
+    // COUNTRY is assumed to have already been checked.
+    ADMIN_AREA,
+    LOCALITY,
+    DEPENDENT_LOCALITY,
+    SORTING_CODE,
+    POSTAL_CODE,
+    STREET_ADDRESS,
+    // RECIPIENT is handled separately.
+  };
 
-  for (std::vector<AddressField>::const_iterator
-       it = country_rule.GetRequired().begin();
-       it != country_rule.GetRequired().end(); ++it) {
-    if (address_.IsFieldEmpty(*it)) {
-      ReportProblemMaybe(*it, MISSING_REQUIRED_FIELD);
+  for (size_t i = 0; i < arraysize(kFields); ++i) {
+    AddressField field = kFields[i];
+    if (address_.IsFieldEmpty(field) && IsFieldRequired(field, region_code)) {
+      ReportProblemMaybe(field, MISSING_REQUIRED_FIELD);
     }
   }
 
@@ -152,6 +163,7 @@ void ValidationTask::CheckUnknownValue(
   }
 }
 
+// Note that it is assumed that CheckUnexpectedField has already been called.
 void ValidationTask::CheckPostalCodeFormatAndValue(
     const Supplier::RuleHierarchy& hierarchy) const {
   assert(hierarchy.rule[0] != NULL);
@@ -164,8 +176,11 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 
   if (address_.IsFieldEmpty(POSTAL_CODE)) {
     return;
-  } else if (IsUnexpected(country_rule, POSTAL_CODE)) {
-    return;  // Problem already reported by CheckUnexpectedField().
+  } else if (std::find(problems_->begin(), problems_->end(),
+                       FieldProblemMap::value_type(POSTAL_CODE,
+                                                   UNEXPECTED_FIELD))
+             != problems_->end()) {
+    return;  // Problem already reported.
   }
 
   // Validate general postal code format. A country-level rule specifies the
@@ -243,15 +258,6 @@ bool ValidationTask::ShouldReport(AddressField field,
          std::find(filter_->begin(), filter_->end(),
                    FieldProblemMap::value_type(field, problem)) !=
          filter_->end();
-}
-
-// static
-bool ValidationTask::IsUnexpected(const Rule& rule, AddressField field) {
-  // TODO: This and IsFieldUsedTask seem to do the opposite of each other.
-  // CheckMissingRequiredField and IsFieldRequired also seem to have duplicated
-  // code. We should address this.
-  return std::find(rule.GetFormat().begin(), rule.GetFormat().end(),
-                   FormatElement(field)) == rule.GetFormat().end();
 }
 
 }  // namespace addressinput
