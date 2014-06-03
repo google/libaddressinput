@@ -21,6 +21,7 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <iosfwd>
 #include <string>
 #include <vector>
 
@@ -73,6 +74,8 @@ struct AddressData {
   const std::vector<std::string>& GetRepeatedFieldValue(
       AddressField field) const;
 
+  bool operator==(const AddressData& other) const;
+
   // Returns true if the parameter comprises multiple fields, false otherwise.
   // Use it to determine whether to call |GetFieldValue| or
   // |GetRepeatedFieldValue|.
@@ -81,5 +84,9 @@ struct AddressData {
 
 }  // namespace addressinput
 }  // namespace i18n
+
+// Produces human-readable output in logging, for example in unit tests.
+std::ostream& operator<<(std::ostream& o,
+                         const i18n::addressinput::AddressData& address);
 
 #endif  // I18N_ADDRESSINPUT_ADDRESS_DATA_H_

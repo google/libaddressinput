@@ -16,6 +16,8 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <sstream>
+
 #include <gtest/gtest.h>
 
 namespace {
@@ -132,6 +134,52 @@ TEST(AddressDataTest, IsFieldEmptyVectorWhitespace) {
   address.address_line.push_back(" b ");
   address.address_line.push_back("   ");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
+}
+
+TEST(AddressDataTest, StreamFunction) {
+  std::ostringstream oss;
+  AddressData address;
+  address.address_line.push_back("Line 1");
+  address.address_line.push_back("Line 2");
+  address.recipient = "N";
+  address.region_code = "R";
+  address.postal_code = "Z";
+  address.administrative_area = "S";
+  address.locality = "C";
+  address.dependent_locality = "D";
+  address.sorting_code = "X";
+  address.language_code = "zh-Hant";
+  oss << address;
+  EXPECT_EQ("region_code: \"R\"\n"
+            "administrative_area: \"S\"\n"
+            "locality: \"C\"\n"
+            "dependent_locality: \"D\"\n"
+            "postal_code: \"Z\"\n"
+            "sorting_code: \"X\"\n"
+            "address_line: \"Line 1\"\n"
+            "address_line: \"Line 2\"\n"
+            "language_code: \"zh-Hant\"\n"
+            "recipient: \"N\"\n", oss.str());
+}
+
+TEST(AddressDataTest, TestEquals) {
+  AddressData address;
+  address.address_line.push_back("Line 1");
+  address.address_line.push_back("Line 2");
+  address.recipient = "N";
+  address.region_code = "R";
+  address.postal_code = "Z";
+  address.administrative_area = "S";
+  address.locality = "C";
+  address.dependent_locality = "D";
+  address.sorting_code = "X";
+  address.language_code = "zh-Hant";
+
+  AddressData clone = address;
+
+  EXPECT_EQ(address, clone);
+  clone.language_code.clear();
+  EXPECT_FALSE(address == clone);
 }
 
 #ifndef NDEBUG

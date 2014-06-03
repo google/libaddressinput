@@ -21,6 +21,7 @@
 #include <cassert>
 #include <cstddef>
 #include <functional>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -102,6 +103,19 @@ const std::vector<std::string>& AddressData::GetRepeatedFieldValue(
   return this->*kVectorStringField[field];
 }
 
+bool AddressData::operator==(const AddressData& other) const {
+  return
+      region_code == other.region_code &&
+      address_line == other.address_line &&
+      administrative_area == other.administrative_area &&
+      locality == other.locality &&
+      dependent_locality == other.dependent_locality &&
+      postal_code == other.postal_code &&
+      sorting_code == other.sorting_code &&
+      language_code == other.language_code &&
+      recipient == other.recipient;
+}
+
 // static
 bool AddressData::IsRepeatedFieldValue(AddressField field) {
   assert(field >= 0);
@@ -111,3 +125,26 @@ bool AddressData::IsRepeatedFieldValue(AddressField field) {
 
 }  // namespace addressinput
 }  // namespace i18n
+
+std::ostream& operator<<(std::ostream& o,
+                         const i18n::addressinput::AddressData& address) {
+  o << "region_code: \"" << address.region_code << "\"\n"
+    "administrative_area: \"" << address.administrative_area << "\"\n"
+    "locality: \"" << address.locality << "\"\n"
+    "dependent_locality: \"" << address.dependent_locality << "\"\n"
+    "postal_code: \"" << address.postal_code << "\"\n"
+    "sorting_code: \"" << address.sorting_code << "\"\n";
+
+  // TODO: Update the field order in the .h file to match the order they are
+  // printed out here, for consistency.
+  for (std::vector<std::string>::const_iterator it =
+           address.address_line.begin();
+       it != address.address_line.end(); ++it) {
+    o << "address_line: \"" << *it << "\"\n";
+  }
+
+  o << "language_code: \"" << address.language_code << "\"\n"
+    "recipient: \"" << address.recipient << "\"\n";
+
+  return o;
+}
