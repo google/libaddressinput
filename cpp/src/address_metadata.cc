@@ -25,6 +25,10 @@ namespace i18n {
 namespace addressinput {
 
 bool IsFieldRequired(AddressField field, const std::string& region_code) {
+  if (field == COUNTRY) {
+    return true;
+  }
+
   Rule rule;
   rule.CopyFrom(Rule::GetDefault());
   if (!rule.ParseSerializedRule(
@@ -38,6 +42,10 @@ bool IsFieldRequired(AddressField field, const std::string& region_code) {
 }
 
 bool IsFieldUsed(AddressField field, const std::string& region_code) {
+  if (field == COUNTRY) {
+    return true;
+  }
+
   Rule rule;
   rule.CopyFrom(Rule::GetDefault());
   if (!rule.ParseSerializedRule(

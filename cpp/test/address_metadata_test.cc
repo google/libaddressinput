@@ -20,11 +20,24 @@
 
 namespace {
 
+using i18n::addressinput::COUNTRY;
 using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::DEPENDENT_LOCALITY;
 
 using i18n::addressinput::IsFieldRequired;
 using i18n::addressinput::IsFieldUsed;
+
+TEST(AddressMetadataTest, IsFieldRequiredCountry) {
+  EXPECT_TRUE(IsFieldRequired(COUNTRY, "US"));
+  EXPECT_TRUE(IsFieldRequired(COUNTRY, "CH"));
+  EXPECT_TRUE(IsFieldRequired(COUNTRY, "rrr"));
+}
+
+TEST(AddressMetadataTest, IsUsedRequiredCountry) {
+  EXPECT_TRUE(IsFieldUsed(COUNTRY, "US"));
+  EXPECT_TRUE(IsFieldUsed(COUNTRY, "CH"));
+  EXPECT_TRUE(IsFieldUsed(COUNTRY, "rrr"));
+}
 
 TEST(AddressMetadataTest, IsFieldRequiredAdminAreaUS) {
   EXPECT_TRUE(IsFieldRequired(ADMIN_AREA, "US"));

@@ -21,11 +21,13 @@ namespace i18n {
 namespace addressinput {
 
 // Checks whether |field| is a required field for |region_code|. Returns false
-// also if no data could be found for region_code.
+// also if no data could be found for region_code. Note: COUNTRY is always
+// required.
 bool IsFieldRequired(AddressField field, const std::string& region_code);
 
 // Checks whether |field| is a field that is used for |region_code|. Returns
-// false also if no data could be found for region_code.
+// false also if no data could be found for region_code. Note: COUNTRY is always
+// used.
 bool IsFieldUsed(AddressField field, const std::string& region_code);
 
 }  // namespace addressinput
