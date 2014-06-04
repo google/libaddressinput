@@ -15,7 +15,6 @@
 #include "retriever.h"
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
@@ -25,6 +24,7 @@
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
+#include "mock_downloader.h"
 
 #define CHECKSUM "dd63dafcbd4d5b28badfcaf86fb6fcdb"
 #define DATA "{'foo': 'bar'}"
@@ -33,8 +33,8 @@
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
+using i18n::addressinput::MockDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Storage;
@@ -119,25 +119,10 @@ TEST_F(RetrieverTest, MissingKeyReturnsEmptyData) {
   EXPECT_EQ(kEmptyData, data_);
 }
 
-// The downloader that always fails.
-class FaultyDownloader : public Downloader {
- public:
-  FaultyDownloader() {}
-  virtual ~FaultyDownloader() {}
-
-  // Downloader implementation.
-  virtual void Download(const std::string& url,
-                        const Callback& downloaded) const {
-    downloaded(false, url, "garbage");
-  }
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(FaultyDownloader);
-};
-
 TEST_F(RetrieverTest, FaultyDownloader) {
-  Retriever bad_retriever(FakeDownloader::kFakeDataUrl,
-                          new FaultyDownloader,
+  // An empty MockDownloader will fail for any request.
+  Retriever bad_retriever(MockDownloader::kMockDataUrl,
+                          new MockDownloader,
                           new NullStorage);
 
   scoped_ptr<Retriever::Callback> callback(BuildCallback());
@@ -172,8 +157,9 @@ class StaleStorage : public Storage {
 TEST_F(RetrieverTest, UseStaleDataWhenDownloaderFails) {
   // Owned by |resilient_retriver|.
   StaleStorage* stale_storage = new StaleStorage;
+  // An empty MockDownloader will fail for any request.
   Retriever resilient_retriever(
-      FakeDownloader::kFakeDataUrl, new FaultyDownloader, stale_storage);
+      MockDownloader::kMockDataUrl, new MockDownloader, stale_storage);
 
   scoped_ptr<Retriever::Callback> callback(BuildCallback());
   resilient_retriever.Retrieve(kKey, *callback);

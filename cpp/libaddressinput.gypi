@@ -69,6 +69,7 @@
       'test/localization_test.cc',
       'test/lookup_key_test.cc',
       'test/lookup_key_util_test.cc',
+      'test/mock_downloader.cc',
       'test/null_storage_test.cc',
       'test/ondemand_supply_task_test.cc',
       'test/post_box_matchers_test.cc',

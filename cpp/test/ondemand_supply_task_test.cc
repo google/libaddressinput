@@ -15,7 +15,6 @@
 #include "ondemand_supply_task.h"
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
@@ -30,14 +29,15 @@
 #include <gtest/gtest.h>
 
 #include "lookup_key.h"
+#include "mock_downloader.h"
 #include "retriever.h"
 #include "rule.h"
 
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::Downloader;
 using i18n::addressinput::LookupKey;
+using i18n::addressinput::MockDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplyTask;
 using i18n::addressinput::Retriever;
@@ -47,48 +47,17 @@ using i18n::addressinput::Supplier;
 
 class OndemandSupplyTaskTest : public testing::Test {
  protected:
-  class MockDownloader : public Downloader {
-   public:
-    static const char kMockDataUrl[];
-    static const size_t kMockDataUrlLength;
-
-    MockDownloader() {}
-    virtual ~MockDownloader() {}
-
-    virtual void Download(const std::string& url,
-                          const Callback& downloaded) const {
-      ASSERT_EQ(0, url.compare(0, kMockDataUrlLength, kMockDataUrl));
-      std::string key(url, kMockDataUrlLength);
-      std::map<std::string, std::string>::const_iterator it = data_.find(key);
-      bool success = it != data_.end();
-      downloaded(success, url, success ? it->second : std::string());
-    }
-
-    std::map<std::string, std::string> data_;
-
-   private:
-    DISALLOW_COPY_AND_ASSIGN(MockDownloader);
-  };
-
-  MockDownloader* const downloader_;
-
- private:
-  std::map<std::string, const Rule*> rule_cache_;
-  const scoped_ptr<Retriever> retriever_;
-  const scoped_ptr<const Supplier::Callback> supplied_;
-
- protected:
   OndemandSupplyTaskTest()
-      : downloader_(new MockDownloader),
+      : success_(true),
+        lookup_key_(),
+        rule_(),
+        called_(false),
+        downloader_(new MockDownloader),
         rule_cache_(),
         retriever_(
             new Retriever(
                 MockDownloader::kMockDataUrl, downloader_, new NullStorage)),
         supplied_(BuildCallback(this, &OndemandSupplyTaskTest::Supplied)),
-        success_(true),
-        lookup_key_(),
-        rule_(),
-        called_(false),
         task_(new OndemandSupplyTask(lookup_key_, &rule_cache_, *supplied_)) {}
 
   virtual ~OndemandSupplyTaskTest() {
@@ -110,6 +79,7 @@ class OndemandSupplyTaskTest : public testing::Test {
   LookupKey lookup_key_;  // Stub.
   const Rule* rule_[arraysize(LookupKey::kHierarchy)];
   bool called_;
+  MockDownloader* const downloader_;
 
  private:
   void Supplied(bool success,
@@ -122,15 +92,13 @@ class OndemandSupplyTaskTest : public testing::Test {
     called_ = true;
   }
 
+  std::map<std::string, const Rule*> rule_cache_;
+  const scoped_ptr<Retriever> retriever_;
+  const scoped_ptr<const Supplier::Callback> supplied_;
   OndemandSupplyTask* const task_;
 
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTaskTest);
 };
-
-const char OndemandSupplyTaskTest::MockDownloader::kMockDataUrl[] = "mock:///";
-
-const size_t OndemandSupplyTaskTest::MockDownloader::kMockDataUrlLength =
-    sizeof OndemandSupplyTaskTest::MockDownloader::kMockDataUrl - 1;
 
 TEST_F(OndemandSupplyTaskTest, Empty) {
   ASSERT_NO_FATAL_FAILURE(Retrieve());

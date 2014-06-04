@@ -16,17 +16,18 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
+#include <utility>
 
 #include <gtest/gtest.h>
 
 #include "fake_downloader.h"
+#include "mock_downloader.h"
 
 namespace {
 
@@ -34,8 +35,8 @@ using i18n::addressinput::AddressData;
 using i18n::addressinput::AddressInputHelper;
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Callback;
-using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
+using i18n::addressinput::MockDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::scoped_ptr;
@@ -245,34 +246,10 @@ TEST_F(AddressInputHelperTest, AddressWithInvalidOrMissingRegionCode) {
 
 class AddressInputHelperMockDataTest : public testing::Test {
  protected:
-  class MockDownloader : public Downloader {
-   public:
-    static const char kMockAggregateDataUrl[];
-    static const size_t kMockAggregateDataUrlLength;
-
-    MockDownloader() {}
-    virtual ~MockDownloader() {}
-
-    virtual void Download(const std::string& url,
-                          const Callback& downloaded) const {
-      ASSERT_EQ(0, url.compare(0, kMockAggregateDataUrlLength,
-                               kMockAggregateDataUrl));
-      std::string key(url, kMockAggregateDataUrlLength);
-      std::map<std::string, std::string>::const_iterator it = data_.find(key);
-      bool success = it != data_.end();
-      downloaded(success, url, success ? it->second : std::string());
-    }
-
-    std::map<std::string, std::string> data_;
-
-   private:
-    DISALLOW_COPY_AND_ASSIGN(MockDownloader);
-  };
-
   AddressInputHelperMockDataTest()
       : downloader_(new MockDownloader),
         // Our PreloadSupplier loads all data for a country at a time.
-        supplier_(MockDownloader::kMockAggregateDataUrl,
+        supplier_(MockDownloader::kMockDataUrl,
                   downloader_,
                   new NullStorage),
         address_input_helper_(&supplier_),
@@ -303,14 +280,6 @@ class AddressInputHelperMockDataTest : public testing::Test {
   const scoped_ptr<const PreloadSupplier::Callback> loaded_;
   DISALLOW_COPY_AND_ASSIGN(AddressInputHelperMockDataTest);
 };
-
-const char
-    AddressInputHelperMockDataTest::MockDownloader::kMockAggregateDataUrl[] =
-        "mock:///aggregate/";
-
-const size_t AddressInputHelperMockDataTest::MockDownloader::
-    kMockAggregateDataUrlLength = sizeof AddressInputHelperMockDataTest::
-                                      MockDownloader::kMockAggregateDataUrl - 1;
 
 TEST_F(AddressInputHelperMockDataTest,
        PostalCodeSharedAcrossDifferentHierarchies) {
