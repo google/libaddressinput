@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <libaddressinput/synonyms.h>
+#include <libaddressinput/address_normalizer.h>
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
@@ -29,15 +29,15 @@
 namespace i18n {
 namespace addressinput {
 
-Synonyms::Synonyms(const PreloadSupplier* supplier)
+AddressNormalizer::AddressNormalizer(const PreloadSupplier* supplier)
     : supplier_(supplier),
       compare_(new StringCompare) {
   assert(supplier_ != NULL);
 }
 
-Synonyms::~Synonyms() {}
+AddressNormalizer::~AddressNormalizer() {}
 
-void Synonyms::NormalizeForDisplay(AddressData* address) const {
+void AddressNormalizer::Normalize(AddressData* address) const {
   assert(address != NULL);
   assert(supplier_->IsLoaded(address->region_code));
 
