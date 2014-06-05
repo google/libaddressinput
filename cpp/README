@@ -46,7 +46,8 @@ http://packages.ubuntu.com/saucy/gyp
 http://packages.ubuntu.com/saucy/ninja-build
 http://packages.ubuntu.com/saucy/libgtest-dev
 http://packages.ubuntu.com/saucy/python
-http://packages.debian.org/experimental/libre2-dev
+http://packages.ubuntu.com/utopic/libre2-1
+http://packages.ubuntu.com/utopic/libre2-dev
 
 Alternatively, you can download, build, and install these tools and libraries
 from source code. Their home pages contain information on how to accomplish
