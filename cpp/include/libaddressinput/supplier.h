@@ -28,7 +28,7 @@ class Rule;
 // metadata needed to validate an address, as described by a LookupKey.
 class Supplier {
  public:
-  class RuleHierarchy;
+  struct RuleHierarchy;
   typedef i18n::addressinput::Callback<LookupKey, RuleHierarchy> Callback;
 
   virtual ~Supplier() {}
