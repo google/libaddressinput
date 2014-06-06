@@ -45,6 +45,9 @@ class AddressInputHelper {
   // Note that the preload supplier must have had the rules for the country
   // represented by this address loaded before this method is called - otherwise
   // an assertion failure will result.
+  //
+  // The address should have the best language tag as returned from
+  // BuildComponents().
   void FillAddress(AddressData* address) const;
 
  private:
