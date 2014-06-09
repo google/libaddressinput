@@ -1,0 +1,21 @@
+apply plugin: 'android-library'
+
+dependencies {
+    compile parent
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java {
+                srcDir '.'
+                exclude 'android/**'
+            }
+            resources.srcDirs = ['../../testdata']
+        }
+    }
+}
