@@ -91,7 +91,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
       "\"state_name_type\":\"state\","
       "\"zipex\":\"C1070AAM,C1000WAM,B1000TBU,X5187XAB\","
-      "\"posturl\":\"http://www.correoargentino.com.ar/cpa\","
+      "\"posturl\":\"http://www.correoargentino.com.ar/formularios/cpa\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("AS", "{"
@@ -282,7 +282,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("CN", "{"
       "\"fmt\":\"%Z%n%S%C%D%n%A%n%O%n%N\","
-      "\"lfmt\":\"%N%n%O%n%A, %D%n%C%n%S, %Z\","
+      "\"lfmt\":\"%N%n%O%n%A%n%D%n%C%n%S, %Z\","
       "\"require\":\"ACSZ\","
       "\"zipex\":\"266033,317204,100096,100808\","
       "\"posturl\":\"http://www.cpdc.com.cn/postcdQueryAction.do\?reqCode=gotoQueryPostAddr\","
