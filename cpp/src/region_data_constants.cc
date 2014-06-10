@@ -1217,7 +1217,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"to~en\""
       "}"));
   region_data.insert(std::make_pair("TR", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C/%S\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"01960,06101\","
       "\"posturl\":\"http://postakodu.ptt.gov.tr/\","
