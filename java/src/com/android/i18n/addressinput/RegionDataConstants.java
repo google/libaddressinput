@@ -32,24 +32,11 @@ class RegionDataConstants {
     private static final Map<String, String> COUNTRY_FORMAT_MAP =
             new HashMap<String, String>();
 
-    /**
-     * Assumes the array is a well-formed array - i.e., there are no unmatched keys in the input.
-     * Package-private so it can be accessed by tests.
-     */
-    static String convertArrayToJsonString(String[] input) {
-        JSONObject object = new JSONObject();
-        for (int i = 0; i < input.length; i += 2) {
-            try {
-                object.put(input[i], input[i + 1]);
-            } catch (JSONException e) {
-                // Ignore for now.
-            }
-        }
-        return object.toString();
-    }
-
     private enum RegionDataEnum {
 
+        AC(new String[]{
+            "name", "ASCENSION ISLAND",
+        }),
         AD(new String[]{
                 "name", "ANDORRA",
                 "lang", "ca",
@@ -278,11 +265,9 @@ class RegionDataConstants {
                 "lang", "zh-hans",
                 "languages", "zh-hans",
                 "fmt", "%Z%n%S%C%D%n%A%n%O%n%N",
-                "lfmt", "%N%n%O%n%A, %D%n%C%n%S, %Z",
+                "lfmt", "%N%n%O%n%A%n%D%n%C%n%S, %Z",
                 "require", "ACSZ",
                 "upper", "S",
-                "fmtCharsets", "GB2312",
-                "hasDisputed", "true",
         }),
         CO(new String[]{
                 "name", "COLOMBIA",
@@ -352,7 +337,7 @@ class RegionDataConstants {
         EG(new String[]{
                 "name", "EGYPT",
                 "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
-                "dir", "rtl",
+                "lfmt", "%N%n%O%n%A%n%C%n%S%n%Z",
         }),
         EH(new String[]{
                 "name", "WESTERN SAHARA",
@@ -503,7 +488,6 @@ class RegionDataConstants {
                 "require", "AS",
                 "upper", "S",
                 "state_name_type", "area",
-                "fmtCharsets", "Big5",
         }),
         HM(new String[]{
                 "name", "HEARD AND MCDONALD ISLANDS",
@@ -544,7 +528,6 @@ class RegionDataConstants {
         IL(new String[]{
                 "name", "ISRAEL",
                 "fmt", "%N%n%O%n%A%n%C %Z",
-                "dir", "rtl",
         }),
         IM(new String[]{
                 "name", "ISLE OF MAN",
@@ -611,7 +594,6 @@ class RegionDataConstants {
                 "require", "ACSZ",
                 "upper", "S",
                 "state_name_type", "prefecture",
-                "fmtCharsets", "ISO-2022-JP",
         }),
         KE(new String[]{
                 "name", "KENYA",
@@ -652,7 +634,6 @@ class RegionDataConstants {
                 "require", "ACSZ",
                 "upper", "Z",
                 "state_name_type", "do_si",
-                "fmtCharsets", "EUC-KR",
         }),
         KW(new String[]{
                 "name", "KUWAIT",
@@ -1092,6 +1073,9 @@ class RegionDataConstants {
                 "fmt", "%N%n%O%n%A%n%C%n%Z",
                 "upper", "ACZ",
         }),
+        TA(new String[]{
+                "name", "TRISTAN DA CUNHA",
+        }),
         TC(new String[]{
                 "name", "TURKS AND CAICOS ISLANDS",
                 "fmt", "%N%n%O%n%A%n%X%n%C%n%Z",
@@ -1111,10 +1095,9 @@ class RegionDataConstants {
                 "name", "THAILAND",
                 "lang", "th",
                 "languages", "th",
-                "fmt", "%N%n%O%n%A%n%C%n%S %Z",
-                "lfmt", "%N%n%O%n%A%n%C%n%S %Z",
+                "fmt", "%N%n%O%n%A%n%D %C%n%S %Z",
+                "lfmt", "%N%n%O%n%A%n%D, %C%n%S %Z",
                 "upper", "S",
-                "fmtCharsets", "TIS-620",
         }),
         TJ(new String[]{
                 "name", "TAJIKISTAN",
@@ -1161,7 +1144,6 @@ class RegionDataConstants {
                 "lfmt", "%N%n%O%n%A%n%C, %S %Z",
                 "require", "ACSZ",
                 "state_name_type", "county",
-                "fmtCharsets", "Big5",
         }),
         TZ(new String[]{
                 "name", "TANZANIA (UNITED REP.)",
@@ -1250,6 +1232,10 @@ class RegionDataConstants {
         WS(new String[]{
                 "name", "SAMOA",
         }),
+        XK(new String[]{
+                "name", "KOSOVO",
+                "fmt", "%N%n%O%n%A%n%Z %C"
+        }),
         YE(new String[]{
                 "name", "YEMEN",
                 "require", "AC",
@@ -1283,7 +1269,6 @@ class RegionDataConstants {
                 "upper", "C",
                 "zip_name_type", "postal",
                 "state_name_type", "province",
-                "dir", "ltr",
         });
 
         private String jsonString;
@@ -1305,5 +1290,21 @@ class RegionDataConstants {
 
     static Map<String, String> getCountryFormatMap() {
         return COUNTRY_FORMAT_MAP;
+    }
+
+    /**
+     * Assumes the array is a well-formed array - i.e., there are no unmatched keys in the input.
+     * Package-private so it can be accessed by tests.
+     */
+    static String convertArrayToJsonString(String[] input) {
+        JSONObject object = new JSONObject();
+        for (int i = 0; i < input.length; i += 2) {
+            try {
+                object.put(input[i], input[i + 1]);
+            } catch (JSONException e) {
+                // Ignore for now.
+            }
+        }
+        return object.toString();
     }
 }
