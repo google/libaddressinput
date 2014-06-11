@@ -921,7 +921,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"1234 AB,2490 AA\","
-      "\"posturl\":\"http://www.tntpost.nl/voorthuis/\","
+      "\"posturl\":\"http://www.postnl.nl/voorthuis/\","
       "\"languages\":\"nl\""
       "}"));
   region_data.insert(std::make_pair("NO", "{"
