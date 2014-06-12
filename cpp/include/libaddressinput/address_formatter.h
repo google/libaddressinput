@@ -13,6 +13,10 @@
 // limitations under the License.
 //
 // Utility functions for formatting the addresses represented as AddressData.
+//
+// Note these work best if the address has a language code specified - this can
+// be obtained when building the UI components (calling BuildComponents on
+// address_ui.h).
 
 #ifndef I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H_
 #define I18N_ADDRESSINPUT_ADDRESS_FORMATTER_H_
