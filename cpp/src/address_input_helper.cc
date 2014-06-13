@@ -45,14 +45,6 @@ const char kLookupKeySeparator = '/';
 
 const size_t kHierarchyDepth = arraysize(LookupKey::kHierarchy);
 
-// Determines whether a given string is a reg-exp or a string. We consider a
-// string to be anything that doesn't contain characters with special meanings
-// in regular expressions - (, [, \, {, ?. These special characters are all the
-// ones that appear in the postal code regular expressions.
-bool ContainsRegExSpecialCharacters(const std::string& input) {
-  return input.find_first_of("([\\{?") != std::string::npos;
-}
-
 // Gets the best name for the entity represented by the current rule, using the
 // language provided. The language is currently used to distinguish whether a
 // Latin-script name should be fetched; if it is not explicitly Latin-script, we
@@ -133,14 +125,7 @@ void AddressInputHelper::FillAddress(AddressData* address) const {
   const RE2ptr* postal_code_reg_exp = region_rule->GetPostalCodeMatcher();
   if (postal_code_reg_exp != NULL) {
     if (address->postal_code.empty()) {
-      // Every reg-exp has been anchored at the start so we can use PartialMatch
-      // for prefix matching; we have to remove this here.
-      // TODO: Modify the rule class to store and expose this directly to make
-      // this more robust.
-      std::string pattern(postal_code_reg_exp->ptr->pattern().substr(1));
-      if (!ContainsRegExSpecialCharacters(pattern)) {
-        address->postal_code = pattern;
-      }
+      address->postal_code = region_rule->GetSolePostalCode();
     }
 
     // If we have a valid postal code, try and work out the most specific

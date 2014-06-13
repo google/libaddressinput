@@ -378,6 +378,20 @@ TEST_F(ValidationTaskTest, PostalCodeMatchingValue) {
   EXPECT_EQ(expected_, problems_);
 }
 
+TEST_F(ValidationTaskTest, PostalCodePrefixMismatchingValue) {
+  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{5}\"}";
+  json_[1] = "{\"zip\":\"9[0-5]|96[01]\"}";
+
+  address_.region_code = "rrr";
+  address_.postal_code = "10960";
+
+  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
 TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
   json_[0] = "{\"zip\":\"\\\\d{3}\"}";
   json_[1] = "{\"zip\":\"1\"}";

@@ -98,6 +98,11 @@ class Rule {
     return postal_code_matcher_.get();
   }
 
+  // Returns the sole postal code for this rule, if there is one.
+  const std::string& GetSolePostalCode() const {
+    return sole_postal_code_;
+  }
+
   // The message string identifier for admin area name. If not set, then
   // INVALID_MESSAGE_ID.
   int GetAdminAreaNameMessageId() const { return admin_area_name_message_id_; }
@@ -134,6 +139,7 @@ class Rule {
   std::vector<std::string> sub_keys_;
   std::vector<std::string> languages_;
   scoped_ptr<const RE2ptr> postal_code_matcher_;
+  std::string sole_postal_code_;
   int admin_area_name_message_id_;
   int postal_code_name_message_id_;
   std::string name_;

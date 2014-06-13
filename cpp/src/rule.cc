@@ -109,6 +109,14 @@ int GetMessageIdFromName(const std::string& name,
   return it != message_ids.end() ? it->second : INVALID_MESSAGE_ID;
 }
 
+// Determines whether a given string is a reg-exp or a string. We consider a
+// string to be anything that doesn't contain characters with special meanings
+// in regular expressions - (, [, \, {, ?. These special characters are all the
+// ones that appear in the postal code regular expressions.
+bool ContainsRegExSpecialCharacters(const std::string& input) {
+  return input.find_first_of("([\\{?") != std::string::npos;
+}
+
 }  // namespace
 
 Rule::Rule()
@@ -119,6 +127,7 @@ Rule::Rule()
       sub_keys_(),
       languages_(),
       postal_code_matcher_(NULL),
+      sole_postal_code_(),
       admin_area_name_message_id_(INVALID_MESSAGE_ID),
       postal_code_name_message_id_(INVALID_MESSAGE_ID),
       name_(),
@@ -152,6 +161,7 @@ void Rule::CopyFrom(const Rule& rule) {
           ? NULL
           : new RE2ptr(new RE2(rule.postal_code_matcher_->ptr->pattern(),
                                rule.postal_code_matcher_->ptr->options())));
+  sole_postal_code_ = rule.sole_postal_code_;
   admin_area_name_message_id_ = rule.admin_area_name_message_id_;
   postal_code_name_message_id_ = rule.postal_code_name_message_id_;
   name_ = rule.name_;
@@ -197,6 +207,7 @@ void Rule::ParseJsonRule(const Json& json) {
         json.GetStringValueForKey(kLanguagesKey), kSeparator, &languages_);
   }
 
+  sole_postal_code_.clear();
   if (json.HasStringValueForKey(kZipKey)) {
     const std::string& zip = json.GetStringValueForKey(kZipKey);
     // The "zip" field in the JSON data is used in two different ways to
@@ -212,12 +223,17 @@ void Rule::ParseJsonRule(const Json& json) {
     // RE2::FullMatch() to perform matching against the entire string.
     RE2::Options options;
     options.set_never_capture(true);
-    RE2* matcher = new RE2("^" + zip, options);
+    RE2* matcher = new RE2("^(" + zip + ")", options);
     if (matcher->ok()) {
       postal_code_matcher_.reset(new RE2ptr(matcher));
     } else {
       postal_code_matcher_.reset(NULL);
       delete matcher;
+    }
+    // If the "zip" field is not a regular expression, then it is the sole
+    // postal code for this rule.
+    if (!ContainsRegExSpecialCharacters(zip)) {
+      sole_postal_code_ = zip;
     }
   }
 

@@ -105,6 +105,7 @@ TEST(RuleTest, ParseOverwritesRule) {
   ASSERT_TRUE(rule.ParseSerializedRule("{"
                                        "\"fmt\":\"%S%Z\","
                                        "\"state_name_type\":\"area\","
+                                       "\"zip\":\"1234\","
                                        "\"zip_name_type\":\"postal\","
                                        "\"zipex\":\"1234\","
                                        "\"posturl\":\"http://www.testpost.com\""
@@ -114,6 +115,7 @@ TEST(RuleTest, ParseOverwritesRule) {
             rule.GetAdminAreaNameMessageId());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
+  EXPECT_EQ("1234", rule.GetSolePostalCode());
   EXPECT_EQ("1234", rule.GetPostalCodeExample());
   EXPECT_EQ("http://www.testpost.com", rule.GetPostServiceUrl());
 
@@ -129,6 +131,7 @@ TEST(RuleTest, ParseOverwritesRule) {
             rule.GetAdminAreaNameMessageId());
   EXPECT_EQ(IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL,
             rule.GetPostalCodeNameMessageId());
+  EXPECT_TRUE(rule.GetSolePostalCode().empty());
   EXPECT_EQ("5678", rule.GetPostalCodeExample());
   EXPECT_EQ("http://www.fakepost.com", rule.GetPostServiceUrl());
 }
@@ -337,6 +340,22 @@ TEST_P(RuleParseTest, PostalCodeNameTypeHasUiString) {
     EXPECT_FALSE(
         localization_.GetString(rule_.GetPostalCodeNameMessageId()).empty());
   }
+}
+
+// Verifies that the sole postal code is correctly recognised and copied.
+TEST_P(RuleParseTest, SolePostalCode) {
+  Rule rule;
+  ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"1234\"}"));
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule.GetSolePostalCode() == "1234");
+
+  Rule copy;
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
+  EXPECT_TRUE(copy.GetSolePostalCode().empty());
+
+  copy.CopyFrom(rule);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
+  EXPECT_EQ(rule.GetSolePostalCode(), copy.GetSolePostalCode());
 }
 
 // Test parsing all region data.
