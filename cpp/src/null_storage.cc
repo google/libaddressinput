@@ -14,6 +14,8 @@
 
 #include <libaddressinput/null_storage.h>
 
+#include <cassert>
+#include <cstddef>
 #include <string>
 
 namespace i18n {
@@ -25,12 +27,14 @@ NullStorage::NullStorage() {
 NullStorage::~NullStorage() {
 }
 
-void NullStorage::Put(const std::string& key, const std::string& data) {
+void NullStorage::Put(const std::string& key, std::string* data) {
+  assert(data != NULL);  // Sanity check.
+  delete data;
 }
 
 void NullStorage::Get(const std::string& key,
                       const Callback& data_ready) const {
-  data_ready(false, key, std::string());
+  data_ready(false, key, NULL);
 }
 
 }  // namespace addressinput

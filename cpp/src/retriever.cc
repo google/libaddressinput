@@ -57,27 +57,29 @@ class Helper {
 
   void OnValidatedDataReady(bool success,
                             const std::string& key,
-                            const std::string& data) {
+                            std::string* data) {
     if (success) {
-      retrieved_(success, key, data);
+      assert(data != NULL);
+      retrieved_(success, key, *data);
       delete this;
     } else {
       // Validating storage returns (false, key, stale-data) for valid but stale
       // data. If |data| is empty, however, then it's either missing or invalid.
-      if (!data.empty()) {
-        stale_data_ = data;
+      if (data != NULL && !data->empty()) {
+        stale_data_ = *data;
       }
       downloader_.Download(lookup_key_util_.GetUrlForKey(key), *downloaded_);
     }
+    delete data;
   }
 
-  void OnDownloaded(bool success,
-                    const std::string& url,
-                    const std::string& data) {
+  void OnDownloaded(bool success, const std::string& url, std::string* data) {
     const std::string& key = lookup_key_util_.GetKeyForUrl(url);
     if (success) {
+      assert(data != NULL);
+      retrieved_(true, key, *data);
       storage_->Put(key, data);
-      retrieved_(true, key, data);
+      data = NULL;  // Deleted by Storage::Put().
     } else if (!stale_data_.empty()) {
       // Reuse the stale data if a download fails. It's better to have slightly
       // outdated validation rules than to suddenly lose validation ability.
@@ -85,6 +87,7 @@ class Helper {
     } else {
       retrieved_(false, key, std::string());
     }
+    delete data;
     delete this;
   }
 

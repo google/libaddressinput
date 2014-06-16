@@ -33,7 +33,7 @@ class NullStorage : public Storage {
   virtual ~NullStorage();
 
   // No-op.
-  virtual void Put(const std::string& key, const std::string& data);
+  virtual void Put(const std::string& key, std::string* data);
 
   // Always calls the |data_ready| callback function signalling failure.
   virtual void Get(const std::string& key, const Callback& data_ready) const;

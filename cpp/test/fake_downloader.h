@@ -41,8 +41,9 @@ namespace addressinput {
 //     private:
 //      void OnDownloaded(bool success,
 //                        const std::string& url,
-//                        const std::string& data) {
+//                        std::string* data) {
 //        ...
+//        delete data;
 //      }
 //
 //      FakeDownloader downloader_;

@@ -25,29 +25,33 @@
 namespace i18n {
 namespace addressinput {
 
-// Stores downloaded validation rules. Sample usage:
+// Stores downloaded validation rules. The data must be allocated on the heap,
+// passing ownership to the called function. Sample usage:
+//
 //    class MyStorage : public Storage {
 //     public:
-//      virtual void Put(const std::string& key, const std::string& data) {
+//      virtual void Put(const std::string& key, std::string* data) {
 //        ...
+//        delete data;
 //      }
 //
 //      virtual void Get(const std::string& key,
 //                       const Callback& data_ready) const {
 //        bool success = ...
-//        std::string data = ...
+//        std::string* data = new ...
 //        data_ready(success, key, data);
 //      }
 //    };
 class Storage {
  public:
   typedef i18n::addressinput::Callback<const std::string&,
-                                       const std::string&> Callback;
+                                       std::string*> Callback;
 
   virtual ~Storage() {}
 
-  // Stores |data| for |key|.
-  virtual void Put(const std::string& key, const std::string& data) = 0;
+  // Stores |data| for |key|, where |data| is an object allocated on the heap,
+  // which Storage takes ownership of.
+  virtual void Put(const std::string& key, std::string* data) = 0;
 
   // Retrieves the data for |key| and invokes the |data_ready| callback.
   virtual void Get(const std::string& key,

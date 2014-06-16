@@ -45,8 +45,9 @@ namespace addressinput {
 //     private:
 //      void OnDataReady(bool success,
 //                       const std::string& key,
-//                       const std::string& data) {
+//                       std::string* data) {
 //        ...
+//        delete data;
 //      }
 //
 //      FakeStorage storage_;
@@ -60,11 +61,11 @@ class FakeStorage : public Storage {
   virtual ~FakeStorage();
 
   // Storage implementation.
-  virtual void Put(const std::string& key, const std::string& data);
+  virtual void Put(const std::string& key, std::string* data);
   virtual void Get(const std::string& key, const Callback& data_ready) const;
 
  private:
-  std::map<std::string, std::string> data_;
+  std::map<std::string, std::string*> data_;
 };
 
 }  // namespace addressinput

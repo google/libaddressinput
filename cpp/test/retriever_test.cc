@@ -19,6 +19,7 @@
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -141,11 +142,13 @@ class StaleStorage : public Storage {
 
   // Storage implementation.
   virtual void Get(const std::string& key, const Callback& data_ready) const {
-    data_ready(true, key, kStaleWrappedData);
+    data_ready(true, key, new std::string(kStaleWrappedData));
   }
 
-  virtual void Put(const std::string& key, const std::string& value) {
+  virtual void Put(const std::string& key, std::string* value) {
+    ASSERT_TRUE(value != NULL);
     data_updated_ = true;
+    delete value;
   }
 
   bool data_updated_;

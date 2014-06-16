@@ -18,6 +18,7 @@
 #include <libaddressinput/downloader.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -48,12 +49,14 @@ class FakeDownloaderTest : public testing::TestWithParam<std::string> {
   std::string data_;
 
  private:
-  void OnDownloaded(bool success,
-                    const std::string& url,
-                    const std::string& data) {
+  void OnDownloaded(bool success, const std::string& url, std::string* data) {
+    ASSERT_FALSE(success && data == NULL);
     success_ = success;
     url_ = url;
-    data_ = data;
+    if (data != NULL) {
+      data_ = *data;
+      delete data;
+    }
   }
 };
 

@@ -139,11 +139,14 @@ TEST(ValidatingUtilTest, UnwrapTimestamp) {
 }
 
 TEST(ValidatingUtilTest, Wrap) {
-  EXPECT_EQ(kWrappedData, ValidatingUtil::Wrap(kUnwrappedData, kTimestamp));
+  std::string data = kUnwrappedData;
+  ValidatingUtil::Wrap(kTimestamp, &data);
+  EXPECT_EQ(kWrappedData, data);
 }
 
 TEST(ValidatingUtilTest, WrapUnwrapIt) {
-  std::string data = ValidatingUtil::Wrap(kUnwrappedData, kTimestamp);
+  std::string data = kUnwrappedData;
+  ValidatingUtil::Wrap(kTimestamp, &data);
   EXPECT_TRUE(ValidatingUtil::UnwrapTimestamp(&data, kTimestamp));
   EXPECT_EQ(kChecksummedData, data);
   EXPECT_TRUE(ValidatingUtil::UnwrapChecksum(&data));

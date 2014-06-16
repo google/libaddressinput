@@ -81,21 +81,22 @@ bool UnwrapHeader(const char* header_prefix,
 }  // namespace
 
 // static
-std::string ValidatingUtil::Wrap(const std::string& data, time_t timestamp) {
+void ValidatingUtil::Wrap(time_t timestamp, std::string* data) {
+  assert(data != NULL);
   char timestamp_string[2 + 3 * sizeof timestamp];
   snprintf(timestamp_string, sizeof timestamp_string, "%ld", timestamp);
 
-  std::string wrapped;
-  wrapped.append(kTimestampPrefix, kTimestampPrefixLength);
-  wrapped.append(timestamp_string);
-  wrapped.push_back(kSeparator);
+  std::string header;
+  header.append(kTimestampPrefix, kTimestampPrefixLength);
+  header.append(timestamp_string);
+  header.push_back(kSeparator);
 
-  wrapped.append(kChecksumPrefix, kChecksumPrefixLength);
-  wrapped.append(MD5String(data));
-  wrapped.push_back(kSeparator);
-  wrapped.append(data);
+  header.append(kChecksumPrefix, kChecksumPrefixLength);
+  header.append(MD5String(*data));
+  header.push_back(kSeparator);
 
-  return wrapped;
+  data->reserve(header.size() + data->size());
+  data->insert(0, header);
 }
 
 // static

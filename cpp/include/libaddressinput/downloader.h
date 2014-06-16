@@ -25,20 +25,22 @@
 namespace i18n {
 namespace addressinput {
 
-// Downloads validation rules from the server. Sample usage:
+// Downloads validation rules from the server. The downloaded data must be
+// allocated on the heap, passing ownership to the callback. Sample usage:
+//
 //    class MyDownloader : public Downloader {
 //     public:
 //      virtual void Download(const std::string& url,
 //                            const Callback& downloaded) const {
 //        bool success = ...
-//        std::string data = ...
+//        std::string* data = new ...
 //        downloaded(success, url, data);
 //      }
 //    };
 class Downloader {
  public:
   typedef i18n::addressinput::Callback<const std::string&,
-                                       const std::string&> Callback;
+                                       std::string*> Callback;
 
   virtual ~Downloader() {}
 

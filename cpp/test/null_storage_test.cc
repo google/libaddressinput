@@ -18,6 +18,7 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -45,12 +46,14 @@ class NullStorageTest : public testing::Test {
   static const char kKey[];
 
  private:
-  void OnDataReady(bool success,
-                   const std::string& key,
-                   const std::string& data) {
+  void OnDataReady(bool success, const std::string& key, std::string* data) {
+    ASSERT_FALSE(success && data == NULL);
     success_ = success;
     key_ = key;
-    data_ = data;
+    if (data != NULL) {
+      data_ = *data;
+      delete data;
+    }
   }
 
   DISALLOW_COPY_AND_ASSIGN(NullStorageTest);
@@ -61,7 +64,7 @@ const char NullStorageTest::kKey[] = "foo";
 TEST_F(NullStorageTest, Put) {
   // The Put() method should not do anything, so this test only tests that the
   // code compiles and that the call doesn't crash.
-  storage_.Put(kKey, "bar");
+  storage_.Put(kKey, new std::string("bar"));
 }
 
 TEST_F(NullStorageTest, Get) {

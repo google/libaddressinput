@@ -14,26 +14,40 @@
 
 #include "fake_storage.h"
 
+#include <cassert>
+#include <cstddef>
 #include <map>
 #include <string>
+#include <utility>
 
 namespace i18n {
 namespace addressinput {
 
 FakeStorage::FakeStorage() {}
 
-FakeStorage::~FakeStorage() {}
+FakeStorage::~FakeStorage() {
+  for (std::map<std::string, std::string*>::const_iterator
+       it = data_.begin(); it != data_.end(); ++it) {
+    delete it->second;
+  }
+}
 
-void FakeStorage::Put(const std::string& key, const std::string& data) {
-  data_[key] = data;
+void FakeStorage::Put(const std::string& key, std::string* data) {
+  assert(data != NULL);
+  std::pair<std::map<std::string, std::string*>::iterator, bool> result =
+      data_.insert(std::make_pair(key, data));
+  if (!result.second) {
+    // Replace data in existing entry for this key.
+    delete result.first->second;
+    result.first->second = data;
+  }
 }
 
 void FakeStorage::Get(const std::string& key,
                       const Callback& data_ready) const {
-  std::map<std::string, std::string>::const_iterator data_it = data_.find(key);
+  std::map<std::string, std::string*>::const_iterator data_it = data_.find(key);
   bool success = data_it != data_.end();
-  std::string data = success ? data_it->second : std::string();
-  data_ready(success, key, data);
+  data_ready(success, key, success ? new std::string(*data_it->second) : NULL);
 }
 
 }  // namespace addressinput

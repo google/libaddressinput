@@ -15,6 +15,7 @@
 #include "mock_downloader.h"
 
 #include <cassert>
+#include <cstddef>
 #include <map>
 #include <string>
 
@@ -41,7 +42,7 @@ void MockDownloader::Download(const std::string& url,
   std::string key(url, kMockDataUrlLength);
   std::map<std::string, std::string>::const_iterator it = data_.find(key);
   bool success = it != data_.end();
-  downloaded(success, url, success ? it->second : std::string());
+  downloaded(success, url, success ? new std::string(it->second) : NULL);
 }
 
 }  // namespace addressinput

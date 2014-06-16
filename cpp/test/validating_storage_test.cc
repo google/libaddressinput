@@ -18,6 +18,7 @@
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -66,17 +67,19 @@ class ValidatingStorageTest : public testing::Test  {
   std::string data_;
 
  private:
-  void OnDataReady(bool success,
-                   const std::string& key,
-                   const std::string& data) {
+  void OnDataReady(bool success, const std::string& key, std::string* data) {
+    ASSERT_FALSE(success && data == NULL);
     success_ = success;
     key_ = key;
-    data_ = data;
+    if (data != NULL) {
+      data_ = *data;
+      delete data;
+    }
   }
 };
 
 TEST_F(ValidatingStorageTest, GoodData) {
-  storage_.Put(kKey, kValidatedData);
+  storage_.Put(kKey, new std::string(kValidatedData));
 
   scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
@@ -87,7 +90,7 @@ TEST_F(ValidatingStorageTest, GoodData) {
 }
 
 TEST_F(ValidatingStorageTest, EmptyData) {
-  storage_.Put(kKey, kEmptyData);
+  storage_.Put(kKey, new std::string(kEmptyData));
 
   scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
@@ -107,8 +110,8 @@ TEST_F(ValidatingStorageTest, MissingKey) {
 }
 
 TEST_F(ValidatingStorageTest, GarbageData) {
-  storage_.Put(kKey, kValidatedData);
-  wrapped_storage_->Put(kKey, "garbage");
+  storage_.Put(kKey, new std::string(kValidatedData));
+  wrapped_storage_->Put(kKey, new std::string("garbage"));
 
   scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
@@ -119,8 +122,8 @@ TEST_F(ValidatingStorageTest, GarbageData) {
 }
 
 TEST_F(ValidatingStorageTest, StaleData) {
-  storage_.Put(kKey, kValidatedData);
-  wrapped_storage_->Put(kKey, kStaleWrappedData);
+  storage_.Put(kKey, new std::string(kValidatedData));
+  wrapped_storage_->Put(kKey, new std::string(kStaleWrappedData));
 
   scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);

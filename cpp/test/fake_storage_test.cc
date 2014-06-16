@@ -18,6 +18,7 @@
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -47,10 +48,14 @@ class FakeStorageTest : public testing::Test {
  private:
   void OnDataReady(bool success,
                    const std::string& key,
-                   const std::string& data) {
+                   std::string* data) {
+    ASSERT_FALSE(success && data == NULL);
     success_ = success;
     key_ = key;
-    data_ = data;
+    if (data != NULL) {
+      data_ = *data;
+      delete data;
+    }
   }
 };
 
@@ -64,7 +69,7 @@ TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
 }
 
 TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
-  storage_.Put("key", "value");
+  storage_.Put("key", new std::string("value"));
 
   scoped_ptr<Storage::Callback> callback(BuildCallback());
   storage_.Get("key", *callback);
@@ -75,8 +80,8 @@ TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
 }
 
 TEST_F(FakeStorageTest, SecondPutOverwritesData) {
-  storage_.Put("key", "bad-value");
-  storage_.Put("key", "good-value");
+  storage_.Put("key", new std::string("bad-value"));
+  storage_.Put("key", new std::string("good-value"));
 
   scoped_ptr<Storage::Callback> callback(BuildCallback());
   storage_.Get("key", *callback);

@@ -158,17 +158,18 @@ void FakeDownloader::Download(const std::string& url,
   std::map<std::string, std::string>::const_iterator data_it =
       GetData().find(url);
   bool success = data_it != GetData().end();
-  std::string data = success ? data_it->second : std::string();
-  if (!success &&
-      (GetLookupKeyUtil().IsValidationDataUrl(url) ||
-       GetAggregateLookupKeyUtil().IsValidationDataUrl(url))) {
+  std::string* data = NULL;
+  if (success) {
+    data = new std::string(data_it->second);
+  } else if (GetLookupKeyUtil().IsValidationDataUrl(url) ||
+             GetAggregateLookupKeyUtil().IsValidationDataUrl(url)) {
     // URLs that start with "https://i18napis.appspot.com/ssl-address/" or
     // "https://i18napis.appspot.com/ssl-aggregate-address/" prefix, but do not
     // have associated data will always return "{}" with status code 200.
     // FakeDownloader imitates this behavior for URLs that start with
     // "test://address/" and "test://aggregate-address/" prefixes.
     success = true;
-    data = "{}";
+    data = new std::string("{}");
   }
   downloaded(success, url, data);
 }
