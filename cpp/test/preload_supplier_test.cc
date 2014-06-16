@@ -54,9 +54,7 @@ class PreloadSupplierTest : public testing::Test {
   scoped_ptr<PreloadSupplier::Callback> loaded_callback_;
 
  private:
-  void OnLoaded(bool success,
-                const std::string& region_code,
-                const int& num_rules) {
+  void OnLoaded(bool success, const std::string& region_code, int num_rules) {
     ASSERT_TRUE(success);
     ASSERT_FALSE(region_code.empty());
     ASSERT_LT(0, num_rules);

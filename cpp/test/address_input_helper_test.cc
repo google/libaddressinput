@@ -65,7 +65,7 @@ class AddressInputHelperTest : public testing::Test {
 
  private:
   // Used to preload data that we need.
-  void Loaded(bool success, const std::string&, const int&) {
+  void Loaded(bool success, const std::string&, int) {
     ASSERT_TRUE(success);
   }
 
@@ -271,7 +271,7 @@ class AddressInputHelperMockDataTest : public testing::Test {
 
  private:
   // Our mock downloader we assume will always succeed.
-  void Loaded(bool success, const std::string&, const int&) {
+  void Loaded(bool success, const std::string&, int) {
     ASSERT_TRUE(success);
   }
 

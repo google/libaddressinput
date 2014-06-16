@@ -42,7 +42,8 @@ class ValidatingStorage;
 //    retriever.Retrieve("data/CA/AB--fr", *retrieved);
 class Retriever {
  public:
-  typedef i18n::addressinput::Callback<std::string, std::string> Callback;
+  typedef i18n::addressinput::Callback<const std::string&,
+                                       const std::string&> Callback;
 
   // Takes ownership of |downloader| and |storage|.
   Retriever(const std::string& validation_data_url,

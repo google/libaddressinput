@@ -66,7 +66,8 @@ typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
 //    };
 class AddressValidator {
  public:
-  typedef i18n::addressinput::Callback<AddressData, FieldProblemMap> Callback;
+  typedef i18n::addressinput::Callback<const AddressData&,
+                                       const FieldProblemMap&> Callback;
 
   // Does not take ownership of |supplier|.
   AddressValidator(Supplier* supplier);

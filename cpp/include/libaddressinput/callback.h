@@ -15,9 +15,7 @@
 // An object to store a pointer to a method in an object with the following
 // signature:
 //
-//    void Observer::ObserveEvent(bool success,
-//                                const Key& key,
-//                                const Data& data);
+//    void Observer::ObserveEvent(bool success, Key key, Data data);
 
 #ifndef I18N_ADDRESSINPUT_CALLBACK_H_
 #define I18N_ADDRESSINPUT_CALLBACK_H_
@@ -31,7 +29,7 @@ namespace addressinput {
 // Stores a pointer to a method in an object. Sample usage:
 //    class MyClass {
 //     public:
-//      typedef Callback<MyType, MyDataType> MyCallback;
+//      typedef Callback<const MyType&, const MyDataType&> MyCallback;
 //
 //      void GetDataAsynchronously() {
 //        scoped_ptr<MyCallback> callback(BuildCallback(
@@ -52,10 +50,7 @@ template <typename Key, typename Data>
 class Callback {
  public:
   virtual ~Callback() {}
-
-  virtual void operator()(bool success,
-                          const Key& key,
-                          const Data& data) const = 0;
+  virtual void operator()(bool success, Key key, Data data) const = 0;
 };
 
 namespace {
@@ -63,7 +58,7 @@ namespace {
 template <typename Observer, typename Key, typename Data>
 class CallbackImpl : public Callback<Key, Data> {
  public:
-  typedef void (Observer::*ObserveEvent)(bool, const Key&, const Data&);
+  typedef void (Observer::*ObserveEvent)(bool, Key, Data);
 
   CallbackImpl(Observer* observer, ObserveEvent observe_event)
       : observer_(observer),
@@ -74,9 +69,7 @@ class CallbackImpl : public Callback<Key, Data> {
 
   virtual ~CallbackImpl() {}
 
-  virtual void operator()(bool success,
-                          const Key& key,
-                          const Data& data) const {
+  virtual void operator()(bool success, Key key, Data data) const {
     (observer_->*observe_event_)(success, key, data);
   }
 
@@ -92,7 +85,7 @@ class CallbackImpl : public Callback<Key, Data> {
 template <typename Observer, typename Key, typename Data>
 Callback<Key, Data>* BuildCallback(
     Observer* observer,
-    void (Observer::*observe_event)(bool, const Key&, const Data&)) {
+    void (Observer::*observe_event)(bool, Key, Data)) {
   return new CallbackImpl<Observer, Key, Data>(observer, observe_event);
 }
 

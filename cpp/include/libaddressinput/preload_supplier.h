@@ -48,7 +48,7 @@ class Storage;
 // in total less than 2 MB of JSON data.)
 class PreloadSupplier : public Supplier {
  public:
-  typedef i18n::addressinput::Callback<std::string, int> Callback;
+  typedef i18n::addressinput::Callback<const std::string&, int> Callback;
 
   // Takes ownership of |downloader| and |storage|. The |validation_data_url|
   // should be a URL to a service that returns address metadata aggregated per

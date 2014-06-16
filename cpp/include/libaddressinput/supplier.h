@@ -29,7 +29,8 @@ class Rule;
 class Supplier {
  public:
   struct RuleHierarchy;
-  typedef i18n::addressinput::Callback<LookupKey, RuleHierarchy> Callback;
+  typedef i18n::addressinput::Callback<const LookupKey&,
+                                       const RuleHierarchy&> Callback;
 
   virtual ~Supplier() {}
 

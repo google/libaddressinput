@@ -116,7 +116,7 @@ class PreloadSupplierWrapper : public SupplierWrapper {
                           new NullStorage),
         loaded_(BuildCallback(this, &PreloadSupplierWrapper::Loaded)) {}
 
-  void Loaded(bool success, const std::string&, const int&) {
+  void Loaded(bool success, const std::string&, int) {
     ASSERT_TRUE(success);
   }
 
