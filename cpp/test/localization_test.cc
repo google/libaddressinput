@@ -139,15 +139,13 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredPostalCode) {
   Localization localization;
   AddressData address;
   address.region_code = "CH";
-  EXPECT_EQ(std::string("You must provide a postal code, for example") +
-            " 2544,1211,1556,3030." +
+  EXPECT_EQ(std::string("You must provide a postal code, for example 2544.") +
             " Don't know your postal code? Find it out" +
             " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, true));
-  EXPECT_EQ(std::string("You must provide a postal code, for example") +
-            " 2544,1211,1556,3030.",
+  EXPECT_EQ("You must provide a postal code, for example 2544.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, false));
   EXPECT_EQ("You can't leave this empty.",
@@ -162,15 +160,13 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredZipCode) {
   Localization localization;
   AddressData address;
   address.region_code = "US";
-  EXPECT_EQ(std::string("You must provide a ZIP code, for example") +
-            " 95014,22162-1010." +
+  EXPECT_EQ(std::string("You must provide a ZIP code, for example 95014.") +
             " Don't know your ZIP code? Find it out" +
             " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, true));
-  EXPECT_EQ(std::string("You must provide a ZIP code, for example") +
-            " 95014,22162-1010.",
+  EXPECT_EQ("You must provide a ZIP code, for example 95014.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          MISSING_REQUIRED_FIELD, true, false));
   EXPECT_EQ("You can't leave this empty.",
@@ -342,16 +338,14 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatPostalCode) {
   AddressData address;
   address.region_code = "CH";
   EXPECT_EQ(std::string("This postal code format is not recognized. Example ") +
-            "of a valid postal code:" +
-            " 2544,1211,1556,3030." +
+            "of a valid postal code: 2544." +
             " Don't know your postal code? Find it out" +
             " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">" +
             "here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, true));
   EXPECT_EQ(std::string("This postal code format is not recognized. Example ") +
-            "of a valid postal code:" +
-            " 2544,1211,1556,3030.",
+            "of a valid postal code: 2544.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, false));
   EXPECT_EQ("This postal code format is not recognized.",
@@ -367,16 +361,14 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatZipCode) {
   AddressData address;
   address.region_code = "US";
   EXPECT_EQ(std::string("This ZIP code format is not recognized. Example of ") +
-            "a valid ZIP code:" +
-            " 95014,22162-1010." +
+            "a valid ZIP code: 95014." +
             " Don't know your ZIP code? Find it out" +
             " <a href=\"https://tools.usps.com/go/ZipLookupAction!" +
             "input.action\">here</a>.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, true));
   EXPECT_EQ(std::string("This ZIP code format is not recognized. Example of ") +
-            "a valid ZIP code:" +
-            " 95014,22162-1010.",
+            "a valid ZIP code: 95014.",
             localization.GetErrorMessage(address, POSTAL_CODE,
                                          INVALID_FORMAT, true, false));
   EXPECT_EQ("This ZIP code format is not recognized.",

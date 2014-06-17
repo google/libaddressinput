@@ -25,6 +25,7 @@
 #include "grit.h"
 #include "region_data_constants.h"
 #include "rule.h"
+#include "util/string_split.h"
 #include "util/string_util.h"
 
 namespace {
@@ -83,7 +84,11 @@ std::string Localization::GetErrorMessage(const AddressData& address,
     if (rule.ParseSerializedRule(
             RegionDataConstants::GetRegionData(address.region_code))) {
       if (enable_examples) {
-        postal_code_example = rule.GetPostalCodeExample();
+        std::vector<std::string> examples_list;
+        SplitString(rule.GetPostalCodeExample(), ',', &examples_list);
+        if (!examples_list.empty()) {
+          postal_code_example = examples_list.front();
+        }
       }
       if (enable_links) {
         post_service_url = rule.GetPostServiceUrl();
