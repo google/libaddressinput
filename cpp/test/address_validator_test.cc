@@ -332,4 +332,53 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
   EXPECT_EQ(expected_, problems_);
 }
 
+TEST_P(AddressValidatorTest, ValidKanjiAddressJP) {
+  address_.region_code = "JP";
+  address_.administrative_area =
+      "\xE5\xBE\xB3\xE5\xB3\xB6\xE7\x9C\x8C"; /* 徳島県 */
+  address_.locality =
+      "\xE5\xBE\xB3\xE5\xB3\xB6\xE5\xB8\x82";  /* 徳島市 */
+  address_.postal_code = "770-0847";
+  address_.address_line.push_back("...");
+  address_.language_code = "ja";
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
+TEST_P(AddressValidatorTest, ValidLatinAddressJP) {
+  // Skip this test case when using the OndemandSupplier, which depends on the
+  // address metadata server to map Latin script names to local script names.
+  if (GetParam() == &OndemandValidatorWrapper::Build) return;
+
+  address_.region_code = "JP";
+  address_.administrative_area = "TOKUSHIMA";
+  address_.locality = "Tokushima";
+  address_.postal_code = "770-0847";
+  address_.address_line.push_back("...");
+  address_.language_code = "ja-Latn";
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
+TEST_P(AddressValidatorTest, ValidAddressBR) {
+  // Skip this test case when using the OndemandSupplier, which depends on the
+  // address metadata server to map natural language names to metadata IDs.
+  if (GetParam() == &OndemandValidatorWrapper::Build) return;
+
+  address_.region_code = "BR";
+  address_.administrative_area = "S\xC3\xA3o Paulo";  /* São Paulo */
+  address_.locality = "Presidente Prudente";
+  address_.postal_code = "19063-008";
+  address_.address_line.push_back("Rodovia Raposo Tavares, 6388-6682");
+  address_.language_code = "pt";
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
 }  // namespace

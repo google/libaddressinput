@@ -21,10 +21,12 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <map>
 #include <set>
+#include <stack>
 #include <string>
 #include <utility>
 #include <vector>
@@ -49,14 +51,17 @@ class Helper {
          const PreloadSupplier::Callback& loaded,
          const Retriever& retriever,
          std::set<std::string>* pending,
-         std::map<std::string, const Rule*>* rule_cache)
+         std::map<std::string, const Rule*>* rule_index,
+         std::vector<const Rule*>* rule_storage)
       : region_code_(region_code),
         loaded_(loaded),
         pending_(pending),
-        rule_cache_(rule_cache),
+        rule_index_(rule_index),
+        rule_storage_(rule_storage),
         retrieved_(BuildCallback(this, &Helper::OnRetrieved)) {
     assert(pending_ != NULL);
-    assert(rule_cache_ != NULL);
+    assert(rule_index_ != NULL);
+    assert(rule_storage_ != NULL);
     assert(retrieved_ != NULL);
     pending_->insert(key);
     retriever.Retrieve(key, *retrieved_);
@@ -75,6 +80,7 @@ class Helper {
     (void)status;  // Prevent unused variable if assert() is optimized away.
 
     Json json;
+    std::vector<const Rule*> sub_rules;
 
     if (!success) {
       goto callback;
@@ -112,11 +118,85 @@ class Helper {
       rule->ParseJsonRule(value);
       assert(id == rule->GetId());  // Sanity check.
 
+      rule_storage_->push_back(rule);
+      if (depth > 0) {
+        sub_rules.push_back(rule);
+      }
+
+      // Add the ID of this Rule object to the rule index.
       std::pair<std::map<std::string, const Rule*>::iterator, bool> result =
-          rule_cache_->insert(std::make_pair(rule->GetId(), rule));
+          rule_index_->insert(std::make_pair(id, rule));
       assert(result.second);
       (void)result;  // Prevent unused variable if assert() is optimized away.
+
       ++rule_count;
+    }
+
+    /*
+     * Normally the address metadata server takes care of mapping from natural
+     * language names to metadata IDs (eg. "São Paulo" -> "SP") and from Latin
+     * script names to local script names (eg. "Tokushima" -> "徳島県").
+     *
+     * As the PreloadSupplier doesn't contact the metadata server upon each
+     * Supply() request, it instead has an internal lookup table (rule_index_)
+     * that contains such mappings.
+     *
+     * This lookup table is populated by iterating over all sub rules and for
+     * each of them construct ID strings using human readable names (eg. "São
+     * Paulo") and using Latin script names (eg. "Tokushima").
+     */
+    for (std::vector<const Rule*>::const_iterator
+         it = sub_rules.begin(); it != sub_rules.end(); ++it) {
+      std::stack<const Rule*> hierarchy;
+      hierarchy.push(*it);
+
+      // Push pointers to all parent Rule objects onto the hierarchy stack.
+      for (std::string parent_id((*it)->GetId());;) {
+        // Strip the last part of parent_id. Break if COUNTRY level is reached.
+        std::string::size_type pos = parent_id.rfind('/');
+        if (pos == sizeof "data/ZZ" - 1) {
+          break;
+        }
+        parent_id.resize(pos);
+
+        std::map<std::string, const Rule*>::const_iterator jt =
+            rule_index_->find(parent_id);
+        assert(jt != rule_index_->end());
+        hierarchy.push(jt->second);
+      }
+
+      std::string human_id((*it)->GetId().substr(0, sizeof "data/ZZ" - 1));
+      std::string latin_id(human_id);
+
+      // Append the names from all Rule objects on the hierarchy stack.
+      for (; !hierarchy.empty(); hierarchy.pop()) {
+        const Rule* rule = hierarchy.top();
+
+        human_id.push_back('/');
+        if (!rule->GetName().empty()) {
+          human_id.append(rule->GetName());
+        } else {
+          // If the "name" field is empty, the name is the last part of the ID.
+          const std::string& id = rule->GetId();
+          std::string::size_type pos = id.rfind('/');
+          assert(pos != std::string::npos);
+          human_id.append(id.substr(pos + 1));
+        }
+
+        if (!rule->GetLatinName().empty()) {
+          latin_id.push_back('/');
+          latin_id.append(rule->GetLatinName());
+        }
+      }
+
+      rule_index_->insert(std::make_pair(human_id, *it));
+
+      // Add the Latin script ID, if a Latin script name could be found for
+      // every part of the ID.
+      if (std::count(human_id.begin(), human_id.end(), '/') ==
+          std::count(latin_id.begin(), latin_id.end(), '/')) {
+        rule_index_->insert(std::make_pair(latin_id, *it));
+      }
     }
 
   callback:
@@ -127,7 +207,8 @@ class Helper {
   const std::string region_code_;
   const PreloadSupplier::Callback& loaded_;
   std::set<std::string>* const pending_;
-  std::map<std::string, const Rule*>* const rule_cache_;
+  std::map<std::string, const Rule*>* const rule_index_;
+  std::vector<const Rule*>* const rule_storage_;
   const scoped_ptr<const Retriever::Callback> retrieved_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
@@ -148,12 +229,13 @@ PreloadSupplier::PreloadSupplier(const std::string& validation_data_url,
                                  Storage* storage)
     : retriever_(new Retriever(validation_data_url, downloader, storage)),
       pending_(),
-      rule_cache_() {}
+      rule_index_(),
+      rule_storage_() {}
 
 PreloadSupplier::~PreloadSupplier() {
-  for (std::map<std::string, const Rule*>::const_iterator
-       it = rule_cache_.begin(); it != rule_cache_.end(); ++it) {
-    delete it->second;
+  for (std::vector<const Rule*>::const_iterator
+       it = rule_storage_.begin(); it != rule_storage_.end(); ++it) {
+    delete *it;
   }
 }
 
@@ -192,7 +274,8 @@ void PreloadSupplier::LoadRules(const std::string& region_code,
       loaded,
       *retriever_,
       &pending_,
-      &rule_cache_);
+      &rule_index_,
+      &rule_storage_);
 }
 
 bool PreloadSupplier::IsLoaded(const std::string& region_code) const {
@@ -215,8 +298,8 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
       std::map<std::string, const Rule*>::const_iterator it =
-          rule_cache_.find(key);
-      if (it == rule_cache_.end()) {
+          rule_index_.find(key);
+      if (it == rule_index_.end()) {
         return depth > 0;  // No data on COUNTRY level is failure.
       }
       hierarchy->rule[depth] = it->second;
@@ -227,7 +310,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
 }
 
 bool PreloadSupplier::IsLoadedKey(const std::string& key) const {
-  return rule_cache_.find(key) != rule_cache_.end();
+  return rule_index_.find(key) != rule_index_.end();
 }
 
 bool PreloadSupplier::IsPendingKey(const std::string& key) const {

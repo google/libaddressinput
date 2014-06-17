@@ -23,6 +23,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 namespace i18n {
 namespace addressinput {
@@ -90,7 +91,8 @@ class PreloadSupplier : public Supplier {
 
   const scoped_ptr<const Retriever> retriever_;
   std::set<std::string> pending_;
-  std::map<std::string, const Rule*> rule_cache_;
+  std::map<std::string, const Rule*> rule_index_;
+  std::vector<const Rule*> rule_storage_;
 
   DISALLOW_COPY_AND_ASSIGN(PreloadSupplier);
 };
