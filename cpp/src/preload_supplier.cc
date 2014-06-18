@@ -149,7 +149,7 @@ class Helper {
       }
 
       // Add the ID of this Rule object to the rule index.
-      std::pair<std::map<std::string, const Rule*>::iterator, bool> result =
+      std::pair<IndexMap::iterator, bool> result =
           rule_index_->insert(std::make_pair(id, rule));
       assert(result.second);
       (void)result;  // Prevent unused variable if assert() is optimized away.
@@ -184,8 +184,7 @@ class Helper {
         }
         parent_id.resize(pos);
 
-        std::map<std::string, const Rule*>::const_iterator jt =
-            rule_index_->find(parent_id);
+        IndexMap::const_iterator jt = rule_index_->find(parent_id);
         assert(jt != rule_index_->end());
         hierarchy.push(jt->second);
       }
@@ -331,8 +330,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
 
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
-      std::map<std::string, const Rule*>::const_iterator it =
-          rule_index_->find(key);
+      IndexMap::const_iterator it = rule_index_->find(key);
       if (it == rule_index_->end()) {
         return depth > 0;  // No data on COUNTRY level is failure.
       }
