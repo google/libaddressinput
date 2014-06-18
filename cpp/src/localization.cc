@@ -43,28 +43,16 @@ namespace addressinput {
 
 namespace {
 
-static const char kDefaultLanguage[] = "en";
-
-// For each language XX with translations:
-//    (1) Add a namespace XX here with an include of "XX_messages.cc".
-//    (2) Add a wrapper that converts the char pointer to std::string. (GRIT
-//        generated functions return char pointers.)
-//    (2) Use the XX::GetStdString in the SetLanguage() method below.
-namespace en {
-
 #include "en_messages.cc"
 
-std::string GetStdString(int message_id) {
+std::string GetEnglishString(int message_id) {
   const char* str = GetString(message_id);
   return str != NULL ? std::string(str) : std::string();
 }
 
-}  // namespace en
-
 }  // namespace
 
-Localization::Localization() : get_string_(&en::GetStdString),
-                               language_tag_(kDefaultLanguage) {}
+Localization::Localization() : get_string_(&GetEnglishString) {}
 
 Localization::~Localization() {}
 
@@ -129,20 +117,9 @@ std::string Localization::GetErrorMessage(const AddressData& address,
   }
 }
 
-void Localization::SetLanguage(const std::string& language_tag) {
-  if (language_tag == kDefaultLanguage) {
-    get_string_ = &en::GetStdString;
-  } else {
-    assert(false);
-  }
-  language_tag_ = language_tag;
-}
-
-void Localization::SetGetter(std::string (*getter)(int),
-                             const std::string& language_tag) {
+void Localization::SetGetter(std::string (*getter)(int)) {
   assert(getter != NULL);
   get_string_ = getter;
-  language_tag_ = language_tag;
 }
 
 std::string Localization::GetErrorMessageForPostalCode(

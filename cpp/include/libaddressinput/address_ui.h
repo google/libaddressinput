@@ -29,7 +29,7 @@ const std::vector<std::string>& GetRegionCodes();
 
 // Returns the UI components for the CLDR |region_code|. Uses the strings from
 // |localization|. The components can be in default or Latin order, depending on
-// the language of |localization|.
+// the BCP 47 |ui_language_tag|.
 //
 // Sets the |best_address_language_tag| to the BCP 47 language tag that should
 // be saved with this address. This language will be used to get drop-downs to
@@ -40,6 +40,7 @@ const std::vector<std::string>& GetRegionCodes();
 std::vector<AddressUiComponent> BuildComponents(
     const std::string& region_code,
     const Localization& localization,
+    const std::string& ui_language_tag,
     std::string* best_address_language_tag);
 
 }  // namespace addressinput

@@ -54,12 +54,10 @@ class LocalizationTest : public testing::TestWithParam<int> {
 
 // Verifies that a custom message getter can be used.
 static const char kValidMessage[] = "Data";
-static const char kValidLanguageTag[] = "tlh";
 std::string GetValidMessage(int message_id) { return kValidMessage; }
 TEST_P(LocalizationTest, ValidStringGetterCanBeUsed) {
-  localization_.SetGetter(&GetValidMessage, kValidLanguageTag);
+  localization_.SetGetter(&GetValidMessage);
   EXPECT_EQ(kValidMessage, localization_.GetString(GetParam()));
-  EXPECT_EQ(kValidLanguageTag, localization_.GetLanguage());
 }
 
 // Verifies that the default language for messages does not have empty strings.
@@ -76,13 +74,6 @@ TEST_P(LocalizationTest, NoNewline) {
 TEST_P(LocalizationTest, NoDoubleSpace) {
   EXPECT_EQ(std::string::npos,
             localization_.GetString(GetParam()).find(std::string(2U, ' ')));
-}
-
-// Verifies that the default string is English.
-TEST_P(LocalizationTest, DefaultStringIsEnglish) {
-  std::string default_string = localization_.GetString(GetParam());
-  localization_.SetLanguage("en");
-  EXPECT_EQ(default_string, localization_.GetString(GetParam()));
 }
 
 // Tests all message identifiers.
@@ -128,11 +119,6 @@ INSTANTIATE_TEST_CASE_P(
 // default configuration.
 TEST_F(LocalizationTest, InvalidMessageIsEmptyString) {
   EXPECT_TRUE(localization_.GetString(INVALID_MESSAGE_ID).empty());
-}
-
-// Verifies that the default language is English.
-TEST_F(LocalizationTest, DefaultLanguageIsEnglish) {
-  EXPECT_EQ("en", localization_.GetLanguage());
 }
 
 TEST(LocalizationGetErrorMessageTest, MissingRequiredPostalCode) {

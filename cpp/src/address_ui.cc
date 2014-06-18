@@ -82,6 +82,7 @@ const std::vector<std::string>& GetRegionCodes() {
 std::vector<AddressUiComponent> BuildComponents(
     const std::string& region_code,
     const Localization& localization,
+    const std::string& ui_language_tag,
     std::string* best_address_language_tag) {
   assert(best_address_language_tag != NULL);
   std::vector<AddressUiComponent> result;
@@ -93,8 +94,8 @@ std::vector<AddressUiComponent> BuildComponents(
     return result;
   }
 
-  const Language& best_address_language = ChooseBestAddressLanguage(
-      rule, Language(localization.GetLanguage()));
+  const Language& best_address_language =
+      ChooseBestAddressLanguage(rule, Language(ui_language_tag));
   *best_address_language_tag = best_address_language.tag;
 
   const std::vector<FormatElement>& format =

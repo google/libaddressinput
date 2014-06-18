@@ -37,6 +37,8 @@ using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;
 using i18n::addressinput::STREET_ADDRESS;
 
+static const char kUiLanguageTag[] = "en";
+
 // Returns testing::AssertionSuccess if the |components| are valid. Uses
 // |region_code| in test failure messages.
 testing::AssertionResult ComponentsAreValid(
@@ -81,14 +83,15 @@ TEST_P(AddressUiTest, RegionCodeHasTwoCharacters) {
 // code.
 TEST_P(AddressUiTest, ComponentsAreValid) {
   EXPECT_TRUE(ComponentsAreValid(BuildComponents(
-      GetParam(), localization_, &best_address_language_tag_)));
+      GetParam(), localization_, kUiLanguageTag, &best_address_language_tag_)));
 }
 
 // Verifies that BuildComponents() returns at most one input field of each type.
 TEST_P(AddressUiTest, UniqueFieldTypes) {
   std::set<AddressField> fields;
   const std::vector<AddressUiComponent>& components =
-      BuildComponents(GetParam(), localization_, &best_address_language_tag_);
+      BuildComponents(GetParam(), localization_, kUiLanguageTag,
+                      &best_address_language_tag_);
   for (std::vector<AddressUiComponent>::const_iterator it = components.begin();
        it != components.end(); ++it) {
     EXPECT_TRUE(fields.insert(it->field).second);
@@ -103,8 +106,9 @@ INSTANTIATE_TEST_CASE_P(
 // Verifies that BuildComponents() returns an empty vector for an invalid region
 // code.
 TEST_F(AddressUiTest, InvalidRegionCodeReturnsEmptyVector) {
-  EXPECT_TRUE(BuildComponents("INVALID-REGION-CODE", localization_,
-                              &best_address_language_tag_).empty());
+  EXPECT_TRUE(BuildComponents(
+      "INVALID-REGION-CODE", localization_, kUiLanguageTag,
+      &best_address_language_tag_).empty());
 }
 
 // Test data for determining the best language tag and whether the right format
@@ -145,9 +149,10 @@ class BestAddressLanguageTagTest
 std::string GetterStub(int) { return std::string(); }
 
 TEST_P(BestAddressLanguageTagTest, CorrectBestAddressLanguageTag) {
-  localization_.SetGetter(&GetterStub, GetParam().ui_language_tag);
+  localization_.SetGetter(&GetterStub);
   const std::vector<AddressUiComponent>& components = BuildComponents(
-      GetParam().region_code, localization_, &best_address_language_tag_);
+      GetParam().region_code, localization_, GetParam().ui_language_tag,
+      &best_address_language_tag_);
   EXPECT_EQ(GetParam().expected_best_address_language_tag,
             best_address_language_tag_);
   ASSERT_FALSE(components.empty());
