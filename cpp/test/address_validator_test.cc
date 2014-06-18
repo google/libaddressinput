@@ -353,7 +353,7 @@ TEST_P(AddressValidatorTest, ValidLatinAddressJP) {
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
   address_.region_code = "JP";
-  address_.administrative_area = "TOKUSHIMA";
+  address_.administrative_area = "Tokushima";
   address_.locality = "Tokushima";
   address_.postal_code = "770-0847";
   address_.address_line.push_back("...");

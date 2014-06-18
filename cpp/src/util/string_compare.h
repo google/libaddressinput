@@ -33,6 +33,12 @@ class StringCompare {
   // default implementation just does case insensitive string matching.
   bool NaturalEquals(const std::string& a, const std::string& b) const;
 
+  // Comparison function for use with the STL analogous to NaturalEquals().
+  // Libaddressinput itself isn't really concerned about how this is done, as
+  // long as it conforms to the STL requirements on less<> predicates. This
+  // default implementation is VERY SLOW! Must be replaced if you need speed.
+  bool NaturalLess(const std::string& a, const std::string& b) const;
+
  private:
   class Impl;
   scoped_ptr<Impl> impl_;

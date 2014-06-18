@@ -25,14 +25,19 @@ using i18n::addressinput::StringCompare;
 struct TestCase {
   TestCase(const std::string& left,
            const std::string& right,
-           bool should_be_equal)
-      : left(left), right(right), should_be_equal(should_be_equal) {}
+           bool should_be_equal,
+           bool should_be_less)
+      : left(left),
+        right(right),
+        should_be_equal(should_be_equal),
+        should_be_less(should_be_less) {}
 
   ~TestCase() {}
 
   std::string left;
   std::string right;
   bool should_be_equal;
+  bool should_be_less;
 };
 
 class StringCompareTest : public testing::TestWithParam<TestCase> {
@@ -48,13 +53,25 @@ TEST_P(StringCompareTest, CorrectComparison) {
   }
 }
 
+TEST_P(StringCompareTest, CorrectLess) {
+  if (GetParam().should_be_less) {
+    EXPECT_TRUE(compare_.NaturalLess(GetParam().left, GetParam().right));
+  } else {
+    EXPECT_FALSE(compare_.NaturalLess(GetParam().left, GetParam().right));
+  }
+}
+
 INSTANTIATE_TEST_CASE_P(
     Comparisons, StringCompareTest,
-    testing::Values(TestCase("foo", "foo", true),
-                    TestCase("foo", "FOO", true),
-                    TestCase("bar", "foo", false),
-                    TestCase("강원도", "강원도", true),
-                    TestCase("강원도", "대구광역시", false),
-                    TestCase("ZÜRICH", "zürich", true)));
+    testing::Values(TestCase("foo", "foo", true, false),
+                    TestCase("foo", "FOO", true, false),
+                    TestCase("bar", "foo", false, true),
+                    TestCase("강원도", "강원도", true, false),
+                    TestCase("강원도", "대구광역시", false, true),
+                    TestCase("ZÜRICH", "zürich", true, false),
+                    TestCase("абв", "где", false, true),
+                    TestCase("абв", "ГДЕ", false, true),
+                    TestCase("где", "абв", false, false),
+                    TestCase("где", "АБВ", false, false)));
 
 }  // namespace
