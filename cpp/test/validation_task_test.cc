@@ -98,14 +98,14 @@ class ValidationTaskTest : public testing::Test {
         &problems_,
         *validated_);
 
-    Supplier::RuleHierarchy* hierarchy = new Supplier::RuleHierarchy();
+    Supplier::RuleHierarchy hierarchy;
 
     for (size_t i = 0; i < arraysize(json_) && json_[i] != NULL; ++i) {
       ASSERT_TRUE(rule[i].ParseSerializedRule(json_[i]));
-      hierarchy->rule[i] = &rule[i];
+      hierarchy.rule[i] = &rule[i];
     }
 
-    (*task->supplied_)(success_, *task->lookup_key_, *hierarchy);
+    (*task->supplied_)(success_, *task->lookup_key_, hierarchy);
   }
 
   const char* json_[arraysize(LookupKey::kHierarchy)];
