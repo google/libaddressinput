@@ -381,4 +381,38 @@ TEST_P(AddressValidatorTest, ValidAddressBR) {
   EXPECT_EQ(expected_, problems_);
 }
 
+TEST_P(AddressValidatorTest, ValidAddressCA_en) {
+  // Skip this test case when using the OndemandSupplier, which depends on the
+  // address metadata server to map natural language names to metadata IDs.
+  if (GetParam() == &OndemandValidatorWrapper::Build) return;
+
+  address_.region_code = "CA";
+  address_.administrative_area = "New Brunswick";
+  address_.locality = "Saint John County";
+  address_.postal_code = "E2L 4Z6";
+  address_.address_line.push_back("...");
+  address_.language_code = "en";
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
+TEST_P(AddressValidatorTest, ValidAddressCA_fr) {
+  // Skip this test case when using the OndemandSupplier, which depends on the
+  // address metadata server to map natural language names to metadata IDs.
+  if (GetParam() == &OndemandValidatorWrapper::Build) return;
+
+  address_.region_code = "CA";
+  address_.administrative_area = "Nouveau-Brunswick";
+  address_.locality = "Comt\xC3\xA9 de Saint-Jean";  /* Comté de Saint-Jean */
+  address_.postal_code = "E2L 4Z6";
+  address_.address_line.push_back("...");
+  address_.language_code = "fr";
+
+  ASSERT_NO_FATAL_FAILURE(Validate());
+  ASSERT_TRUE(called_);
+  EXPECT_EQ(expected_, problems_);
+}
+
 }  // namespace

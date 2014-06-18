@@ -214,6 +214,15 @@ class Helper {
         }
       }
 
+      // If the ID has a language tag, copy it.
+      {
+        const std::string& id = (*it)->GetId();
+        std::string::size_type pos = id.rfind("--");
+        if (pos != std::string::npos) {
+          human_id.append(id, pos, id.size() - pos);
+        }
+      }
+
       rule_index_->insert(std::make_pair(human_id, *it));
 
       // Add the Latin script ID, if a Latin script name could be found for
