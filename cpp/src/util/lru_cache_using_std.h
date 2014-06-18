@@ -14,24 +14,23 @@
 /*  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            */
 /******************************************************************************/
 
-#ifndef _lru_cache_using_std_
-#define _lru_cache_using_std_
+// The original source code is from:
+// https://bitbucket.org/timday/lru_cache/src/497822a492a8/include/lru_cache_using_std.h
+
+#ifndef I18N_ADDRESSINPUT_UTIL_LRU_CACHE_USING_STD_H_
+#define I18N_ADDRESSINPUT_UTIL_LRU_CACHE_USING_STD_H_
 
 #include <cassert>
 #include <list>
+#include <map>
 
 // Class providing fixed-size (by number of records)
 // LRU-replacement cache of a function with signature
 // V f(K).
-// MAP should be one of std::map or std::unordered_map.
-// Variadic template args used to deal with the
-// different type argument signatures of those 
-// containers; the default comparator/hash/allocator
-// will be used.
+// The default comparator/hash/allocator will be used.
 template <
   typename K,
-  typename V,
-  template<typename...> class MAP
+  typename V
   > class lru_cache_using_std
 {
 public:
@@ -41,17 +40,17 @@ public:
 
   // Key access history, most recent at back
   typedef std::list<key_type> key_tracker_type;
-  
+
   // Key to value and key history iterator
-  typedef MAP<
+  typedef std::map<
     key_type,
     std::pair<
       value_type,
       typename key_tracker_type::iterator
       >
   > key_to_value_type;
-  
-  // Constuctor specifies the cached function and 
+
+  // Constuctor specifies the cached function and
   // the maximum number of records to be stored
   lru_cache_using_std(
     value_type (*f)(const key_type&),
@@ -62,14 +61,14 @@ public:
   {
     assert(_capacity!=0);
   }
-    
+
   // Obtain value of the cached function for k
   value_type operator()(const key_type& k) {
-    
+
     // Attempt to find existing record
     const typename key_to_value_type::iterator it
       =_key_to_value.find(k);
-    
+
     if (it==_key_to_value.end()) {
 
       // We don't have it:
@@ -92,12 +91,12 @@ public:
 	_key_tracker,
 	(*it).second.second
       );
-      
+
       // Return the retrieved value
       return (*it).second.first;
     }
   }
-  
+
   // Obtain the cached keys, most recently used element
   // at head, least recently used at tail.
   // This method is provided purely to support testing.
@@ -108,24 +107,24 @@ public:
       *dst++ = *src++;
     }
   }
-  
+
 private:
-  
+
   // Record a fresh key-value pair in the cache
   void insert(const key_type& k,const value_type& v) {
 
     // Method is only called on cache misses
     assert(_key_to_value.find(k)==_key_to_value.end());
-    
+
     // Make space if necessary
-    if (_key_to_value.size()==_capacity) 
+    if (_key_to_value.size()==_capacity)
       evict();
 
     // Record k as most-recently-used key
     typename key_tracker_type::iterator it
       =_key_tracker.insert(_key_tracker.end(),k);
 
-    // Create the key-value entry, 
+    // Create the key-value entry,
     // linked to the usage record.
     _key_to_value.insert(
       std::make_pair(
@@ -136,13 +135,13 @@ private:
     // No need to check return,
     // given previous assert.
   }
-  
+
   // Purge the least-recently-used element in the cache
   void evict() {
-    
+
     // Assert method is never called when cache is empty
     assert(!_key_tracker.empty());
-    
+
     // Identify least recently used key
     const typename key_to_value_type::iterator it
       =_key_to_value.find(_key_tracker.front());
@@ -166,4 +165,4 @@ private:
   key_to_value_type _key_to_value;
 };
 
-#endif
+#endif  // I18N_ADDRESSINPUT_UTIL_LRU_CACHE_USING_STD_H_
