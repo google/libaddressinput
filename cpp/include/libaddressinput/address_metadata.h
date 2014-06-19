@@ -17,6 +17,8 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <string>
+
 namespace i18n {
 namespace addressinput {
 
