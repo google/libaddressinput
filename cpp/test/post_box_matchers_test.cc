@@ -23,7 +23,7 @@
 
 namespace i18n {
 namespace addressinput {
-class RE2ptr;
+struct RE2ptr;
 }  // namespace addressinput
 }  // namespace i18n
 

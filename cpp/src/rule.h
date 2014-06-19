@@ -33,7 +33,7 @@ namespace i18n {
 namespace addressinput {
 
 class Json;
-class RE2ptr;
+struct RE2ptr;
 
 // Stores address metadata addressing rules, to be used for determining the
 // layout of an address input widget or for address validation. Sample usage:

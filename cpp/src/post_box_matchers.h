@@ -22,8 +22,8 @@
 namespace i18n {
 namespace addressinput {
 
-class RE2ptr;
 class Rule;
+struct RE2ptr;
 
 class PostBoxMatchers {
  public:
