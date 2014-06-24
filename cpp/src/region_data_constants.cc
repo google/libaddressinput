@@ -119,7 +119,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"nl~pap\""
       "}"));
   region_data.insert(std::make_pair("AX", "{"
-      "\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%n\u00c5LAND\","
+      "\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%n\\u00c5LAND\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"22150,22550,22240,22710,22270,22730,22430\","
       "\"posturl\":\"http://www.posten.ax/department.con\?iPage=123\","
@@ -634,7 +634,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("JP", "{"
-      "\"fmt\":\"\u3012%Z%n%S%C%n%A%n%O%n%N\","
+      "\"fmt\":\"\\u3012%Z%n%S%C%n%A%n%O%n%N\","
       "\"lfmt\":\"%N%n%O%n%A%n%C, %S%n%Z\","
       "\"require\":\"ACSZ\","
       "\"state_name_type\":\"prefecture\","
