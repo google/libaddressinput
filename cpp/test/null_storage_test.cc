@@ -25,7 +25,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
@@ -33,9 +32,11 @@ using i18n::addressinput::Storage;
 class NullStorageTest : public testing::Test {
  protected:
   NullStorageTest() {}
+  virtual ~NullStorageTest() {}
 
   Storage::Callback* BuildCallback() {
-    return ::BuildCallback(this, &NullStorageTest::OnDataReady);
+    return i18n::addressinput::BuildCallback(
+        this, &NullStorageTest::OnDataReady);
   }
 
   NullStorage storage_;

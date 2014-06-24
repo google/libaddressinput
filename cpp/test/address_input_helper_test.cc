@@ -326,7 +326,7 @@ TEST_F(AddressInputHelperMockDataTest,
       "{\"data/KR\": "
       // The top-level ZIP expression must be present for sub-key matches to be
       // evaluated.
-      "{\"id\":\"data/KR\", \"sub_keys\":\"A~B\", \"zip\":\"\\\\d\{5}\"}, "
+      "{\"id\":\"data/KR\", \"sub_keys\":\"A~B\", \"zip\":\"\\\\d{5}\"}, "
       "\"data/KR/A\": "
       "{\"id\":\"data/KR/A\", \"sub_keys\":\"A1~A2\"}, "
       "\"data/KR/A/A1\": "

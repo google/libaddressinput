@@ -14,20 +14,20 @@
 
 #include <libaddressinput/address_formatter.h>
 
-#include <strings.h>
+#include <libaddressinput/address_data.h>
+#include <libaddressinput/address_field.h>
 
 #include <algorithm>
 #include <cstddef>
+#include <functional>
 #include <string>
 #include <vector>
-
-#include <libaddressinput/address_data.h>
-#include <libaddressinput/address_field.h>
 
 #include "format_element.h"
 #include "language.h"
 #include "region_data_constants.h"
 #include "rule.h"
+#include "util/cctype_tolower_equal.h"
 
 namespace i18n {
 namespace addressinput {
@@ -66,15 +66,6 @@ const char* kLanguagesThatUseAnArabicComma[] = {
   "uz"
 };
 
-// Case insensitive matcher for language tags.
-struct LanguageMatcher {
-  LanguageMatcher(const std::string& tag) : tag(tag) {}
-  std::string tag;
-  bool operator() (const std::string& s) {
-    return strcasecmp(tag.c_str(), s.c_str()) == 0;
-  }
-};
-
 std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
   Language address_language(language_tag);
 
@@ -87,20 +78,22 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
   const std::string& base_language = address_language.base;
   if (std::find_if(kLanguagesThatUseSpace,
                    kLanguagesThatUseSpace + arraysize(kLanguagesThatUseSpace),
-                   LanguageMatcher(base_language)) !=
+                   std::bind2nd(EqualToTolowerString(), base_language)) !=
       kLanguagesThatUseSpace + arraysize(kLanguagesThatUseSpace)) {
     return kSpaceSeparator;
-  } else if (std::find_if(kLanguagesThatHaveNoSeparator,
-                          kLanguagesThatHaveNoSeparator +
-                              arraysize(kLanguagesThatHaveNoSeparator),
-                          LanguageMatcher(base_language)) !=
+  } else if (std::find_if(
+                 kLanguagesThatHaveNoSeparator,
+                 kLanguagesThatHaveNoSeparator +
+                     arraysize(kLanguagesThatHaveNoSeparator),
+                 std::bind2nd(EqualToTolowerString(), base_language)) !=
              kLanguagesThatHaveNoSeparator +
                  arraysize(kLanguagesThatHaveNoSeparator)) {
     return "";
-  } else if (std::find_if(kLanguagesThatUseAnArabicComma,
-                          kLanguagesThatUseAnArabicComma +
-                              arraysize(kLanguagesThatUseAnArabicComma),
-                          LanguageMatcher(base_language)) !=
+  } else if (std::find_if(
+                 kLanguagesThatUseAnArabicComma,
+                 kLanguagesThatUseAnArabicComma +
+                     arraysize(kLanguagesThatUseAnArabicComma),
+                 std::bind2nd(EqualToTolowerString(), base_language)) !=
              kLanguagesThatUseAnArabicComma +
                  arraysize(kLanguagesThatUseAnArabicComma)) {
     return kArabicCommaSeparator;

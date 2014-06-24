@@ -23,9 +23,9 @@ namespace i18n {
 namespace addressinput {
 
 class LookupKey;
-class Node;
 class PreloadSupplier;
 struct AddressData;
+struct Node;
 
 class AddressInputHelper {
  public:

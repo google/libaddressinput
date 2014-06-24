@@ -84,7 +84,10 @@ bool UnwrapHeader(const char* header_prefix,
 void ValidatingUtil::Wrap(time_t timestamp, std::string* data) {
   assert(data != NULL);
   char timestamp_string[2 + 3 * sizeof timestamp];
-  snprintf(timestamp_string, sizeof timestamp_string, "%ld", timestamp);
+  int size = std::sprintf(timestamp_string, "%ld", timestamp);
+  assert(size > 0);
+  assert(size < sizeof timestamp_string);
+  (void)size;
 
   std::string header;
   header.append(kTimestampPrefix, kTimestampPrefixLength);

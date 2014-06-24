@@ -16,6 +16,7 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
@@ -31,7 +32,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeStorage;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
@@ -57,7 +57,8 @@ class ValidatingStorageTest : public testing::Test  {
   virtual ~ValidatingStorageTest() {}
 
   ValidatingStorage::Callback* BuildCallback() {
-    return ::BuildCallback(this, &ValidatingStorageTest::OnDataReady);
+    return i18n::addressinput::BuildCallback(
+        this, &ValidatingStorageTest::OnDataReady);
   }
 
   Storage* const wrapped_storage_;  // Owned by |storage_|.
@@ -76,6 +77,8 @@ class ValidatingStorageTest : public testing::Test  {
       delete data;
     }
   }
+
+  DISALLOW_COPY_AND_ASSIGN(ValidatingStorageTest);
 };
 
 TEST_F(ValidatingStorageTest, GoodData) {

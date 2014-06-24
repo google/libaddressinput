@@ -17,6 +17,7 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/storage.h>
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
@@ -33,7 +34,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::MockDownloader;
 using i18n::addressinput::NullStorage;
@@ -68,7 +68,8 @@ class RetrieverTest : public testing::Test {
   virtual ~RetrieverTest() {}
 
   Retriever::Callback* BuildCallback() {
-    return ::BuildCallback(this, &RetrieverTest::OnDataReady);
+    return i18n::addressinput::BuildCallback(
+        this, &RetrieverTest::OnDataReady);
   }
 
   Retriever retriever_;
@@ -84,6 +85,8 @@ class RetrieverTest : public testing::Test {
     key_ = key;
     data_ = data;
   }
+
+  DISALLOW_COPY_AND_ASSIGN(RetrieverTest);
 };
 
 TEST_F(RetrieverTest, RetrieveData) {

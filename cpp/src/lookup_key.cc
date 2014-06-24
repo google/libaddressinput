@@ -14,20 +14,22 @@
 
 #include "lookup_key.h"
 
+#include <libaddressinput/address_data.h>
+#include <libaddressinput/address_field.h>
+#include <libaddressinput/util/basictypes.h>
+
 #include <cassert>
 #include <cstddef>
+#include <functional>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <libaddressinput/address_data.h>
-#include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
-
 #include "language.h"
 #include "region_data_constants.h"
 #include "rule.h"
+#include "util/cctype_tolower_equal.h"
 
 namespace i18n {
 namespace addressinput {
@@ -38,15 +40,6 @@ const char kSlashDelim[] = "/";
 const char kDashDelim[] = "--";
 const char kData[] = "data";
 const char kUnknown[] = "ZZ";
-
-// Case insensitive matcher for language tags.
-struct LanguageMatcher {
-  LanguageMatcher(const std::string& tag) : tag(tag) { }
-  std::string tag;
-  bool operator() (const std::string& s) {
-    return strcasecmp(tag.c_str(), s.c_str()) == 0;
-  }
-};
 
 // Assume the language_tag has had "Latn" script removed when this is called.
 bool ShouldSetLanguageForKey(const std::string& language_tag,
@@ -69,10 +62,9 @@ bool ShouldSetLanguageForKey(const std::string& language_tag,
     return false;
   }
   // Finally, only return true if the language is one of the remaining ones.
-  return std::find_if(languages.begin() + 1,
-                      languages.end(),
-                      LanguageMatcher(language_tag))
-      != languages.end();
+  return std::find_if(languages.begin() + 1, languages.end(),
+                      std::bind2nd(EqualToTolowerString(), language_tag)) !=
+         languages.end();
 }
 
 }  // namespace

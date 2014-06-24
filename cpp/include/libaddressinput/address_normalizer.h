@@ -21,9 +21,9 @@
 namespace i18n {
 namespace addressinput {
 
-class AddressData;
 class PreloadSupplier;
 class StringCompare;
+struct AddressData;
 
 class AddressNormalizer {
  public:

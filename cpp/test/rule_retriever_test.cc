@@ -16,6 +16,7 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <string>
@@ -28,7 +29,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
@@ -50,7 +50,8 @@ class RuleRetrieverTest : public testing::Test {
   virtual ~RuleRetrieverTest() {}
 
   RuleRetriever::Callback* BuildCallback() {
-    return ::BuildCallback(this, &RuleRetrieverTest::OnRuleReady);
+    return i18n::addressinput::BuildCallback(
+        this, &RuleRetrieverTest::OnRuleReady);
   }
 
   RuleRetriever rule_retriever_;
@@ -66,6 +67,8 @@ class RuleRetrieverTest : public testing::Test {
     key_ = key;
     rule_.CopyFrom(rule);
   }
+
+  DISALLOW_COPY_AND_ASSIGN(RuleRetrieverTest);
 };
 
 TEST_F(RuleRetrieverTest, ExistingRule) {

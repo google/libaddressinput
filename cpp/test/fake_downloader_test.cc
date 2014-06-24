@@ -16,6 +16,7 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/downloader.h>
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
@@ -27,7 +28,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::RegionDataConstants;
@@ -40,7 +40,8 @@ class FakeDownloaderTest : public testing::TestWithParam<std::string> {
   virtual ~FakeDownloaderTest() {}
 
   Downloader::Callback* BuildCallback() {
-    return ::BuildCallback(this, &FakeDownloaderTest::OnDownloaded);
+    return i18n::addressinput::BuildCallback(
+        this, &FakeDownloaderTest::OnDownloaded);
   }
 
   FakeDownloader downloader_;
@@ -58,6 +59,8 @@ class FakeDownloaderTest : public testing::TestWithParam<std::string> {
       delete data;
     }
   }
+
+  DISALLOW_COPY_AND_ASSIGN(FakeDownloaderTest);
 };
 
 // Returns testing::AssertionSuccess if |data| is valid downloaded data for

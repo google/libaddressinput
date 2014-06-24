@@ -16,6 +16,7 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
+#include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
@@ -25,7 +26,6 @@
 
 namespace {
 
-using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeStorage;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
@@ -37,7 +37,8 @@ class FakeStorageTest : public testing::Test {
   virtual ~FakeStorageTest() {}
 
   Storage::Callback* BuildCallback() {
-    return ::BuildCallback(this, &FakeStorageTest::OnDataReady);
+    return i18n::addressinput::BuildCallback(
+        this, &FakeStorageTest::OnDataReady);
   }
 
   FakeStorage storage_;
@@ -57,6 +58,8 @@ class FakeStorageTest : public testing::Test {
       delete data;
     }
   }
+
+  DISALLOW_COPY_AND_ASSIGN(FakeStorageTest);
 };
 
 TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {

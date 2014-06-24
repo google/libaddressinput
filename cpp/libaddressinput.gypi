@@ -40,6 +40,7 @@
       'src/retriever.cc',
       'src/rule.cc',
       'src/rule_retriever.cc',
+      'src/util/cctype_tolower_equal.cc',
       'src/util/json.cc',
       'src/util/md5.cc',
       'src/util/string_compare.cc',
