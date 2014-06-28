@@ -56,11 +56,15 @@ enum AddressDataKey {
      */
     LFMT,
     /**
+     * Indicates the type of the name used for the locality (city) field.
+     */
+    LOCALITY_NAME_TYPE,
+    /**
      * Indicates which fields must be present in a valid address.
      */
     REQUIRE,
     /**
-     * Indicates the name used for the admin areas for a particular region.
+     * Indicates the type of the name used for the state (administrative area) field.
      */
     STATE_NAME_TYPE,
     /**
@@ -90,7 +94,7 @@ enum AddressDataKey {
      */
     ZIP,
     /**
-     * Indicates the name used for the postal code for a particular region.
+     * Indicates the type of the name used for the ZIP (postal code) field.
      */
     ZIP_NAME_TYPE;
 

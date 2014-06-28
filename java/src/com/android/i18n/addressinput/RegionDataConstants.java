@@ -1124,6 +1124,7 @@ class RegionDataConstants {
                 "name", "TURKEY",
                 "fmt", "%N%n%O%n%A%n%Z %C/%S",
                 "require", "ACZ",
+                "locality_name_type", "district",
         }),
         TT(new String[]{
                 "name", "TRINIDAD AND TOBAGO",
@@ -1269,6 +1270,7 @@ class RegionDataConstants {
                 "upper", "C",
                 "zip_name_type", "postal",
                 "state_name_type", "province",
+                "locality_name_type", "city",
         });
 
         private String jsonString;
