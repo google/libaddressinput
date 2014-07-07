@@ -36,7 +36,8 @@ struct EqualToTolowerChar
 
 EqualToTolowerString::result_type EqualToTolowerString::operator()(
     const first_argument_type& a, const second_argument_type& b) const {
-  return std::equal(a.begin(), a.end(), b.begin(), EqualToTolowerChar());
+  return a.size() == b.size() &&
+         std::equal(a.begin(), a.end(), b.begin(), EqualToTolowerChar());
 }
 
 }  // addressinput
