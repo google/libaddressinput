@@ -309,7 +309,7 @@ class RegionDataConstants {
         }),
         DK(new String[]{
                 "name", "DENMARK",
-                "fmt", "%O%n%N%n%A%n%Z %C",
+                "fmt", "%N%n%O%n%A%n%Z %C",
                 "require", "ACZ",
         }),
         DM(new String[]{

@@ -328,7 +328,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"ar~fr\""
       "}"));
   region_data.insert(std::make_pair("DK", "{"
-      "\"fmt\":\"%O%n%N%n%A%n%Z %C\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"8660,1566\","
       "\"posturl\":\"http://www.postdanmark.dk/da/Privat/Kundeservice/postnummerkort/Sider/Find-postnummer.aspx\","
