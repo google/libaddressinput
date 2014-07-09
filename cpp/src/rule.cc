@@ -73,6 +73,8 @@ NameMessageIdMap InitAdminAreaMessageIds() {
   message_ids.insert(std::make_pair(
       "island", IDS_LIBADDRESSINPUT_ISLAND));
   message_ids.insert(std::make_pair(
+      "oblast", IDS_LIBADDRESSINPUT_OBLAST));
+  message_ids.insert(std::make_pair(
       "parish", IDS_LIBADDRESSINPUT_PARISH));
   message_ids.insert(std::make_pair(
       "prefecture", IDS_LIBADDRESSINPUT_PREFECTURE));

@@ -80,6 +80,9 @@
     <!-- Administrative Area for certain countries (e.g., Bahama's Cat Island) [CHAR LIMIT=30] -->
     <string name="i18n_island">Island</string>
 
+    <!-- Administrative Area for certain countries (e.g., Russia's Leningrad) [CHAR LIMIT=30] -->
+    <string name="i18n_oblast">Oblast</string>
+
     <!-- Administrative Area for certain countries (e.g., Andorra's Canillo) [CHAR LIMIT=30] -->
     <string name="i18n_parish">Parish</string>
 
@@ -139,6 +142,10 @@
     <!-- Message to be shown when the administrative area (island) for certain countries
          (e.g., Bahama) is entered incorrectly by the user [CHAR LIMIT=30] -->
     <string name="invalid_island">Invalid island</string>
+
+    <!-- Message to be shown when the administrative area (oblast) for certain countries
+         (e.g., Russia) is entered incorrectly by the user [CHAR LIMIT=30] -->
+    <string name="invalid_oblast">Invalid oblast</string>
 
     <!-- Message to be shown when the administrative area (parish) for certain countries
          (e.g., Andorra) is entered incorrectly by the user [CHAR LIMIT=30] -->

@@ -147,7 +147,7 @@ public class FormatInterpreterTest extends TestCase {
     public void testUsEnvelopeAddress() {
         List<String> expected = new ArrayList<String>();
         expected.add("1098 Alta Ave");
-        expected.add("Mt View CA 94043");
+        expected.add("Mt View, CA 94043");
 
         List<String> real = formatInterpreter.getEnvelopeAddress(US_CA_ADDRESS);
 
@@ -189,4 +189,44 @@ public class FormatInterpreterTest extends TestCase {
         List<String> real = formatInterpreter.getEnvelopeAddress(address);
         assertEquals(expected, real);
     }
+
+  public void testEnvelopeAddressLeadingPostPrefix() {
+      List<String> expected = new ArrayList<String>();
+      expected.add("CH-8047 Herrliberg");
+      AddressData address = new AddressData.Builder().setCountry("CH")
+              .setPostalCode("8047")
+              .setLocality("Herrliberg")
+              .build();
+
+      List<String> real = formatInterpreter.getEnvelopeAddress(address);
+      assertEquals(expected, real);
+  }
+
+  public void testSvAddress() {
+      final AddressData svAddress = new AddressData.Builder().setCountry("SV")
+              .setAdminArea("Ahuachapán")
+              .setLocality("Ahuachapán")
+              .setAddressLine1("Some Street 12")
+              .build();
+
+      List<String> expected = new ArrayList<String>();
+      expected.add("Some Street 12");
+      expected.add("Ahuachapán");
+      expected.add("Ahuachapán");
+
+      List<String> real = formatInterpreter.getEnvelopeAddress(svAddress);
+      assertEquals(expected, real);
+
+      final AddressData svAddressWithPostCode = new AddressData.Builder(svAddress)
+              .setPostalCode("CP 2101")
+              .build();
+
+      expected = new ArrayList<String>();
+      expected.add("Some Street 12");
+      expected.add("CP 2101-Ahuachapán");
+      expected.add("Ahuachapán");
+
+      real = formatInterpreter.getEnvelopeAddress(svAddressWithPostCode);
+      assertEquals(expected, real);
+  }
 }

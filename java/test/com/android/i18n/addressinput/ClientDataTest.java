@@ -78,6 +78,6 @@ public class ClientDataTest extends AsyncTestCase {
         // data from there.
         assertNotNull(data);
         String unitedStatesFormatInfo = data.get(AddressDataKey.FMT);
-        assertEquals("%N%n%O%n%A%n%C %S %Z", unitedStatesFormatInfo);
+        assertEquals("%N%n%O%n%A%n%C, %S %Z", unitedStatesFormatInfo);
     }
 }

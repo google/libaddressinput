@@ -43,9 +43,8 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("AD", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%Z %S\","
-      "\"require\":\"AS\","
-      "\"state_name_type\":\"parish\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
+      "\"require\":\"A\","
       "\"zipex\":\"AD100,AD501,AD700\","
       "\"posturl\":\"http://www.correos.es/comun/CodigosPostales/1010_s-CodPostal.asp\?Provincia=\","
       "\"languages\":\"ca\""
@@ -1062,8 +1061,9 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"sr-Cyrl~sr-Latn\""
       "}"));
   region_data.insert(std::make_pair("RU", "{"
-      "\"fmt\":\"%Z %C  %n%A%n%O%n%N\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"require\":\"ACZ\","
+      "\"state_name_type\":\"oblast\","
       "\"zipex\":\"125075,247112,103375\","
       "\"posturl\":\"http://info.russianpost.ru/servlet/department\","
       "\"languages\":\"ru\""

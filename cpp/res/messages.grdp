@@ -85,6 +85,12 @@ limitations under the License.
     Island
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_OBLAST"
+      desc="Administrative Area for certain countries (e.g., Russia's
+            Leningrad).">
+    Oblast
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_PARISH"
       desc="Administrative Area for certain countries (e.g., Andorra's
             Canillo).">

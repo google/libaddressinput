@@ -41,10 +41,8 @@ class RegionDataConstants {
                 "name", "ANDORRA",
                 "lang", "ca",
                 "languages", "ca",
-                "fmt", "%N%n%O%n%A%n%Z %S",
-                "require", "AS",
-                "upper", "S",
-                "state_name_type", "parish",
+                "fmt", "%N%n%O%n%A%n%Z %C",
+                "require", "A",
         }),
         AE(new String[]{
                 "name", "UNITED ARAB EMIRATES",
@@ -977,8 +975,9 @@ class RegionDataConstants {
         }),
         RU(new String[]{
                 "name", "RUSSIAN FEDERATION",
-                "fmt", "%Z %C  %n%A%n%O%n%N",
+                "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
                 "require", "ACZ",
+                "state_name_type", "oblast",
                 "upper", "AC",
         }),
         RW(new String[]{
@@ -1168,7 +1167,7 @@ class RegionDataConstants {
                 "name", "UNITED STATES",
                 "lang", "en",
                 "languages", "en",
-                "fmt", "%N%n%O%n%A%n%C %S %Z",
+                "fmt", "%N%n%O%n%A%n%C, %S %Z",
                 "require", "ACSZ",
                 "upper", "CS",
                 "zip_name_type", "zip",

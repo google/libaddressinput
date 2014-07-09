@@ -112,6 +112,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         adminLabelMap.put("do_si", R.string.i18n_do_si);
         adminLabelMap.put("emirate", R.string.i18n_emirate);
         adminLabelMap.put("island", R.string.i18n_island);
+        adminLabelMap.put("oblast", R.string.i18n_oblast);
         adminLabelMap.put("parish", R.string.i18n_parish);
         adminLabelMap.put("prefecture", R.string.i18n_prefecture);
         adminLabelMap.put("province", R.string.i18n_province);
@@ -131,6 +132,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         adminErrorMap.put("do_si", R.string.invalid_do_si);
         adminErrorMap.put("emirate", R.string.invalid_emirate);
         adminErrorMap.put("island", R.string.invalid_island);
+        adminErrorMap.put("oblast", R.string.invalid_oblast);
         adminErrorMap.put("parish", R.string.invalid_parish);
         adminErrorMap.put("prefecture", R.string.invalid_prefecture);
         adminErrorMap.put("province", R.string.invalid_province);

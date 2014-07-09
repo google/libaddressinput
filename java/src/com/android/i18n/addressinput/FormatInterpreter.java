@@ -155,15 +155,16 @@ class FormatInterpreter {
 
         List<String> lines = new ArrayList<String>();
         StringBuilder currentLine = new StringBuilder();
-        for (String substr : getFormatSubStrings(scriptType, regionCode)) {
-            if (substr.equals(NEW_LINE)) {
-                String normalizedStr = removeAllRedundantSpaces(currentLine.toString());
+        for (String formatSymbol : getFormatSubStrings(scriptType, regionCode)) {
+            if (formatSymbol.equals(NEW_LINE)) {
+                String normalizedStr =
+                        removeRedundantSpacesAndLeadingPunctuation(currentLine.toString());
                 if (normalizedStr.length() > 0) {
                     lines.add(normalizedStr);
                     currentLine.setLength(0);
                 }
-            } else if (substr.startsWith("%")) {
-                char c = substr.charAt(1);
+            } else if (formatSymbol.startsWith("%")) {
+                char c = formatSymbol.charAt(1);
                 AddressField field = AddressField.of(c);
                 Util.checkNotNull(field, "null address field for character " + c);
 
@@ -203,10 +204,10 @@ class FormatInterpreter {
                     currentLine.append(value);
                 }
             } else {
-                currentLine.append(substr);
+                currentLine.append(formatSymbol);
             }
         }
-        String normalizedStr = removeAllRedundantSpaces(currentLine.toString());
+        String normalizedStr = removeRedundantSpacesAndLeadingPunctuation(currentLine.toString());
         if (normalizedStr.length() > 0) {
             lines.add(normalizedStr);
         }
@@ -242,13 +243,16 @@ class FormatInterpreter {
         return parts;
     }
 
-    private String removeAllRedundantSpaces(String str) {
+    private static String removeRedundantSpacesAndLeadingPunctuation(String str) {
+        // Remove leading commas and other punctuation that might have been added by the formatter
+        // in the case of missing data.
+        str = str.replaceFirst("^[-,\\s]+", "");
         str = str.trim();
         str = str.replaceAll(" +", " ");
         return str;
     }
 
-    private String getFormatString(ScriptType scriptType, String regionCode) {
+    private static String getFormatString(ScriptType scriptType, String regionCode) {
         String format = (scriptType == ScriptType.LOCAL)
                 ? getJsonValue(regionCode, AddressDataKey.FMT)
                 : getJsonValue(regionCode, AddressDataKey.LFMT);
@@ -258,7 +262,7 @@ class FormatInterpreter {
         return format;
     }
 
-    private String getJsonValue(String regionCode, AddressDataKey key) {
+    private static String getJsonValue(String regionCode, AddressDataKey key) {
         Util.checkNotNull(regionCode);
         String jsonString = RegionDataConstants.getCountryFormatMap().get(regionCode);
         Util.checkNotNull(jsonString, "no json data for region code " + regionCode);
