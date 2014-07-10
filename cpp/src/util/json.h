@@ -43,15 +43,11 @@ class Json {
   // successfully in ParseObject() before invoking this method.
   const std::vector<std::string>& GetKeys() const;
 
-  // Returns true if the parsed JSON contains a string value for |key|. The JSON
-  // object must be parsed successfully in ParseObject() before invoking this
-  // method.
-  bool HasStringValueForKey(const std::string& key) const;
-
-  // Returns the string value for the |key|. The |key| must be present and its
-  // value must be of string type, i.e., HasStringValueForKey(key) must return
-  // true before invoking this method.
-  std::string GetStringValueForKey(const std::string& key) const;
+  // Returns true if the parsed JSON contains a string value for |key|. Sets
+  // |value| to the string value of the |key|. The JSON object must be parsed
+  // successfully in ParseObject() before invoking this method. The |value|
+  // parameter should not be NULL.
+  bool GetStringValueForKey(const std::string& key, std::string* value) const;
 
   // Returns true if the parsed JSON contains a dictionary value for |key|. The
   // JSON object must be parsed successfully in ParseObject() before invoking

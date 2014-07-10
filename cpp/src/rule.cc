@@ -38,20 +38,6 @@ namespace {
 
 typedef std::map<std::string, int> NameMessageIdMap;
 
-const char kAdminAreaNameTypeKey[] = "state_name_type";
-const char kFormatKey[] = "fmt";
-const char kIdKey[] = "id";
-const char kLanguagesKey[] = "languages";
-const char kLatinFormatKey[] = "lfmt";
-const char kLatinNameKey[] = "lname";
-const char kNameKey[] = "name";
-const char kPostalCodeNameTypeKey[] = "zip_name_type";
-const char kRequireKey[] = "require";
-const char kSubKeysKey[] = "sub_keys";
-const char kZipKey[] = "zip";
-const char kPostalCodeExampleKey[] = "zipex";
-const char kPostServiceUrlKey[] = "posturl";
-
 // Used as a separator in a list of items. For example, the list of supported
 // languages can be "de~fr~it".
 const char kSeparator = '~';
@@ -182,36 +168,33 @@ bool Rule::ParseSerializedRule(const std::string& serialized_rule) {
 }
 
 void Rule::ParseJsonRule(const Json& json) {
-  if (json.HasStringValueForKey(kIdKey)) {
-    id_ = json.GetStringValueForKey(kIdKey);
+  std::string value;
+  if (json.GetStringValueForKey("id", &value)) {
+    id_.swap(value);
   }
 
-  if (json.HasStringValueForKey(kFormatKey)) {
-    ParseFormatRule(json.GetStringValueForKey(kFormatKey), &format_);
+  if (json.GetStringValueForKey("fmt", &value)) {
+    ParseFormatRule(value, &format_);
   }
 
-  if (json.HasStringValueForKey(kLatinFormatKey)) {
-    ParseFormatRule(json.GetStringValueForKey(kLatinFormatKey), &latin_format_);
+  if (json.GetStringValueForKey("lfmt", &value)) {
+    ParseFormatRule(value, &latin_format_);
   }
 
-  if (json.HasStringValueForKey(kRequireKey)) {
-    ParseAddressFieldsRequired(
-        json.GetStringValueForKey(kRequireKey), &required_);
+  if (json.GetStringValueForKey("require", &value)) {
+    ParseAddressFieldsRequired(value, &required_);
   }
 
-  if (json.HasStringValueForKey(kSubKeysKey)) {
-    SplitString(
-        json.GetStringValueForKey(kSubKeysKey), kSeparator, &sub_keys_);
+  if (json.GetStringValueForKey("sub_keys", &value)) {
+    SplitString(value, kSeparator, &sub_keys_);
   }
 
-  if (json.HasStringValueForKey(kLanguagesKey)) {
-    SplitString(
-        json.GetStringValueForKey(kLanguagesKey), kSeparator, &languages_);
+  if (json.GetStringValueForKey("languages", &value)) {
+    SplitString(value, kSeparator, &languages_);
   }
 
   sole_postal_code_.clear();
-  if (json.HasStringValueForKey(kZipKey)) {
-    const std::string& zip = json.GetStringValueForKey(kZipKey);
+  if (json.GetStringValueForKey("zip", &value)) {
     // The "zip" field in the JSON data is used in two different ways to
     // validate the postal code. At the country level, the "zip" field indicates
     // a Java compatible regular expression corresponding to all postal codes in
@@ -225,7 +208,7 @@ void Rule::ParseJsonRule(const Json& json) {
     // RE2::FullMatch() to perform matching against the entire string.
     RE2::Options options;
     options.set_never_capture(true);
-    RE2* matcher = new RE2("^(" + zip + ")", options);
+    RE2* matcher = new RE2("^(" + value + ")", options);
     if (matcher->ok()) {
       postal_code_matcher_.reset(new RE2ptr(matcher));
     } else {
@@ -234,37 +217,35 @@ void Rule::ParseJsonRule(const Json& json) {
     }
     // If the "zip" field is not a regular expression, then it is the sole
     // postal code for this rule.
-    if (!ContainsRegExSpecialCharacters(zip)) {
-      sole_postal_code_ = zip;
+    if (!ContainsRegExSpecialCharacters(value)) {
+      sole_postal_code_.swap(value);
     }
   }
 
-  if (json.HasStringValueForKey(kAdminAreaNameTypeKey)) {
+  if (json.GetStringValueForKey("state_name_type", &value)) {
     admin_area_name_message_id_ =
-        GetMessageIdFromName(json.GetStringValueForKey(kAdminAreaNameTypeKey),
-                             GetAdminAreaMessageIds());
+        GetMessageIdFromName(value, GetAdminAreaMessageIds());
   }
 
-  if (json.HasStringValueForKey(kPostalCodeNameTypeKey)) {
+  if (json.GetStringValueForKey("zip_name_type", &value)) {
     postal_code_name_message_id_ =
-        GetMessageIdFromName(json.GetStringValueForKey(kPostalCodeNameTypeKey),
-                             GetPostalCodeMessageIds());
+        GetMessageIdFromName(value, GetPostalCodeMessageIds());
   }
 
-  if (json.HasStringValueForKey(kNameKey)) {
-    name_ = json.GetStringValueForKey(kNameKey);
+  if (json.GetStringValueForKey("name", &value)) {
+    name_.swap(value);
   }
 
-  if (json.HasStringValueForKey(kLatinNameKey)) {
-    latin_name_ = json.GetStringValueForKey(kLatinNameKey);
+  if (json.GetStringValueForKey("lname", &value)) {
+    latin_name_.swap(value);
   }
 
-  if (json.HasStringValueForKey(kPostalCodeExampleKey)) {
-    postal_code_example_ = json.GetStringValueForKey(kPostalCodeExampleKey);
+  if (json.GetStringValueForKey("zipex", &value)) {
+    postal_code_example_.swap(value);
   }
 
-  if (json.HasStringValueForKey(kPostServiceUrlKey)) {
-    post_service_url_ = json.GetStringValueForKey(kPostServiceUrlKey);
+  if (json.GetStringValueForKey("posturl", &value)) {
+    post_service_url_.swap(value);
   }
 }
 

@@ -139,23 +139,19 @@ const std::vector<std::string>& Json::GetKeys() const {
   return impl_->GetKeys();
 }
 
-bool Json::HasStringValueForKey(const std::string& key) const {
+bool Json::GetStringValueForKey(const std::string& key,
+                                std::string* value) const {
   assert(impl_ != NULL);
-
-  // Member is owned by impl_.
-  const Value::Member* member = impl_->FindMember(key);
-  return member != NULL && member->value.IsString();
-}
-
-std::string Json::GetStringValueForKey(const std::string& key) const {
-  assert(impl_ != NULL);
+  assert(value != NULL);
 
   // Member is owned by impl_.
   const Value::Member* member = impl_->FindMember(key.c_str());
-  assert(member != NULL);
-  assert(member->value.IsString());
-  return std::string(member->value.GetString(),
-                     member->value.GetStringLength());
+  if (member == NULL || !member->value.IsString()) {
+    return false;
+  }
+
+  value->assign(member->value.GetString(), member->value.GetStringLength());
+  return true;
 }
 
 bool Json::HasDictionaryValueForKey(const std::string& key) const {

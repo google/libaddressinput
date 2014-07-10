@@ -105,6 +105,7 @@ class Helper {
     (void)status;  // Prevent unused variable if assert() is optimized away.
 
     Json json;
+    std::string id;
     std::vector<const Rule*> sub_rules;
 
     if (!success) {
@@ -124,11 +125,10 @@ class Helper {
       }
       const Json& value = json.GetDictionaryValueForKey(*it);
 
-      if (!value.HasStringValueForKey("id")) {
+      if (!value.GetStringValueForKey("id", &id)) {
         success = false;
         goto callback;
       }
-      const std::string& id = value.GetStringValueForKey("id");
       assert(*it == id);  // Sanity check.
 
       size_t depth = std::count(id.begin(), id.end(), '/') - 1;
