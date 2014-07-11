@@ -53,14 +53,10 @@ class IndexLess : public std::binary_function<std::string, std::string, bool> {
  public:
   result_type operator()(const first_argument_type& a,
                          const second_argument_type& b) const {
+    static const StringCompare kStringCompare;
     return kStringCompare.NaturalLess(a, b);
   }
-
- private:
-  static const StringCompare kStringCompare;
 };
-
-const StringCompare IndexLess::kStringCompare;
 
 }  // namespace
 
