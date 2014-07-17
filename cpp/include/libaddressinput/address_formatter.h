@@ -45,10 +45,6 @@ void GetFormattedNationalAddressLine(
 void GetStreetAddressLinesAsSingleLine(
     const AddressData& address_data, std::string* line);
 
-// Returns the separator used for collapsing multiple parts of an address into a
-// single line.
-std::string GetLineSeparatorForLanguage(const std::string& language_tag);
-
 }  // namespace addressinput
 }  // namespace i18n
 
