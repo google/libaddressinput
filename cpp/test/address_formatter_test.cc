@@ -28,6 +28,13 @@ using i18n::addressinput::GetFormattedNationalAddress;
 using i18n::addressinput::GetFormattedNationalAddressLine;
 using i18n::addressinput::GetStreetAddressLinesAsSingleLine;
 
+TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_EmptyAddress) {
+  AddressData address;
+  std::string result;
+  GetStreetAddressLinesAsSingleLine(address, &result);
+  EXPECT_TRUE(result.empty());
+}
+
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_1Line) {
   AddressData address;
   address.region_code = "US";  // Not used.

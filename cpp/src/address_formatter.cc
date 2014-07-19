@@ -108,16 +108,17 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
   return kCommaSeparator;
 }
 
-void CombineLinesForLanguage(
-    const std::vector<std::string>& lines, const std::string& language_tag,
-    std::string *line) {
-  if (lines.size() > 0) {
-    line->assign(lines[0]);
-  }
+void CombineLinesForLanguage(const std::vector<std::string>& lines,
+                             const std::string& language_tag,
+                             std::string* line) {
+  line->clear();
   std::string separator = GetLineSeparatorForLanguage(language_tag);
-  for (std::vector<std::string>::const_iterator it = lines.begin() + 1;
-       it < lines.end(); ++it) {
-    line->append(separator);
+  for (std::vector<std::string>::const_iterator it = lines.begin();
+       it != lines.end();
+       ++it) {
+    if (it != lines.begin()) {
+      line->append(separator);
+    }
     line->append(*it);
   }
 }
