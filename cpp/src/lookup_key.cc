@@ -109,7 +109,8 @@ void LookupKey::FromLookupKey(const LookupKey& parent,
   assert(parent.nodes_.size() < arraysize(kHierarchy));
   assert(!child_node.empty());
 
-  nodes_ = parent.nodes_;
+  // Copy its nodes if this isn't the parent object.
+  if (this != &parent) nodes_ = parent.nodes_;
   AddressField child_field = kHierarchy[nodes_.size()];
   nodes_.insert(std::make_pair(child_field, child_node));
 }
