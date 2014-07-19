@@ -14,10 +14,10 @@
 
 #include <libaddressinput/address_problem.h>
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <cstddef>
 #include <ostream>
-
-#include <libaddressinput/util/basictypes.h>
 
 using i18n::addressinput::AddressProblem;
 using i18n::addressinput::UNEXPECTED_FIELD;

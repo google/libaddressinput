@@ -16,8 +16,10 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <functional>
 #include <string>

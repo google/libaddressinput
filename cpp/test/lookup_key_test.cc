@@ -17,6 +17,8 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/util/basictypes.h>
 
+#include <cstddef>
+
 #include <gtest/gtest.h>
 
 namespace {

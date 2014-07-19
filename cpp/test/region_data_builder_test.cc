@@ -21,11 +21,11 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
-#include "fake_downloader.h"
-
 #include <string>
 
 #include <gtest/gtest.h>
+
+#include "fake_downloader.h"
 
 namespace {
 

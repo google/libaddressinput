@@ -22,11 +22,12 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <string>
+
 namespace i18n {
 namespace addressinput {
 
 class LookupKey;
-class Rule;
 struct AddressData;
 
 // A ValidationTask object encapsulates the information necessary to perform

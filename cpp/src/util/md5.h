@@ -8,6 +8,7 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_MD5_H_
 #define I18N_ADDRESSINPUT_UTIL_MD5_H_
 
+#include <cstddef>
 #include <string>
 
 namespace i18n {

@@ -16,6 +16,9 @@
 
 #include "region_data_constants.h"
 
+#include <libaddressinput/address_field.h>
+#include <libaddressinput/util/basictypes.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <map>
@@ -24,10 +27,8 @@
 #include <utility>
 #include <vector>
 
-#include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
-
 #include "address_field_util.h"
+#include "format_element.h"
 #include "lookup_key.h"
 
 namespace i18n {

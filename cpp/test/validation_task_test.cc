@@ -34,8 +34,6 @@
 namespace i18n {
 namespace addressinput {
 
-class LookupKey;
-
 class ValidationTaskTest : public testing::Test {
  protected:
   ValidationTaskTest()

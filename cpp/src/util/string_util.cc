@@ -10,10 +10,9 @@
 
 #include "string_util.h"
 
-#include <libaddressinput/util/basictypes.h>
-
-#include <algorithm>
 #include <cassert>
+#include <cstddef>
+#include <stdint.h>
 #include <string>
 #include <vector>
 

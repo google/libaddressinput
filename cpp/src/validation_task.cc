@@ -19,6 +19,7 @@
 #include <libaddressinput/address_metadata.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/address_validator.h>
+#include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
 
@@ -29,12 +30,12 @@
 #include <utility>
 #include <vector>
 
+#include <re2/re2.h>
+
 #include "lookup_key.h"
 #include "post_box_matchers.h"
 #include "rule.h"
 #include "util/re2ptr.h"
-
-#include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {

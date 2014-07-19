@@ -27,11 +27,10 @@
 #include <string>
 #include <vector>
 
-#include "format_element.h"
-
 namespace i18n {
 namespace addressinput {
 
+class FormatElement;
 class Json;
 struct RE2ptr;
 

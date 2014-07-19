@@ -15,6 +15,7 @@
 #include "fake_downloader.h"
 
 #include <cassert>
+#include <cstddef>
 #include <fstream>
 #include <map>
 #include <string>

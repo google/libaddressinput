@@ -14,7 +14,6 @@
 
 #include <libaddressinput/region_data.h>
 
-#include <cassert>
 #include <cstddef>
 #include <string>
 #include <vector>

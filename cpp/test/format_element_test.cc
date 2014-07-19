@@ -14,6 +14,8 @@
 
 #include "format_element.h"
 
+#include <libaddressinput/address_field.h>
+
 #include <sstream>
 
 #include <gtest/gtest.h>

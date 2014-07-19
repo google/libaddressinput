@@ -14,6 +14,7 @@
 
 #include <libaddressinput/region_data.h>
 
+#include <cstddef>
 #include <string>
 
 #include <gtest/gtest.h>

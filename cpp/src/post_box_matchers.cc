@@ -20,11 +20,11 @@
 #include <utility>
 #include <vector>
 
+#include <re2/re2.h>
+
 #include "language.h"
 #include "rule.h"
 #include "util/re2ptr.h"
-
-#include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {

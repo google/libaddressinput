@@ -14,22 +14,21 @@
 
 #include "rule.h"
 
-#include <libaddressinput/address_field.h>
-
 #include <cstddef>
 #include <map>
 #include <string>
 #include <utility>
 
+#include <re2/re2.h>
+
 #include "address_field_util.h"
+#include "format_element.h"
 #include "grit.h"
 #include "messages.h"
 #include "region_data_constants.h"
 #include "util/json.h"
 #include "util/re2ptr.h"
 #include "util/string_split.h"
-
-#include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {

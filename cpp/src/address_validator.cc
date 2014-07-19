@@ -14,6 +14,9 @@
 
 #include <libaddressinput/address_validator.h>
 
+#include <cassert>
+#include <cstddef>
+
 #include "validation_task.h"
 
 namespace i18n {

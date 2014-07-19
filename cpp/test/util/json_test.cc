@@ -22,7 +22,6 @@
 namespace {
 
 using i18n::addressinput::Json;
-using i18n::addressinput::scoped_ptr;
 
 TEST(JsonTest, EmptyStringIsNotValid) {
   Json json;

@@ -15,6 +15,7 @@
 #include "util/string_util.h"
 
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 

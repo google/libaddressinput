@@ -14,6 +14,11 @@
 
 #include "ondemand_supply_task.h"
 
+#include <libaddressinput/address_field.h>
+#include <libaddressinput/callback.h>
+#include <libaddressinput/supplier.h>
+#include <libaddressinput/util/basictypes.h>
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -21,12 +26,6 @@
 #include <set>
 #include <string>
 #include <utility>
-
-#include <libaddressinput/address_field.h>
-#include <libaddressinput/callback.h>
-#include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include "lookup_key.h"
 #include "retriever.h"

@@ -28,7 +28,9 @@
 
 #include <libaddressinput/util/basictypes.h>
 
+#include <cstddef>
 #include <string>
+#include <string.h>
 
 namespace {
 

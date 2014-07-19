@@ -15,7 +15,6 @@
 #include "region_data_constants.h"
 
 #include <string>
-#include <vector>
 
 #include <gtest/gtest.h>
 

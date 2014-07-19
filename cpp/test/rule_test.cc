@@ -24,7 +24,6 @@
 
 #include <gtest/gtest.h>
 
-#include "address_field_util.h"
 #include "format_element.h"
 #include "grit.h"
 #include "messages.h"

@@ -20,10 +20,10 @@
 #include <string>
 #include <vector>
 
-#include "format_element.h"
-
 namespace i18n {
 namespace addressinput {
+
+class FormatElement;
 
 // Clears |fields|, parses |format|, and adds the format address fields to
 // |fields|. The |fields| may also contain NEWLINE elements. For example, parses

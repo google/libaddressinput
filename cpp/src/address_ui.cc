@@ -24,7 +24,6 @@
 #include <string>
 #include <vector>
 
-#include "address_field_util.h"
 #include "format_element.h"
 #include "grit.h"
 #include "language.h"

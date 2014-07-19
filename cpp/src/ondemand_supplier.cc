@@ -19,8 +19,6 @@
 #include <map>
 #include <string>
 
-#include <libaddressinput/util/scoped_ptr.h>
-
 #include "lookup_key.h"
 #include "ondemand_supply_task.h"
 #include "region_data_constants.h"

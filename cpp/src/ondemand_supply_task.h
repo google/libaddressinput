@@ -29,7 +29,6 @@ namespace i18n {
 namespace addressinput {
 
 class LookupKey;
-class Retriever;
 class Rule;
 
 // An OndemandSupplyTask object encapsulates the information necessary to

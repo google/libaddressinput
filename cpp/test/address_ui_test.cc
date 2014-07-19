@@ -26,9 +26,9 @@
 
 namespace {
 
-using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::AddressField;
 using i18n::addressinput::AddressUiComponent;
+using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::BuildComponents;
 using i18n::addressinput::COUNTRY;
 using i18n::addressinput::GetRegionCodes;

@@ -19,6 +19,7 @@
 #include <libaddressinput/address_problem.h>
 
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -29,21 +30,22 @@ namespace {
 
 using i18n::addressinput::AddressData;
 using i18n::addressinput::AddressField;
-using i18n::addressinput::AddressProblem;
-using i18n::addressinput::ADMIN_AREA;
-using i18n::addressinput::COUNTRY;
-using i18n::addressinput::DEPENDENT_LOCALITY;
-using i18n::addressinput::INVALID_FORMAT;
 using i18n::addressinput::INVALID_MESSAGE_ID;
-using i18n::addressinput::LOCALITY;
 using i18n::addressinput::Localization;
-using i18n::addressinput::MISMATCHING_VALUE;
-using i18n::addressinput::MISSING_REQUIRED_FIELD;
-using i18n::addressinput::POSTAL_CODE;
-using i18n::addressinput::RECIPIENT;
+
+using i18n::addressinput::COUNTRY;
+using i18n::addressinput::ADMIN_AREA;
+using i18n::addressinput::LOCALITY;
+using i18n::addressinput::DEPENDENT_LOCALITY;
 using i18n::addressinput::SORTING_CODE;
+using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::STREET_ADDRESS;
+using i18n::addressinput::RECIPIENT;
+
+using i18n::addressinput::MISSING_REQUIRED_FIELD;
 using i18n::addressinput::UNKNOWN_VALUE;
+using i18n::addressinput::INVALID_FORMAT;
+using i18n::addressinput::MISMATCHING_VALUE;
 using i18n::addressinput::USES_P_O_BOX;
 
 // Tests for Localization object.

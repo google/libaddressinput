@@ -11,14 +11,13 @@
 // This is an implementation designed to match the anticipated future TR2
 // implementation of the scoped_ptr class and scoped_ptr_malloc (deprecated).
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdlib.h>
-
-#include <algorithm>  // For std::swap().
-
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/template_util.h>
+
+#include <algorithm>  // For std::swap().
+#include <cassert>
+#include <cstddef>
+#include <cstdlib>
 
 namespace i18n {
 namespace addressinput {

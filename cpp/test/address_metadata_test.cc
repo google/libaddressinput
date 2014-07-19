@@ -20,12 +20,12 @@
 
 namespace {
 
+using i18n::addressinput::IsFieldRequired;
+using i18n::addressinput::IsFieldUsed;
+
 using i18n::addressinput::COUNTRY;
 using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::DEPENDENT_LOCALITY;
-
-using i18n::addressinput::IsFieldRequired;
-using i18n::addressinput::IsFieldUsed;
 
 TEST(AddressMetadataTest, IsFieldRequiredCountry) {
   EXPECT_TRUE(IsFieldRequired(COUNTRY, "US"));

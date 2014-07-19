@@ -18,11 +18,10 @@
 #define I18N_ADDRESSINPUT_TEST_MOCK_DOWNLOADER_H_
 
 #include <libaddressinput/downloader.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <string>
-
-#include <libaddressinput/util/basictypes.h>
 
 namespace i18n {
 namespace addressinput {

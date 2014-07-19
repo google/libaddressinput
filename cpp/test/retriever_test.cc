@@ -38,8 +38,8 @@ using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::MockDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
-using i18n::addressinput::Storage;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::Storage;
 
 const char kKey[] = "data/CA/AB--fr";
 

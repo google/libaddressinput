@@ -16,7 +16,6 @@
 #define I18N_ADDRESSINPUT_SUPPLIER_H_
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/util/basictypes.h>
 
 namespace i18n {
 namespace addressinput {

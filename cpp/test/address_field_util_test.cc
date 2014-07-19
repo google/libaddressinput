@@ -27,8 +27,8 @@ namespace {
 
 using i18n::addressinput::AddressField;
 using i18n::addressinput::COUNTRY;
-using i18n::addressinput::LOCALITY;
 using i18n::addressinput::FormatElement;
+using i18n::addressinput::LOCALITY;
 using i18n::addressinput::ParseFormatRule;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::RECIPIENT;

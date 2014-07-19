@@ -20,9 +20,8 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 #define I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 
-#include <limits.h>         // So we can set the bounds of our types
-#include <stddef.h>         // For size_t
-#include <string.h>         // for memcpy
+#include <climits>         // So we can set the bounds of our types
+#include <cstddef>         // For size_t
 
 #if !defined(_WIN32)
 // stdint.h is part of C99 but MSVC doesn't have it.

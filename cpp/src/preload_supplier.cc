@@ -32,7 +32,6 @@
 #include <utility>
 #include <vector>
 
-#include "language.h"
 #include "lookup_key.h"
 #include "region_data_constants.h"
 #include "retriever.h"

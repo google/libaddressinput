@@ -20,9 +20,10 @@
 
 #include <cassert>
 #include <cstddef>
+#include <string>
+#include <vector>
 
 #include "lookup_key.h"
-#include "region_data_constants.h"
 #include "rule.h"
 #include "util/string_compare.h"
 

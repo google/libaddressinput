@@ -21,8 +21,10 @@
 #define I18N_ADDRESSINPUT_UTIL_LRU_CACHE_USING_STD_H_
 
 #include <cassert>
+#include <cstddef>
 #include <list>
 #include <map>
+#include <utility>
 
 // Class providing fixed-size (by number of records)
 // LRU-replacement cache of a function with signature

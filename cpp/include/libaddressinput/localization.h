@@ -19,7 +19,6 @@
 #include <libaddressinput/address_problem.h>
 
 #include <string>
-#include <vector>
 
 namespace i18n {
 namespace addressinput {

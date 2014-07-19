@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
+
+#include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>

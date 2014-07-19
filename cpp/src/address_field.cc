@@ -14,10 +14,10 @@
 
 #include <libaddressinput/address_field.h>
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <cstddef>
 #include <ostream>
-
-#include <libaddressinput/util/basictypes.h>
 
 using i18n::addressinput::AddressField;
 using i18n::addressinput::COUNTRY;

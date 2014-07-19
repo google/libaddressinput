@@ -16,11 +16,9 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -55,7 +53,6 @@ const char kKashiShi[] = "\xE5\x96\x80\xE4\xBB\x80\xE5\xB8\x82";
 
 using i18n::addressinput::AddressData;
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::Downloader;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
@@ -63,7 +60,6 @@ using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
-using i18n::addressinput::Storage;
 using i18n::addressinput::Supplier;
 
 class SupplierWrapper {

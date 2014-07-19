@@ -21,8 +21,9 @@
 #include <cassert>
 #include <cstddef>
 #include <string>
+#include <vector>
 
-#include "grit.h"
+#include "messages.h"
 #include "region_data_constants.h"
 #include "rule.h"
 #include "util/string_split.h"

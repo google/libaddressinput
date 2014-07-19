@@ -17,9 +17,9 @@
 #include <cstddef>
 #include <vector>
 
-#include "rule.h"
-
 #include <gtest/gtest.h>
+
+#include "rule.h"
 
 namespace i18n {
 namespace addressinput {

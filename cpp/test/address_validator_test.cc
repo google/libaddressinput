@@ -15,6 +15,7 @@
 #include <libaddressinput/address_validator.h>
 
 #include <libaddressinput/address_data.h>
+#include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
@@ -23,6 +24,7 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <string>
 #include <utility>
 
 #include <gtest/gtest.h>
@@ -44,7 +46,6 @@ using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::COUNTRY;
 using i18n::addressinput::ADMIN_AREA;
 using i18n::addressinput::LOCALITY;
-using i18n::addressinput::DEPENDENT_LOCALITY;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::STREET_ADDRESS;
 
