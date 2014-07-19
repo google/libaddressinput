@@ -32,8 +32,8 @@ namespace addressinput {
 //    scoped_ptr<Storage> file_storage = ...;
 //    ValidatingStorage storage(file_storage));
 //    storage.Put("key", new std::string("data"));
-//    scoped_ptr<ValidatingStorage::Callback> data_ready(BuildCallback(
-//        this, &MyClass::OnDataReady));
+//    const scoped_ptr<const ValidatingStorage::Callback> data_ready(
+//        BuildCallback(this, &MyClass::OnDataReady));
 //    storage.Get("key", *data_ready);
 class ValidatingStorage : public Storage {
  public:

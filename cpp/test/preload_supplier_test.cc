@@ -51,7 +51,7 @@ class PreloadSupplierTest : public testing::Test {
   virtual ~PreloadSupplierTest() {}
 
   PreloadSupplier supplier_;
-  scoped_ptr<PreloadSupplier::Callback> loaded_callback_;
+  const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;
 
  private:
   void OnLoaded(bool success, const std::string& region_code, int num_rules) {

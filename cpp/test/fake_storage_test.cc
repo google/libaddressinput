@@ -63,7 +63,7 @@ class FakeStorageTest : public testing::Test {
 };
 
 TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
-  scoped_ptr<Storage::Callback> callback(BuildCallback());
+  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
   storage_.Get("key", *callback);
 
   EXPECT_FALSE(success_);
@@ -74,7 +74,7 @@ TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
 TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
   storage_.Put("key", new std::string("value"));
 
-  scoped_ptr<Storage::Callback> callback(BuildCallback());
+  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
   storage_.Get("key", *callback);
 
   EXPECT_TRUE(success_);
@@ -86,7 +86,7 @@ TEST_F(FakeStorageTest, SecondPutOverwritesData) {
   storage_.Put("key", new std::string("bad-value"));
   storage_.Put("key", new std::string("good-value"));
 
-  scoped_ptr<Storage::Callback> callback(BuildCallback());
+  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
   storage_.Get("key", *callback);
 
   EXPECT_TRUE(success_);

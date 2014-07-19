@@ -90,7 +90,7 @@ class RetrieverTest : public testing::Test {
 };
 
 TEST_F(RetrieverTest, RetrieveData) {
-  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback(BuildCallback());
   retriever_.Retrieve(kKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -100,10 +100,10 @@ TEST_F(RetrieverTest, RetrieveData) {
 }
 
 TEST_F(RetrieverTest, ReadDataFromStorage) {
-  scoped_ptr<Retriever::Callback> callback1(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback1(BuildCallback());
   retriever_.Retrieve(kKey, *callback1);
 
-  scoped_ptr<Retriever::Callback> callback2(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback2(BuildCallback());
   retriever_.Retrieve(kKey, *callback2);
 
   EXPECT_TRUE(success_);
@@ -115,7 +115,7 @@ TEST_F(RetrieverTest, ReadDataFromStorage) {
 TEST_F(RetrieverTest, MissingKeyReturnsEmptyData) {
   static const char kMissingKey[] = "junk";
 
-  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback(BuildCallback());
   retriever_.Retrieve(kMissingKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -129,7 +129,7 @@ TEST_F(RetrieverTest, FaultyDownloader) {
                           new MockDownloader,
                           new NullStorage);
 
-  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback(BuildCallback());
   bad_retriever.Retrieve(kKey, *callback);
 
   EXPECT_FALSE(success_);
@@ -167,7 +167,7 @@ TEST_F(RetrieverTest, UseStaleDataWhenDownloaderFails) {
   Retriever resilient_retriever(
       MockDownloader::kMockDataUrl, new MockDownloader, stale_storage);
 
-  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback(BuildCallback());
   resilient_retriever.Retrieve(kKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -182,7 +182,7 @@ TEST_F(RetrieverTest, DoNotUseStaleDataWhenDownloaderSucceeds) {
   Retriever resilient_retriever(
       FakeDownloader::kFakeDataUrl, new FakeDownloader, stale_storage);
 
-  scoped_ptr<Retriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const Retriever::Callback> callback(BuildCallback());
   resilient_retriever.Retrieve(kKey, *callback);
 
   EXPECT_TRUE(success_);

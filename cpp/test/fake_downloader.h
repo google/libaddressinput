@@ -47,7 +47,7 @@ namespace addressinput {
 //      }
 //
 //      FakeDownloader downloader_;
-//      scoped_ptr<Downloader::Callback> callback_;
+//      const scoped_ptr<const Downloader::Callback> callback_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };

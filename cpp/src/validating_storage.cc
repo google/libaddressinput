@@ -68,7 +68,7 @@ class Helper {
   }
 
   const Storage::Callback& data_ready_;
-  scoped_ptr<Storage::Callback> wrapped_data_ready_;
+  const scoped_ptr<const Storage::Callback> wrapped_data_ready_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };

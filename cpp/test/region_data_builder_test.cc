@@ -51,7 +51,7 @@ class RegionDataBuilderTest : public testing::Test {
 
   PreloadSupplier supplier_;
   RegionDataBuilder builder_;
-  scoped_ptr<PreloadSupplier::Callback> loaded_callback_;
+  const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;
   std::string best_language_;
 
  private:

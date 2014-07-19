@@ -74,7 +74,7 @@ class RuleRetrieverTest : public testing::Test {
 TEST_F(RuleRetrieverTest, ExistingRule) {
   static const char kExistingKey[] = "data/CA";
 
-  scoped_ptr<RuleRetriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const RuleRetriever::Callback> callback(BuildCallback());
   rule_retriever_.RetrieveRule(kExistingKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -85,7 +85,7 @@ TEST_F(RuleRetrieverTest, ExistingRule) {
 TEST_F(RuleRetrieverTest, MissingRule) {
   static const char kMissingKey[] = "junk";
 
-  scoped_ptr<RuleRetriever::Callback> callback(BuildCallback());
+  const scoped_ptr<const RuleRetriever::Callback> callback(BuildCallback());
   rule_retriever_.RetrieveRule(kMissingKey, *callback);
 
   EXPECT_TRUE(success_);  // The server returns "{}" for bad keys.

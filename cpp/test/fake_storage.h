@@ -51,7 +51,7 @@ namespace addressinput {
 //      }
 //
 //      FakeStorage storage_;
-//      scoped_ptr<Storage::Callback> callback_;
+//      const scoped_ptr<const Storage::Callback> callback_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };

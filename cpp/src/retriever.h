@@ -37,8 +37,8 @@ class ValidatingStorage;
 //    Downloader* downloader = ...;
 //    Retriever retriever("https://i18napis.appspot.com/ssl-address/",
 //                        downloader, storage);
-//    scoped_ptr<Retriever::Callback> retrieved(BuildCallback(
-//        this, &MyClass::OnDataRetrieved));
+//    const scoped_ptr<const Retriever::Callback> retrieved(
+//        BuildCallback(this, &MyClass::OnDataRetrieved));
 //    retriever.Retrieve("data/CA/AB--fr", *retrieved);
 class Retriever {
  public:

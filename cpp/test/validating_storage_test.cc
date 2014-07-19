@@ -84,7 +84,7 @@ class ValidatingStorageTest : public testing::Test  {
 TEST_F(ValidatingStorageTest, GoodData) {
   storage_.Put(kKey, new std::string(kValidatedData));
 
-  scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
+  const scoped_ptr<const ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -95,7 +95,7 @@ TEST_F(ValidatingStorageTest, GoodData) {
 TEST_F(ValidatingStorageTest, EmptyData) {
   storage_.Put(kKey, new std::string(kEmptyData));
 
-  scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
+  const scoped_ptr<const ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
 
   EXPECT_TRUE(success_);
@@ -104,7 +104,7 @@ TEST_F(ValidatingStorageTest, EmptyData) {
 }
 
 TEST_F(ValidatingStorageTest, MissingKey) {
-  scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
+  const scoped_ptr<const ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
 
   EXPECT_FALSE(success_);
@@ -116,7 +116,7 @@ TEST_F(ValidatingStorageTest, GarbageData) {
   storage_.Put(kKey, new std::string(kValidatedData));
   wrapped_storage_->Put(kKey, new std::string("garbage"));
 
-  scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
+  const scoped_ptr<const ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
 
   EXPECT_FALSE(success_);
@@ -128,7 +128,7 @@ TEST_F(ValidatingStorageTest, StaleData) {
   storage_.Put(kKey, new std::string(kValidatedData));
   wrapped_storage_->Put(kKey, new std::string(kStaleWrappedData));
 
-  scoped_ptr<ValidatingStorage::Callback> callback(BuildCallback());
+  const scoped_ptr<const ValidatingStorage::Callback> callback(BuildCallback());
   storage_.Get(kKey, *callback);
 
   EXPECT_FALSE(success_);

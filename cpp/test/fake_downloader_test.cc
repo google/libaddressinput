@@ -95,7 +95,7 @@ testing::AssertionResult DataIsValid(const std::string& data,
 TEST_P(FakeDownloaderTest, FakeDownloaderHasValidDataForRegion) {
   std::string key = "data/" + GetParam();
   std::string url = std::string(FakeDownloader::kFakeDataUrl) + key;
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(url, *callback);
 
   EXPECT_TRUE(success_);
@@ -136,7 +136,7 @@ testing::AssertionResult AggregateDataIsValid(const std::string& data,
 TEST_P(FakeDownloaderTest, FakeDownloaderHasValidAggregatedDataForRegion) {
   std::string key = "data/" + GetParam();
   std::string url = std::string(FakeDownloader::kFakeAggregateDataUrl) + key;
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(url, *callback);
 
   EXPECT_TRUE(success_);
@@ -154,7 +154,7 @@ TEST_F(FakeDownloaderTest, DownloadExistingData) {
   static const std::string kKey = "data";
   static const std::string kUrl =
       std::string(FakeDownloader::kFakeDataUrl) + kKey;
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(kUrl, *callback);
 
   EXPECT_TRUE(success_);
@@ -166,7 +166,7 @@ TEST_F(FakeDownloaderTest, DownloadExistingData) {
 TEST_F(FakeDownloaderTest, DownloadMissingKeyReturnsEmptyDictionary) {
   static const std::string kJunkUrl =
       std::string(FakeDownloader::kFakeDataUrl) + "junk";
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(kJunkUrl, *callback);
 
   EXPECT_TRUE(success_);
@@ -178,7 +178,7 @@ TEST_F(FakeDownloaderTest, DownloadMissingKeyReturnsEmptyDictionary) {
 TEST_F(FakeDownloaderTest, AggregateDownloadMissingKeyReturnsEmptyDictionary) {
   static const std::string kJunkUrl =
       std::string(FakeDownloader::kFakeAggregateDataUrl) + "junk";
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(kJunkUrl, *callback);
 
   EXPECT_TRUE(success_);
@@ -189,7 +189,7 @@ TEST_F(FakeDownloaderTest, AggregateDownloadMissingKeyReturnsEmptyDictionary) {
 // Verifies that downloading an empty key will return "{}".
 TEST_F(FakeDownloaderTest, DownloadEmptyKeyReturnsEmptyDictionary) {
   static const std::string kPrefixOnlyUrl = FakeDownloader::kFakeDataUrl;
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(kPrefixOnlyUrl, *callback);
 
   EXPECT_TRUE(success_);
@@ -200,7 +200,7 @@ TEST_F(FakeDownloaderTest, DownloadEmptyKeyReturnsEmptyDictionary) {
 // Verifies that downloading a real URL fails.
 TEST_F(FakeDownloaderTest, DownloadRealUrlFals) {
   static const std::string kRealUrl = "http://www.google.com/";
-  scoped_ptr<Downloader::Callback> callback(BuildCallback());
+  const scoped_ptr<const Downloader::Callback> callback(BuildCallback());
   downloader_.Download(kRealUrl, *callback);
 
   EXPECT_FALSE(success_);

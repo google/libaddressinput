@@ -95,8 +95,8 @@ class Helper {
   const LookupKeyUtil& lookup_key_util_;
   const Downloader& downloader_;
   ValidatingStorage* storage_;
-  scoped_ptr<Downloader::Callback> downloaded_;
-  scoped_ptr<Storage::Callback> validated_data_ready_;
+  const scoped_ptr<const Downloader::Callback> downloaded_;
+  const scoped_ptr<const Storage::Callback> validated_data_ready_;
   std::string stale_data_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);

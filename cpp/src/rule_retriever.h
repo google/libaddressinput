@@ -32,8 +32,8 @@ class Rule;
 // Retrieves validation rules. Sample usage:
 //    const Retriever* retriever = ...
 //    RuleRetriever rules(retriever);
-//    scoped_ptr<RuleRetriever::Callback> rule_ready(BuildCallback(
-//        this, &MyClass::OnRuleReady));
+//    const scoped_ptr<const RuleRetriever::Callback> rule_ready(
+//        BuildCallback(this, &MyClass::OnRuleReady));
 //    rules.RetrieveRule("data/CA/AB--fr", *rule_ready);
 class RuleRetriever {
  public:

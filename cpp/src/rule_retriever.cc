@@ -57,7 +57,7 @@ class Helper {
   }
 
   const RuleRetriever::Callback& rule_ready_;
-  scoped_ptr<Retriever::Callback> data_retrieved_;
+  const scoped_ptr<const Retriever::Callback> data_retrieved_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };
