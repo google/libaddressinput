@@ -29,6 +29,7 @@
 
 namespace {
 
+using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
@@ -45,19 +46,16 @@ class RuleRetrieverTest : public testing::Test {
                                       new NullStorage)),
         success_(false),
         key_(),
-        rule_() {}
+        rule_(),
+        rule_ready_(BuildCallback(this, &RuleRetrieverTest::OnRuleReady)) {}
 
   virtual ~RuleRetrieverTest() {}
-
-  RuleRetriever::Callback* BuildCallback() {
-    return i18n::addressinput::BuildCallback(
-        this, &RuleRetrieverTest::OnRuleReady);
-  }
 
   RuleRetriever rule_retriever_;
   bool success_;
   std::string key_;
   Rule rule_;
+  const scoped_ptr<const RuleRetriever::Callback> rule_ready_;
 
  private:
   void OnRuleReady(bool success,
@@ -74,8 +72,7 @@ class RuleRetrieverTest : public testing::Test {
 TEST_F(RuleRetrieverTest, ExistingRule) {
   static const char kExistingKey[] = "data/CA";
 
-  const scoped_ptr<const RuleRetriever::Callback> callback(BuildCallback());
-  rule_retriever_.RetrieveRule(kExistingKey, *callback);
+  rule_retriever_.RetrieveRule(kExistingKey, *rule_ready_);
 
   EXPECT_TRUE(success_);
   EXPECT_EQ(kExistingKey, key_);
@@ -85,8 +82,7 @@ TEST_F(RuleRetrieverTest, ExistingRule) {
 TEST_F(RuleRetrieverTest, MissingRule) {
   static const char kMissingKey[] = "junk";
 
-  const scoped_ptr<const RuleRetriever::Callback> callback(BuildCallback());
-  rule_retriever_.RetrieveRule(kMissingKey, *callback);
+  rule_retriever_.RetrieveRule(kMissingKey, *rule_ready_);
 
   EXPECT_TRUE(success_);  // The server returns "{}" for bad keys.
   EXPECT_EQ(kMissingKey, key_);

@@ -26,6 +26,7 @@
 
 namespace {
 
+using i18n::addressinput::BuildCallback;
 using i18n::addressinput::FakeStorage;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
@@ -33,18 +34,20 @@ using i18n::addressinput::Storage;
 // Tests for FakeStorage object.
 class FakeStorageTest : public testing::Test {
  protected:
-  FakeStorageTest() : storage_(), success_(false), key_(), data_() {}
-  virtual ~FakeStorageTest() {}
+  FakeStorageTest()
+      : storage_(),
+        success_(false),
+        key_(),
+        data_(),
+        data_ready_(BuildCallback(this, &FakeStorageTest::OnDataReady)) {}
 
-  Storage::Callback* BuildCallback() {
-    return i18n::addressinput::BuildCallback(
-        this, &FakeStorageTest::OnDataReady);
-  }
+  virtual ~FakeStorageTest() {}
 
   FakeStorage storage_;
   bool success_;
   std::string key_;
   std::string data_;
+  const scoped_ptr<const Storage::Callback> data_ready_;
 
  private:
   void OnDataReady(bool success,
@@ -63,8 +66,7 @@ class FakeStorageTest : public testing::Test {
 };
 
 TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
-  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
-  storage_.Get("key", *callback);
+  storage_.Get("key", *data_ready_);
 
   EXPECT_FALSE(success_);
   EXPECT_EQ("key", key_);
@@ -73,9 +75,7 @@ TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
 
 TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
   storage_.Put("key", new std::string("value"));
-
-  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
-  storage_.Get("key", *callback);
+  storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);
   EXPECT_EQ("key", key_);
@@ -85,9 +85,7 @@ TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
 TEST_F(FakeStorageTest, SecondPutOverwritesData) {
   storage_.Put("key", new std::string("bad-value"));
   storage_.Put("key", new std::string("good-value"));
-
-  const scoped_ptr<const Storage::Callback> callback(BuildCallback());
-  storage_.Get("key", *callback);
+  storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);
   EXPECT_EQ("key", key_);
