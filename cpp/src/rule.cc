@@ -14,6 +14,7 @@
 
 #include "rule.h"
 
+#include <cassert>
 #include <cstddef>
 #include <map>
 #include <string>
@@ -137,6 +138,7 @@ const Rule& Rule::GetDefault() {
 }
 
 void Rule::CopyFrom(const Rule& rule) {
+  assert(this != &rule);
   id_ = rule.id_;
   format_ = rule.format_;
   latin_format_ = rule.latin_format_;
