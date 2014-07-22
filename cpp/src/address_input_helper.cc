@@ -99,7 +99,7 @@ void FillAddressFromMatchedRules(
 
 AddressInputHelper::AddressInputHelper(PreloadSupplier* supplier)
     : supplier_(supplier) {
-  assert(supplier_ !=  NULL);
+  assert(supplier_ != NULL);
 }
 
 AddressInputHelper::~AddressInputHelper() {

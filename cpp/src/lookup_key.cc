@@ -98,8 +98,9 @@ void LookupKey::FromAddress(const AddressData& address) {
     }
   }
   Language address_language(address.language_code);
-  std::string language_tag_no_latn = address_language.has_latin_script ?
-      address_language.base : address_language.tag;
+  std::string language_tag_no_latn = address_language.has_latin_script
+                                         ? address_language.base
+                                         : address_language.tag;
   if (ShouldSetLanguageForKey(language_tag_no_latn, address.region_code)) {
     language_ = language_tag_no_latn;
   }

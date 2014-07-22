@@ -76,9 +76,9 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
     return IsStringEmpty(value);
   } else {
     const std::vector<std::string>& value = GetRepeatedFieldValue(field);
-    return std::find_if(value.begin(), value.end(),
-                        std::not1(std::ptr_fun(&IsStringEmpty))) ==
-           value.end();
+    return std::find_if(value.begin(),
+                        value.end(),
+                        std::not1(std::ptr_fun(&IsStringEmpty))) == value.end();
   }
 }
 
@@ -104,16 +104,14 @@ const std::vector<std::string>& AddressData::GetRepeatedFieldValue(
 }
 
 bool AddressData::operator==(const AddressData& other) const {
-  return
-      region_code == other.region_code &&
-      address_line == other.address_line &&
-      administrative_area == other.administrative_area &&
-      locality == other.locality &&
-      dependent_locality == other.dependent_locality &&
-      postal_code == other.postal_code &&
-      sorting_code == other.sorting_code &&
-      language_code == other.language_code &&
-      recipient == other.recipient;
+  return region_code == other.region_code &&
+         address_line == other.address_line &&
+         administrative_area == other.administrative_area &&
+         locality == other.locality &&
+         dependent_locality == other.dependent_locality &&
+         postal_code == other.postal_code &&
+         sorting_code == other.sorting_code &&
+         language_code == other.language_code && recipient == other.recipient;
 }
 
 // static

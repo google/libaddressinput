@@ -143,7 +143,8 @@ void GetFormattedNationalAddress(
   // explicitly tagged as being Latin, then use the latinized formatting rules.
   const std::vector<FormatElement>& format =
       language.has_latin_script && !rule.GetLatinFormat().empty()
-          ? rule.GetLatinFormat() : rule.GetFormat();
+          ? rule.GetLatinFormat()
+          : rule.GetFormat();
 
   std::string line;
   for (size_t i = 0; i < format.size(); ++i) {
@@ -162,7 +163,8 @@ void GetFormattedNationalAddress(
           lines->push_back(line);
           line.clear();
         }
-        lines->insert(lines->end(), address_data.address_line.begin(),
+        lines->insert(lines->end(),
+                      address_data.address_line.begin(),
                       address_data.address_line.end());
       } else {
         line.append(address_data.GetFieldValue(field));

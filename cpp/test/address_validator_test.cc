@@ -132,9 +132,7 @@ class PreloadValidatorWrapper : public ValidatorWrapper {
         validator_(&supplier_),
         loaded_(BuildCallback(this, &PreloadValidatorWrapper::Loaded)) {}
 
-  void Loaded(bool success, const std::string&, int) {
-    ASSERT_TRUE(success);
-  }
+  void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier supplier_;
   const AddressValidator validator_;

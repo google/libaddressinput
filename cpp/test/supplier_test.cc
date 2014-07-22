@@ -112,9 +112,7 @@ class PreloadSupplierWrapper : public SupplierWrapper {
                           new NullStorage),
         loaded_(BuildCallback(this, &PreloadSupplierWrapper::Loaded)) {}
 
-  void Loaded(bool success, const std::string&, int) {
-    ASSERT_TRUE(success);
-  }
+  void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier preload_supplier_;
   const scoped_ptr<const PreloadSupplier::Callback> loaded_;

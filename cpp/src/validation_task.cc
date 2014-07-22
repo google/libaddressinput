@@ -256,9 +256,10 @@ void ValidationTask::ReportProblemMaybe(AddressField field,
 bool ValidationTask::ShouldReport(AddressField field,
                                   AddressProblem problem) const {
   return filter_ == NULL || filter_->empty() ||
-         std::find(filter_->begin(), filter_->end(),
+         std::find(filter_->begin(),
+                   filter_->end(),
                    FieldProblemMap::value_type(field, problem)) !=
-         filter_->end();
+             filter_->end();
 }
 
 }  // namespace addressinput

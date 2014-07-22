@@ -97,7 +97,7 @@ std::map<std::string, const RE2ptr*> InitMatchers() {
   return matchers;
 }
 
-} // namespace
+}  // namespace
 
 // static
 std::vector<const RE2ptr*> PostBoxMatchers::GetMatchers(

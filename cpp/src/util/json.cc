@@ -85,9 +85,7 @@ class Json::JsonImpl {
     (void)inserted;
   }
 
-  const std::vector<std::string>& GetKeys() const {
-    return keys_;
-  }
+  const std::vector<std::string>& GetKeys() const { return keys_; }
 
  private:
   void BuildKeyList() {

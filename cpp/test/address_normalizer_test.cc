@@ -93,7 +93,6 @@ TEST_F(AddressNormalizerTest, GangwonKoreanName) {
   EXPECT_EQ("강원도", address.administrative_area);
 }
 
-
 TEST_F(AddressNormalizerTest, DontSwitchLatinScriptForUnknownLanguage) {
   supplier_.LoadRules("KR", *loaded_);
   AddressData address;

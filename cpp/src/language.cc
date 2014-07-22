@@ -32,13 +32,13 @@ Language::Language(const std::string& language_tag) : tag(language_tag),
   // legacy code generates tags with '_' instead of '-'.
   static const char kSubtagsSeparator = '-';
   static const char kAlternativeSubtagsSeparator = '_';
-  std::replace(tag.begin(), tag.end(), kAlternativeSubtagsSeparator,
-               kSubtagsSeparator);
+  std::replace(
+      tag.begin(), tag.end(), kAlternativeSubtagsSeparator, kSubtagsSeparator);
 
   // OK to use 'tolower' because BCP 47 tags are always in ASCII.
   std::string lowercase = tag;
-  std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(),
-                 tolower);
+  std::transform(
+      lowercase.begin(), lowercase.end(), lowercase.begin(), tolower);
 
   base = lowercase.substr(0, lowercase.find(kSubtagsSeparator));
 

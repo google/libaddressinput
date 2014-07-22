@@ -46,7 +46,7 @@ const char kStaleWrappedData[] = "timestamp=" OLD_TIMESTAMP "\n"
 const char kEmptyData[] = "";
 
 // Tests for ValidatingStorage object.
-class ValidatingStorageTest : public testing::Test  {
+class ValidatingStorageTest : public testing::Test {
  protected:
   ValidatingStorageTest()
       : wrapped_storage_(new FakeStorage),

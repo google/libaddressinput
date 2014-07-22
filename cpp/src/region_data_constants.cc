@@ -1397,8 +1397,10 @@ struct SelectFirst {
 
 std::vector<std::string> InitRegionCodes() {
   std::vector<std::string> region_codes(GetAllRegionData().size());
-  std::transform(GetAllRegionData().begin(), GetAllRegionData().end(),
-                 region_codes.begin(), SelectFirst());
+  std::transform(GetAllRegionData().begin(),
+                 GetAllRegionData().end(),
+                 region_codes.begin(),
+                 SelectFirst());
   return region_codes;
 }
 

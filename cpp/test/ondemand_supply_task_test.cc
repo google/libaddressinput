@@ -67,13 +67,9 @@ class OndemandSupplyTaskTest : public testing::Test {
     }
   }
 
-  void Queue(const std::string& key) {
-    task_->Queue(key);
-  }
+  void Queue(const std::string& key) { task_->Queue(key); }
 
-  void Retrieve() {
-    task_->Retrieve(*retriever_);
-  }
+  void Retrieve() { task_->Retrieve(*retriever_); }
 
   bool success_;  // Expected status from MockDownloader.
   LookupKey lookup_key_;  // Stub.

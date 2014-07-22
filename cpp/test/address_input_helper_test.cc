@@ -65,9 +65,7 @@ class AddressInputHelperTest : public testing::Test {
 
  private:
   // Used to preload data that we need.
-  void Loaded(bool success, const std::string&, int) {
-    ASSERT_TRUE(success);
-  }
+  void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;
@@ -194,8 +192,8 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingMultipleValues) {
   address.postal_code = "527-111";
 
   AddressData expected = address;
-   /* The province, Jeonnam - 전라남도 - is known, but we have several locality
-    * matches so none of them are populated. */
+  /* The province, Jeonnam - 전라남도 - is known, but we have several locality
+   * matches so none of them are populated. */
   expected.administrative_area =
       "\xEC\xA0\x84\xEB\x9D\xBC\xEB\x82\xA8\xEB\x8F\x84";
   FillAddress(&address);
@@ -271,9 +269,7 @@ class AddressInputHelperMockDataTest : public testing::Test {
 
  private:
   // Our mock downloader we assume will always succeed.
-  void Loaded(bool success, const std::string&, int) {
-    ASSERT_TRUE(success);
-  }
+  void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;

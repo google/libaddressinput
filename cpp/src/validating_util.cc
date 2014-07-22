@@ -111,7 +111,7 @@ bool ValidatingUtil::UnwrapTimestamp(std::string* data, time_t now) {
 
   std::string timestamp_string;
   if (!UnwrapHeader(
-           kTimestampPrefix, kTimestampPrefixLength, data, &timestamp_string)) {
+          kTimestampPrefix, kTimestampPrefixLength, data, &timestamp_string)) {
     return false;
   }
 

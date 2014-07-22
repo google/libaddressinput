@@ -59,8 +59,8 @@ void BuildRegionTreeRecursively(PreloadSupplier* supplier,
             ? rule->GetLatinName() : local_name;
     RegionData* region = parent_region->AddSubRegion(*key_it, name);
     if (!rule->GetSubKeys().empty()) {
-      BuildRegionTreeRecursively(supplier, lookup_key, region,
-                                 rule->GetSubKeys(), prefer_latin_name);
+      BuildRegionTreeRecursively(
+          supplier, lookup_key, region, rule->GetSubKeys(), prefer_latin_name);
     }
   }
 }
@@ -82,8 +82,11 @@ RegionData* BuildRegion(PreloadSupplier* supplier,
   assert(rule != NULL);
 
   RegionData* region = new RegionData(region_code);
-  BuildRegionTreeRecursively(supplier, lookup_key, region,
-                             rule->GetSubKeys(), language.has_latin_script);
+  BuildRegionTreeRecursively(supplier,
+                             lookup_key,
+                             region,
+                             rule->GetSubKeys(),
+                             language.has_latin_script);
 
   return region;
 }
@@ -127,17 +130,21 @@ const RegionData& RegionDataBuilder::Build(
   Rule rule;
   rule.ParseSerializedRule(RegionDataConstants::GetRegionData(region_code));
   static const Language kUndefinedLanguage("und");
-  const Language& best_language = rule.GetLanguages().empty()
-      ? kUndefinedLanguage
-      : ChooseBestAddressLanguage(rule, Language(ui_language_tag));
+  const Language& best_language =
+      rule.GetLanguages().empty()
+          ? kUndefinedLanguage
+          : ChooseBestAddressLanguage(rule, Language(ui_language_tag));
   *best_region_tree_language_tag = best_language.tag;
 
   LanguageRegionMap::const_iterator language_it =
       region_it->second->find(best_language.tag);
   if (language_it == region_it->second->end()) {
-    language_it = region_it->second->insert(std::make_pair(
-        best_language.tag,
-        BuildRegion(supplier_, region_code, best_language))).first;
+    language_it =
+        region_it->second->insert(std::make_pair(best_language.tag,
+                                                 BuildRegion(supplier_,
+                                                             region_code,
+                                                             best_language)))
+            .first;
   }
 
   return *language_it->second;

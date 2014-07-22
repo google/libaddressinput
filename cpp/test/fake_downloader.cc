@@ -101,8 +101,9 @@ std::map<std::string, std::string> InitData() {
                       kDataKeyPrefixLength) == 0) {
         // Example aggregate URL:
         //     test:///aggregate/data/CH
-        const std::string& aggregate_url = GetAggregateLookupKeyUtil()
-            .GetUrlForKey(key.substr(0, kAggregateDataKeyLength));
+        const std::string& aggregate_url =
+            GetAggregateLookupKeyUtil().GetUrlForKey(
+                key.substr(0, kAggregateDataKeyLength));
 
         std::map<std::string, std::string>::iterator aggregate_data_it =
             data.find(aggregate_url);
