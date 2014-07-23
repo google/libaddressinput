@@ -63,15 +63,39 @@ TEST_P(StringCompareTest, CorrectLess) {
 
 INSTANTIATE_TEST_CASE_P(
     Comparisons, StringCompareTest,
-    testing::Values(TestCase("foo", "foo", true, false),
-                    TestCase("foo", "FOO", true, false),
-                    TestCase("bar", "foo", false, true),
-                    TestCase("강원도", "강원도", true, false),
-                    TestCase("강원도", "대구광역시", false, true),
-                    TestCase("ZÜRICH", "zürich", true, false),
-                    TestCase("абв", "где", false, true),
-                    TestCase("абв", "ГДЕ", false, true),
-                    TestCase("где", "абв", false, false),
-                    TestCase("где", "АБВ", false, false)));
+    testing::Values(
+        TestCase("foo", "foo", true, false),
+        TestCase("foo", "FOO", true, false),
+        TestCase("bar", "foo", false, true),
+        TestCase(
+            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",  /* "강원도" */
+            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",  /* "강원도" */
+            true, false),
+        TestCase(
+            /* "강원도" */
+            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",
+            /* "대구광역시" */
+            "\xEB\x8C\x80\xEA\xB5\xAC\xEA\xB4\x91\xEC\x97\xAD\xEC\x8B\x9C",
+            false, true),
+        TestCase(
+            "Z\xC3\x9CRICH",  /* "ZÜRICH" */
+            "z\xC3\xBCrich",  /* "zürich" */
+            true, false),
+        TestCase(
+            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
+            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
+            false, true),
+        TestCase(
+            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
+            "\xD0\x93\xD0\x94\xD0\x95",  /* "ГДЕ" */
+            false, true),
+        TestCase(
+            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
+            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
+            false, false),
+        TestCase(
+            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
+            "\xD0\x90\xD0\x91\xD0\x92",  /* "АБВ" */
+            false, false)));
 
 }  // namespace

@@ -36,7 +36,7 @@ using i18n::addressinput::STREET_ADDRESS;
 
 TEST(AddressFieldUtilTest, FormatParseNewline) {
   std::vector<FormatElement> actual;
-  ParseFormatRule("%O%n%N%n%A%nAX-%Z %C%nÅLAND", &actual);
+  ParseFormatRule("%O%n%N%n%A%nAX-%Z %C%n\xC3\x85LAND", &actual);  /* "ÅLAND" */
 
   std::vector<FormatElement> expected;
   // Organization is skipped.
@@ -50,7 +50,7 @@ TEST(AddressFieldUtilTest, FormatParseNewline) {
   expected.push_back(FormatElement(" "));
   expected.push_back(FormatElement(LOCALITY));
   expected.push_back(FormatElement());
-  expected.push_back(FormatElement("ÅLAND"));
+  expected.push_back(FormatElement("\xC3\x85LAND"));  /* "ÅLAND" */
 
   EXPECT_EQ(expected, actual);
 }
