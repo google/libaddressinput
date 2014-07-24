@@ -49,15 +49,12 @@ class Json {
   // parameter should not be NULL.
   bool GetStringValueForKey(const std::string& key, std::string* value) const;
 
-  // Returns true if the parsed JSON contains a dictionary value for |key|. The
-  // JSON object must be parsed successfully in ParseObject() before invoking
-  // this method.
-  bool HasDictionaryValueForKey(const std::string& key) const;
-
-  // Returns the dictionary value for the |key|. The |key| must be present and
-  // its value must be of the dictionary type, i.e., HasDictionaryValueForKey()
-  // must return true before invoking this method.
-  const Json& GetDictionaryValueForKey(const std::string& key) const;
+  // Returns true if the parsed JSON contains a dictionary value for |key|.
+  // Points |value| to the dictionary value of the |key|. The JSON object must
+  // be parsed successfully in ParseObject() before invoking this method. The
+  // caller does not own |value|.
+  bool GetDictionaryValueForKey(const std::string& key,
+                                const Json** value) const;
 
  private:
   class JsonImpl;

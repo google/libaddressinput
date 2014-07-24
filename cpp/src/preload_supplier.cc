@@ -114,13 +114,13 @@ class Helper {
 
     for (std::vector<std::string>::const_iterator
          it = json.GetKeys().begin(); it != json.GetKeys().end(); ++it) {
-      if (!json.HasDictionaryValueForKey(*it)) {
+      const Json* value;
+      if (!json.GetDictionaryValueForKey(*it, &value)) {
         success = false;
         goto callback;
       }
-      const Json& value = json.GetDictionaryValueForKey(*it);
 
-      if (!value.GetStringValueForKey("id", &id)) {
+      if (!value->GetStringValueForKey("id", &id)) {
         success = false;
         goto callback;
       }
@@ -135,7 +135,7 @@ class Helper {
         // All rules on the COUNTRY level inherit from the default rule.
         rule->CopyFrom(Rule::GetDefault());
       }
-      rule->ParseJsonRule(value);
+      rule->ParseJsonRule(*value);
       assert(id == rule->GetId());  // Sanity check.
 
       rule_storage_->push_back(rule);

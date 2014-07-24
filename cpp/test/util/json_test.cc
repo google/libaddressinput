@@ -120,16 +120,18 @@ TEST(JsonTest, NumberIsNotValid) {
 TEST(JsonTest, NoDictionaryFound) {
   Json json;
   ASSERT_TRUE(json.ParseObject("{\"key\":\"value\"}"));
-  EXPECT_FALSE(json.HasDictionaryValueForKey("key"));
+  const Json* sub_json;
+  EXPECT_FALSE(json.GetDictionaryValueForKey("key", &sub_json));
 }
 
 TEST(JsonTest, DictionaryFound) {
   Json json;
   ASSERT_TRUE(json.ParseObject("{\"key\":{\"inner_key\":\"value\"}}"));
-  ASSERT_TRUE(json.HasDictionaryValueForKey("key"));
-  const Json& sub_json = json.GetDictionaryValueForKey("key");
+  const Json* sub_json = NULL;
+  ASSERT_TRUE(json.GetDictionaryValueForKey("key", &sub_json));
+  ASSERT_TRUE(sub_json != NULL);
   std::string value;
-  EXPECT_TRUE(sub_json.GetStringValueForKey("inner_key", &value));
+  EXPECT_TRUE(sub_json->GetStringValueForKey("inner_key", &value));
   EXPECT_EQ("value", value);
 }
 
@@ -139,10 +141,11 @@ TEST(JsonTest, DictionariesHaveKeys) {
   std::vector<std::string> expected_keys(1, "key");
   EXPECT_EQ(expected_keys, json.GetKeys());
 
-  ASSERT_TRUE(json.HasDictionaryValueForKey("key"));
-  const Json& sub_json = json.GetDictionaryValueForKey("key");
+  const Json* sub_json = NULL;
+  ASSERT_TRUE(json.GetDictionaryValueForKey("key", &sub_json));
+  ASSERT_TRUE(sub_json != NULL);
   std::vector<std::string> expected_sub_keys(1, "inner_key");
-  EXPECT_EQ(expected_sub_keys, sub_json.GetKeys());
+  EXPECT_EQ(expected_sub_keys, sub_json->GetKeys());
 }
 
 }  // namespace
