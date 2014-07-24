@@ -79,24 +79,28 @@ std::map<std::string, std::string> InitData() {
     std::exit(EXIT_FAILURE);
   }
 
-  std::string line;
+  std::string key;
+  std::string value;
+
+  std::map<std::string, std::string>::iterator last_data_it = data.end();
+  std::map<std::string, std::string>::iterator aggregate_data_it = data.end();
+
   while (file.good()) {
     // Example line from countryinfo.txt:
     //     data/CH/AG={"name": "Aargau"}
-    std::getline(file, line);
+    // Example key:
+    //     data/CH/AG
+    std::getline(file, key, '=');
 
-    std::string::size_type divider = line.find('=');
-    if (divider != std::string::npos) {
-      // Example key:
-      //     data/CH/AG
-      const std::string& key = line.substr(0, divider);
-
+    if (!key.empty()) {
       // Example value:
       //     {"name": "Aargau"}
-      const std::string& value = line.substr(divider + 1);
+      std::getline(file, value, '\n');
 
       // For example, map 'test:///plain/data/CH/AG' to '{"name": "Aargau"}'.
-      data.insert(std::make_pair(GetLookupKeyUtil().GetUrlForKey(key), value));
+      last_data_it = data.insert(
+          last_data_it,
+          std::make_pair(GetLookupKeyUtil().GetUrlForKey(key), value));
 
       // Aggregate keys that begin with 'data/'. We don't aggregate keys that
       // begin with 'example/' because example data is not used anywhere.
@@ -110,42 +114,41 @@ std::map<std::string, std::string> InitData() {
             GetAggregateLookupKeyUtil().GetUrlForKey(
                 key.substr(0, kAggregateDataKeyLength));
 
-        std::map<std::string, std::string>::iterator aggregate_data_it =
-            data.find(aggregate_url);
-        if (aggregate_data_it != data.end()) {
+        // If aggregate_data_it and key have the same prefix, e.g. "data/ZZ".
+        if (aggregate_data_it != data.end() &&
+            key.compare(0,
+                        kAggregateDataKeyLength,
+                        aggregate_data_it->first,
+                        kFakeAggregateDataUrlLength,
+                        kAggregateDataKeyLength) == 0) {
           // Append more data to the aggregate string, for example:
           //     , "data/CH/AG": {"name": "Aargau"}
           aggregate_data_it->second.append(", \"" + key + "\": " + value);
         } else {
+          // Make the aggregate data strings valid. For example, this incomplete
+          // JSON data:
+          //     {"data/CH/AG": {"name": "Aargau"},
+          //      "data/CH": {"name": "SWITZERLAND"}
+          //
+          // becomes valid JSON data like so:
+          //
+          //     {"data/CH/AG": {"name": "Aargau"},
+          //      "data/CH": {"name": "SWITZERLAND"}}
+          if (aggregate_data_it != data.end()) {
+            aggregate_data_it->second.push_back('}');
+          }
+
           // Begin a new aggregate string, for example:
           //     {"data/CH/AG": {"name": "Aargau"}
-          data.insert(
+          aggregate_data_it = data.insert(
+              aggregate_data_it,
               std::make_pair(aggregate_url, "{\"" + key + "\": " + value));
         }
       }
     }
   }
+
   file.close();
-
-  // Make the aggregate data strings valid. For example, this incomplete JSON
-  // data:
-  //     {"data/CH/AG": {"name": "Aargau"},
-  //      "data/CH": {"name": "SWITZERLAND"}
-  //
-  // becomes valid JSON data like so:
-  //
-  //     {"data/CH/AG": {"name": "Aargau"},
-  //      "data/CH": {"name": "SWITZERLAND"}}
-  for (std::map<std::string, std::string>::iterator data_it = data.begin();
-       data_it != data.end(); ++data_it) {
-    if (data_it->first.compare(0,
-                               kFakeAggregateDataUrlLength,
-                               FakeDownloader::kFakeAggregateDataUrl,
-                               kFakeAggregateDataUrlLength) == 0) {
-      data_it->second.append("}");
-    }
-  }
-
   return data;
 }
 
