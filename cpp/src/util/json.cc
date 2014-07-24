@@ -90,17 +90,11 @@ class Json::JsonImpl {
       return false;
     }
 
-    Json* sub_dictionary = new Json;
-    sub_dictionary->impl_.reset(new JsonImpl(&member->value));
-    bool inserted =
-        dictionaries_.insert(std::make_pair(key, sub_dictionary)).second;
-    // Cannot do work inside of assert(), because the compiler can optimize it
-    // away.
-    assert(inserted);
-    // Avoid unused variable warning when assert() is optimized away.
-    (void)inserted;
-
-    *value = sub_dictionary;
+    std::pair<std::map<std::string, const Json*>::iterator, bool> result =
+        dictionaries_.insert(
+            std::make_pair(key, new Json(new JsonImpl(&member->value))));
+    assert(result.second);
+    *value = result.first->second;
     return true;
   }
 
@@ -143,7 +137,7 @@ class Json::JsonImpl {
   DISALLOW_COPY_AND_ASSIGN(JsonImpl);
 };
 
-Json::Json() {}
+Json::Json() : impl_() {}
 
 Json::~Json() {}
 
@@ -172,6 +166,8 @@ bool Json::GetDictionaryValueForKey(const std::string& key,
   assert(impl_ != NULL);
   return impl_->GetDictionaryValueForKey(key, value);
 }
+
+Json::Json(JsonImpl* impl) : impl_(impl) {}
 
 }  // namespace addressinput
 }  // namespace i18n

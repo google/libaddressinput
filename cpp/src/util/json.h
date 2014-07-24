@@ -58,6 +58,11 @@ class Json {
 
  private:
   class JsonImpl;
+  friend class JsonImpl;
+
+  // Constructor to be called by JsonImpl.
+  explicit Json(JsonImpl* impl);
+
   scoped_ptr<JsonImpl> impl_;
 
   DISALLOW_COPY_AND_ASSIGN(Json);
