@@ -125,6 +125,10 @@ std::map<std::string, std::string> InitData() {
           //     , "data/CH/AG": {"name": "Aargau"}
           aggregate_data_it->second.append(", \"" + key + "\": " + value);
         } else {
+          // The countryinfo.txt file must be sorted so that subkey data
+          // follows directly after its parent key data.
+          assert(key.size() == kAggregateDataKeyLength);
+
           // Make the aggregate data strings valid. For example, this incomplete
           // JSON data:
           //     {"data/CH/AG": {"name": "Aargau"},
