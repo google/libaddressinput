@@ -1243,7 +1243,9 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"sw~en\""
       "}"));
   region_data.insert(std::make_pair("UA", "{"
-      "\"fmt\":\"%Z %C%n%A%n%O%n%N\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
+      "\"require\":\"ACZ\","
+      "\"state_name_type\":\"oblast\","
       "\"zipex\":\"15432,01055,01001\","
       "\"posturl\":\"http://services.ukrposhta.com/postindex_new/\","
       "\"languages\":\"uk~ru\""
