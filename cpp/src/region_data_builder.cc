@@ -17,6 +17,7 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/region_data.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <cassert>
 #include <cstddef>
@@ -34,59 +35,91 @@ namespace addressinput {
 
 namespace {
 
-// Does not take ownership of |supplier| or |parent_region|, neither of which is
-// allowed to be NULL.
-void BuildRegionTreeRecursively(PreloadSupplier* supplier,
-                                const LookupKey& parent_key,
-                                RegionData* parent_region,
-                                const std::vector<std::string>& keys,
-                                bool prefer_latin_name) {
-  assert(supplier != NULL);
+// The maximum depth of lookup keys.
+static const size_t kLookupKeysMaxDepth = arraysize(LookupKey::kHierarchy) - 1;
+
+// Does not take ownership of |parent_region|, which is not allowed to be NULL.
+void BuildRegionTreeRecursively(
+    const std::map<std::string, const Rule*>& rules,
+    std::map<std::string, const Rule*>::const_iterator hint,
+    const LookupKey& parent_key,
+    RegionData* parent_region,
+    const std::vector<std::string>& keys,
+    bool prefer_latin_name,
+    size_t region_max_depth) {
   assert(parent_region != NULL);
 
   LookupKey lookup_key;
   for (std::vector<std::string>::const_iterator key_it = keys.begin();
        key_it != keys.end(); ++key_it) {
     lookup_key.FromLookupKey(parent_key, *key_it);
-    const Rule* rule = supplier->GetRule(lookup_key);
-    if (rule == NULL) {
-      return;
+    const std::string& lookup_key_string =
+        lookup_key.ToKeyString(kLookupKeysMaxDepth);
+
+    ++hint;
+    if (hint == rules.end() || hint->first != lookup_key_string) {
+      hint = rules.find(lookup_key_string);
+      if (hint == rules.end()) {
+        return;
+      }
     }
+
+    const Rule* rule = hint->second;
+    assert(rule != NULL);
+
     const std::string& local_name = rule->GetName().empty()
         ? *key_it : rule->GetName();
     const std::string& name =
         prefer_latin_name && !rule->GetLatinName().empty()
             ? rule->GetLatinName() : local_name;
     RegionData* region = parent_region->AddSubRegion(*key_it, name);
-    if (!rule->GetSubKeys().empty()) {
-      BuildRegionTreeRecursively(
-          supplier, lookup_key, region, rule->GetSubKeys(), prefer_latin_name);
+
+    if (!rule->GetSubKeys().empty() &&
+        region_max_depth > parent_key.GetDepth()) {
+      BuildRegionTreeRecursively(rules,
+                                 hint,
+                                 lookup_key,
+                                 region,
+                                 rule->GetSubKeys(),
+                                 prefer_latin_name,
+                                 region_max_depth);
     }
   }
 }
 
-// Does not take ownership of |supplier|, which cannot be NULL. The caller owns
-// the result.
-RegionData* BuildRegion(PreloadSupplier* supplier,
+// The caller owns the result.
+RegionData* BuildRegion(const std::map<std::string, const Rule*>& rules,
                         const std::string& region_code,
                         const Language& language) {
-  assert(supplier != NULL);
-
   AddressData address;
   address.region_code = region_code;
 
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
 
-  const Rule* const rule = supplier->GetRule(lookup_key);
+  std::map<std::string, const Rule*>::const_iterator hint =
+      rules.find(lookup_key.ToKeyString(kLookupKeysMaxDepth));
+  assert(hint != rules.end());
+
+  const Rule* rule = hint->second;
   assert(rule != NULL);
 
   RegionData* region = new RegionData(region_code);
-  BuildRegionTreeRecursively(supplier,
-                             lookup_key,
-                             region,
-                             rule->GetSubKeys(),
-                             language.has_latin_script);
+
+  // If there're sub-keys for field X, but field X is not used in this region
+  // code, then these sub-keys are skipped over. For example, CH has sub-keys
+  // for field ADMIN_AREA, but CH does not use ADMIN_AREA field.
+  size_t region_max_depth =
+      RegionDataConstants::GetMaxLookupKeyDepth(region_code);
+  if (region_max_depth > 0) {
+    BuildRegionTreeRecursively(rules,
+                               hint,
+                               lookup_key,
+                               region,
+                               rule->GetSubKeys(),
+                               language.has_latin_script,
+                               region_max_depth);
+  }
 
   return region;
 }
@@ -139,9 +172,11 @@ const RegionData& RegionDataBuilder::Build(
   LanguageRegionMap::const_iterator language_it =
       region_it->second->find(best_language.tag);
   if (language_it == region_it->second->end()) {
+    const std::map<std::string, const Rule*>& rules =
+        supplier_->GetRulesForRegion(region_code);
     language_it =
         region_it->second->insert(std::make_pair(best_language.tag,
-                                                 BuildRegion(supplier_,
+                                                 BuildRegion(rules,
                                                              region_code,
                                                              best_language)))
             .first;

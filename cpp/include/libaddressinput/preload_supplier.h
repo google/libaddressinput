@@ -20,6 +20,7 @@
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -80,6 +81,11 @@ class PreloadSupplier : public Supplier {
   // Calls |loaded| when the loading has finished.
   void LoadRules(const std::string& region_code, const Callback& loaded);
 
+  // Returns a mapping of lookup keys to rules. Should be called only when
+  // IsLoaded() returns true for the |region_code|.
+  const std::map<std::string, const Rule*>& GetRulesForRegion(
+      const std::string& region_code) const;
+
   bool IsLoaded(const std::string& region_code) const;
   bool IsPending(const std::string& region_code) const;
 
@@ -93,6 +99,7 @@ class PreloadSupplier : public Supplier {
   std::set<std::string> pending_;
   const scoped_ptr<IndexMap> rule_index_;
   std::vector<const Rule*> rule_storage_;
+  std::map<std::string, std::map<std::string, const Rule*> > region_rules_;
 
   DISALLOW_COPY_AND_ASSIGN(PreloadSupplier);
 };

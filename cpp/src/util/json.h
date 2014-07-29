@@ -39,22 +39,16 @@ class Json {
   // object.
   bool ParseObject(const std::string& json);
 
-  // Returns the list of keys in the parsed JSON. The JSON object must be parsed
-  // successfully in ParseObject() before invoking this method.
-  const std::vector<std::string>& GetKeys() const;
+  // Returns the list of sub dictionaries. The JSON object must be parsed
+  // successfully in ParseObject() before invoking this method. The caller does
+  // not own the result.
+  const std::vector<const Json*>& GetSubDictionaries() const;
 
   // Returns true if the parsed JSON contains a string value for |key|. Sets
   // |value| to the string value of the |key|. The JSON object must be parsed
   // successfully in ParseObject() before invoking this method. The |value|
   // parameter should not be NULL.
   bool GetStringValueForKey(const std::string& key, std::string* value) const;
-
-  // Returns true if the parsed JSON contains a dictionary value for |key|.
-  // Points |value| to the dictionary value of the |key|. The JSON object must
-  // be parsed successfully in ParseObject() before invoking this method. The
-  // caller does not own |value|.
-  bool GetDictionaryValueForKey(const std::string& key,
-                                const Json** value) const;
 
  private:
   class JsonImpl;

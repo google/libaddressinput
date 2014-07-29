@@ -19,9 +19,7 @@
 
 #include <cassert>
 #include <cstddef>
-#include <map>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include <rapidjson/document.h>
@@ -40,27 +38,31 @@ class Json::JsonImpl {
       : document_(new Document),
         value_(document_.get()),
         dictionaries_(),
-        keys_(),
         valid_(false) {
     document_->Parse<kParseValidateEncodingFlag>(json.c_str());
     valid_ = !document_->HasParseError() && document_->IsObject();
-    if (valid_) {
-      BuildKeyList();
-    }
   }
 
   ~JsonImpl() {
-    for (std::map<std::string, const Json*>::const_iterator
-         it = dictionaries_.begin();
-         it != dictionaries_.end();
-         ++it) {
-      delete it->second;
+    for (std::vector<const Json*>::const_iterator it = dictionaries_.begin();
+         it != dictionaries_.end(); ++it) {
+      delete *it;
     }
   }
 
   bool valid() const { return valid_; }
 
-  const std::vector<std::string>& GetKeys() const { return keys_; }
+  const std::vector<const Json*>& GetSubDictionaries() {
+    if (dictionaries_.empty()) {
+      for (Value::ConstMemberIterator member = value_->MemberBegin();
+           member != value_->MemberEnd(); ++member) {
+        if (member->value.IsObject()) {
+          dictionaries_.push_back(new Json(new JsonImpl(&member->value)));
+        }
+      }
+    }
+    return dictionaries_;
+  }
 
   bool GetStringValueForKey(const std::string& key, std::string* value) const {
     assert(value != NULL);
@@ -75,48 +77,15 @@ class Json::JsonImpl {
     return true;
   }
 
-  bool GetDictionaryValueForKey(const std::string& key, const Json** value) {
-    assert(value != NULL);
-
-    std::map<std::string, const Json*>::const_iterator dict_it =
-        dictionaries_.find(key);
-    if (dict_it != dictionaries_.end()) {
-      *value = dict_it->second;
-      return true;
-    }
-
-    Value::ConstMemberIterator member = value_->FindMember(key.c_str());
-    if (member == NULL || !member->value.IsObject()) {
-      return false;
-    }
-
-    std::pair<std::map<std::string, const Json*>::iterator, bool> result =
-        dictionaries_.insert(
-            std::make_pair(key, new Json(new JsonImpl(&member->value))));
-    assert(result.second);
-    *value = result.first->second;
-    return true;
-  }
-
  private:
   // Does not take ownership of |value|.
   explicit JsonImpl(const Value* value)
       : document_(),
         value_(value),
         dictionaries_(),
-        keys_(),
         valid_(true) {
     assert(value_ != NULL);
     assert(value_->IsObject());
-    BuildKeyList();
-  }
-
-  void BuildKeyList() {
-    assert(keys_.empty());
-    for (Value::ConstMemberIterator member = value_->MemberBegin();
-         member != value_->MemberEnd(); ++member) {
-      keys_.push_back(member->name.GetString());
-    }
   }
 
   // An owned JSON document. Can be NULL if the JSON document is not owned.
@@ -125,11 +94,8 @@ class Json::JsonImpl {
   // A JSON document that is not owned. Cannot be NULL. Can point to document_.
   const Value* const value_;
 
-  // Owned JSON objects.
-  std::map<std::string, const Json*> dictionaries_;
-
-  // The list of keys with values in the JSON object.
-  std::vector<std::string> keys_;
+  // Owned JSON objects of sub-dictionaries.
+  std::vector<const Json*> dictionaries_;
 
   // True if the JSON object was parsed successfully.
   bool valid_;
@@ -150,21 +116,15 @@ bool Json::ParseObject(const std::string& json) {
   return impl_ != NULL;
 }
 
-const std::vector<std::string>& Json::GetKeys() const {
+const std::vector<const Json*>& Json::GetSubDictionaries() const {
   assert(impl_ != NULL);
-  return impl_->GetKeys();
+  return impl_->GetSubDictionaries();
 }
 
 bool Json::GetStringValueForKey(const std::string& key,
                                 std::string* value) const {
   assert(impl_ != NULL);
   return impl_->GetStringValueForKey(key, value);
-}
-
-bool Json::GetDictionaryValueForKey(const std::string& key,
-                                    const Json** value) const {
-  assert(impl_ != NULL);
-  return impl_->GetDictionaryValueForKey(key, value);
 }
 
 Json::Json(JsonImpl* impl) : impl_(impl) {}
