@@ -205,4 +205,19 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressMultilingualCountry) {
   EXPECT_EQ(expected, lines);
 }
 
+TEST(AddressFormatterTest, GetFormattedNationalAddress_InlineStreetAddress) {
+  AddressData address;
+  address.region_code = "CI";
+  address.address_line.push_back("32 Boulevard Carde");
+  address.locality = "Abidjan";
+  address.sorting_code = "64";
+
+  std::vector<std::string> expected;
+  expected.push_back("64 32 Boulevard Carde Abidjan 64");
+
+  std::vector<std::string> lines;
+  GetFormattedNationalAddress(address, &lines);
+  EXPECT_EQ(expected, lines);
+}
+
 }  // namespace

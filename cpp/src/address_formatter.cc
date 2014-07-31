@@ -159,13 +159,16 @@ void GetFormattedNationalAddress(
       if (field == STREET_ADDRESS) {
         // The field "street address" represents the street address lines of an
         // address, so there can be multiple values.
-        if (!line.empty()) {
-          lines->push_back(line);
-          line.clear();
+        if (!address_data.IsFieldEmpty(field)) {
+          line.append(address_data.address_line.front());
+          if (address_data.address_line.size() > 1U) {
+            lines->push_back(line);
+            line.clear();
+            lines->insert(lines->end(),
+                          address_data.address_line.begin() + 1,
+                          address_data.address_line.end());
+          }
         }
-        lines->insert(lines->end(),
-                      address_data.address_line.begin(),
-                      address_data.address_line.end());
       } else {
         line.append(address_data.GetFieldValue(field));
       }
