@@ -100,10 +100,10 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
                  arraysize(kLanguagesThatUseAnArabicComma)) {
     return kArabicCommaSeparator;
   }
-  // Either the language is a latin-script language, or no language was
+  // Either the language is a Latin-script language, or no language was
   // specified. In the latter case we still return ", " as the most common
   // separator in use. In countries that don't use this, e.g. Thailand,
-  // addresses are often written in latin script where this would still be
+  // addresses are often written in Latin script where this would still be
   // appropriate, so this is a reasonable default in the absence of information.
   return kCommaSeparator;
 }
@@ -139,23 +139,55 @@ void GetFormattedNationalAddress(
 
   Language language(address_data.language_code);
 
-  // If latinized rules are available and the |language_code| of this address is
-  // explicitly tagged as being Latin, then use the latinized formatting rules.
+  // If Latin-script rules are available and the |language_code| of this address
+  // is explicitly tagged as being Latin, then use the Latin-script formatting
+  // rules.
   const std::vector<FormatElement>& format =
       language.has_latin_script && !rule.GetLatinFormat().empty()
           ? rule.GetLatinFormat()
           : rule.GetFormat();
 
+  // Address format without the unnecessary elements (based on which address
+  // fields are empty). We assume all literal strings that are not at the start
+  // or end of a line are separators, and therefore only relevant if the
+  // surrounding fields are filled in. This works with the data we have
+  // currently.
+  std::vector<FormatElement> pruned_format;
+  for (std::vector<FormatElement>::const_iterator
+       element_it = format.begin();
+       element_it != format.end();
+       ++element_it) {
+    // Always keep the newlines.
+    if (element_it->IsNewline() ||
+        // Always keep the non-empty address fields.
+        (element_it->IsField() &&
+         !address_data.IsFieldEmpty(element_it->GetField())) ||
+        // Only keep literals that satisfy these 2 conditions:
+        (!element_it->IsField() &&
+         // (1) Not preceding an empty field.
+         (element_it + 1 == format.end() ||
+          !(element_it + 1)->IsField() ||
+          !address_data.IsFieldEmpty((element_it + 1)->GetField())) &&
+         // (2) Not following a removed field.
+         (element_it == format.begin() ||
+          !(element_it - 1)->IsField() ||
+          (!pruned_format.empty() && pruned_format.back().IsField())))) {
+      pruned_format.push_back(*element_it);
+    }
+  }
+
   std::string line;
-  for (size_t i = 0; i < format.size(); ++i) {
-    FormatElement element = format[i];
-    if (element.IsNewline()) {
+  for (std::vector<FormatElement>::const_iterator
+       element_it = pruned_format.begin();
+       element_it != pruned_format.end();
+       ++element_it) {
+    if (element_it->IsNewline()) {
       if (!line.empty()) {
         lines->push_back(line);
         line.clear();
       }
-    } else if (element.IsField()) {
-      AddressField field = element.GetField();
+    } else if (element_it->IsField()) {
+      AddressField field = element_it->GetField();
       if (field == STREET_ADDRESS) {
         // The field "street address" represents the street address lines of an
         // address, so there can be multiple values.
@@ -173,7 +205,7 @@ void GetFormattedNationalAddress(
         line.append(address_data.GetFieldValue(field));
       }
     } else {
-      line.append(element.GetLiteral());
+      line.append(element_it->GetLiteral());
     }
   }
   if (!line.empty()) {
