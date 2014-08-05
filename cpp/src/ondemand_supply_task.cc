@@ -81,21 +81,20 @@ void OndemandSupplyTask::Retrieve(const Retriever& retriever) {
 void OndemandSupplyTask::Load(bool success,
                               const std::string& key,
                               const std::string& data) {
+  size_t depth = std::count(key.begin(), key.end(), '/') - 1;
+  assert(depth < arraysize(LookupKey::kHierarchy));
+
   // Sanity check: This key should be present in the set of pending requests.
   size_t status = pending_.erase(key);
   assert(status == 1);  // There will always be one item erased from the set.
   (void)status;  // Prevent unused variable if assert() is optimized away.
-
-  size_t depth = std::count(key.begin(), key.end(), '/') - 1;
-  assert(depth < arraysize(LookupKey::kHierarchy));
-  AddressField field = LookupKey::kHierarchy[depth];
 
   if (success) {
     // The address metadata server will return the empty JSON "{}" when it
     // successfully performed a lookup, but didn't find any data for that key.
     if (data != "{}") {
       Rule* rule = new Rule;
-      if (field == COUNTRY) {
+      if (LookupKey::kHierarchy[depth] == COUNTRY) {
         // All rules on the COUNTRY level inherit from the default rule.
         rule->CopyFrom(Rule::GetDefault());
       }
