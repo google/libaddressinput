@@ -23,20 +23,17 @@
 
 #include <string>
 
-#include "lookup_key_util.h"
-
 namespace i18n {
 namespace addressinput {
 
-class Downloader;
+class Source;
 class Storage;
 class ValidatingStorage;
 
 // Retrieves data. Sample usage:
+//    Source* source = ...;
 //    Storage* storage = ...;
-//    Downloader* downloader = ...;
-//    Retriever retriever("https://i18napis.appspot.com/ssl-address/",
-//                        downloader, storage);
+//    Retriever retriever(source, storage);
 //    const scoped_ptr<const Retriever::Callback> retrieved(
 //        BuildCallback(this, &MyClass::OnDataRetrieved));
 //    retriever.Retrieve("data/CA/AB--fr", *retrieved);
@@ -45,24 +42,21 @@ class Retriever {
   typedef i18n::addressinput::Callback<const std::string&,
                                        const std::string&> Callback;
 
-  // Takes ownership of |downloader| and |storage|.
-  Retriever(const std::string& validation_data_url,
-            const Downloader* downloader,
-            Storage* storage);
+  // Takes ownership of |source| and |storage|.
+  Retriever(const Source* source, Storage* storage);
   ~Retriever();
 
   // Retrieves the data for |key| and invokes the |retrieved| callback. Checks
-  // for the data in storage first. If storage does not have the data for |key|,
-  // then downloads the data and places it in storage. If the data in storage is
-  // corrupted, then it's discarded and redownloaded. If the data is stale, then
-  // it's redownloaded. If the download fails, then stale data will be returned
-  // this one time. The next call to Retrieve() will attempt to download fresh
-  // data again.
+  // for the data in |storage_| first. If storage does not have the data for
+  // |key|, then gets the data from |source_| and places it in storage. If the
+  // data in storage is corrupted, then it's discarded and requested anew. If
+  // the data is stale, then it's requested anew. If the request fails, then
+  // stale data will be returned this one time. Any subsequent call to
+  // Retrieve() will attempt to get fresh data again.
   void Retrieve(const std::string& key, const Callback& retrieved) const;
 
  private:
-  const LookupKeyUtil lookup_key_util_;
-  scoped_ptr<const Downloader> downloader_;
+  scoped_ptr<const Source> source_;
   scoped_ptr<ValidatingStorage> storage_;
 
   DISALLOW_COPY_AND_ASSIGN(Retriever);

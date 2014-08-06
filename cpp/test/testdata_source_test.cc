@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "fake_downloader.h"
+#include "testdata_source.h"
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
+#include <libaddressinput/source.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
 
@@ -29,44 +29,46 @@
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::Downloader;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::RegionDataConstants;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::Source;
+using i18n::addressinput::TestdataSource;
 
-// Tests for FakeDownloader object.
-class FakeDownloaderTest : public testing::TestWithParam<std::string> {
+// Tests for TestdataSource object.
+class TestdataSourceTest : public testing::TestWithParam<std::string> {
  protected:
-  FakeDownloaderTest()
-      : downloader_(),
+  TestdataSourceTest()
+      : source_(false),
+        aggregate_source_(true),
         success_(false),
-        url_(),
+        key_(),
         data_(),
-        downloaded_(BuildCallback(this, &FakeDownloaderTest::OnDownloaded)) {}
+        data_ready_(BuildCallback(this, &TestdataSourceTest::OnDataReady)) {}
 
-  virtual ~FakeDownloaderTest() {}
+  virtual ~TestdataSourceTest() {}
 
-  FakeDownloader downloader_;
+  TestdataSource source_;
+  TestdataSource aggregate_source_;
   bool success_;
-  std::string url_;
+  std::string key_;
   std::string data_;
-  const scoped_ptr<const Downloader::Callback> downloaded_;
+  const scoped_ptr<const Source::Callback> data_ready_;
 
  private:
-  void OnDownloaded(bool success, const std::string& url, std::string* data) {
+  void OnDataReady(bool success, const std::string& key, std::string* data) {
     ASSERT_FALSE(success && data == NULL);
     success_ = success;
-    url_ = url;
+    key_ = key;
     if (data != NULL) {
       data_ = *data;
       delete data;
     }
   }
 
-  DISALLOW_COPY_AND_ASSIGN(FakeDownloaderTest);
+  DISALLOW_COPY_AND_ASSIGN(TestdataSourceTest);
 };
 
-// Returns testing::AssertionSuccess if |data| is valid downloaded data for
+// Returns testing::AssertionSuccess if |data| is valid callback data for
 // |key|.
 testing::AssertionResult DataIsValid(const std::string& data,
                                      const std::string& key) {
@@ -94,18 +96,17 @@ testing::AssertionResult DataIsValid(const std::string& data,
   return testing::AssertionSuccess();
 }
 
-// Verifies that FakeDownloader downloads valid data for a region code.
-TEST_P(FakeDownloaderTest, FakeDownloaderHasValidDataForRegion) {
+// Verifies that TestdataSource gets valid data for a region code.
+TEST_P(TestdataSourceTest, TestdataSourceHasValidDataForRegion) {
   std::string key = "data/" + GetParam();
-  std::string url = std::string(FakeDownloader::kFakeDataUrl) + key;
-  downloader_.Download(url, *downloaded_);
+  source_.Get(key, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(url, url_);
+  EXPECT_EQ(key, key_);
   EXPECT_TRUE(DataIsValid(data_, key));
 };
 
-// Returns testing::AssertionSuccess if |data| is valid aggregated downloaded
+// Returns testing::AssertionSuccess if |data| is valid aggregated callback
 // data for |key|.
 testing::AssertionResult AggregateDataIsValid(const std::string& data,
                                               const std::string& key) {
@@ -133,75 +134,59 @@ testing::AssertionResult AggregateDataIsValid(const std::string& data,
   return testing::AssertionSuccess();
 }
 
-// Verifies that FakeDownloader downloads valid aggregated data for a region
-// code.
-TEST_P(FakeDownloaderTest, FakeDownloaderHasValidAggregatedDataForRegion) {
+// Verifies that TestdataSource gets valid aggregated data for a region code.
+TEST_P(TestdataSourceTest, TestdataSourceHasValidAggregatedDataForRegion) {
   std::string key = "data/" + GetParam();
-  std::string url = std::string(FakeDownloader::kFakeAggregateDataUrl) + key;
-  downloader_.Download(url, *downloaded_);
+  aggregate_source_.Get(key, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(url, url_);
+  EXPECT_EQ(key, key_);
   EXPECT_TRUE(AggregateDataIsValid(data_, key));
 };
 
 // Test all region codes.
 INSTANTIATE_TEST_CASE_P(
-    AllRegions, FakeDownloaderTest,
+    AllRegions, TestdataSourceTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
 
 // Verifies that the key "data" also contains valid data.
-TEST_F(FakeDownloaderTest, DownloadExistingData) {
+TEST_F(TestdataSourceTest, GetExistingData) {
   static const std::string kKey = "data";
-  static const std::string kUrl =
-      std::string(FakeDownloader::kFakeDataUrl) + kKey;
-  downloader_.Download(kUrl, *downloaded_);
+  source_.Get(kKey, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(kUrl, url_);
+  EXPECT_EQ(kKey, key_);
   EXPECT_TRUE(DataIsValid(data_, kKey));
 }
 
-// Verifies that downloading a missing key will return "{}".
-TEST_F(FakeDownloaderTest, DownloadMissingKeyReturnsEmptyDictionary) {
-  static const std::string kJunkUrl =
-      std::string(FakeDownloader::kFakeDataUrl) + "junk";
-  downloader_.Download(kJunkUrl, *downloaded_);
+// Verifies that requesting a missing key will return "{}".
+TEST_F(TestdataSourceTest, GetMissingKeyReturnsEmptyDictionary) {
+  static const std::string kJunkKey = "junk";
+  source_.Get(kJunkKey, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(kJunkUrl, url_);
+  EXPECT_EQ(kJunkKey, key_);
   EXPECT_EQ("{}", data_);
 }
 
-// Verifies that aggregate downloading of a missing key will also return "{}".
-TEST_F(FakeDownloaderTest, AggregateDownloadMissingKeyReturnsEmptyDictionary) {
-  static const std::string kJunkUrl =
-      std::string(FakeDownloader::kFakeAggregateDataUrl) + "junk";
-  downloader_.Download(kJunkUrl, *downloaded_);
+// Verifies that aggregate requesting of a missing key will also return "{}".
+TEST_F(TestdataSourceTest, AggregateGetMissingKeyReturnsEmptyDictionary) {
+  static const std::string kJunkKey = "junk";
+  aggregate_source_.Get(kJunkKey, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(kJunkUrl, url_);
+  EXPECT_EQ(kJunkKey, key_);
   EXPECT_EQ("{}", data_);
 }
 
-// Verifies that downloading an empty key will return "{}".
-TEST_F(FakeDownloaderTest, DownloadEmptyKeyReturnsEmptyDictionary) {
-  static const std::string kPrefixOnlyUrl = FakeDownloader::kFakeDataUrl;
-  downloader_.Download(kPrefixOnlyUrl, *downloaded_);
+// Verifies that requesting an empty key will return "{}".
+TEST_F(TestdataSourceTest, GetEmptyKeyReturnsEmptyDictionary) {
+  static const std::string kEmptyKey;
+  source_.Get(kEmptyKey, *data_ready_);
 
   EXPECT_TRUE(success_);
-  EXPECT_EQ(kPrefixOnlyUrl, url_);
+  EXPECT_EQ(kEmptyKey, key_);
   EXPECT_EQ("{}", data_);
-}
-
-// Verifies that downloading a real URL fails.
-TEST_F(FakeDownloaderTest, DownloadRealUrlFals) {
-  static const std::string kRealUrl = "http://www.google.com/";
-  downloader_.Download(kRealUrl, *downloaded_);
-
-  EXPECT_FALSE(success_);
-  EXPECT_EQ(kRealUrl, url_);
-  EXPECT_TRUE(data_.empty());
 }
 
 }  // namespace

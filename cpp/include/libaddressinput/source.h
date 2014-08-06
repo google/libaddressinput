@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The interface to be implemented by the user of the library to enable
-// downloading validation rules from a server.
+// The interface to be implemented by the user of the library to access address
+// metadata, typically by downloading this from the address metadata server or
+// by linking the metadata into the binary.
 
-#ifndef I18N_ADDRESSINPUT_DOWNLOADER_H_
-#define I18N_ADDRESSINPUT_DOWNLOADER_H_
+#ifndef I18N_ADDRESSINPUT_SOURCE_H_
+#define I18N_ADDRESSINPUT_SOURCE_H_
 
 #include <libaddressinput/callback.h>
 
@@ -25,31 +26,31 @@
 namespace i18n {
 namespace addressinput {
 
-// Downloads validation rules from the server. The downloaded data must be
-// allocated on the heap, passing ownership to the callback. Sample usage:
+// Gets address metadata. The callback data must be allocated on the heap,
+// passing ownership to the callback. Sample usage:
 //
-//    class MyDownloader : public Downloader {
+//    class MySource : public Source {
 //     public:
-//      virtual void Download(const std::string& url,
-//                            const Callback& downloaded) const {
+//      virtual void Get(const std::string& key,
+//                       const Callback& data_ready) const {
 //        bool success = ...
 //        std::string* data = new ...
-//        downloaded(success, url, data);
+//        data_ready(success, key, data);
 //      }
 //    };
-class Downloader {
+class Source {
  public:
   typedef i18n::addressinput::Callback<const std::string&,
                                        std::string*> Callback;
 
-  virtual ~Downloader() {}
+  virtual ~Source() {}
 
-  // Downloads |url| and invokes the |downloaded| callback.
-  virtual void Download(const std::string& url,
-                        const Callback& downloaded) const = 0;
+  // Gets metadata for |key| and invokes the |data_ready| callback.
+  virtual void Get(const std::string& key,
+                   const Callback& data_ready) const = 0;
 };
 
 }  // namespace addressinput
 }  // namespace i18n
 
-#endif  // I18N_ADDRESSINPUT_DOWNLOADER_H_
+#endif  // I18N_ADDRESSINPUT_SOURCE_H_

@@ -26,8 +26,8 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
-#include "mock_downloader.h"
+#include "mock_source.h"
+#include "testdata_source.h"
 
 namespace {
 
@@ -35,19 +35,17 @@ using i18n::addressinput::AddressData;
 using i18n::addressinput::AddressInputHelper;
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::Callback;
-using i18n::addressinput::FakeDownloader;
-using i18n::addressinput::MockDownloader;
+using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::TestdataSource;
 
 class AddressInputHelperTest : public testing::Test {
  protected:
   AddressInputHelperTest()
       // Our PreloadSupplier loads all data for a country at a time.
-      : supplier_(FakeDownloader::kFakeAggregateDataUrl,
-                  new FakeDownloader,
-                  new NullStorage),
+      : supplier_(new TestdataSource(true), new NullStorage),
         address_input_helper_(&supplier_),
         loaded_(BuildCallback(this, &AddressInputHelperTest::Loaded)) {}
 
@@ -245,11 +243,9 @@ TEST_F(AddressInputHelperTest, AddressWithInvalidOrMissingRegionCode) {
 class AddressInputHelperMockDataTest : public testing::Test {
  protected:
   AddressInputHelperMockDataTest()
-      : downloader_(new MockDownloader),
+      : source_(new MockSource),
         // Our PreloadSupplier loads all data for a country at a time.
-        supplier_(MockDownloader::kMockDataUrl,
-                  downloader_,
-                  new NullStorage),
+        supplier_(source_, new NullStorage),
         address_input_helper_(&supplier_),
         loaded_(BuildCallback(this, &AddressInputHelperMockDataTest::Loaded)) {}
 
@@ -265,10 +261,10 @@ class AddressInputHelperMockDataTest : public testing::Test {
     address_input_helper_.FillAddress(address);
   }
 
-  MockDownloader* const downloader_;
+  MockSource* const source_;
 
  private:
-  // Our mock downloader we assume will always succeed.
+  // Our mock source we assume will always succeed.
   void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier supplier_;
@@ -281,7 +277,7 @@ TEST_F(AddressInputHelperMockDataTest,
        PostalCodeSharedAcrossDifferentHierarchies) {
   // Note that this data is in the format of data that would be returned from
   // the aggregate server.
-  downloader_->data_.insert(std::make_pair(
+  source_->data_.insert(std::make_pair(
       // We use KR since we need a country where we format all fields down to
       // dependent locality, or the hierarchy won't be loaded.
       "data/KR",
@@ -315,7 +311,7 @@ TEST_F(AddressInputHelperMockDataTest,
   // Create data where one state matches the ZIP code, but the other doesn't:
   // within the state which does, multiple cities and sub-cities match. The only
   // thing we can be certain of is therefore the state.
-  downloader_->data_.insert(std::make_pair(
+  source_->data_.insert(std::make_pair(
       // We use KR since we need a country where we format all fields down to
       // dependent locality, or the hierarchy won't be loaded.
       "data/KR",

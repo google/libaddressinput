@@ -12,34 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// A fake storage object to use in tests. Stores data in memory instead of
-// writing it to disk. All operations are synchronous.
+// An implementation of the Source interface, that reads address metadata from a
+// text file, to be used in tests.
 
-#ifndef I18N_ADDRESSINPUT_FAKE_STORAGE_H_
-#define I18N_ADDRESSINPUT_FAKE_STORAGE_H_
+#ifndef I18N_ADDRESSINPUT_TEST_TESTDATA_SOURCE_H_
+#define I18N_ADDRESSINPUT_TEST_TESTDATA_SOURCE_H_
 
-#include <libaddressinput/storage.h>
+#include <libaddressinput/source.h>
+#include <libaddressinput/util/basictypes.h>
 
-#include <map>
 #include <string>
 
 namespace i18n {
 namespace addressinput {
 
-// Stores data in memory. Sample usage:
+// Gets address metadata from a text file. Sample usage:
 //    class MyClass {
 //     public:
-//      MyClass() : storage_(),
+//      MyClass() : source_(),
 //                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {}
 //
 //      ~MyClass() {}
 //
-//      void Write() {
-//        storage_.Put("key", "value");
-//      }
-//
-//      void Read() {
-//        storage_.Get("key", *data_ready_);
+//      void GetData(const std::string& key) {
+//        source_.Get(key, *data_ready_);
 //      }
 //
 //     private:
@@ -50,25 +46,26 @@ namespace addressinput {
 //        delete data;
 //      }
 //
-//      FakeStorage storage_;
-//      const scoped_ptr<const Storage::Callback> data_ready_;
+//      TestdataSource source_;
+//      const scoped_ptr<const Source::Callback> data_ready_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };
-class FakeStorage : public Storage {
+class TestdataSource : public Source {
  public:
-  FakeStorage();
-  virtual ~FakeStorage();
+  // Will return aggregate data if |aggregate| is set to true.
+  explicit TestdataSource(bool aggregate);
+  virtual ~TestdataSource();
 
-  // Storage implementation.
-  virtual void Put(const std::string& key, std::string* data);
+  // Source implementation.
   virtual void Get(const std::string& key, const Callback& data_ready) const;
 
  private:
-  std::map<std::string, std::string*> data_;
+  const bool aggregate_;
+  DISALLOW_COPY_AND_ASSIGN(TestdataSource);
 };
 
 }  // namespace addressinput
 }  // namespace i18n
 
-#endif  // I18N_ADDRESSINPUT_FAKE_STORAGE_H_
+#endif  // I18N_ADDRESSINPUT_TEST_TESTDATA_SOURCE_H_

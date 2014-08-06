@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "mock_downloader.h"
+#include "mock_source.h"
 
-#include <cassert>
 #include <cstddef>
 #include <map>
 #include <string>
@@ -22,27 +21,14 @@
 namespace i18n {
 namespace addressinput {
 
-// static
-const char MockDownloader::kMockDataUrl[] = "mock:///";
+MockSource::MockSource() {}
 
-namespace {
+MockSource::~MockSource() {}
 
-// The number of characters in the mock data URL prefix.
-const size_t kMockDataUrlLength = sizeof MockDownloader::kMockDataUrl - 1;
-
-}  // namespace
-
-MockDownloader::MockDownloader() {}
-
-MockDownloader::~MockDownloader() {}
-
-void MockDownloader::Download(const std::string& url,
-                              const Callback& downloaded) const {
-  assert(url.compare(0, kMockDataUrlLength, kMockDataUrl) == 0);
-  std::string key(url, kMockDataUrlLength);
+void MockSource::Get(const std::string& key, const Callback& data_ready) const {
   std::map<std::string, std::string>::const_iterator it = data_.find(key);
   bool success = it != data_.end();
-  downloaded(success, url, success ? new std::string(it->second) : NULL);
+  data_ready(success, key, success ? new std::string(it->second) : NULL);
 }
 
 }  // namespace addressinput

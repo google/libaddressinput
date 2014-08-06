@@ -28,9 +28,9 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
 #include "lookup_key.h"
 #include "rule.h"
+#include "testdata_source.h"
 
 namespace {
 
@@ -53,7 +53,6 @@ const char kKashiShi[] = "\xE5\x96\x80\xE4\xBB\x80\xE5\xB8\x82";
 
 using i18n::addressinput::AddressData;
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplier;
@@ -61,6 +60,7 @@ using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Supplier;
+using i18n::addressinput::TestdataSource;
 
 class SupplierWrapper {
  public:
@@ -82,9 +82,7 @@ class OndemandSupplierWrapper : public SupplierWrapper {
 
  private:
   OndemandSupplierWrapper()
-      : ondemand_supplier_(FakeDownloader::kFakeDataUrl,
-                           new FakeDownloader,
-                           new NullStorage) {}
+      : ondemand_supplier_(new TestdataSource(false), new NullStorage) {}
 
   OndemandSupplier ondemand_supplier_;
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplierWrapper);
@@ -107,9 +105,7 @@ class PreloadSupplierWrapper : public SupplierWrapper {
 
  private:
   PreloadSupplierWrapper()
-      : preload_supplier_(FakeDownloader::kFakeAggregateDataUrl,
-                          new FakeDownloader,
-                          new NullStorage),
+      : preload_supplier_(new TestdataSource(true), new NullStorage),
         loaded_(BuildCallback(this, &PreloadSupplierWrapper::Loaded)) {}
 
   void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }

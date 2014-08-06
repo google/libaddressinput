@@ -29,7 +29,7 @@
 #include <gtest/gtest.h>
 
 #include "lookup_key.h"
-#include "mock_downloader.h"
+#include "mock_source.h"
 #include "retriever.h"
 #include "rule.h"
 
@@ -37,7 +37,7 @@ namespace {
 
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::LookupKey;
-using i18n::addressinput::MockDownloader;
+using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplyTask;
 using i18n::addressinput::Retriever;
@@ -52,11 +52,9 @@ class OndemandSupplyTaskTest : public testing::Test {
         lookup_key_(),
         rule_(),
         called_(false),
-        downloader_(new MockDownloader),
+        source_(new MockSource),
         rule_cache_(),
-        retriever_(
-            new Retriever(
-                MockDownloader::kMockDataUrl, downloader_, new NullStorage)),
+        retriever_(new Retriever(source_, new NullStorage)),
         supplied_(BuildCallback(this, &OndemandSupplyTaskTest::Supplied)),
         task_(new OndemandSupplyTask(lookup_key_, &rule_cache_, *supplied_)) {}
 
@@ -71,11 +69,11 @@ class OndemandSupplyTaskTest : public testing::Test {
 
   void Retrieve() { task_->Retrieve(*retriever_); }
 
-  bool success_;  // Expected status from MockDownloader.
+  bool success_;  // Expected status from MockSource.
   LookupKey lookup_key_;  // Stub.
   const Rule* rule_[arraysize(LookupKey::kHierarchy)];
   bool called_;
-  MockDownloader* const downloader_;
+  MockSource* const source_;
 
  private:
   void Supplied(bool success,
@@ -115,7 +113,7 @@ TEST_F(OndemandSupplyTaskTest, Invalid) {
 }
 
 TEST_F(OndemandSupplyTaskTest, Valid) {
-  downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
+  source_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
 
   Queue("data/XA");
 
@@ -135,13 +133,13 @@ TEST_F(OndemandSupplyTaskTest, Valid) {
 }
 
 TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
-  downloader_->data_.insert(
+  source_->data_.insert(
       std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
-  downloader_->data_.insert(
+  source_->data_.insert(
       std::make_pair("data/XA/aa", "{\"id\":\"data/XA/aa\"}"));
-  downloader_->data_.insert(
+  source_->data_.insert(
       std::make_pair("data/XA/aa/bb", "{\"id\":\"data/XA/aa/bb\"}"));
-  downloader_->data_.insert(
+  source_->data_.insert(
       std::make_pair("data/XA/aa/bb/cc", "{\"id\":\"data/XA/aa/bb/cc\"}"));
 
   Queue("data/XA");
@@ -175,7 +173,7 @@ TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
 }
 
 TEST_F(OndemandSupplyTaskTest, InvalidJson1) {
-  downloader_->data_.insert(std::make_pair("data/XA", ":"));
+  source_->data_.insert(std::make_pair("data/XA", ":"));
 
   success_ = false;
 
@@ -186,8 +184,8 @@ TEST_F(OndemandSupplyTaskTest, InvalidJson1) {
 }
 
 TEST_F(OndemandSupplyTaskTest, InvalidJson2) {
-  downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
-  downloader_->data_.insert(std::make_pair("data/XA/aa", ":"));
+  source_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
+  source_->data_.insert(std::make_pair("data/XA/aa", ":"));
 
   success_ = false;
 
@@ -199,8 +197,8 @@ TEST_F(OndemandSupplyTaskTest, InvalidJson2) {
 }
 
 TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
-  downloader_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
-  downloader_->data_.insert(std::make_pair("data/XA/aa", "{}"));
+  source_->data_.insert(std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
+  source_->data_.insert(std::make_pair("data/XA/aa", "{}"));
 
   Queue("data/XA");
   Queue("data/XA/aa");
@@ -216,7 +214,7 @@ TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
 }
 
 TEST_F(OndemandSupplyTaskTest, IfCountryFailsAllFails) {
-  downloader_->data_.insert(
+  source_->data_.insert(
       std::make_pair("data/XA/aa", "{\"id\":\"data/XA/aa\"}"));
 
   success_ = false;

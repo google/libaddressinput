@@ -25,23 +25,22 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
+#include "testdata_source.h"
 
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::RegionData;
 using i18n::addressinput::RegionDataBuilder;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::TestdataSource;
 
 class RegionDataBuilderTest : public testing::Test {
  protected:
   RegionDataBuilderTest()
-      : supplier_(FakeDownloader::kFakeAggregateDataUrl,
-                  new FakeDownloader,
+      : supplier_(new TestdataSource(true),
                   new NullStorage),
         builder_(&supplier_),
         loaded_callback_(BuildCallback(this, &RegionDataBuilderTest::OnLoaded)),

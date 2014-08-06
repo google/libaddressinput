@@ -50,9 +50,7 @@ class FakeStorageTest : public testing::Test {
   const scoped_ptr<const Storage::Callback> data_ready_;
 
  private:
-  void OnDataReady(bool success,
-                   const std::string& key,
-                   std::string* data) {
+  void OnDataReady(bool success, const std::string& key, std::string* data) {
     ASSERT_FALSE(success && data == NULL);
     success_ = success;
     key_ = key;

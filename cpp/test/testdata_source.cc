@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "fake_downloader.h"
+#include "testdata_source.h"
 
 #include <cassert>
 #include <cstddef>
@@ -23,28 +23,19 @@
 #include <string>
 #include <utility>
 
-#include "lookup_key_util.h"
-
 namespace i18n {
 namespace addressinput {
 
-// static
-const char FakeDownloader::kFakeDataUrl[] = "test:///plain/";
-
-// static
-const char FakeDownloader::kFakeAggregateDataUrl[] = "test:///aggregate/";
-
 namespace {
+
+// For historical reasons, normal and aggregated data is here stored in the
+// same data structure, differentiated by giving each key a prefix. It does
+// seem like a good idea to refactor this.
+const char kNormalPrefix = '-';
+const char kAggregatePrefix = '+';
 
 // The name of the test data file.
 const char kDataFileName[] = TEST_DATA_DIR "/countryinfo.txt";
-
-// The number of characters in the fake data URL prefix.
-const size_t kFakeDataUrlLength = sizeof FakeDownloader::kFakeDataUrl - 1;
-
-// The number of characters in the fake aggregate data URL prefix.
-const size_t kFakeAggregateDataUrlLength =
-    sizeof FakeDownloader::kFakeAggregateDataUrl - 1;
 
 // Each data key begins with this string. Example of a data key:
 //     data/CH/AG
@@ -60,17 +51,6 @@ const size_t kCldrRegionCodeLength = 2;
 const size_t kAggregateDataKeyLength =
     kDataKeyPrefixLength + kCldrRegionCodeLength;
 
-const LookupKeyUtil& GetLookupKeyUtil() {
-  static const LookupKeyUtil kLookupKeyUtil(FakeDownloader::kFakeDataUrl);
-  return kLookupKeyUtil;
-}
-
-const LookupKeyUtil& GetAggregateLookupKeyUtil() {
-  static const LookupKeyUtil kLookupKeyUtil(
-      FakeDownloader::kFakeAggregateDataUrl);
-  return kLookupKeyUtil;
-}
-
 std::map<std::string, std::string> InitData() {
   std::map<std::string, std::string> data;
   std::ifstream file(kDataFileName);
@@ -78,6 +58,9 @@ std::map<std::string, std::string> InitData() {
     std::cerr << "Error opening \"" << kDataFileName << "\"." << std::endl;
     std::exit(EXIT_FAILURE);
   }
+
+  const std::string normal_prefix(1, kNormalPrefix);
+  const std::string aggregate_prefix(1, kAggregatePrefix);
 
   std::string key;
   std::string value;
@@ -97,10 +80,10 @@ std::map<std::string, std::string> InitData() {
       //     {"name": "Aargau"}
       std::getline(file, value, '\n');
 
-      // For example, map 'test:///plain/data/CH/AG' to '{"name": "Aargau"}'.
+      // For example, map '-data/CH/AG' to '{"name": "Aargau"}'.
       last_data_it = data.insert(
           last_data_it,
-          std::make_pair(GetLookupKeyUtil().GetUrlForKey(key), value));
+          std::make_pair(normal_prefix + key, value));
 
       // Aggregate keys that begin with 'data/'. We don't aggregate keys that
       // begin with 'example/' because example data is not used anywhere.
@@ -108,18 +91,12 @@ std::map<std::string, std::string> InitData() {
                       kDataKeyPrefixLength,
                       kDataKeyPrefix,
                       kDataKeyPrefixLength) == 0) {
-        // Example aggregate URL:
-        //     test:///aggregate/data/CH
-        const std::string& aggregate_url =
-            GetAggregateLookupKeyUtil().GetUrlForKey(
-                key.substr(0, kAggregateDataKeyLength));
-
         // If aggregate_data_it and key have the same prefix, e.g. "data/ZZ".
         if (aggregate_data_it != data.end() &&
             key.compare(0,
                         kAggregateDataKeyLength,
                         aggregate_data_it->first,
-                        kFakeAggregateDataUrlLength,
+                        sizeof kAggregatePrefix,
                         kAggregateDataKeyLength) == 0) {
           // Append more data to the aggregate string, for example:
           //     , "data/CH/AG": {"name": "Aargau"}
@@ -142,11 +119,16 @@ std::map<std::string, std::string> InitData() {
             aggregate_data_it->second.push_back('}');
           }
 
+          // Example aggregate prefixed key:
+          //     +data/CH
+          const std::string& aggregate_key =
+              aggregate_prefix + key.substr(0, kAggregateDataKeyLength);
+
           // Begin a new aggregate string, for example:
           //     {"data/CH/AG": {"name": "Aargau"}
           aggregate_data_it = data.insert(
               aggregate_data_it,
-              std::make_pair(aggregate_url, "{\"" + key + "\": " + value));
+              std::make_pair(aggregate_key, "{\"" + key + "\": " + value));
         }
       }
     }
@@ -163,29 +145,29 @@ const std::map<std::string, std::string>& GetData() {
 
 }  // namespace
 
-FakeDownloader::FakeDownloader() {}
+TestdataSource::TestdataSource(bool aggregate) : aggregate_(aggregate) {}
 
-FakeDownloader::~FakeDownloader() {}
+TestdataSource::~TestdataSource() {}
 
-void FakeDownloader::Download(const std::string& url,
-                              const Callback& downloaded) const {
+void TestdataSource::Get(const std::string& key,
+                         const Callback& data_ready) const {
+  std::string prefixed_key(1, aggregate_ ? kAggregatePrefix : kNormalPrefix);
+  prefixed_key += key;
   std::map<std::string, std::string>::const_iterator data_it =
-      GetData().find(url);
+      GetData().find(prefixed_key);
   bool success = data_it != GetData().end();
   std::string* data = NULL;
   if (success) {
     data = new std::string(data_it->second);
-  } else if (GetLookupKeyUtil().IsValidationDataUrl(url) ||
-             GetAggregateLookupKeyUtil().IsValidationDataUrl(url)) {
+  } else {
     // URLs that start with "https://i18napis.appspot.com/ssl-address/" or
     // "https://i18napis.appspot.com/ssl-aggregate-address/" prefix, but do not
     // have associated data will always return "{}" with status code 200.
-    // FakeDownloader imitates this behavior for URLs that start with
-    // "test://address/" and "test://aggregate-address/" prefixes.
+    // TestdataSource imitates this behavior.
     success = true;
     data = new std::string("{}");
   }
-  downloaded(success, url, data);
+  data_ready(success, key, data);
 }
 
 }  // namespace addressinput

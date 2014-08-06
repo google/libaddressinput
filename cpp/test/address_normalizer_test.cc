@@ -25,24 +25,22 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
+#include "testdata_source.h"
 
 namespace {
 
 using i18n::addressinput::AddressData;
 using i18n::addressinput::AddressNormalizer;
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::TestdataSource;
 
 class AddressNormalizerTest : public testing::Test {
  protected:
   AddressNormalizerTest()
-      : supplier_(FakeDownloader::kFakeAggregateDataUrl,
-                  new FakeDownloader,
-                  new NullStorage),
+      : supplier_(new TestdataSource(true), new NullStorage),
         loaded_(BuildCallback(this, &AddressNormalizerTest::OnLoaded)),
         normalizer_(&supplier_) {}
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 // The interface to be implemented by the user of the library to enable storing
-// the downloaded validation rules (e.g. on disk).
+// address metadata (e.g. on disk).
 
 #ifndef I18N_ADDRESSINPUT_STORAGE_H_
 #define I18N_ADDRESSINPUT_STORAGE_H_
@@ -25,8 +25,8 @@
 namespace i18n {
 namespace addressinput {
 
-// Stores downloaded validation rules. The data must be allocated on the heap,
-// passing ownership to the called function. Sample usage:
+// Stores address metadata. The data must be allocated on the heap, passing
+// ownership to the called function. Sample usage:
 //
 //    class MyStorage : public Storage {
 //     public:

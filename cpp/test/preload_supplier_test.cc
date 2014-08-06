@@ -25,27 +25,25 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
 #include "lookup_key.h"
 #include "rule.h"
+#include "testdata_source.h"
 
 namespace {
 
 using i18n::addressinput::AddressData;
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Rule;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::TestdataSource;
 
 class PreloadSupplierTest : public testing::Test {
  protected:
   PreloadSupplierTest()
-      : supplier_(FakeDownloader::kFakeAggregateDataUrl,
-                  new FakeDownloader,
-                  new NullStorage),
+      : supplier_(new TestdataSource(true), new NullStorage),
         loaded_callback_(BuildCallback(this, &PreloadSupplierTest::OnLoaded)) {}
 
   virtual ~PreloadSupplierTest() {}

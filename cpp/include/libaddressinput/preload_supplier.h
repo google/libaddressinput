@@ -28,11 +28,11 @@
 namespace i18n {
 namespace addressinput {
 
-class Downloader;
 class IndexMap;
 class LookupKey;
 class Retriever;
 class Rule;
+class Source;
 class Storage;
 
 // An implementation of the Supplier interface that owns a Retriever object,
@@ -42,8 +42,8 @@ class Storage;
 // or in progress of being loaded.
 //
 // When using a PreloadSupplier, it becomes possible to do synchronous address
-// validation using an asynchronous Downloader, and to have full control over
-// when network access is being done.
+// validation using an asynchronous Source, and to have full control over when
+// network access is being done.
 //
 // The maximum size of this cache is naturally limited to the amount of data
 // available from the data server. (Currently this is less than 12,000 items of
@@ -52,15 +52,8 @@ class PreloadSupplier : public Supplier {
  public:
   typedef i18n::addressinput::Callback<const std::string&, int> Callback;
 
-  // Takes ownership of |downloader| and |storage|. The |validation_data_url|
-  // should be a URL to a service that returns address metadata aggregated per
-  // region, and which |downloader| can access.
-  //
-  // (See the documentation for the Downloader implementation used for
-  // information about what URLs are useable with that Downloader.)
-  PreloadSupplier(const std::string& validation_data_url,
-                  const Downloader* downloader,
-                  Storage* storage);
+  // Takes ownership of |source| and |storage|.
+  PreloadSupplier(const Source* source, Storage* storage);
   virtual ~PreloadSupplier();
 
   // Collects the metadata needed for |lookup_key| from the cache, then calls

@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Google Inc.
+// Copyright (C) 2014 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// A fake storage object to use in tests. Stores data in memory instead of
-// writing it to disk. All operations are synchronous.
+// A mock implementation of the Source interface to be used in tests.
 
-#ifndef I18N_ADDRESSINPUT_FAKE_STORAGE_H_
-#define I18N_ADDRESSINPUT_FAKE_STORAGE_H_
+#ifndef I18N_ADDRESSINPUT_TEST_MOCK_SOURCE_H_
+#define I18N_ADDRESSINPUT_TEST_MOCK_SOURCE_H_
 
-#include <libaddressinput/storage.h>
+#include <libaddressinput/source.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <string>
@@ -26,20 +26,19 @@
 namespace i18n {
 namespace addressinput {
 
-// Stores data in memory. Sample usage:
+// Gets address metadata from a key-value map. Sample usage:
 //    class MyClass {
 //     public:
-//      MyClass() : storage_(),
-//                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {}
+//      MyClass() : source_(),
+//                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {
+//        source_.data_.insert(
+//            std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
+//      }
 //
 //      ~MyClass() {}
 //
-//      void Write() {
-//        storage_.Put("key", "value");
-//      }
-//
-//      void Read() {
-//        storage_.Get("key", *data_ready_);
+//      void GetData(const std::string& key) {
+//        source_.Get(key, *data_ready_);
 //      }
 //
 //     private:
@@ -50,25 +49,26 @@ namespace addressinput {
 //        delete data;
 //      }
 //
-//      FakeStorage storage_;
-//      const scoped_ptr<const Storage::Callback> data_ready_;
+//      MockSource source_;
+//      const scoped_ptr<const Source::Callback> data_ready_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };
-class FakeStorage : public Storage {
+class MockSource : public Source {
  public:
-  FakeStorage();
-  virtual ~FakeStorage();
+  MockSource();
+  virtual ~MockSource();
 
-  // Storage implementation.
-  virtual void Put(const std::string& key, std::string* data);
+  // Source implementation.
   virtual void Get(const std::string& key, const Callback& data_ready) const;
 
+  std::map<std::string, std::string> data_;
+
  private:
-  std::map<std::string, std::string*> data_;
+  DISALLOW_COPY_AND_ASSIGN(MockSource);
 };
 
 }  // namespace addressinput
 }  // namespace i18n
 
-#endif  // I18N_ADDRESSINPUT_FAKE_STORAGE_H_
+#endif  // I18N_ADDRESSINPUT_TEST_MOCK_SOURCE_H_

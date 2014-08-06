@@ -271,10 +271,8 @@ std::string KeyFromRegionCode(const std::string& region_code) {
 
 }  // namespace
 
-PreloadSupplier::PreloadSupplier(const std::string& validation_data_url,
-                                 const Downloader* downloader,
-                                 Storage* storage)
-    : retriever_(new Retriever(validation_data_url, downloader, storage)),
+PreloadSupplier::PreloadSupplier(const Source* source, Storage* storage)
+    : retriever_(new Retriever(source, storage)),
       pending_(),
       rule_index_(new IndexMap),
       rule_storage_(),

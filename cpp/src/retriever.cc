@@ -15,7 +15,7 @@
 #include "retriever.h"
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/downloader.h>
+#include <libaddressinput/source.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
 #include <libaddressinput/util/scoped_ptr.h>
@@ -24,7 +24,6 @@
 #include <cstddef>
 #include <string>
 
-#include "lookup_key_util.h"
 #include "validating_storage.h"
 
 namespace i18n {
@@ -37,14 +36,12 @@ class Helper {
   // Does not take ownership of its parameters.
   Helper(const std::string& key,
          const Retriever::Callback& retrieved,
-         const LookupKeyUtil& lookup_key_util,
-         const Downloader& downloader,
+         const Source& source,
          ValidatingStorage* storage)
       : retrieved_(retrieved),
-        lookup_key_util_(lookup_key_util),
-        downloader_(downloader),
+        source_(source),
         storage_(storage),
-        downloaded_(BuildCallback(this, &Helper::OnDownloaded)),
+        fresh_data_ready_(BuildCallback(this, &Helper::OnFreshDataReady)),
         validated_data_ready_(
             BuildCallback(this, &Helper::OnValidatedDataReady)),
         stale_data_() {
@@ -68,13 +65,14 @@ class Helper {
       if (data != NULL && !data->empty()) {
         stale_data_ = *data;
       }
-      downloader_.Download(lookup_key_util_.GetUrlForKey(key), *downloaded_);
+      source_.Get(key, *fresh_data_ready_);
     }
     delete data;
   }
 
-  void OnDownloaded(bool success, const std::string& url, std::string* data) {
-    const std::string& key = lookup_key_util_.GetKeyForUrl(url);
+  void OnFreshDataReady(bool success,
+                        const std::string& key,
+                        std::string* data) {
     if (success) {
       assert(data != NULL);
       retrieved_(true, key, *data);
@@ -92,10 +90,9 @@ class Helper {
   }
 
   const Retriever::Callback& retrieved_;
-  const LookupKeyUtil& lookup_key_util_;
-  const Downloader& downloader_;
+  const Source& source_;
   ValidatingStorage* storage_;
-  const scoped_ptr<const Downloader::Callback> downloaded_;
+  const scoped_ptr<const Source::Callback> fresh_data_ready_;
   const scoped_ptr<const Storage::Callback> validated_data_ready_;
   std::string stale_data_;
 
@@ -104,21 +101,17 @@ class Helper {
 
 }  // namespace
 
-Retriever::Retriever(const std::string& validation_data_url,
-                     const Downloader* downloader,
-                     Storage* storage)
-    : lookup_key_util_(validation_data_url),
-      downloader_(downloader),
-      storage_(new ValidatingStorage(storage)) {
+Retriever::Retriever(const Source* source, Storage* storage)
+    : source_(source), storage_(new ValidatingStorage(storage)) {
+  assert(source_ != NULL);
   assert(storage_ != NULL);
-  assert(downloader_ != NULL);
 }
 
 Retriever::~Retriever() {}
 
 void Retriever::Retrieve(const std::string& key,
                          const Callback& retrieved) const {
-  new Helper(key, retrieved, lookup_key_util_, *downloader_, storage_.get());
+  new Helper(key, retrieved, *source_, storage_.get());
 }
 
 }  // namespace addressinput

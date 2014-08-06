@@ -25,8 +25,8 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
-#include "mock_downloader.h"
+#include "mock_source.h"
+#include "testdata_source.h"
 
 #define CHECKSUM "dd63dafcbd4d5b28badfcaf86fb6fcdb"
 #define DATA "{'foo': 'bar'}"
@@ -35,16 +35,16 @@
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
-using i18n::addressinput::MockDownloader;
+using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
+using i18n::addressinput::TestdataSource;
 
 const char kKey[] = "data/CA/AB--fr";
 
-// Empty data that the downloader can return.
+// Empty data that the source can return.
 const char kEmptyData[] = "{}";
 
 // The value of the data that the stale storage returns.
@@ -59,9 +59,7 @@ const char kStaleWrappedData[] = "timestamp=" OLD_TIMESTAMP "\n"
 class RetrieverTest : public testing::Test {
  protected:
   RetrieverTest()
-      : retriever_(FakeDownloader::kFakeDataUrl,
-                   new FakeDownloader,
-                   new NullStorage),
+      : retriever_(new TestdataSource(false), new NullStorage),
         success_(false),
         key_(),
         data_(),
@@ -116,11 +114,9 @@ TEST_F(RetrieverTest, MissingKeyReturnsEmptyData) {
   EXPECT_EQ(kEmptyData, data_);
 }
 
-TEST_F(RetrieverTest, FaultyDownloader) {
-  // An empty MockDownloader will fail for any request.
-  Retriever bad_retriever(MockDownloader::kMockDataUrl,
-                          new MockDownloader,
-                          new NullStorage);
+TEST_F(RetrieverTest, FaultySource) {
+  // An empty MockSource will fail for any request.
+  Retriever bad_retriever(new MockSource, new NullStorage);
 
   bad_retriever.Retrieve(kKey, *data_ready_);
 
@@ -152,12 +148,11 @@ class StaleStorage : public Storage {
   DISALLOW_COPY_AND_ASSIGN(StaleStorage);
 };
 
-TEST_F(RetrieverTest, UseStaleDataWhenDownloaderFails) {
+TEST_F(RetrieverTest, UseStaleDataWhenSourceFails) {
   // Owned by |resilient_retriver|.
   StaleStorage* stale_storage = new StaleStorage;
-  // An empty MockDownloader will fail for any request.
-  Retriever resilient_retriever(
-      MockDownloader::kMockDataUrl, new MockDownloader, stale_storage);
+  // An empty MockSource will fail for any request.
+  Retriever resilient_retriever(new MockSource, stale_storage);
 
   resilient_retriever.Retrieve(kKey, *data_ready_);
 
@@ -167,11 +162,10 @@ TEST_F(RetrieverTest, UseStaleDataWhenDownloaderFails) {
   EXPECT_FALSE(stale_storage->data_updated_);
 }
 
-TEST_F(RetrieverTest, DoNotUseStaleDataWhenDownloaderSucceeds) {
+TEST_F(RetrieverTest, DoNotUseStaleDataWhenSourceSucceeds) {
   // Owned by |resilient_retriver|.
   StaleStorage* stale_storage = new StaleStorage;
-  Retriever resilient_retriever(
-      FakeDownloader::kFakeDataUrl, new FakeDownloader, stale_storage);
+  Retriever resilient_retriever(new TestdataSource(false), stale_storage);
 
   resilient_retriever.Retrieve(kKey, *data_ready_);
 

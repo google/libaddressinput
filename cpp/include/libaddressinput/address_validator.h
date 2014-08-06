@@ -38,7 +38,8 @@ typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
 //    class MyClass {
 //     public:
 //      MyClass()
-//          : validator_(kMyServerUrl, new MyDownloader, new MyStorage),
+//          : supplier_(new MySupplier),
+//            validator_(new AddressValidator(supplier_.get())),
 //            validated_(BuildCallback(this, &MyClass::Validated)) {}
 //
 //      virtual ~MyClass() {}
@@ -61,7 +62,8 @@ typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
 //      AddressData address_;
 //      FieldProblemMap filter_;
 //      FieldProblemMap problems_;
-//      const AddressValidator validator_;
+//      const scoped_ptr<Supplier> supplier_;
+//      const scoped_ptr<AddressValidator> validator_;
 //      const scoped_ptr<const AddressValidator::Callback> validated_;
 //    };
 class AddressValidator {

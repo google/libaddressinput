@@ -23,27 +23,26 @@
 
 #include <gtest/gtest.h>
 
-#include "fake_downloader.h"
 #include "retriever.h"
 #include "rule.h"
+#include "testdata_source.h"
 
 namespace {
 
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::FakeDownloader;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
 using i18n::addressinput::RuleRetriever;
 using i18n::addressinput::scoped_ptr;
+using i18n::addressinput::TestdataSource;
 
 // Tests for RuleRetriever object.
 class RuleRetrieverTest : public testing::Test {
  protected:
   RuleRetrieverTest()
-      : rule_retriever_(new Retriever(FakeDownloader::kFakeDataUrl,
-                                      new FakeDownloader,
-                                      new NullStorage)),
+      : rule_retriever_(
+            new Retriever(new TestdataSource(false), new NullStorage)),
         success_(false),
         key_(),
         rule_(),
