@@ -124,7 +124,7 @@ TEST_F(PreloadSupplierTest, GetRulesForRegion) {
   const std::map<std::string, const Rule*>& rules =
       supplier_.GetRulesForRegion("CN");
   EXPECT_TRUE(rules.find("data/CN") != rules.end());
-  EXPECT_LT(1, rules.size());
+  EXPECT_LT(1U, rules.size());
 }
 
 }  // namespace
