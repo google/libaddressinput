@@ -17,6 +17,7 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <string>
 
@@ -83,6 +84,8 @@ class Localization {
 
   // The string getter.
   std::string (*get_string_)(int);
+
+  DISALLOW_COPY_AND_ASSIGN(Localization);
 };
 
 }  // namespace addressinput

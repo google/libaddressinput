@@ -17,6 +17,7 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <string>
 #include <vector>
@@ -51,7 +52,11 @@ using i18n::addressinput::USES_P_O_BOX;
 // Tests for Localization object.
 class LocalizationTest : public testing::TestWithParam<int> {
  protected:
+  LocalizationTest() {}
   Localization localization_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LocalizationTest);
 };
 
 // Verifies that a custom message getter can be used.

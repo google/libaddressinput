@@ -14,6 +14,8 @@
 
 #include "language.h"
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <string>
 
 #include <gtest/gtest.h>
@@ -40,7 +42,13 @@ struct LanguageTestCase {
   const bool expected_has_latin_script;
 };
 
-class LanguageTest : public testing::TestWithParam<LanguageTestCase> {};
+class LanguageTest : public testing::TestWithParam<LanguageTestCase> {
+ protected:
+  LanguageTest() {}
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LanguageTest);
+};
 
 TEST_P(LanguageTest, ExtractedDataIsCorrect) {
   Language language(GetParam().input_language_tag);

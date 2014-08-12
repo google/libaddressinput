@@ -19,6 +19,8 @@
 #ifndef I18N_ADDRESSINPUT_VALIDATING_UTIL_H_
 #define I18N_ADDRESSINPUT_VALIDATING_UTIL_H_
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <ctime>
 #include <string>
 
@@ -47,6 +49,9 @@ class ValidatingUtil {
   // Strips out the checksum from |data|. Returns |true| if the checksum is
   // present, formatted correctly, and valid for this data.
   static bool UnwrapChecksum(std::string* data);
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(ValidatingUtil);
 };
 
 }  // namespace addressinput

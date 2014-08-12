@@ -17,6 +17,8 @@
 #ifndef I18N_ADDRESSINPUT_POST_BOX_MATCHERS_H_
 #define I18N_ADDRESSINPUT_POST_BOX_MATCHERS_H_
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <vector>
 
 namespace i18n {
@@ -30,6 +32,9 @@ class PostBoxMatchers {
   // Returns pointers to RE2 regular expression objects to test address lines
   // for those languages that are relevant for |country_rule|.
   static std::vector<const RE2ptr*> GetMatchers(const Rule& country_rule);
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(PostBoxMatchers);
 };
 
 }  // namespace addressinput

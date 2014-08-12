@@ -16,6 +16,7 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/localization.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <string>
@@ -241,7 +242,11 @@ TEST(RuleTest, EmptyDictionaryIsValid) {
 class PostalCodeNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
  protected:
+  PostalCodeNameParseTest() {}
   Rule rule_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(PostalCodeNameParseTest);
 };
 
 // Verifies that a postal code name is parsed correctly.
@@ -263,7 +268,11 @@ INSTANTIATE_TEST_CASE_P(
 class AdminAreaNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
  protected:
+  AdminAreaNameParseTest() {}
   Rule rule_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(AdminAreaNameParseTest);
 };
 
 // Verifies that an administrative area name is parsed correctly.
@@ -302,6 +311,8 @@ INSTANTIATE_TEST_CASE_P(
 // Tests for rule parsing.
 class RuleParseTest : public testing::TestWithParam<std::string> {
  protected:
+  RuleParseTest() {}
+
   const std::string& GetRegionData() const {
     // GetParam() is either a region code or the region data itself.
     // RegionDataContants::GetRegionData() returns an empty string for anything
@@ -312,6 +323,9 @@ class RuleParseTest : public testing::TestWithParam<std::string> {
 
   Rule rule_;
   Localization localization_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(RuleParseTest);
 };
 
 // Verifies that a region data can be parsed successfully.

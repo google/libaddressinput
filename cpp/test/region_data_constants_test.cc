@@ -14,6 +14,8 @@
 
 #include "region_data_constants.h"
 
+#include <libaddressinput/util/basictypes.h>
+
 #include <string>
 
 #include <gtest/gtest.h>
@@ -23,7 +25,13 @@ namespace {
 using i18n::addressinput::RegionDataConstants;
 
 // Tests for region codes, for example "ZA".
-class RegionCodeTest : public testing::TestWithParam<std::string> {};
+class RegionCodeTest : public testing::TestWithParam<std::string> {
+ protected:
+  RegionCodeTest() {}
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(RegionCodeTest);
+};
 
 // Verifies that a region code consists of two characters, for example "ZA".
 TEST_P(RegionCodeTest, RegionCodeHasTwoCharacters) {
@@ -57,9 +65,14 @@ TEST(DefaultRegionDataTest, DefaultRegionHasCurlyBraces) {
 // Tests for region data, for example "{\"fmt\":\"%C%S\"}".
 class RegionDataTest : public testing::TestWithParam<std::string> {
  protected:
+  RegionDataTest() {}
+
   const std::string& GetData() const {
     return RegionDataConstants::GetRegionData(GetParam());
   }
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(RegionDataTest);
 };
 
 // Verifies that a region data value begins with '{' and end with '}', for

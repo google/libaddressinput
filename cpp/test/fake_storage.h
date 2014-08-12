@@ -19,6 +19,7 @@
 #define I18N_ADDRESSINPUT_FAKE_STORAGE_H_
 
 #include <libaddressinput/storage.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <string>
@@ -66,6 +67,7 @@ class FakeStorage : public Storage {
 
  private:
   std::map<std::string, std::string*> data_;
+  DISALLOW_COPY_AND_ASSIGN(FakeStorage);
 };
 
 }  // namespace addressinput

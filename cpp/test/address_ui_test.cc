@@ -17,6 +17,7 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_ui_component.h>
 #include <libaddressinput/localization.h>
+#include <libaddressinput/util/basictypes.h>
 
 #include <set>
 #include <string>
@@ -70,8 +71,12 @@ testing::AssertionResult ComponentsAreValid(
 // Tests for address UI functions.
 class AddressUiTest : public testing::TestWithParam<std::string> {
  protected:
+  AddressUiTest() {}
   Localization localization_;
   std::string best_address_language_tag_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(AddressUiTest);
 };
 
 // Verifies that a region code consists of two characters, for example "TW".
@@ -142,8 +147,12 @@ struct LanguageTestCase {
 class BestAddressLanguageTagTest
     : public testing::TestWithParam<LanguageTestCase> {
  protected:
+  BestAddressLanguageTagTest() {}
   Localization localization_;
   std::string best_address_language_tag_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(BestAddressLanguageTagTest);
 };
 
 std::string GetterStub(int) { return std::string(); }
