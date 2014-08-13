@@ -44,8 +44,6 @@ class AddressNormalizerTest : public testing::Test {
         loaded_(BuildCallback(this, &AddressNormalizerTest::OnLoaded)),
         normalizer_(&supplier_) {}
 
-  virtual ~AddressNormalizerTest() {}
-
   PreloadSupplier supplier_;
   const scoped_ptr<const PreloadSupplier::Callback> loaded_;
   const AddressNormalizer normalizer_;

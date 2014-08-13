@@ -46,8 +46,6 @@ class PreloadSupplierTest : public testing::Test {
       : supplier_(new TestdataSource(true), new NullStorage),
         loaded_callback_(BuildCallback(this, &PreloadSupplierTest::OnLoaded)) {}
 
-  virtual ~PreloadSupplierTest() {}
-
   PreloadSupplier supplier_;
   const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;
 

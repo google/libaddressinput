@@ -45,8 +45,6 @@ class TestdataSourceTest : public testing::TestWithParam<std::string> {
         data_(),
         data_ready_(BuildCallback(this, &TestdataSourceTest::OnDataReady)) {}
 
-  virtual ~TestdataSourceTest() {}
-
   TestdataSource source_;
   TestdataSource aggregate_source_;
   bool success_;

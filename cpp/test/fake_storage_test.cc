@@ -41,8 +41,6 @@ class FakeStorageTest : public testing::Test {
         data_(),
         data_ready_(BuildCallback(this, &FakeStorageTest::OnDataReady)) {}
 
-  virtual ~FakeStorageTest() {}
-
   FakeStorage storage_;
   bool success_;
   std::string key_;

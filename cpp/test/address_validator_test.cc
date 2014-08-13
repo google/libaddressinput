@@ -70,8 +70,6 @@ class OndemandValidatorWrapper : public ValidatorWrapper {
  public:
   static ValidatorWrapper* Build() { return new OndemandValidatorWrapper; }
 
-  virtual ~OndemandValidatorWrapper() {}
-
   virtual void Validate(const AddressData& address,
                         bool allow_postal,
                         bool require_name,
@@ -100,8 +98,6 @@ class OndemandValidatorWrapper : public ValidatorWrapper {
 class PreloadValidatorWrapper : public ValidatorWrapper {
  public:
   static ValidatorWrapper* Build() { return new PreloadValidatorWrapper; }
-
-  virtual ~PreloadValidatorWrapper() {}
 
   virtual void Validate(const AddressData& address,
                         bool allow_postal,
@@ -149,8 +145,6 @@ class AddressValidatorTest
         called_(false),
         validator_wrapper_((*GetParam())()),
         validated_(BuildCallback(this, &AddressValidatorTest::Validated)) {}
-
-  virtual ~AddressValidatorTest() {}
 
   void Validate() {
     validator_wrapper_->Validate(

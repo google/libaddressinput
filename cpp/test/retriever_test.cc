@@ -65,8 +65,6 @@ class RetrieverTest : public testing::Test {
         data_(),
         data_ready_(BuildCallback(this, &RetrieverTest::OnDataReady)) {}
 
-  virtual ~RetrieverTest() {}
-
   Retriever retriever_;
   bool success_;
   std::string key_;

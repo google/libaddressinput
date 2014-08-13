@@ -48,8 +48,6 @@ class RuleRetrieverTest : public testing::Test {
         rule_(),
         rule_ready_(BuildCallback(this, &RuleRetrieverTest::OnRuleReady)) {}
 
-  virtual ~RuleRetrieverTest() {}
-
   RuleRetriever rule_retriever_;
   bool success_;
   std::string key_;

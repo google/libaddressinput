@@ -56,8 +56,6 @@ class ValidatingStorageTest : public testing::Test {
         data_(),
         data_ready_(BuildCallback(this, &ValidatingStorageTest::OnDataReady)) {}
 
-  virtual ~ValidatingStorageTest() {}
-
   Storage* const wrapped_storage_;  // Owned by |storage_|.
   ValidatingStorage storage_;
   bool success_;

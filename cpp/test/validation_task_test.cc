@@ -83,8 +83,6 @@ class ValidationTaskTest : public testing::Test {
     filter_.insert(std::make_pair(RECIPIENT, MISSING_REQUIRED_FIELD));
   }
 
-  virtual ~ValidationTaskTest() {}
-
   void Validate() {
     Rule rule[arraysize(json_)];
 

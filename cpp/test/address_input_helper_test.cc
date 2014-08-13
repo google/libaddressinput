@@ -49,8 +49,6 @@ class AddressInputHelperTest : public testing::Test {
         address_input_helper_(&supplier_),
         loaded_(BuildCallback(this, &AddressInputHelperTest::Loaded)) {}
 
-  ~AddressInputHelperTest() {}
-
   // Helper method to test FillAddress that ensures the PreloadSupplier has the
   // necessary data preloaded.
   void FillAddress(AddressData* address) {
@@ -248,8 +246,6 @@ class AddressInputHelperMockDataTest : public testing::Test {
         supplier_(source_, new NullStorage),
         address_input_helper_(&supplier_),
         loaded_(BuildCallback(this, &AddressInputHelperMockDataTest::Loaded)) {}
-
-  ~AddressInputHelperMockDataTest() {}
 
   // Helper method to test FillAddress that ensures the PreloadSupplier has the
   // necessary data preloaded.

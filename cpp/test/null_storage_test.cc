@@ -36,8 +36,6 @@ class NullStorageTest : public testing::Test {
   NullStorageTest()
       : data_ready_(BuildCallback(this, &NullStorageTest::OnDataReady)) {}
 
-  virtual ~NullStorageTest() {}
-
   NullStorage storage_;
   bool success_;
   std::string key_;

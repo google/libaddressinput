@@ -46,8 +46,6 @@ class RegionDataBuilderTest : public testing::Test {
         loaded_callback_(BuildCallback(this, &RegionDataBuilderTest::OnLoaded)),
         best_language_() {}
 
-  virtual ~RegionDataBuilderTest() {}
-
   PreloadSupplier supplier_;
   RegionDataBuilder builder_;
   const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;

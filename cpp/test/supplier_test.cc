@@ -73,8 +73,6 @@ class OndemandSupplierWrapper : public SupplierWrapper {
  public:
   static SupplierWrapper* Build() { return new OndemandSupplierWrapper; }
 
-  virtual ~OndemandSupplierWrapper() {}
-
   virtual void Supply(const LookupKey& lookup_key,
                       const Supplier::Callback& supplied) {
     ondemand_supplier_.Supply(lookup_key, supplied);
@@ -91,8 +89,6 @@ class OndemandSupplierWrapper : public SupplierWrapper {
 class PreloadSupplierWrapper : public SupplierWrapper {
  public:
   static SupplierWrapper* Build() { return new PreloadSupplierWrapper; }
-
-  virtual ~PreloadSupplierWrapper() {}
 
   virtual void Supply(const LookupKey& lookup_key,
                       const Supplier::Callback& supplied) {
@@ -124,8 +120,6 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
         lookup_key_(),
         supplier_wrapper_((*GetParam())()),
         supplied_(BuildCallback(this, &SupplierTest::Supplied)) {}
-
-  virtual ~SupplierTest() {}
 
   void Supply() {
     lookup_key_.FromAddress(address_);
