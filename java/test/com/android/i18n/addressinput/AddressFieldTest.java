@@ -30,8 +30,4 @@ public class AddressFieldTest extends TestCase {
     public void testGetChar() throws Exception {
         assertEquals('R', AddressField.COUNTRY.getChar());
     }
-
-    public void testGetAttributeName() throws Exception {
-        assertEquals("name", AddressField.RECIPIENT.getAttributeName());
-    }
 }
