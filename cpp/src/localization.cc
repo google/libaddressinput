@@ -31,10 +31,11 @@
 
 namespace {
 
-void PushBackUrl(std::vector<std::string>& parameters, const std::string url) {
+void PushBackUrl(const std::string& url, std::vector<std::string>* parameters) {
+  assert(parameters != NULL);
   // TODO: HTML-escape the "url".
-  parameters.push_back("<a href=\"" + url + "\">");
-  parameters.push_back("</a>");
+  parameters->push_back("<a href=\"" + url + "\">");
+  parameters->push_back("</a>");
 }
 
 }  // namespace
@@ -137,7 +138,7 @@ std::string Localization::GetErrorMessageForPostalCode(
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE_AND_URL :
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE_AND_URL;
       parameters.push_back(postal_code_example);
-      PushBackUrl(parameters, post_service_url);
+      PushBackUrl(post_service_url, &parameters);
     } else if (!postal_code_example.empty()) {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE :
@@ -153,7 +154,7 @@ std::string Localization::GetErrorMessageForPostalCode(
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE_AND_URL :
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_ZIP_CODE_EXAMPLE_AND_URL;
       parameters.push_back(postal_code_example);
-      PushBackUrl(parameters, post_service_url);
+      PushBackUrl(post_service_url, &parameters);
     } else if (!postal_code_example.empty()) {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_UNRECOGNIZED_FORMAT_POSTAL_CODE_EXAMPLE :
@@ -170,7 +171,7 @@ std::string Localization::GetErrorMessageForPostalCode(
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE_URL :
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_ZIP_URL;
-      PushBackUrl(parameters, post_service_url);
+      PushBackUrl(post_service_url, &parameters);
     } else {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISMATCHING_VALUE_POSTAL_CODE :
