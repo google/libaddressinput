@@ -63,7 +63,7 @@ void OndemandSupplyTask::Retrieve(const Retriever& retriever) {
   } else {
     // When the final pending rule has been retrieved, the retrieved_ callback,
     // implemented by Load(), will finish by calling Loaded(), which will finish
-    // by delete'ing this RuleHierarchy object. So after the final call to
+    // by delete'ing this OndemandSupplyTask object. So after the final call to
     // retriever.Retrieve() no attributes of this object can be accessed (as the
     // object then no longer will exist, if the final callback has finished by
     // then), and the condition statement of the loop must therefore not use the
