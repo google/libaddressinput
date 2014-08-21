@@ -41,6 +41,7 @@ std::string AddressData::*kStringField[] = {
   &AddressData::sorting_code,
   &AddressData::postal_code,
   NULL,
+  &AddressData::organization,
   &AddressData::recipient
 };
 
@@ -53,6 +54,7 @@ const std::vector<std::string> AddressData::*kVectorStringField[] = {
   NULL,
   NULL,
   &AddressData::address_line,
+  NULL,
   NULL
 };
 
@@ -111,7 +113,9 @@ bool AddressData::operator==(const AddressData& other) const {
          dependent_locality == other.dependent_locality &&
          postal_code == other.postal_code &&
          sorting_code == other.sorting_code &&
-         language_code == other.language_code && recipient == other.recipient;
+         language_code == other.language_code &&
+         organization == other.organization &&
+         recipient == other.recipient;
 }
 
 // static
@@ -142,6 +146,7 @@ std::ostream& operator<<(std::ostream& o,
   }
 
   o << "language_code: \"" << address.language_code << "\"\n"
+    "organization: \"" << address.organization << "\"\n"
     "recipient: \"" << address.recipient << "\"\n";
 
   return o;

@@ -26,20 +26,22 @@
 namespace {
 
 using i18n::addressinput::AddressField;
-using i18n::addressinput::COUNTRY;
 using i18n::addressinput::FormatElement;
-using i18n::addressinput::LOCALITY;
 using i18n::addressinput::ParseFormatRule;
+
+using i18n::addressinput::COUNTRY;
+using i18n::addressinput::LOCALITY;
 using i18n::addressinput::POSTAL_CODE;
-using i18n::addressinput::RECIPIENT;
 using i18n::addressinput::STREET_ADDRESS;
+using i18n::addressinput::ORGANIZATION;
+using i18n::addressinput::RECIPIENT;
 
 TEST(AddressFieldUtilTest, FormatParseNewline) {
   std::vector<FormatElement> actual;
   ParseFormatRule("%O%n%N%n%A%nAX-%Z %C%n\xC3\x85LAND", &actual);  /* "ÅLAND" */
 
   std::vector<FormatElement> expected;
-  // Organization is skipped.
+  expected.push_back(FormatElement(ORGANIZATION));
   expected.push_back(FormatElement());
   expected.push_back(FormatElement(RECIPIENT));
   expected.push_back(FormatElement());

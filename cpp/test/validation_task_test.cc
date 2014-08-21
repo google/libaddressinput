@@ -57,6 +57,7 @@ class ValidationTaskTest : public testing::Test {
       SORTING_CODE,
       POSTAL_CODE,
       STREET_ADDRESS,
+      ORGANIZATION,
       RECIPIENT
     };
 
@@ -213,12 +214,14 @@ TEST_F(ValidationTaskTest, MissingNoRequiredFieldsUS) {
   address_.locality = "ccc";
   address_.postal_code = "zzz";
   address_.address_line.push_back("aaa");
+  address_.organization = "ooo";
   address_.recipient = "nnn";
 
   filter_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
   filter_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
   filter_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
   filter_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
+  filter_.insert(std::make_pair(ORGANIZATION, MISSING_REQUIRED_FIELD));
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);

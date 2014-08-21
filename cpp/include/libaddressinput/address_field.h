@@ -31,6 +31,7 @@ enum AddressField {
   SORTING_CODE,        // Sorting code.
   POSTAL_CODE,         // Zip or postal code.
   STREET_ADDRESS,      // Street address lines.
+  ORGANIZATION,        // Organization, company, firm, institution, etc.
   RECIPIENT            // Name.
 };
 

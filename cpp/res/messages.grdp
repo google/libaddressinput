@@ -113,6 +113,13 @@ limitations under the License.
     State
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_ORGANIZATION_LABEL"
+      desc="Label for the field of organization, firm, company, or institution
+            in an address. Examples of values in this field: Google,
+            Department of Transportation, University of Cambridge.">
+    Organization
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_RECIPIENT_LABEL"
       desc="Label for the field for a person's name in an address.">
     Name

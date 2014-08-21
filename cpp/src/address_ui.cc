@@ -63,6 +63,9 @@ std::string GetLabelForField(const Localization& localization,
     case STREET_ADDRESS:
       messageId = IDS_LIBADDRESSINPUT_ADDRESS_LINE_1_LABEL;
       break;
+    case ORGANIZATION:
+      messageId = IDS_LIBADDRESSINPUT_ORGANIZATION_LABEL;
+      break;
     case RECIPIENT:
       messageId = IDS_LIBADDRESSINPUT_RECIPIENT_LABEL;
       break;

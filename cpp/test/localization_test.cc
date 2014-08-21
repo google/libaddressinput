@@ -41,6 +41,7 @@ using i18n::addressinput::DEPENDENT_LOCALITY;
 using i18n::addressinput::SORTING_CODE;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::STREET_ADDRESS;
+using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::RECIPIENT;
 
 using i18n::addressinput::MISSING_REQUIRED_FIELD;
@@ -103,6 +104,7 @@ INSTANTIATE_TEST_CASE_P(
         IDS_LIBADDRESSINPUT_PREFECTURE,
         IDS_LIBADDRESSINPUT_PROVINCE,
         IDS_LIBADDRESSINPUT_STATE,
+        IDS_LIBADDRESSINPUT_ORGANIZATION_LABEL,
         IDS_LIBADDRESSINPUT_RECIPIENT_LABEL,
         IDS_LIBADDRESSINPUT_MISSING_REQUIRED_FIELD,
         IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE_AND_URL,
@@ -181,6 +183,7 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredOtherFields) {
   other_fields.push_back(DEPENDENT_LOCALITY);
   other_fields.push_back(SORTING_CODE);
   other_fields.push_back(STREET_ADDRESS);
+  other_fields.push_back(ORGANIZATION);
   other_fields.push_back(RECIPIENT);
   for (std::vector<AddressField>::iterator it = other_fields.begin();
        it != other_fields.end(); it++) {
@@ -211,6 +214,7 @@ TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
   address_line.push_back("bad address line 1");
   address_line.push_back("bad address line 2");
   address.address_line = address_line;
+  address.organization = "bad organization";
   address.recipient = "bad recipient";
   EXPECT_EQ("US "
             "is not recognized as a known value for this field.",
@@ -308,6 +312,22 @@ TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
                 address, STREET_ADDRESS, UNKNOWN_VALUE, false, true));
+  EXPECT_EQ("bad organization "
+            "is not recognized as a known value for this field.",
+            localization.GetErrorMessage(
+                address, ORGANIZATION, UNKNOWN_VALUE, true, true));
+  EXPECT_EQ("bad organization "
+            "is not recognized as a known value for this field.",
+            localization.GetErrorMessage(
+                address, ORGANIZATION, UNKNOWN_VALUE, true, false));
+  EXPECT_EQ("bad organization "
+            "is not recognized as a known value for this field.",
+            localization.GetErrorMessage(
+                address, ORGANIZATION, UNKNOWN_VALUE, false, false));
+  EXPECT_EQ("bad organization "
+            "is not recognized as a known value for this field.",
+            localization.GetErrorMessage(
+                address, ORGANIZATION, UNKNOWN_VALUE, false, true));
   EXPECT_EQ("bad recipient "
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
@@ -439,6 +459,7 @@ TEST(LocalizationGetErrorMessageTest, UsesPOBoxOtherFields) {
   other_fields.push_back(DEPENDENT_LOCALITY);
   other_fields.push_back(SORTING_CODE);
   other_fields.push_back(STREET_ADDRESS);
+  other_fields.push_back(ORGANIZATION);
   other_fields.push_back(RECIPIENT);
   for (std::vector<AddressField>::iterator it = other_fields.begin();
        it != other_fields.end(); it++) {

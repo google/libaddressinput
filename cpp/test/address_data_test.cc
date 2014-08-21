@@ -32,6 +32,7 @@ using i18n::addressinput::DEPENDENT_LOCALITY;
 using i18n::addressinput::SORTING_CODE;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::STREET_ADDRESS;
+using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::RECIPIENT;
 
 TEST(AddressDataTest, GetFieldValue) {
@@ -42,6 +43,7 @@ TEST(AddressDataTest, GetFieldValue) {
   address.dependent_locality = "ddd";
   address.sorting_code = "xxx";
   address.postal_code = "zzz";
+  address.organization = "ooo";
   address.recipient = "nnn";
 
   EXPECT_EQ(address.region_code,
@@ -56,6 +58,8 @@ TEST(AddressDataTest, GetFieldValue) {
             address.GetFieldValue(SORTING_CODE));
   EXPECT_EQ(address.postal_code,
             address.GetFieldValue(POSTAL_CODE));
+  EXPECT_EQ(address.organization,
+            address.GetFieldValue(ORGANIZATION));
   EXPECT_EQ(address.recipient,
             address.GetFieldValue(RECIPIENT));
 }
@@ -78,6 +82,7 @@ TEST(AddressDataTest, IsFieldEmpty) {
   EXPECT_TRUE(address.IsFieldEmpty(SORTING_CODE));
   EXPECT_TRUE(address.IsFieldEmpty(POSTAL_CODE));
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
+  EXPECT_TRUE(address.IsFieldEmpty(ORGANIZATION));
   EXPECT_TRUE(address.IsFieldEmpty(RECIPIENT));
 
   address.region_code = "rrr";
@@ -87,6 +92,7 @@ TEST(AddressDataTest, IsFieldEmpty) {
   address.sorting_code = "xxx";
   address.postal_code = "zzz";
   address.address_line.push_back("aaa");
+  address.organization = "ooo";
   address.recipient = "nnn";
 
   EXPECT_FALSE(address.IsFieldEmpty(COUNTRY));
@@ -96,6 +102,7 @@ TEST(AddressDataTest, IsFieldEmpty) {
   EXPECT_FALSE(address.IsFieldEmpty(SORTING_CODE));
   EXPECT_FALSE(address.IsFieldEmpty(POSTAL_CODE));
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
+  EXPECT_FALSE(address.IsFieldEmpty(ORGANIZATION));
   EXPECT_FALSE(address.IsFieldEmpty(RECIPIENT));
 }
 
@@ -149,6 +156,7 @@ TEST(AddressDataTest, StreamFunction) {
   address.dependent_locality = "D";
   address.sorting_code = "X";
   address.language_code = "zh-Hant";
+  address.organization = "O";
   oss << address;
   EXPECT_EQ("region_code: \"R\"\n"
             "administrative_area: \"S\"\n"
@@ -159,6 +167,7 @@ TEST(AddressDataTest, StreamFunction) {
             "address_line: \"Line 1\"\n"
             "address_line: \"Line 2\"\n"
             "language_code: \"zh-Hant\"\n"
+            "organization: \"O\"\n"
             "recipient: \"N\"\n", oss.str());
 }
 
@@ -173,6 +182,7 @@ TEST(AddressDataTest, TestEquals) {
   address.locality = "C";
   address.dependent_locality = "D";
   address.sorting_code = "X";
+  address.organization = "O";
   address.language_code = "zh-Hant";
 
   AddressData clone = address;

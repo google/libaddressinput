@@ -40,6 +40,7 @@ std::map<char, AddressField> InitFields() {
   fields.insert(std::make_pair('X', SORTING_CODE));
   fields.insert(std::make_pair('Z', POSTAL_CODE));
   fields.insert(std::make_pair('A', STREET_ADDRESS));
+  fields.insert(std::make_pair('O', ORGANIZATION));
   fields.insert(std::make_pair('N', RECIPIENT));
   return fields;
 }

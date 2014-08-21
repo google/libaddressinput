@@ -55,6 +55,10 @@ struct AddressData {
   // Language code of the address. Should be in BCP-47 format.
   std::string language_code;
 
+  // The organization, firm, company, or institution at this address. This
+  // corresponds to the FirmName sub-element of the xAL FirmType element.
+  std::string organization;
+
   // Name of recipient or contact person. Not present in xAL.
   std::string recipient;
 

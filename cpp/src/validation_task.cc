@@ -110,6 +110,7 @@ void ValidationTask::CheckUnexpectedField(
     SORTING_CODE,
     POSTAL_CODE,
     STREET_ADDRESS,
+    ORGANIZATION,
     RECIPIENT
   };
 
@@ -132,7 +133,8 @@ void ValidationTask::CheckMissingRequiredField(
     DEPENDENT_LOCALITY,
     SORTING_CODE,
     POSTAL_CODE,
-    STREET_ADDRESS,
+    STREET_ADDRESS
+    // ORGANIZATION is never required.
     // RECIPIENT is handled separately.
   };
 
