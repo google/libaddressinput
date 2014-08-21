@@ -977,7 +977,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"tpi~en~ho\""
       "}"));
   region_data.insert(std::make_pair("PH", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\","
+      "\"fmt\":\"%N%n%O%n%A%n%D, %C%n%Z %S\","
       "\"zipex\":\"1008,1050,1135,1207,2000,1000\","
       "\"posturl\":\"http://www.philpost.gov.ph/\","
       "\"languages\":\"en\""
