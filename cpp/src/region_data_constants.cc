@@ -869,7 +869,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("MY", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%Z %C, %S\","
+      "\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C%n%S\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"state\","
       "\"zipex\":\"43000,50754,88990,50670\","
