@@ -15,7 +15,7 @@
 // An object to store address metadata, describing the addressing rules for
 // regions and sub-regions. The address metadata format is documented here:
 //
-// https://code.google.com/p/libaddressinput/wiki/AddressValidationMetadata
+// https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata
 
 #ifndef I18N_ADDRESSINPUT_RULE_H_
 #define I18N_ADDRESSINPUT_RULE_H_
