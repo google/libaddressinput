@@ -1,0 +1,6 @@
+[submodule "externals/grit"]
+	path = externals/grit
+	url = https://chromium.googlesource.com/external/grit-i18n
+[submodule "externals/rapidjson"]
+	path = externals/rapidjson
+	url = https://github.com/miloyip/rapidjson.git
