@@ -33,5 +33,11 @@ Video: [Easy International Checkout with Chrome](https://www.youtube.com/watch?v
 The Java library of _libaddressinput_ is written for use in
 [Android](https://developer.android.com/) and includes an Android UI address
 input widget ready for use, but only the UI parts are tied to Android (all the
-non-UI unit tests can be readily run in Java SE, "`ant junit`") and the rest
-of the library could easily be adapted to run in any Java environment.
+non-UI unit tests can be readily run in Java SE, `ant junit`) and the rest of
+the library could easily be adapted to run in any Java environment.
+
+## Mailing List
+
+Using and developing libaddressinput is discussed on this mailing list:
+
+https://groups.google.com/forum/#!forum/libaddressinput-discuss

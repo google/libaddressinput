@@ -1,0 +1,35 @@
+Building and running tests with Android
+=======================================
+
+The easiest way to build libaddressinput for Android and run all the tests is
+using the Gradle project automation tool:
+
+http://tools.android.com/tech-docs/new-build-system
+http://www.gradle.org/
+
+With an Android emulator running or an Android device connected, the following
+command line then builds the library and runs the tests:
+
+$ gradle connectedInstrumentTest
+
+The test runner logs to the system log, which can be viewed using logcat:
+
+$ adb logcat
+
+Building and running tests with Java SE
+=======================================
+
+Large parts of the library and tests are not Android specific and those can be
+built and run in a standard Java SE environment using the Ant build tool:
+
+http://ant.apache.org/
+
+The following command line then builds those parts of the library and runs the
+corresponding tests:
+
+$ ant junit
+
+The test runner logs to XML files in the build/junitreport directory, which can
+be formatted into human-friendly HTML (build/junitreport/index.html) like this:
+
+$ ant junitreport
