@@ -59,7 +59,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private CacheData mCacheData;
 
-    // A map for all address fields except for country.
+    // A map for all address fields.
     private final EnumMap<AddressField, AddressUiComponent> mInputWidgets =
         new EnumMap<AddressField, AddressUiComponent>(AddressField.class);
 
