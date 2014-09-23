@@ -1,5 +1,7 @@
 # ![](https://github.com/googlei18n/libaddressinput/wiki/libaddressinput-icon-70x55.png) libaddressinput
 
+[![Build Status](https://drone.io/github.com/googlei18n/libaddressinput/status.png)](https://drone.io/github.com/googlei18n/libaddressinput/latest)
+
 The _libaddressinput_ project consists of two different libraries (one
 implemented in C++, one implemented in Java for Android) that use
 [address metadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata)
