@@ -351,7 +351,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("EC", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
-      "\"zipex\":\"EC090112,090105,H0103C,P0133B,P0133A,P0133V\","
+      "\"zipex\":\"090105,EC090112,H0103C,P0133B,P0133A,P0133V\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("EE", "{"
