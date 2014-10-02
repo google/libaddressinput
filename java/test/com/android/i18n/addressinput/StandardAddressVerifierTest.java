@@ -136,8 +136,8 @@ public class StandardAddressVerifierTest extends TestCase {
 
     /**
      * If there is a postal code pattern for a certain country, and the input postal code is empty,
-     * it should not be reported as bad postal code format. Whether empty postal code is ok should
-     * be determined by checks for required fields.
+     * it should not be reported as bad postal code format. Whether an empty postal code is ok
+     * should be determined by checks for required fields.
      */
     public void testEmptyPostalCodeReportedAsGoodFormat() {
         // Chilean address has a postal code format pattern, but does not require
@@ -145,7 +145,7 @@ public class StandardAddressVerifierTest extends TestCase {
         AddressData addr = new AddressData.Builder().setCountry("CL")
                                                     .setAddressLine1("GUSTAVO LE PAIGE ST #159")
                                                     .setAdminArea("Atacama")
-                                                    .setLocality("San Pedro")
+                                                    .setLocality("Alto del Carmen")
                                                     .setPostalCode("")
                                                     .build();
         verifier.verify(addr, problems);
