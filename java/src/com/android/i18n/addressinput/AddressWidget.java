@@ -127,14 +127,14 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         Map<String, Integer> localityLabelMap = new HashMap<String, Integer>(2);
         localityLabelMap.put("city", R.string.i18n_locality_label);
         localityLabelMap.put("district", R.string.i18n_dependent_locality_label);
-        localityLabelMap.put("post_town", R.string.i18n_post_town_label);
+        localityLabelMap.put("post_town", R.string.i18n_post_town);
         LOCALITY_LABELS = Collections.unmodifiableMap(localityLabelMap);
 
         Map<String, Integer> sublocalityLabelMap = new HashMap<String, Integer>(2);
-        sublocalityLabelMap.put("suburb", R.string.i18n_suburb_label);
+        sublocalityLabelMap.put("suburb", R.string.i18n_suburb);
         sublocalityLabelMap.put("district", R.string.i18n_dependent_locality_label);
-        sublocalityLabelMap.put("neighborhood", R.string.i18n_neighborhood_label);
-        sublocalityLabelMap.put("village_township", R.string.i18n_neighborhood_label);
+        sublocalityLabelMap.put("neighborhood", R.string.i18n_neighborhood);
+        sublocalityLabelMap.put("village_township", R.string.i18n_village_township);
         SUB_LOCALITY_LABELS = Collections.unmodifiableMap(sublocalityLabelMap);
 
         Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
