@@ -135,7 +135,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         sublocalityLabelMap.put("district", R.string.i18n_dependent_locality_label);
         sublocalityLabelMap.put("neighborhood", R.string.i18n_neighborhood);
         sublocalityLabelMap.put("village_township", R.string.i18n_village_township);
-        SUB_LOCALITY_LABELS = Collections.unmodifiableMap(sublocalityLabelMap);
+        SUBLOCALITY_LABELS = Collections.unmodifiableMap(sublocalityLabelMap);
 
         Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
         adminErrorMap.put("area", R.string.invalid_area);
@@ -372,7 +372,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         Integer result = SUBLOCALITY_LABELS.get(sublocalityLabelType);
         if (result == null) {
             // Fallback to suburb.
-            result = R.string.i18n_suburb_label;
+            result = R.string.i18n_suburb;
         }
         return mContext.getString(result);
     }
