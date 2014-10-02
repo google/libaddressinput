@@ -41,9 +41,31 @@
     <!-- A city or town, such as New York City [CHAR LIMIT=30] -->
     <string name="i18n_locality_label">City</string>
 
+    <!-- The name of a town through which postal deliveries are routed, present
+         in UK addresses.
+         See: http://en.wikipedia.org/wiki/Post_town [CHAR LIMIT=30] -->
+    <string name="i18n_post_town_label">Post Town</string>
+
+    <!-- TODO: Delete this; it is a duplicate. -->
     <!-- Area of a town (a neighbourhood/suburb) used for addresses in Korea and
          China, or a district of a country such as Nauru [CHAR LIMIT=30] -->
     <string name="i18n_dependent_locality_label">District</string>
+
+    <!-- Administrative Area for Nauru Central Pacific (e.g., Aiwo district), or
+         area of a town (a neighbourhood/suburb) used for addresses in Korea and
+         China. [CHAR LIMIT=30] -->
+    <string name="i18n_district_label">District</string>
+
+    <!-- Label for a neighborhood, shown as part of an address input form. [CHAR LIMIT=30] -->
+    <string name="i18n_neighborhood_label">Neighborhood</string>
+
+    <!-- Smaller part of a city used in some addresses in countries like New
+         Zealand to give a more specific location in a postal address. [CHAR LIMIT=30] -->
+    <string name="i18n_suburb_label">Suburb</string>
+
+    <!-- A unit used in postal addresses in Malaysia, which is smaller than the
+         city/town, and represents a village, township, or precinct. [CHAR LIMIT=30] -->
+    <string name="i18n_village_township">Village / Township</string>
 
     <!-- Company/Organization of the address [CHAR LIMIT=30] -->
     <string name="i18n_organization_label">Company</string>

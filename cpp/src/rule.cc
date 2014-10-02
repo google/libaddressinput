@@ -91,6 +91,42 @@ const NameMessageIdMap& GetPostalCodeMessageIds() {
   return kPostalCodeMessageIds;
 }
 
+NameMessageIdMap InitLocalityMessageIds() {
+  NameMessageIdMap message_ids;
+  message_ids.insert(std::make_pair(
+      "city", IDS_LIBADDRESSINPUT_LOCALITY_LABEL));
+  message_ids.insert(std::make_pair(
+      "post_town", IDS_LIBADDRESSINPUT_POST_TOWN));
+  message_ids.insert(std::make_pair(
+      "district", IDS_LIBADDRESSINPUT_DISTRICT));
+  return message_ids;
+}
+
+const NameMessageIdMap& GetLocalityMessageIds() {
+  static const NameMessageIdMap kLocalityMessageIds(
+      InitLocalityMessageIds());
+  return kLocalityMessageIds;
+}
+
+NameMessageIdMap InitSublocalityMessageIds() {
+  NameMessageIdMap message_ids;
+  message_ids.insert(std::make_pair(
+      "suburb", IDS_LIBADDRESSINPUT_SUBURB));
+  message_ids.insert(std::make_pair(
+      "district", IDS_LIBADDRESSINPUT_DISTRICT));
+  message_ids.insert(std::make_pair(
+      "neighborhood", IDS_LIBADDRESSINPUT_NEIGHBORHOOD));
+  message_ids.insert(std::make_pair(
+      "village_township", IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP));
+  return message_ids;
+}
+
+const NameMessageIdMap& GetSublocalityMessageIds() {
+  static const NameMessageIdMap kSublocalityMessageIds(
+      InitSublocalityMessageIds());
+  return kSublocalityMessageIds;
+}
+
 int GetMessageIdFromName(const std::string& name,
                          const NameMessageIdMap& message_ids) {
   NameMessageIdMap::const_iterator it = message_ids.find(name);
@@ -118,6 +154,8 @@ Rule::Rule()
       sole_postal_code_(),
       admin_area_name_message_id_(INVALID_MESSAGE_ID),
       postal_code_name_message_id_(INVALID_MESSAGE_ID),
+      locality_name_message_id_(INVALID_MESSAGE_ID),
+      sublocality_name_message_id_(INVALID_MESSAGE_ID),
       name_(),
       latin_name_(),
       postal_code_example_(),
@@ -153,6 +191,8 @@ void Rule::CopyFrom(const Rule& rule) {
   sole_postal_code_ = rule.sole_postal_code_;
   admin_area_name_message_id_ = rule.admin_area_name_message_id_;
   postal_code_name_message_id_ = rule.postal_code_name_message_id_;
+  locality_name_message_id_ = rule.locality_name_message_id_;
+  sublocality_name_message_id_ = rule.sublocality_name_message_id_;
   name_ = rule.name_;
   latin_name_ = rule.latin_name_;
   postal_code_example_ = rule.postal_code_example_;
@@ -231,6 +271,16 @@ void Rule::ParseJsonRule(const Json& json) {
   if (json.GetStringValueForKey("zip_name_type", &value)) {
     postal_code_name_message_id_ =
         GetMessageIdFromName(value, GetPostalCodeMessageIds());
+  }
+
+  if (json.GetStringValueForKey("locality_name_type", &value)) {
+    locality_name_message_id_ =
+        GetMessageIdFromName(value, GetLocalityMessageIds());
+  }
+
+  if (json.GetStringValueForKey("sublocality_name_type", &value)) {
+    sublocality_name_message_id_ =
+        GetMessageIdFromName(value, GetSublocalityMessageIds());
   }
 
   if (json.GetStringValueForKey("name", &value)) {

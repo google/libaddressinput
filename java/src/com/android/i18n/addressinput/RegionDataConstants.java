@@ -35,7 +35,7 @@ class RegionDataConstants {
     private enum RegionDataEnum {
 
         AC(new String[]{
-            "name", "ASCENSION ISLAND",
+                "name", "ASCENSION ISLAND",
         }),
         AD(new String[]{
                 "name", "ANDORRA",
@@ -260,12 +260,13 @@ class RegionDataConstants {
         }),
         CN(new String[]{
                 "name", "P.R. CHINA",
-                "lang", "zh-hans",
-                "languages", "zh-hans",
+                "lang", "zh-Hans",
+                "languages", "zh-Hans",
                 "fmt", "%Z%n%S%C%D%n%A%n%O%n%N",
                 "lfmt", "%N%n%O%n%A%n%D%n%C%n%S, %Z",
                 "require", "ACSZ",
                 "upper", "S",
+                "sublocality_name_type", "district",
         }),
         CO(new String[]{
                 "name", "COLOMBIA",
@@ -334,11 +335,14 @@ class RegionDataConstants {
         }),
         EG(new String[]{
                 "name", "EGYPT",
+                "lang", "ar",
+                "languages", "ar",
                 "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
                 "lfmt", "%N%n%O%n%A%n%C%n%S%n%Z",
         }),
         EH(new String[]{
                 "name", "WESTERN SAHARA",
+                "fmt", "%N%n%O%n%A%n%Z %C",
         }),
         ER(new String[]{
                 "name", "ERITREA",
@@ -398,6 +402,7 @@ class RegionDataConstants {
                 "require", "ACZ",
                 "upper", "CZ",
                 "state_name_type", "county",
+                "locality_name_type", "post_town",
         }),
         GD(new String[]{
                 "name", "GRENADA (WEST INDIES)",
@@ -479,8 +484,8 @@ class RegionDataConstants {
         }),
         HK(new String[]{
                 "name", "HONG KONG",
-                "lang", "zh",
-                "languages", "zh",
+                "lang", "zh-Hant",
+                "languages", "zh-Hant~en",
                 "fmt", "%S%n%A%n%O%n%N",
                 "lfmt", "%N%n%O%n%A%n%S",
                 "require", "AS",
@@ -514,7 +519,9 @@ class RegionDataConstants {
         }),
         ID(new String[]{
                 "name", "INDONESIA",
-                "fmt", "%N%n%O%n%A%n%C %Z%n%S",
+                "lang", "id",
+                "languages", "id",
+                "fmt", "%N%n%O%n%A%n%C%n%S %Z",
         }),
         IE(new String[]{
                 "name", "IRELAND",
@@ -627,11 +634,12 @@ class RegionDataConstants {
                 "name", "KOREA (REP.)",
                 "lang", "ko",
                 "languages", "ko",
-                "fmt", "%S %C%D%n%A%n%O%n%N%nSEOUL %Z",
-                "lfmt", "%N%n%O%n%A%n%D%n%C%n%S%nSEOUL %Z",
+                "fmt", "%S %C%D%n%A%n%O%n%N%n%Z",
+                "lfmt", "%N%n%O%n%A%n%D%n%C%n%S%n%Z",
                 "require", "ACSZ",
                 "upper", "Z",
                 "state_name_type", "do_si",
+                "sublocality_name_type", "district",
         }),
         KW(new String[]{
                 "name", "KUWAIT",
@@ -745,8 +753,6 @@ class RegionDataConstants {
         }),
         MO(new String[]{
                 "name", "MACAO",
-                "lang", "zh-hant",
-                "languages", "zh-hant",
                 "fmt", "%A%n%O%n%N",
                 "lfmt", "%N%n%O%n%A",
                 "require", "A",
@@ -794,19 +800,21 @@ class RegionDataConstants {
                 "name", "MEXICO",
                 "lang", "es",
                 "languages", "es",
-                "fmt", "%N%n%O%n%A%n%Z %C, %S",
+                "fmt", "%N%n%O%n%A%n%D%n%Z %C, %S",
                 "require", "ACZ",
                 "upper", "CSZ",
                 "state_name_type", "state",
+                "sublocality_name_type", "neighborhood",
         }),
         MY(new String[]{
                 "name", "MALAYSIA",
                 "lang", "ms",
                 "languages", "ms",
-                "fmt", "%N%n%O%n%A%n%Z %C, %S",
+                "fmt", "%N%n%O%n%A%n%D%n%Z %C%n%S",
                 "require", "ACZ",
                 "upper", "CS",
                 "state_name_type", "state",
+                "sublocality_name_type", "village_township",
         }),
         MZ(new String[]{
                 "name", "MOZAMBIQUE",
@@ -832,8 +840,8 @@ class RegionDataConstants {
         }),
         NG(new String[]{
                 "name", "NIGERIA",
-                "lang", "fr",
-                "languages", "fr",
+                "lang", "en",
+                "languages", "en",
                 "fmt", "%N%n%O%n%A%n%C %Z%n%S",
                 "upper", "CS",
                 "state_name_type", "state",
@@ -873,7 +881,7 @@ class RegionDataConstants {
         }),
         NZ(new String[]{
                 "name", "NEW ZEALAND",
-                "fmt", "%N%n%O%n%A%n%C %Z",
+                "fmt", "%N%n%O%n%A%n%D%n%C %Z",
                 "require", "ACZ",
         }),
         OM(new String[]{
@@ -902,7 +910,9 @@ class RegionDataConstants {
         }),
         PH(new String[]{
                 "name", "PHILIPPINES",
-                "fmt", "%N%n%O%n%A%n%Z %C%n%S",
+                "lang", "en",
+                "languages", "en",
+                "fmt", "%N%n%O%n%A%n%D, %C%n%Z %S",
                 "require", "AC",
         }),
         PK(new String[]{
@@ -1121,6 +1131,8 @@ class RegionDataConstants {
         }),
         TR(new String[]{
                 "name", "TURKEY",
+                "lang", "tr",
+                "languages", "tr",
                 "fmt", "%N%n%O%n%A%n%Z %C/%S",
                 "require", "ACZ",
                 "locality_name_type", "district",
@@ -1138,8 +1150,8 @@ class RegionDataConstants {
         }),
         TW(new String[]{
                 "name", "TAIWAN",
-                "lang", "zh-hant",
-                "languages", "zh-hant",
+                "lang", "zh-Hant",
+                "languages", "zh-Hant",
                 "fmt", "%Z%n%S%C%n%A%n%O%n%N",
                 "lfmt", "%N%n%O%n%A%n%C, %S %Z",
                 "require", "ACSZ",
@@ -1150,7 +1162,9 @@ class RegionDataConstants {
         }),
         UA(new String[]{
                 "name", "UKRAINE",
-                "fmt", "%Z %C%n%A%n%O%n%N",
+                "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
+                "require", "ACZ",
+                "state_name_type", "oblast",
         }),
         UG(new String[]{
                 "name", "UGANDA",
@@ -1234,7 +1248,7 @@ class RegionDataConstants {
         }),
         XK(new String[]{
                 "name", "KOSOVO",
-                "fmt", "%N%n%O%n%A%n%Z %C"
+                "fmt", "%N%n%O%n%A%n%Z %C",
         }),
         YE(new String[]{
                 "name", "YEMEN",
@@ -1246,13 +1260,9 @@ class RegionDataConstants {
                 "require", "ACZ",
                 "upper", "ACX",
         }),
-        YU(new String[]{
-                "name", "SERBIA AND MONTENEGRO",
-                "fmt", "%N%n%O%n%A%n%Z %C",
-        }),
         ZA(new String[]{
                 "name", "SOUTH AFRICA",
-                "fmt", "%N%n%O%n%A%n%C%n%Z",
+                "fmt", "%N%n%O%n%A%n%D%n%C%n%Z",
                 "require", "ACZ",
         }),
         ZM(new String[]{
@@ -1270,6 +1280,7 @@ class RegionDataConstants {
                 "zip_name_type", "postal",
                 "state_name_type", "province",
                 "locality_name_type", "city",
+                "sublocality_name_type", "suburb",
         });
 
         private String jsonString;
