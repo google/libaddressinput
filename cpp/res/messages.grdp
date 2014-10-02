@@ -29,6 +29,25 @@ limitations under the License.
     City
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_POST_TOWN"
+      desc="The name of a town through
+            which postal deliveries are routed, present in UK addresses.
+            See: http://en.wikipedia.org/wiki/Post_town">
+    Post Town
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_SUBURB"
+      desc="Smaller part of a city used in some addresses in countries like New
+            Zealand to give a more specific location in a postal address.">
+    Suburb
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP"
+      desc="A unit used in postal addresses in Malaysia, which is smaller than the
+            city/town, and represents a village, township, or precinct.">
+    Village / Township
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_ADDRESS_LINE_1_LABEL"
       desc="E.g., 18th Street, Unit 3.">
     Street address
@@ -123,6 +142,11 @@ limitations under the License.
       name="IDS_LIBADDRESSINPUT_RECIPIENT_LABEL"
       desc="Label for the field for a person's name in an address.">
     Name
+  </message>
+  <message
+      name="IDS_LIBADDRESSINPUT_NEIGHBORHOOD"
+      desc="Label for a neighborhood, shown as part of an address input form.">
+    Neighborhood
   </message>
   <message
       name="IDS_LIBADDRESSINPUT_MISSING_REQUIRED_FIELD"

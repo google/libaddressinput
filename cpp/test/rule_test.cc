@@ -46,21 +46,24 @@ using i18n::addressinput::STREET_ADDRESS;
 
 TEST(RuleTest, CopyOverwritesRule) {
   Rule rule;
-  ASSERT_TRUE(rule.ParseSerializedRule("{"
-                                       "\"fmt\":\"%S%Z\","
-                                       "\"lfmt\":\"%Z%S\","
-                                       "\"id\":\"data/XA\","
-                                       "\"name\":\"Le Test\","
-                                       "\"lname\":\"Testistan\","
-                                       "\"require\":\"AC\","
-                                       "\"sub_keys\":\"aa~bb~cc\","
-                                       "\"languages\":\"en~fr\","
-                                       "\"zip\":\"\\\\d{3}\","
-                                       "\"state_name_type\":\"area\","
-                                       "\"zip_name_type\":\"postal\","
-                                       "\"zipex\":\"1234\","
-                                       "\"posturl\":\"http://www.testpost.com\""
-                                       "}"));
+  ASSERT_TRUE(rule.ParseSerializedRule(
+      "{"
+      "\"fmt\":\"%S%Z\","
+      "\"lfmt\":\"%Z%S\","
+      "\"id\":\"data/XA\","
+      "\"name\":\"Le Test\","
+      "\"lname\":\"Testistan\","
+      "\"require\":\"AC\","
+      "\"sub_keys\":\"aa~bb~cc\","
+      "\"languages\":\"en~fr\","
+      "\"zip\":\"\\\\d{3}\","
+      "\"state_name_type\":\"area\","
+      "\"locality_name_type\":\"post_town\","
+      "\"sublocality_name_type\":\"neighborhood\","
+      "\"zip_name_type\":\"postal\","
+      "\"zipex\":\"1234\","
+      "\"posturl\":\"http://www.testpost.com\""
+      "}"));
 
   Rule copy;
   EXPECT_NE(rule.GetFormat(), copy.GetFormat());
@@ -73,6 +76,10 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetAdminAreaNameMessageId());
   EXPECT_NE(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
+  EXPECT_NE(rule.GetLocalityNameMessageId(),
+            copy.GetLocalityNameMessageId());
+  EXPECT_NE(rule.GetSublocalityNameMessageId(),
+            copy.GetSublocalityNameMessageId());
   EXPECT_NE(rule.GetName(), copy.GetName());
   EXPECT_NE(rule.GetLatinName(), copy.GetLatinName());
   EXPECT_NE(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
@@ -92,6 +99,10 @@ TEST(RuleTest, CopyOverwritesRule) {
             copy.GetAdminAreaNameMessageId());
   EXPECT_EQ(rule.GetPostalCodeNameMessageId(),
             copy.GetPostalCodeNameMessageId());
+  EXPECT_EQ(rule.GetSublocalityNameMessageId(),
+            copy.GetSublocalityNameMessageId());
+  EXPECT_EQ(rule.GetLocalityNameMessageId(),
+            copy.GetLocalityNameMessageId());
   EXPECT_EQ(rule.GetName(), copy.GetName());
   EXPECT_EQ(rule.GetLatinName(), copy.GetLatinName());
   EXPECT_EQ(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
@@ -264,6 +275,64 @@ INSTANTIATE_TEST_CASE_P(
         std::make_pair("{\"zip_name_type\":\"zip\"}",
                        IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL)));
 
+// Tests for parsing the locality name.
+class LocalityNameParseTest
+    : public testing::TestWithParam<std::pair<std::string, int> > {
+ protected:
+  LocalityNameParseTest() {}
+  Rule rule_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LocalityNameParseTest);
+};
+
+// Verifies that a locality name is parsed correctly.
+TEST_P(LocalityNameParseTest, ParsedCorrectly) {
+  ASSERT_TRUE(rule_.ParseSerializedRule(GetParam().first));
+  EXPECT_EQ(GetParam().second, rule_.GetLocalityNameMessageId());
+}
+
+// Test parsing all locality names.
+INSTANTIATE_TEST_CASE_P(
+    AllLocalityNames, LocalityNameParseTest,
+    testing::Values(
+        std::make_pair("{\"locality_name_type\":\"post_town\"}",
+                       IDS_LIBADDRESSINPUT_POST_TOWN),
+        std::make_pair("{\"locality_name_type\":\"city\"}",
+                       IDS_LIBADDRESSINPUT_LOCALITY_LABEL),
+        std::make_pair("{\"locality_name_type\":\"district\"}",
+                       IDS_LIBADDRESSINPUT_DISTRICT)));
+
+// Tests for parsing the locality name.
+class SublocalityNameParseTest
+    : public testing::TestWithParam<std::pair<std::string, int> > {
+ protected:
+  SublocalityNameParseTest() {}
+  Rule rule_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(SublocalityNameParseTest);
+};
+
+// Verifies that a sublocality name is parsed correctly.
+TEST_P(SublocalityNameParseTest, ParsedCorrectly) {
+  ASSERT_TRUE(rule_.ParseSerializedRule(GetParam().first));
+  EXPECT_EQ(GetParam().second, rule_.GetSublocalityNameMessageId());
+}
+
+// Test parsing all sublocality names.
+INSTANTIATE_TEST_CASE_P(
+    AllSublocalityNames, SublocalityNameParseTest,
+    testing::Values(
+        std::make_pair("{\"sublocality_name_type\":\"village_township\"}",
+                       IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP),
+        std::make_pair("{\"sublocality_name_type\":\"neighborhood\"}",
+                       IDS_LIBADDRESSINPUT_NEIGHBORHOOD),
+        std::make_pair("{\"sublocality_name_type\":\"suburb\"}",
+                       IDS_LIBADDRESSINPUT_SUBURB),
+        std::make_pair("{\"sublocality_name_type\":\"district\"}",
+                       IDS_LIBADDRESSINPUT_DISTRICT)));
+
 // Tests for parsing the administrative area name.
 class AdminAreaNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
@@ -352,6 +421,30 @@ TEST_P(RuleParseTest, PostalCodeNameTypeHasUiString) {
     EXPECT_NE(INVALID_MESSAGE_ID, rule_.GetPostalCodeNameMessageId());
     EXPECT_FALSE(
         localization_.GetString(rule_.GetPostalCodeNameMessageId()).empty());
+  }
+}
+
+// Verifies that the locality name type corresponds to a UI string.
+TEST_P(RuleParseTest, LocalityNameTypeHasUiString) {
+  const std::string& region_data = GetRegionData();
+  rule_.ParseSerializedRule(region_data);
+  // The leading quote here ensures we don't match against sublocality_name_type
+  // in the data.
+  if (region_data.find("\"locality_name_type") != std::string::npos) {
+    EXPECT_NE(INVALID_MESSAGE_ID, rule_.GetLocalityNameMessageId());
+    EXPECT_FALSE(
+        localization_.GetString(rule_.GetLocalityNameMessageId()).empty());
+  }
+}
+
+// Verifies that the sublocality name type corresponds to a UI string.
+TEST_P(RuleParseTest, SublocalityNameTypeHasUiString) {
+  const std::string& region_data = GetRegionData();
+  rule_.ParseSerializedRule(region_data);
+  if (region_data.find("sublocality_name_type") != std::string::npos) {
+    EXPECT_NE(INVALID_MESSAGE_ID, rule_.GetSublocalityNameMessageId());
+    EXPECT_FALSE(
+        localization_.GetString(rule_.GetSublocalityNameMessageId()).empty());
   }
 }
 

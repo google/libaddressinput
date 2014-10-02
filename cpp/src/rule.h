@@ -110,6 +110,18 @@ class Rule {
     return postal_code_name_message_id_;
   }
 
+  // The message string identifier for locality name. If not set, then
+  // INVALID_MESSAGE_ID.
+  int GetLocalityNameMessageId() const {
+    return locality_name_message_id_;
+  }
+
+  // The message string identifier for sublocality name. If not set, then
+  // INVALID_MESSAGE_ID.
+  int GetSublocalityNameMessageId() const {
+    return sublocality_name_message_id_;
+  }
+
   // Returns the name for the most specific place described by this rule, if
   // there is one. This is typically set when it differs from the key.
   const std::string& GetName() const { return name_; }
@@ -137,6 +149,8 @@ class Rule {
   std::string sole_postal_code_;
   int admin_area_name_message_id_;
   int postal_code_name_message_id_;
+  int locality_name_message_id_;
+  int sublocality_name_message_id_;
   std::string name_;
   std::string latin_name_;
   std::string postal_code_example_;

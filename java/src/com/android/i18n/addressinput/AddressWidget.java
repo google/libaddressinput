@@ -75,22 +75,27 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private String mCurrentRegion;
 
-    // The current language the widget use in BCP47 format. It differs from the default locale of
+    // The current language the widget uses in BCP47 format. It differs from the default locale of
     // the phone in that it contains information on the script to use.
     private String mWidgetLocale;
 
     private ScriptType mScript;
 
-    // The appropriate label that should be applied to the locality (city) field of the current
-    // country.  Examples include "city" or "district".
-    private String mLocalityLabel;
-
     // The appropriate label that should be applied to the admin area field of the current country.
     // Examples include "state", "province", "emirate", etc.
     private String mAdminLabel;
 
+    // The appropriate label that should be applied to the locality (city) field of the current
+    // country.  Examples include "city" or "district".
+    private String mLocalityLabel;
+
+    // The appropriate label that should be applied to the sublocality field of the current country.
+    // Examples include "suburb" or "neighborhood".
+    private String mSublocalityLabel;
+
     private static final Map<String, Integer> ADMIN_LABELS;
     private static final Map<String, Integer> LOCALITY_LABELS;
+    private static final Map<String, Integer> SUBLOCALITY_LABELS;
     private static final Map<String, Integer> ADMIN_ERROR_MESSAGES;
 
     private static final FormOptions SHOW_ALL_FIELDS = new FormOptions.Builder().build();
@@ -122,7 +127,15 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         Map<String, Integer> localityLabelMap = new HashMap<String, Integer>(2);
         localityLabelMap.put("city", R.string.i18n_locality_label);
         localityLabelMap.put("district", R.string.i18n_dependent_locality_label);
+        localityLabelMap.put("post_town", R.string.i18n_post_town);
         LOCALITY_LABELS = Collections.unmodifiableMap(localityLabelMap);
+
+        Map<String, Integer> sublocalityLabelMap = new HashMap<String, Integer>(2);
+        sublocalityLabelMap.put("suburb", R.string.i18n_suburb);
+        sublocalityLabelMap.put("district", R.string.i18n_dependent_locality_label);
+        sublocalityLabelMap.put("neighborhood", R.string.i18n_neighborhood);
+        sublocalityLabelMap.put("village_township", R.string.i18n_village_township);
+        SUBLOCALITY_LABELS = Collections.unmodifiableMap(sublocalityLabelMap);
 
         Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
         adminErrorMap.put("area", R.string.invalid_area);
@@ -283,7 +296,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
         // Set up AddressField.DEPENDENT_LOCALITY
         AddressUiComponent subLocalityUi = new AddressUiComponent(AddressField.DEPENDENT_LOCALITY);
-        subLocalityUi.setFieldName(mContext.getString(R.string.i18n_dependent_locality_label));
+        subLocalityUi.setFieldName(getSublocalityFieldName(countryNode));
         mInputWidgets.put(AddressField.DEPENDENT_LOCALITY, subLocalityUi);
 
         // Set up AddressField.ADDRESS_LINE_1
@@ -349,6 +362,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         if (result == null) {
             // Fallback to city.
             result = R.string.i18n_locality_label;
+        }
+        return mContext.getString(result);
+    }
+
+    private String getSublocalityFieldName(AddressVerificationNodeData countryNode) {
+        String sublocalityLabelType = countryNode.get(AddressDataKey.SUBLOCALITY_NAME_TYPE);
+        mSublocalityLabel = sublocalityLabelType;
+        Integer result = SUBLOCALITY_LABELS.get(sublocalityLabelType);
+        if (result == null) {
+            // Fallback to suburb.
+            result = R.string.i18n_suburb;
         }
         return mContext.getString(result);
     }
