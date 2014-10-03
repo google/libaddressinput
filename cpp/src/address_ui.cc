@@ -39,7 +39,9 @@ namespace {
 std::string GetLabelForField(const Localization& localization,
                              AddressField field,
                              int admin_area_name_message_id,
-                             int postal_code_name_message_id) {
+                             int postal_code_name_message_id,
+                             int locality_name_message_id,
+                             int sublocality_name_message_id) {
   int messageId;
   switch (field) {
     case SORTING_CODE:
@@ -52,10 +54,10 @@ std::string GetLabelForField(const Localization& localization,
       messageId = admin_area_name_message_id;
       break;
     case LOCALITY:
-      messageId = IDS_LIBADDRESSINPUT_LOCALITY_LABEL;
+      messageId = locality_name_message_id;
       break;
     case DEPENDENT_LOCALITY:
-      messageId = IDS_LIBADDRESSINPUT_DISTRICT;
+      messageId = sublocality_name_message_id;
       break;
     case POSTAL_CODE:
       messageId = postal_code_name_message_id;
@@ -132,7 +134,9 @@ std::vector<AddressUiComponent> BuildComponents(
     component.name = GetLabelForField(localization,
                                       format_it->GetField(),
                                       rule.GetAdminAreaNameMessageId(),
-                                      rule.GetPostalCodeNameMessageId());
+                                      rule.GetPostalCodeNameMessageId(),
+                                      rule.GetLocalityNameMessageId(),
+                                      rule.GetSublocalityNameMessageId());
     result.push_back(component);
   }
 

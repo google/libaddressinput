@@ -77,6 +77,10 @@ enum AddressDataKey {
      */
     SUB_LNAMES,
     /**
+     * Indicates the type of the name used for the sublocality field.
+     */
+    SUBLOCALITY_NAME_TYPE,
+    /**
      * Indicates, for each child of this region, whether that child has additional children.
      */
     SUB_MORES,
