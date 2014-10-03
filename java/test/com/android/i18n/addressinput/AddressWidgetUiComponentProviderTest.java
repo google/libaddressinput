@@ -34,7 +34,7 @@ import junit.framework.Assert;
 /**
  * Test class for {@link AddressWidgetUiComponentProvider}.
  */
-public class AddressWidgetUiComponentProviderTest 
+public class AddressWidgetUiComponentProviderTest
         extends ActivityInstrumentationTestCase2<TestActivity> {
     private AddressWidget widget;
     private AddressWidgetUiComponentProvider componentProvider;
@@ -43,11 +43,11 @@ public class AddressWidgetUiComponentProviderTest
     private Context context;
     private int customTextViewCounter;
     private int customProgressDialogCounter;
-    
+
     public AddressWidgetUiComponentProviderTest() {
       super(TestActivity.class);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -60,7 +60,7 @@ public class AddressWidgetUiComponentProviderTest
         context = getActivity();
         container = new LinearLayout(context);
     }
-    
+
     public void testCustomWidgets() {
         customTextViewCounter = 0;
         customProgressDialogCounter = 0;
@@ -68,12 +68,12 @@ public class AddressWidgetUiComponentProviderTest
         widget = new AddressWidget(context, container, new FormOptions.Builder().build(),
             new SimpleClientCacheManager(), componentProvider);
         widget.renderFormWithSavedAddress(address);
-        
+
         for (AddressField field : AddressField.values()) {
             if (field.equals(AddressField.COUNTRY)) {
               continue;
             }
-            
+
             View view = widget.getViewForField(field);
             if (view instanceof EditText) {
                 assertTrue("Field " + field + " does not use customized edit text widget.",
@@ -85,19 +85,19 @@ public class AddressWidgetUiComponentProviderTest
                         ((Spinner) view).getAdapter() instanceof CustomArrayAdapter);
             }
         }
-        
+
         assertTrue("Custom TextView label not used.", customTextViewCounter > 0);
         assertTrue("Custom ProgressDialog not used.", customProgressDialogCounter > 0);
     }
-    
+
     private void increaseTextViewCounter() {
         customTextViewCounter++;
     }
-    
+
     private void increaseProgressDialogCounter() {
         customProgressDialogCounter++;
     }
-    
+
     private class CustomEditText extends EditText {
         CustomEditText(Context context) {
           super(context);
@@ -109,33 +109,33 @@ public class AddressWidgetUiComponentProviderTest
             super(context);
         }
     }
-    
+
     private class CustomArrayAdapter<String> extends ArrayAdapter {
         CustomArrayAdapter(Context context, int id) {
             super(context, id);
         }
     }
-    
+
     private class TestComponentProvider extends AddressWidgetUiComponentProvider {
         TestComponentProvider(Context context) {
             super(context);
         }
-      
+
         protected TextView createUiLabel(CharSequence label, AddressField.WidthType widthType) {
             TextView result = new TextView(mContext);
             result.setText(label);
             AddressWidgetUiComponentProviderTest.this.increaseTextViewCounter();
             return result;
         }
-  
+
         protected EditText createUiTextField(AddressField.WidthType widthType) {
             return new CustomEditText(mContext);
         }
-  
+
         protected Spinner createUiPickerSpinner(AddressField.WidthType widthType) {
             return new CustomSpinner(mContext);
         }
-  
+
         protected ArrayAdapter<String> createUiPickerAdapter(AddressField.WidthType widthType) {
             ArrayAdapter<String> result =
                     new CustomArrayAdapter<String>(
@@ -143,11 +143,11 @@ public class AddressWidgetUiComponentProviderTest
             result.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             return result;
         }
-        
+
         protected ProgressDialog getUiActivityIndicatorView() {
             AddressWidgetUiComponentProviderTest.this.increaseProgressDialogCounter();
             return super.getUiActivityIndicatorView();
         }
     }
 }
- 
+
