@@ -296,7 +296,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
         // Set up AddressField.DEPENDENT_LOCALITY
         AddressUiComponent subLocalityUi = new AddressUiComponent(AddressField.DEPENDENT_LOCALITY);
-        subLocalityUi.setFieldName(mContext.getString(R.string.i18n_dependent_locality_label));
+        subLocalityUi.setFieldName(getSublocalityFieldName(countryNode));
         mInputWidgets.put(AddressField.DEPENDENT_LOCALITY, subLocalityUi);
 
         // Set up AddressField.ADDRESS_LINE_1
