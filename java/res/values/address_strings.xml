@@ -52,7 +52,7 @@
     <string name="i18n_dependent_locality_label">District</string>
 
     <!-- Administrative Area for Nauru Central Pacific (e.g., Aiwo district), or
-         area of a town (a neighbourhood/suburb) used for addresses in Korea and
+         area of a town (a neighborhood/suburb) used for addresses in Korea and
          China. [CHAR LIMIT=30] -->
     <string name="i18n_district">District</string>
 
