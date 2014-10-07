@@ -96,7 +96,6 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     private static final Map<String, Integer> ADMIN_LABELS;
     private static final Map<String, Integer> LOCALITY_LABELS;
     private static final Map<String, Integer> SUBLOCALITY_LABELS;
-    private static final Map<String, Integer> ADMIN_ERROR_MESSAGES;
 
     private static final FormOptions SHOW_ALL_FIELDS = new FormOptions.Builder().build();
 
@@ -111,9 +110,9 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     static {
         Map<String, Integer> adminLabelMap = new HashMap<String, Integer>(15);
         adminLabelMap.put("area", R.string.i18n_area);
-        adminLabelMap.put("county", R.string.i18n_county_label);
+        adminLabelMap.put("county", R.string.i18n_county);
         adminLabelMap.put("department", R.string.i18n_department);
-        adminLabelMap.put("district", R.string.i18n_dependent_locality_label);
+        adminLabelMap.put("district", R.string.i18n_district);
         adminLabelMap.put("do_si", R.string.i18n_do_si);
         adminLabelMap.put("emirate", R.string.i18n_emirate);
         adminLabelMap.put("island", R.string.i18n_island);
@@ -121,36 +120,21 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         adminLabelMap.put("parish", R.string.i18n_parish);
         adminLabelMap.put("prefecture", R.string.i18n_prefecture);
         adminLabelMap.put("province", R.string.i18n_province);
-        adminLabelMap.put("state", R.string.i18n_state_label);
+        adminLabelMap.put("state", R.string.i18n_state);
         ADMIN_LABELS = Collections.unmodifiableMap(adminLabelMap);
 
         Map<String, Integer> localityLabelMap = new HashMap<String, Integer>(2);
         localityLabelMap.put("city", R.string.i18n_locality_label);
-        localityLabelMap.put("district", R.string.i18n_dependent_locality_label);
+        localityLabelMap.put("district", R.string.i18n_district);
         localityLabelMap.put("post_town", R.string.i18n_post_town);
         LOCALITY_LABELS = Collections.unmodifiableMap(localityLabelMap);
 
         Map<String, Integer> sublocalityLabelMap = new HashMap<String, Integer>(2);
         sublocalityLabelMap.put("suburb", R.string.i18n_suburb);
-        sublocalityLabelMap.put("district", R.string.i18n_dependent_locality_label);
+        sublocalityLabelMap.put("district", R.string.i18n_district);
         sublocalityLabelMap.put("neighborhood", R.string.i18n_neighborhood);
         sublocalityLabelMap.put("village_township", R.string.i18n_village_township);
         SUBLOCALITY_LABELS = Collections.unmodifiableMap(sublocalityLabelMap);
-
-        Map<String, Integer> adminErrorMap = new HashMap<String, Integer>(15);
-        adminErrorMap.put("area", R.string.invalid_area);
-        adminErrorMap.put("county", R.string.invalid_county_label);
-        adminErrorMap.put("department", R.string.invalid_department);
-        adminErrorMap.put("district", R.string.invalid_dependent_locality_label);
-        adminErrorMap.put("do_si", R.string.invalid_do_si);
-        adminErrorMap.put("emirate", R.string.invalid_emirate);
-        adminErrorMap.put("island", R.string.invalid_island);
-        adminErrorMap.put("oblast", R.string.invalid_oblast);
-        adminErrorMap.put("parish", R.string.invalid_parish);
-        adminErrorMap.put("prefecture", R.string.invalid_prefecture);
-        adminErrorMap.put("province", R.string.invalid_province);
-        adminErrorMap.put("state", R.string.invalid_state_label);
-        ADMIN_ERROR_MESSAGES = Collections.unmodifiableMap(adminErrorMap);
     }
 
     // Need handler for callbacks to the UI thread
@@ -340,7 +324,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         localityUi.initializeCandidatesList(localityList);
     }
 
-    // Zip code is called postal code in some countries. This method returns the appropriate name
+    // ZIP code is called postal code in some countries. This method returns the appropriate name
     // for the given countryNode.
     private String getZipFieldName(AddressVerificationNodeData countryNode) {
         String zipName;
@@ -391,7 +375,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     private void buildCountryListBox() {
         // Set up AddressField.COUNTRY
         AddressUiComponent countryUi = new AddressUiComponent(AddressField.COUNTRY);
-        countryUi.setFieldName(mContext.getString(R.string.i18n_country_label));
+        countryUi.setFieldName(mContext.getString(R.string.i18n_country_or_region_label));
         ArrayList<RegionData> countries = new ArrayList<RegionData>();
         for (RegionData regionData : mFormController.getRegionData(new LookupKey.Builder(
                 KeyType.DATA).build())) {
@@ -732,37 +716,42 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
 
     /**
-     * Displays an appropriate error message when the AddressField contains an invalid entry.
+     * Displays an appropriate error message for an AddressField with a problem.
      *
      * @return the View object representing the AddressField.
      */
-    public View displayErrorMessageForInvalidEntryIn(AddressField field) {
+    public View displayErrorMessageForField(AddressData address,
+            AddressField field, AddressProblemType problem) {
         Log.d(this.toString(), "Display error message for the field: " + field.toString());
         AddressUiComponent addressUiComponent = mInputWidgets.get(field);
         if (addressUiComponent != null && addressUiComponent.getUiType() == UiComponent.EDIT) {
-            int errorMessageId = getErrorMessageIdForInvalidEntryIn(field);
             EditText view = (EditText) addressUiComponent.getView();
-            view.setError(mContext.getString(errorMessageId));
+            view.setError(getErrorMessageForInvalidEntry(address, field, problem));
             return view;
         }
         return null;
     }
 
-    private int getErrorMessageIdForInvalidEntryIn(AddressField field) {
-        switch (field) {
-            case ADMIN_AREA:
-                return ADMIN_ERROR_MESSAGES.get(mAdminLabel);
-            case LOCALITY:
-                return R.string.invalid_locality_label;
-            case DEPENDENT_LOCALITY:
-                return R.string.invalid_dependent_locality_label;
-            case POSTAL_CODE:
+    private String getErrorMessageForInvalidEntry(AddressData address, AddressField field,
+            AddressProblemType problem) {
+        switch (problem) {
+            case MISSING_REQUIRED_FIELD:
+                return mContext.getString(R.string.i18n_missing_required_field);
+            case UNKNOWN_VALUE:
+                String currentValue = address.getFieldValue(field);
+                return String.format(mContext.getString(R.string.unknown_entry), currentValue);
+            case UNRECOGNIZED_FORMAT:
+                // We only support this error type for the Postal Code field.
                 return (mZipLabel == ZipLabel.POSTAL
-                        ? R.string.invalid_postal_code_label
-                        : R.string.invalid_zip_code_label);
-            default:
-                return R.string.invalid_entry;
+                    ? mContext.getString(R.string.unrecognized_format_postal_code)
+                    : mContext.getString(R.string.unrecognized_format_zip_code));
+            case MISMATCHING_VALUE:
+                // We only support this error type for the Postal Code field.
+                return (mZipLabel == ZipLabel.POSTAL
+                    ? mContext.getString(R.string.mismatching_value_postal_code)
+                    : mContext.getString(R.string.mismatching_value_zip_code));
         }
+        return "";
     }
 
     /**
