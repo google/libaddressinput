@@ -81,20 +81,14 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private ScriptType mScript;
 
-    // The appropriate label that should be applied to the admin area field of the current country.
+    // Possible labels that could be applied to the admin area field of the current country.
     // Examples include "state", "province", "emirate", etc.
-    private String mAdminLabel;
-
-    // The appropriate label that should be applied to the locality (city) field of the current
-    // country.  Examples include "city" or "district".
-    private String mLocalityLabel;
-
-    // The appropriate label that should be applied to the sublocality field of the current country.
-    // Examples include "suburb" or "neighborhood".
-    private String mSublocalityLabel;
-
     private static final Map<String, Integer> ADMIN_LABELS;
+    // Possible labels that could be applied to the locality (city) field of the current country.
+    // Examples include "city" or "district".
     private static final Map<String, Integer> LOCALITY_LABELS;
+    // Possible labels that could be applied to the sublocality field of the current country.
+    // Examples include "suburb" or "neighborhood".
     private static final Map<String, Integer> SUBLOCALITY_LABELS;
 
     private static final FormOptions SHOW_ALL_FIELDS = new FormOptions.Builder().build();
@@ -341,7 +335,6 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private String getLocalityFieldName(AddressVerificationNodeData countryNode) {
         String localityLabelType = countryNode.get(AddressDataKey.LOCALITY_NAME_TYPE);
-        mLocalityLabel = localityLabelType;
         Integer result = LOCALITY_LABELS.get(localityLabelType);
         if (result == null) {
             // Fallback to city.
@@ -352,7 +345,6 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private String getSublocalityFieldName(AddressVerificationNodeData countryNode) {
         String sublocalityLabelType = countryNode.get(AddressDataKey.SUBLOCALITY_NAME_TYPE);
-        mSublocalityLabel = sublocalityLabelType;
         Integer result = SUBLOCALITY_LABELS.get(sublocalityLabelType);
         if (result == null) {
             // Fallback to suburb.
@@ -363,7 +355,6 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     private String getAdminAreaFieldName(AddressVerificationNodeData countryNode) {
         String adminLabelType = countryNode.get(AddressDataKey.STATE_NAME_TYPE);
-        mAdminLabel = adminLabelType;
         Integer result = ADMIN_LABELS.get(adminLabelType);
         if (result == null) {
             // Fallback to province.
