@@ -121,7 +121,7 @@
 
     <!-- Error message shown with a UI field when it is a required field and the user has not filled
          it out. [CHAR LIMIT=30] -->
-    <string name="i18n_missing_required_field">You can\'t leave this empty.</string>
+    <string name="i18n_missing_required_field">You can\u0027t leave this empty.</string>
 
     <!-- Occurs when the user fills out the wrong value for an address field. For example, this
          would be shown when putting 'Cupertino' in United States' State field. [CHAR LIMIT=60] -->
