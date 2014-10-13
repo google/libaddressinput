@@ -69,9 +69,6 @@ class RegionDataConstants {
                 "fmt", "%N%n%O%n%A%n%Z%n%C%n%S",
                 "lfmt", "%N%n%O%n%A%n%Z%n%C%n%S",
         }),
-        AN(new String[]{
-                "name", "NETHERLANDS ANTILLES",
-        }),
         AO(new String[]{
                 "name", "ANGOLA",
         }),
@@ -274,10 +271,6 @@ class RegionDataConstants {
         }),
         CR(new String[]{
                 "name", "COSTA RICA",
-                "fmt", "%N%n%O%n%A%n%Z %C",
-        }),
-        CS(new String[]{
-                "name", "SERBIA AND MONTENEGRO",
                 "fmt", "%N%n%O%n%A%n%Z %C",
         }),
         CV(new String[]{
