@@ -88,7 +88,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST(RegionDataConstantsTest, GetMaxLookupKeyDepth) {
   EXPECT_EQ(0, RegionDataConstants::GetMaxLookupKeyDepth("NZ"));
-  EXPECT_EQ(1, RegionDataConstants::GetMaxLookupKeyDepth("HK"));
+  EXPECT_EQ(1, RegionDataConstants::GetMaxLookupKeyDepth("KY"));
   EXPECT_EQ(2, RegionDataConstants::GetMaxLookupKeyDepth("US"));
   EXPECT_EQ(3, RegionDataConstants::GetMaxLookupKeyDepth("CN"));
 }
