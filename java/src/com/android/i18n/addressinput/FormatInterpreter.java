@@ -25,9 +25,11 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Address format interpreter. A utility to find address format related info.
@@ -133,6 +135,30 @@ class FormatInterpreter {
         for (int j = 0; j < union.size(); ++j) {
             fieldOrder.set(slots.get(j), union.get(j));
         }
+    }
+
+    /**
+     * Returns the fields that are required to be filled in for this country. This is based upon the
+     * "required" field in RegionDataConstants for {@code regionCode}, and handles falling back to
+     * the default data if necessary.
+     */
+    static Set<AddressField> getRequiredFields(String regionCode) {
+        Util.checkNotNull(regionCode);
+        String requireString = getRequiredString(regionCode);
+
+        EnumSet<AddressField> required = EnumSet.of(AddressField.COUNTRY);
+        for (char c : requireString.toCharArray()) {
+            required.add(AddressField.of(c));
+        }
+        return required;
+    }
+
+    private static String getRequiredString(String regionCode) {
+        String required = getJsonValue(regionCode, AddressDataKey.REQUIRE);
+        if (required == null) {
+            required = getJsonValue("ZZ", AddressDataKey.REQUIRE);
+        }
+        return required;
     }
 
     /**

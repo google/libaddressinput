@@ -20,6 +20,12 @@ import com.android.i18n.addressinput.testing.AddressDataMapLoader;
 
 import junit.framework.TestCase;
 
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Spot check the standard data set for various cases of interest. This is not an exhaustive test.
  */
@@ -258,14 +264,51 @@ public class FieldVerifierTest extends TestCase {
     }
 
     public void testCanadaMixedCasePostcode() {
-      final AddressData address = new AddressData.Builder()
-              .setRecipient("Joe Bloggs")
-              .setAddress("11 East St")
-              .setLocality("Montreal")
-              .setAdminArea("Quebec")
-              .setCountry("CA")
-              .setPostalCode("H2b 2y5").build();
-      VERIFIER.verify(address, problems);
-      assertTrue(problems.isEmpty());
-  }
+        final AddressData address = new AddressData.Builder()
+                .setRecipient("Joe Bloggs")
+                .setAddress("11 East St")
+                .setLocality("Montreal")
+                .setAdminArea("Quebec")
+                .setCountry("CA")
+                .setPostalCode("H2b 2y5").build();
+        VERIFIER.verify(address, problems);
+        assertTrue(problems.isEmpty());
+    }
+
+    public void testMultipleAddressLines() {
+        final AddressData address = new AddressData.Builder()
+                .setCountry("US")
+                .setAdminArea("CA")
+                .setLocality("Mountain View")
+                .setAddressLine1("Somewhere")
+                .setAddressLine2("1234")
+                .setPostalCode("94025").build();
+        VERIFIER.verify(address, problems);
+        assertTrue(problems.isEmpty());
+    }
+
+    public void testFieldVerifierUsesRegionDataConstantsForFmtAndRequire() {
+        Map<AddressDataKey, String> map = new EnumMap<AddressDataKey, String>(AddressDataKey.class);
+        // Values for format and require are deliberately different from RegionDataConstants so that
+        // we can test that the RDC's version is preferred.
+        map.put(AddressDataKey.FMT, "%N%n%O");
+        map.put(AddressDataKey.REQUIRE, "A");
+        map.put(AddressDataKey.SUB_KEYS, "Test");
+        map.put(AddressDataKey.ID, "data/FM");
+        AddressVerificationNodeData testNode = new AddressVerificationNodeData(map);
+        FieldVerifier fieldVerifier = new FieldVerifier(VERIFIER.mRootVerifier, testNode);
+
+        // Used and required obtained from RegionDataConstants for FM.
+        Set<AddressField> expectedPossibleFields = EnumSet.of(AddressField.RECIPIENT,
+                AddressField.ORGANIZATION, AddressField.STREET_ADDRESS, AddressField.LOCALITY,
+                AddressField.ADMIN_AREA, AddressField.POSTAL_CODE, AddressField.COUNTRY);
+        Set<AddressField> expectedRequiredField = EnumSet.of(AddressField.STREET_ADDRESS,
+                AddressField.LOCALITY, AddressField.ADMIN_AREA, AddressField.POSTAL_CODE,
+                AddressField.COUNTRY);
+        assertEquals(expectedPossibleFields, fieldVerifier.mPossiblyUsedFields);
+        assertEquals(expectedRequiredField, fieldVerifier.mRequired);
+        assertEquals("data/FM", fieldVerifier.mId);
+        // Keys should be populated from the test node.
+        assertEquals("[Test]", Arrays.toString(fieldVerifier.mKeys));
+    }
 }

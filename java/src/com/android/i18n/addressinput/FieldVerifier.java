@@ -20,6 +20,7 @@ import com.android.i18n.addressinput.LookupKey.ScriptType;
 
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -36,19 +37,24 @@ public class FieldVerifier {
     // Keys are built up using this delimiter: eg data/US, data/US/CA.
     private static final String KEY_DELIMITER = "/";
 
-    private String mId;
+    private static final FormatInterpreter FORMAT_INTERPRETER =
+        new FormatInterpreter(new FormOptions.Builder().build());
+
+    // Package-private so it can be accessed by tests.
+    String mId;
     private DataSource mDataSource;
 
-    private Set<AddressField> mPossibleFields;
-    private Set<AddressField> mRequired;
+    // Package-private so they can be accessed by tests.
+    Set<AddressField> mPossiblyUsedFields;
+    Set<AddressField> mRequired;
     // Known values. Can be either a key, a name in Latin, or a name in native script.
     private Map<String, String> mCandidateValues;
 
     // Keys for the subnodes of this verifier. For example, a key for the US would be CA, since
     // there is a sub-verifier with the ID "data/US/CA". Keys may be the local names of the
     // locations in the next level of the hierarchy, or the abbreviations if suitable abbreviations
-    // exist.
-    private String[] mKeys;
+    // exist. Package-private so it can be accessed by tests.
+    String[] mKeys;
     // Names in Latin. These are only populated if the native/local names are in a script other than
     // latin.
     private String[] mLatinNames;
@@ -71,10 +77,12 @@ public class FieldVerifier {
     /**
      * Creates a field verifier based on its parent and on the new data for this node supplied by
      * nodeData (which may be null).
+     *
+     * Package-private so it can be accessed by tests.
      */
-    private FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
+    FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
         // Most information is inherited from the parent.
-        mPossibleFields = parent.mPossibleFields;
+        mPossiblyUsedFields = parent.mPossiblyUsedFields;
         mRequired = parent.mRequired;
         mDataSource = parent.mDataSource;
         mFormat = parent.mFormat;
@@ -88,10 +96,7 @@ public class FieldVerifier {
     }
 
     /**
-     * Sets possibleFieldsUsed, required, keys and candidateValues for the root field verifier. This
-     * is a little messy at the moment since not all the appropriate information is actually under
-     * the root "data" node in the metadata. For example, "possibleFields" and "required" are not
-     * present there.
+     * Sets possiblyUsedFields, required, keys and candidateValues for the root field verifier.
      */
     private void populateRootVerifier() {
         mId = "data";
@@ -103,22 +108,18 @@ public class FieldVerifier {
         // candidateValues is just the set of keys.
         mCandidateValues = Util.buildNameToKeyMap(mKeys, null, null);
 
-        // Copy "possibleFieldsUsed" and "required" from the defaults here for bootstrapping.
-        // TODO: Investigate a cleaner way of doing this - maybe we should populate "data" with this
-        // information instead.
-        AddressVerificationNodeData defaultZZ = mDataSource.getDefaultData("data/ZZ");
-        mPossibleFields = new HashSet<AddressField>();
-        if (defaultZZ.containsKey(AddressDataKey.FMT)) {
-            mPossibleFields = parseAddressFields(defaultZZ.get(AddressDataKey.FMT));
-        }
+        // TODO: Investigate if these need to be set here. The country level population already
+        // handles the fallback, the question is if validation can be done without a country level
+        // validator being created.
+        // Copy "possiblyUsedFields" and "required" from the defaults here for bootstrapping.
+        mPossiblyUsedFields = new HashSet<AddressField>();
         mRequired = new HashSet<AddressField>();
-        if (defaultZZ.containsKey(AddressDataKey.REQUIRE)) {
-            mRequired = parseRequireString(defaultZZ.get(AddressDataKey.REQUIRE));
-        }
+        populatePossibleAndRequired("ZZ");
     }
 
     /**
-     * Populates this verifier with data from the node data passed in. This may be null.
+     * Populates this verifier with data from the node data passed in and from RegionDataConstants.
+     * The node data may be null.
      */
     private void populate(AddressVerificationNodeData nodeData) {
         if (nodeData == null) {
@@ -135,12 +136,6 @@ public class FieldVerifier {
         }
         if (nodeData.containsKey(AddressDataKey.SUB_NAMES)) {
             mLocalNames = nodeData.get(AddressDataKey.SUB_NAMES).split(DATA_DELIMITER);
-        }
-        if (nodeData.containsKey(AddressDataKey.FMT)) {
-            mPossibleFields = parseAddressFields(nodeData.get(AddressDataKey.FMT));
-        }
-        if (nodeData.containsKey(AddressDataKey.REQUIRE)) {
-            mRequired = parseRequireString(nodeData.get(AddressDataKey.REQUIRE));
         }
         if (nodeData.containsKey(AddressDataKey.XZIP)) {
             mFormat = Pattern.compile(nodeData.get(AddressDataKey.XZIP), Pattern.CASE_INSENSITIVE);
@@ -162,6 +157,18 @@ public class FieldVerifier {
             mKeys.length == mLatinNames.length) {
             mLocalNames = mKeys;
         }
+
+        // These fields are populated from RegionDataConstants so that the metadata server can be
+        // updated without needing to be in sync with clients.
+        if (isCountryKey()) {
+            populatePossibleAndRequired(mId.split(KEY_DELIMITER)[1]);
+        }
+    }
+
+    private void populatePossibleAndRequired(String regionCode) {
+        List<AddressField> possible = FORMAT_INTERPRETER.getAddressFieldOrder(regionCode);
+        mPossiblyUsedFields = convertAddressFieldsToPossiblyUsedSet(possible);
+        mRequired = FormatInterpreter.getRequiredFields(regionCode);
     }
 
     FieldVerifier refineVerifier(String sublevel) {
@@ -215,7 +222,7 @@ public class FieldVerifier {
         String trimmedValue = Util.trimToNull(value);
         switch (problem) {
             case USING_UNUSED_FIELD:
-                if (trimmedValue != null && !mPossibleFields.contains(field)) {
+                if (trimmedValue != null && !mPossiblyUsedFields.contains(field)) {
                     problemFound = true;
                 }
                 break;
@@ -289,61 +296,22 @@ public class FieldVerifier {
     }
 
     /**
-     * Parses the value of the "fmt" key in the data to see which fields are used for a particular
-     * country. Returns a list of all fields found. Country is always assumed to be present. Skips
-     * characters that indicate new-lines in the format information, as well as any characters not
-     * escaped with "%".
+     * Converts a list of address fields to a set of possibly used fields. Adds country and handles
+     * street address.
      */
-    private static Set<AddressField> parseAddressFields(String value) {
+    private static Set<AddressField> convertAddressFieldsToPossiblyUsedSet(
+            List<AddressField> fields) {
+        // COUNTRY is never unexpected.
         EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
-        boolean escaped = false;
-        for (char c : value.toCharArray()) {
-            if (escaped) {
-                escaped = false;
-                if (c == 'n') {
-                    continue;
-                }
-                AddressField f = AddressField.of(c);
-                if (f == null) {
-                    throw new RuntimeException(
-                            "Unrecognized character '" + c + "' in format pattern: " + value);
-                }
-                result.add(f);
-            } else if (c == '%') {
-                escaped = true;
+        for (AddressField field : fields) {
+            // Replace ADDRESS_LINE with STREET_ADDRESS because that's what the validation expects.
+            if (field == AddressField.ADDRESS_LINE_1 ||
+                field == AddressField.ADDRESS_LINE_2) {
+                result.add(AddressField.STREET_ADDRESS);
+            } else {
+                result.add(field);
             }
         }
-        // These fields are not mentioned in the metadata at the moment since there is an effort to
-        // move away from STREET_ADDRESS and use these fields instead. This means they have to be
-        // removed here.
-        result.remove(AddressField.ADDRESS_LINE_1);
-        result.remove(AddressField.ADDRESS_LINE_2);
-
-        return result;
-    }
-
-    /**
-     * Parses the value of the "required" key in the data. Adds country as well as any other field
-     * mentioned in the string.
-     */
-    private static Set<AddressField> parseRequireString(String value) {
-        // Country is always required
-        EnumSet<AddressField> result = EnumSet.of(AddressField.COUNTRY);
-
-        for (char c : value.toCharArray()) {
-            AddressField f = AddressField.of(c);
-            if (f == null) {
-                throw new RuntimeException("Unrecognized character '" + c + "' in require pattern: "
-                        + value);
-            }
-            result.add(f);
-        }
-        // These fields are not mentioned in the metadata at the moment since there is an effort to
-        // move away from STREET_ADDRESS and use these fields instead. This means they have to be
-        // removed here.
-        result.remove(AddressField.ADDRESS_LINE_1);
-        result.remove(AddressField.ADDRESS_LINE_2);
-
         return result;
     }
 
