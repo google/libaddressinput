@@ -56,7 +56,7 @@ class FormController {
    */
   FormController(ClientData integratedData, String languageCode, String currentCountry) {
     Util.checkNotNull(integratedData, "null data not allowed");
-    languageCode = languageCode;
+    this.languageCode = languageCode;
     this.currentCountry = currentCountry;
 
     AddressData address = new AddressData.Builder().setCountry(DEFAULT_REGION_CODE).build();
@@ -70,11 +70,11 @@ class FormController {
   }
 
   void setLanguageCode(String languageCode) {
-    languageCode = languageCode;
+    this.languageCode = languageCode;
   }
 
   void setCurrentCountry(String currentCountry) {
-    currentCountry = currentCountry;
+    this.currentCountry = currentCountry;
   }
 
   private ScriptType getScriptType() {

@@ -105,9 +105,9 @@ public class StandardAddressVerifier {
     private DataLoadListener listener;
 
     Verifier(AddressData address, AddressProblems problems, DataLoadListener listener) {
-      address = address;
-      problems = problems;
-      listener = listener;
+      this.address = address;
+      this.problems = problems;
+      this.listener = listener;
     }
 
     @Override
@@ -165,17 +165,15 @@ public class StandardAddressVerifier {
    * Hook to perform any final processing using the final verifier.  Default does no additional
    * verification.
    */
-  protected void postVerify(FieldVerifier verifier, AddressData address,
-      AddressProblems problems) {
+  protected void postVerify(FieldVerifier verifier, AddressData address, AddressProblems problems) {
   }
 
   /**
    * Hook called by verify with each verifiable field, in order.  Override to provide pre- or
    * post-checks for all fields.
    */
-  protected boolean verifyField(LookupKey.ScriptType script,
-      FieldVerifier verifier, AddressField field, String value,
-      AddressProblems problems) {
+  protected boolean verifyField(LookupKey.ScriptType script, FieldVerifier verifier,
+      AddressField field, String value, AddressProblems problems) {
     Iterator<AddressProblemType> iter = getProblemIterator(field);
     while (iter.hasNext()) {
       AddressProblemType prob = iter.next();
@@ -220,8 +218,7 @@ public class StandardAddressVerifier {
     /**
      * Refines the verifier.  This delegates to the verifier to perform the refinement.
      */
-    public FieldVerifier refineVerifier(FieldVerifier v, AddressField field,
-        String subkey) {
+    public FieldVerifier refineVerifier(FieldVerifier v, AddressField field, String subkey) {
       return v.refineVerifier(subkey);
     }
 

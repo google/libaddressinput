@@ -24,8 +24,8 @@ public class NotifyingListener implements DataLoadListener {
   private boolean done;
 
   NotifyingListener(Object sleeper) {
-    sleeper = sleeper;
-    done = false;
+    this.sleeper = sleeper;
+    this.done = false;
   }
 
   @Override

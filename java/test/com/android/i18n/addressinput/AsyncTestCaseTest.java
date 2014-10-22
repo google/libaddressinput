@@ -68,6 +68,14 @@ public class AsyncTestCaseTest extends AsyncTestCase {
    * Helper class to perform an asynchronous callback after a specified delay.
    */
   private static class AsyncCallback extends Thread {
+    private long waitMillis;
+    private Runnable callback;
+
+    private AsyncCallback(long waitMillis, Runnable callback) {
+      this.waitMillis = waitMillis;
+      this.callback = callback;
+    }
+
     public static void execute(long waitMillis, Runnable callback) {
       (new AsyncCallback(waitMillis, callback)).start();
     }
@@ -76,20 +84,12 @@ public class AsyncTestCaseTest extends AsyncTestCase {
     public void run() {
       try {
         synchronized (this) {
-          wait(waitMillis);
+          wait(this.waitMillis);
         }
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-      callback.run();
+      this.callback.run();
     }
-
-    private AsyncCallback(long waitMillis, Runnable callback) {
-      this.waitMillis = waitMillis;
-      this.callback = callback;
-    }
-
-    private long waitMillis;
-    private Runnable callback;
   }
 }

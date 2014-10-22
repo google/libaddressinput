@@ -167,10 +167,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     @SuppressWarnings("unchecked")
     public AddressSpinnerInfo(Spinner view, AddressField id, AddressField parentId) {
-      view = view;
-      id = id;
-      parentId = parentId;
-      adapter = (ArrayAdapter<String>) view.getAdapter();
+      this.view = view;
+      this.id = id;
+      this.parentId = parentId;
+      this.adapter = (ArrayAdapter<String>) view.getAdapter();
     }
 
     public void setSpinnerList(List<RegionData> list, String defaultKey) {
@@ -599,8 +599,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   private void initializeFieldsWithAddress(AddressData savedAddress) {
-    for (AddressField field : formatInterpreter.getAddressFieldOrder(script,
-          currentRegion)) {
+    for (AddressField field : formatInterpreter.getAddressFieldOrder(script, currentRegion)) {
       String value = savedAddress.getFieldValue(field);
       if (value == null) {
         value = "";
@@ -615,17 +614,15 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private void init(Context context, ViewGroup rootView, FormOptions formOptions,
       ClientCacheManager cacheManager) {
-    context = context;
-    rootView = rootView;
-    formOptions = formOptions;
-    cacheData = new CacheData(cacheManager);
-    inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    formController =
-        new FormController(new ClientData(cacheData),
-            widgetLocale, currentRegion);
-    formatInterpreter = new FormatInterpreter(formOptions);
-    verifier = new StandardAddressVerifier(
-        new FieldVerifier(new ClientData(cacheData)));
+    this.context = context;
+    this.rootView = rootView;
+    this.formOptions = formOptions;
+    this.cacheData = new CacheData(cacheManager);
+    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    this.formController =
+        new FormController(new ClientData(cacheData), widgetLocale, currentRegion);
+    this.formatInterpreter = new FormatInterpreter(formOptions);
+    this.verifier = new StandardAddressVerifier(new FieldVerifier(new ClientData(cacheData)));
     if (!formOptions.isHidden(AddressField.COUNTRY)) {
       buildCountryListBox();
       createView(rootView, inputWidgets.get(AddressField.COUNTRY),

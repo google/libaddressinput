@@ -55,10 +55,10 @@ class AddressUiComponent {
   }
 
   AddressUiComponent(AddressField id) {
-    id = id;
+    this.id = id;
     // By default, an AddressUiComponent doesn't depend on anything else.
-    parentId = null;
-    uiType = UiComponent.EDIT;
+    this.parentId = null;
+    this.uiType = UiComponent.EDIT;
   }
 
   /**
@@ -66,7 +66,7 @@ class AddressUiComponent {
    * @param candidatesList
    */
   void initializeCandidatesList(List<RegionData> candidatesList) {
-    candidatesList = candidatesList;
+    this.candidatesList = candidatesList;
     if (candidatesList.size() > 1) {
       uiType = UiComponent.SPINNER;
       switch (id) {
@@ -111,7 +111,7 @@ class AddressUiComponent {
   }
 
   void setFieldName(String fieldName) {
-    fieldName = fieldName;
+    this.fieldName = fieldName;
   }
 
   UiComponent getUiType() {
@@ -119,7 +119,7 @@ class AddressUiComponent {
   }
 
   void setUiType(UiComponent uiType) {
-    uiType = uiType;
+    this.uiType = uiType;
   }
 
   List<RegionData> getCandidatesList() {
@@ -127,7 +127,7 @@ class AddressUiComponent {
   }
 
   void setCandidatesList(List<RegionData> candidatesList) {
-    candidatesList = candidatesList;
+    this.candidatesList = candidatesList;
   }
 
   AddressField getId() {
@@ -135,7 +135,7 @@ class AddressUiComponent {
   }
 
   void setId(AddressField id) {
-    id = id;
+    this.id = id;
   }
 
   AddressField getParentId() {
@@ -143,11 +143,11 @@ class AddressUiComponent {
   }
 
   void setParentId(AddressField parentId) {
-    parentId = parentId;
+    this.parentId = parentId;
   }
 
   void setView(View view) {
-    view = view;
+    this.view = view;
   }
 
   View getView() {

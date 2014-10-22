@@ -154,7 +154,7 @@ public class FormOptions {
       if (baseId == null) {
         throw new RuntimeException("baseId cannot be null.");
       }
-      baseId = baseId;
+      this.baseId = baseId;
       return this;
     }
 

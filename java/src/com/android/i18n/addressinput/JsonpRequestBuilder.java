@@ -72,8 +72,8 @@ class JsonpRequestBuilder {
     private AsyncCallback<JsoMap> callback;
 
     protected AsyncHttp(HttpUriRequest request, AsyncCallback<JsoMap> callback) {
-      request = request;
-      callback = callback;
+      this.request = request;
+      this.callback = callback;
     }
 
     @Override

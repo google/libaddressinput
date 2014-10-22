@@ -41,8 +41,8 @@ public class AddressWidgetUiComponentProvider {
   protected LayoutInflater inflater;
 
   public AddressWidgetUiComponentProvider(Context context) {
-    context = context;
-    inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    this.context = context;
+    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
   }
 
   /**
