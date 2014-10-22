@@ -177,10 +177,11 @@ class RegionDataConstants {
                 "name", "BRAZIL",
                 "lang", "pt",
                 "languages", "pt",
-                "fmt", "%O%n%N%n%A%n%C-%S%n%Z",
+                "fmt", "%O%n%N%n%A%n%D%n%C-%S%n%Z",
                 "require", "ASCZ",
                 "upper", "CS",
                 "state_name_type", "state",
+                "sublocality_name_type", "neighborhood",
         }),
         BS(new String[]{
                 "name", "BAHAMAS",
@@ -243,7 +244,6 @@ class RegionDataConstants {
         }),
         CK(new String[]{
                 "name", "COOK ISLANDS",
-                "fmt", "%N%n%O%n%A%n%C %Z",
         }),
         CL(new String[]{
                 "name", "CHILE",
@@ -421,7 +421,7 @@ class RegionDataConstants {
         }),
         GI(new String[]{
                 "name", "GIBRALTAR",
-                "fmt", "%N%n%O%n%A",
+                "fmt", "%N%n%O%n%A%nGIBRALTAR%n%Z",
                 "require", "A",
         }),
         GL(new String[]{
@@ -479,11 +479,12 @@ class RegionDataConstants {
                 "name", "HONG KONG",
                 "lang", "zh-Hant",
                 "languages", "zh-Hant~en",
-                "fmt", "%S%n%A%n%O%n%N",
-                "lfmt", "%N%n%O%n%A%n%S",
+                "fmt", "%S%n%C%n%A%n%O%n%N",
+                "lfmt", "%N%n%O%n%A%n%C%n%S",
                 "require", "AS",
                 "upper", "S",
                 "state_name_type", "area",
+                "locality_name_type", "district",
         }),
         HM(new String[]{
                 "name", "HEARD AND MCDONALD ISLANDS",
@@ -642,7 +643,7 @@ class RegionDataConstants {
                 "name", "CAYMAN ISLANDS",
                 "lang", "en",
                 "languages", "en",
-                "fmt", "%N%n%O%n%A%n%S",
+                "fmt", "%N%n%O%n%A%n%S %Z",
                 "require", "AS",
                 "state_name_type", "island",
         }),
@@ -746,6 +747,8 @@ class RegionDataConstants {
         }),
         MO(new String[]{
                 "name", "MACAO",
+                "lang", "zh-Hant",
+                "languages", "zh-Hant",
                 "fmt", "%A%n%O%n%N",
                 "lfmt", "%N%n%O%n%A",
                 "require", "A",
@@ -811,7 +814,6 @@ class RegionDataConstants {
         }),
         MZ(new String[]{
                 "name", "MOZAMBIQUE",
-                "fmt", "%N%n%O%n%A%n%C",
         }),
         NA(new String[]{
                 "name", "NAMIBIA",
@@ -980,8 +982,8 @@ class RegionDataConstants {
                 "name", "RUSSIAN FEDERATION",
                 "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
                 "require", "ACZ",
-                "state_name_type", "oblast",
                 "upper", "AC",
+                "state_name_type", "oblast",
         }),
         RW(new String[]{
                 "name", "RWANDA",
@@ -1209,6 +1211,7 @@ class RegionDataConstants {
         }),
         VG(new String[]{
                 "name", "VIRGIN ISLANDS (BRITISH)",
+                "fmt", "%N%n%O%n%A%n%C%n%Z",
                 "require", "A",
         }),
         VI(new String[]{
@@ -1223,9 +1226,8 @@ class RegionDataConstants {
                 "name", "VIET NAM",
                 "lang", "vi",
                 "languages", "vi",
-                "fmt", "%N%n%O%n%A%n%C%n%S",
-                "lfmt", "%N%n%O%n%A%n%C%n%S",
-                "require", "AC",
+                "fmt", "%N%n%O%n%A%n%C%n%S %Z",
+                "lfmt", "%N%n%O%n%A%n%C%n%S %Z",
         }),
         VU(new String[]{
                 "name", "VANUATU",
@@ -1245,7 +1247,6 @@ class RegionDataConstants {
         }),
         YE(new String[]{
                 "name", "YEMEN",
-                "require", "AC",
         }),
         YT(new String[]{
                 "name", "MAYOTTE",
@@ -1261,7 +1262,6 @@ class RegionDataConstants {
         ZM(new String[]{
                 "name", "ZAMBIA",
                 "fmt", "%N%n%O%n%A%n%Z %C",
-                "require", "AC",
         }),
         ZW(new String[]{
                 "name", "ZIMBABWE",
