@@ -264,10 +264,8 @@ public class ClientData implements DataSource {
 
             if (map.containsKey(subMores)) {
                 // This key could have sub keys.
-                String[] mores = {};
+                String[] mores = map.get(subMores).split("~");
                 String[] keys = {};
-
-                mores = map.get(subMores).split("~");
 
                 if (map.containsKey(subKeys)) {
                     keys = map.get(subKeys).split("~");
