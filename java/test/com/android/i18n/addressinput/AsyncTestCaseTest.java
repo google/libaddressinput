@@ -25,41 +25,41 @@ import java.util.concurrent.TimeoutException;
 public class AsyncTestCaseTest extends AsyncTestCase {
 
   public void testSuccess() {
-      delayTestFinish(1000);
-      AsyncCallback.execute(500, new Runnable() {
-          @Override
-          public void run() {
-              finishTest();
-          }
-      });
+    delayTestFinish(1000);
+    AsyncCallback.execute(500, new Runnable() {
+      @Override
+      public void run() {
+        finishTest();
+      }
+    });
   }
 
   public void testFailure() {
-      expectTimeout = true;
-      delayTestFinish(1000);
-      AsyncCallback.execute(1500, new Runnable() {
-          @Override
-          public void run() {
-              finishTest();
-          }
-      });
+    expectTimeout = true;
+    delayTestFinish(1000);
+    AsyncCallback.execute(1500, new Runnable() {
+      @Override
+      public void run() {
+        finishTest();
+      }
+    });
   }
 
   @Override
   protected void runTest() throws Throwable {
-      expectTimeout = false;
-      try {
-          super.runTest();
-      } catch (TimeoutException e) {
-          if (expectTimeout) {
-              return;
-          } else {
-              throw e;
-          }
-      }
+    expectTimeout = false;
+    try {
+      super.runTest();
+    } catch (TimeoutException e) {
       if (expectTimeout) {
-          throw new AssertionFailedError("Test case did not time out.");
+        return;
+      } else {
+        throw e;
       }
+    }
+    if (expectTimeout) {
+      throw new AssertionFailedError("Test case did not time out.");
+    }
   }
 
   private boolean expectTimeout;
@@ -68,28 +68,28 @@ public class AsyncTestCaseTest extends AsyncTestCase {
    * Helper class to perform an asynchronous callback after a specified delay.
    */
   private static class AsyncCallback extends Thread {
-      public static void execute(long waitMillis, Runnable callback) {
-          (new AsyncCallback(waitMillis, callback)).start();
-      }
+    public static void execute(long waitMillis, Runnable callback) {
+      (new AsyncCallback(waitMillis, callback)).start();
+    }
 
-      @Override
-      public void run() {
-          try {
-              synchronized (this) {
-              wait(mWaitMillis);
-          }
+    @Override
+    public void run() {
+      try {
+        synchronized (this) {
+          wait(waitMillis);
+        }
       } catch (InterruptedException e) {
-          throw new RuntimeException(e);
+        throw new RuntimeException(e);
       }
-      mCallback.run();
+      callback.run();
     }
 
     private AsyncCallback(long waitMillis, Runnable callback) {
-        this.mWaitMillis = waitMillis;
-        this.mCallback = callback;
+      this.waitMillis = waitMillis;
+      this.callback = callback;
     }
 
-    private long mWaitMillis;
-    private Runnable mCallback;
+    private long waitMillis;
+    private Runnable callback;
   }
 }

@@ -27,30 +27,30 @@ import java.util.Map;
  */
 public class AddressDataMapLoader {
 
-    private static final String DATA_PATH = "/countryinfo.txt";
+  private static final String DATA_PATH = "/countryinfo.txt";
 
-    private AddressDataMapLoader() {
-    }
+  private AddressDataMapLoader() {
+  }
 
-    public static final Map<String, String> DATA;
+  public static final Map<String, String> DATA;
 
-    static {
-        DATA = new HashMap<String, String>();
-        try {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(DATA_PATH),
-                            "utf-8"));
-            String line = null;
-            while (null != (line = br.readLine())) {
-                line = line.trim();
-                if (line.length() == 0 || line.charAt(0) == '#') {
-                    continue;
-                }
-                int x = line.indexOf('=');
-                DATA.put(line.substring(0, x), line.substring(x + 1));
-            }
-        } catch (IOException e) {
-            System.err.println("unable to create map: " + e.getMessage());
+  static {
+    DATA = new HashMap<String, String>();
+    try {
+      BufferedReader br = new BufferedReader(
+          new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(DATA_PATH),
+            "utf-8"));
+      String line = null;
+      while (null != (line = br.readLine())) {
+        line = line.trim();
+        if (line.length() == 0 || line.charAt(0) == '#') {
+          continue;
         }
+        int x = line.indexOf('=');
+        DATA.put(line.substring(0, x), line.substring(x + 1));
+      }
+    } catch (IOException e) {
+      System.err.println("unable to create map: " + e.getMessage());
     }
+  }
 }

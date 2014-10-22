@@ -24,44 +24,44 @@ import java.util.Map;
  */
 public class AddressProblems {
 
-    private Map<AddressField, AddressProblemType> mProblems =
-        new HashMap<AddressField, AddressProblemType>();
+  private Map<AddressField, AddressProblemType> problems =
+      new HashMap<AddressField, AddressProblemType>();
 
-    /**
-     * Only one address problem type is saved per addressField. Address field as used here refers to
-     * the different data parts in the AddressData class.
-     */
-    void add(AddressField addressField, AddressProblemType problem) {
-        mProblems.put(addressField, problem);
-    }
+  /**
+   * Only one address problem type is saved per addressField. Address field as used here refers to
+   * the different data parts in the AddressData class.
+   */
+  void add(AddressField addressField, AddressProblemType problem) {
+    problems.put(addressField, problem);
+  }
 
-    /**
-     * Returns true if no problems have been added.
-     */
-    public boolean isEmpty() {
-        return mProblems.isEmpty();
-    }
+  /**
+   * Returns true if no problems have been added.
+   */
+  public boolean isEmpty() {
+    return problems.isEmpty();
+  }
 
-    @Override
-    public String toString() {
-        return mProblems.toString();
-    }
+  @Override
+  public String toString() {
+    return problems.toString();
+  }
 
-    public void clear() {
-        mProblems.clear();
-    }
+  public void clear() {
+    problems.clear();
+  }
 
-    /**
-     * Returns null if no problems exists.
-     */
-    public AddressProblemType getProblem(AddressField addressField) {
-        return mProblems.get(addressField);
-    }
+  /**
+   * Returns null if no problems exists.
+   */
+  public AddressProblemType getProblem(AddressField addressField) {
+    return problems.get(addressField);
+  }
 
-    /**
-     * This will return an empty map if there are no problems.
-     */
-    public Map<AddressField, AddressProblemType> getProblems() {
-        return mProblems;
-    }
+  /**
+   * This will return an empty map if there are no problems.
+   */
+  public Map<AddressField, AddressProblemType> getProblems() {
+    return problems;
+  }
 }

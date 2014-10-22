@@ -23,61 +23,61 @@ import com.android.i18n.addressinput.testing.AsyncTestCase;
  * server and recovers if no data is present.
  */
 public class ClientDataTest extends AsyncTestCase {
-    private ClientData client;
+  private ClientData client;
 
-    @Override
-    public void setUp() {
-        client = new ClientData(new CacheData());
-    }
+  @Override
+  public void setUp() {
+    client = new ClientData(new CacheData());
+  }
 
-    public void testGet() {
-        AddressVerificationNodeData data = client.get("data");
-        assertNotNull(data);
-    }
+  public void testGet() {
+    AddressVerificationNodeData data = client.get("data");
+    assertNotNull(data);
+  }
 
-    public void testGet2() {
-        AddressVerificationNodeData data;
+  public void testGet2() {
+    AddressVerificationNodeData data;
 
-        data = client.get("data");
-        assertNotNull(data);
+    data = client.get("data");
+    assertNotNull(data);
 
-        data = client.get("data");
-        assertNotNull(data);
-    }
+    data = client.get("data");
+    assertNotNull(data);
+  }
 
-    public void testPrefetchCountry() {
-        delayTestFinish(60000);
+  public void testPrefetchCountry() {
+    delayTestFinish(60000);
 
-        client.prefetchCountry("TW", new DataLoadListener() {
-            boolean beginCalled = false;
+    client.prefetchCountry("TW", new DataLoadListener() {
+      boolean beginCalled = false;
 
-            @Override
-            public void dataLoadingBegin() {
-                beginCalled = true;
-            }
+      @Override
+      public void dataLoadingBegin() {
+        beginCalled = true;
+      }
 
-            @Override
-            public void dataLoadingEnd() {
-                assertTrue("dataLoadingBegin should be called", beginCalled);
-                // Currently this test only tests that the execution doesn't crash and eventually
-                // terminates. TODO: Write test cases to verify that correct data is loaded.
-                finishTest();
-            }
-        });
-    }
+      @Override
+      public void dataLoadingEnd() {
+        assertTrue("dataLoadingBegin should be called", beginCalled);
+        // Currently this test only tests that the execution doesn't crash and eventually
+        // terminates. TODO: Write test cases to verify that correct data is loaded.
+        finishTest();
+      }
+    });
+  }
 
-    public void testFetchDataWithBadServer() {
-        CacheData badCache = new CacheData();
-        badCache.setUrl("http://www.google.com");
-        ClientData badServerClient = new ClientData(badCache);
+  public void testFetchDataWithBadServer() {
+    CacheData badCache = new CacheData();
+    badCache.setUrl("http://www.google.com");
+    ClientData badServerClient = new ClientData(badCache);
 
-        AddressVerificationNodeData data = badServerClient.get("data/US");
+    AddressVerificationNodeData data = badServerClient.get("data/US");
 
-        // No data was available on the server or in the cache - it should check
-        // that there is nothing in region data constants, and should return the
-        // data from there.
-        assertNotNull(data);
-        String unitedStatesFormatInfo = data.get(AddressDataKey.FMT);
-        assertEquals("%N%n%O%n%A%n%C, %S %Z", unitedStatesFormatInfo);
-    }
+    // No data was available on the server or in the cache - it should check
+    // that there is nothing in region data constants, and should return the
+    // data from there.
+    assertNotNull(data);
+    String unitedStatesFormatInfo = data.get(AddressDataKey.FMT);
+    assertEquals("%N%n%O%n%A%n%C, %S %Z", unitedStatesFormatInfo);
+  }
 }

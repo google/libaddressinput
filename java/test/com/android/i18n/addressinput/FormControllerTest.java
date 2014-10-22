@@ -26,126 +26,126 @@ import java.util.List;
  */
 public class FormControllerTest extends AsyncTestCase {
 
-    private static final AddressData US_CA_ADDRESS;
-    private static final AddressData US_ADDRESS;
-    private ClientData clientData;
+  private static final AddressData US_CA_ADDRESS;
+  private static final AddressData US_ADDRESS;
+  private ClientData clientData;
 
-    static {
-        US_CA_ADDRESS = new AddressData.Builder().setCountry("US")
-                .setAdminArea("CA")
-                .setLocality("Mt View")
-                .setAddressLine1("1098 Alta Ave")
-                .setPostalCode("94043")
-                .build();
-        US_ADDRESS = new AddressData.Builder().setCountry("US").build();
-    }
+  static {
+    US_CA_ADDRESS = new AddressData.Builder().setCountry("US")
+        .setAdminArea("CA")
+        .setLocality("Mt View")
+        .setAddressLine1("1098 Alta Ave")
+        .setPostalCode("94043")
+        .build();
+    US_ADDRESS = new AddressData.Builder().setCountry("US").build();
+  }
 
-    @Override
-    public void setUp() {
-        clientData = new ClientData(new CacheData());
-    }
+  @Override
+  public void setUp() {
+    clientData = new ClientData(new CacheData());
+  }
 
-    public void testRequestDataForAddress() {
-        final FormController controller = new FormController(clientData, "en", "US");
+  public void testRequestDataForAddress() {
+    final FormController controller = new FormController(clientData, "en", "US");
 
-        delayTestFinish(15000);
+    delayTestFinish(15000);
 
-        controller.requestDataForAddress(US_CA_ADDRESS, new DataLoadListener() {
-            boolean beginCalled = false;
-            @Override
-            public void dataLoadingBegin() {
-                beginCalled = true;
-            }
+    controller.requestDataForAddress(US_CA_ADDRESS, new DataLoadListener() {
+      boolean beginCalled = false;
+      @Override
+      public void dataLoadingBegin() {
+        beginCalled = true;
+      }
 
-            @Override
-            public void dataLoadingEnd() {
-                assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
-                           beginCalled);
-                LookupKey usCaMtvKey = new LookupKey.Builder(KeyType.DATA)
-                        .setAddressData(US_CA_ADDRESS).build();
-                LookupKey usKey = usCaMtvKey.getKeyForUpperLevelField(
-                        AddressField.COUNTRY);
-                LookupKey usCaKey = usCaMtvKey.getKeyForUpperLevelField(
-                        AddressField.ADMIN_AREA);
-                assertNotNull("key should be data/US/CA", usCaKey);
-                assertNotNull("key should be data/US/CA/Mt View", usCaMtvKey);
-                assertNotNull(clientData.get(usKey.toString()));
-                assertNotNull(clientData.get(usCaKey.toString()));
-                assertNull(clientData.get(usCaMtvKey.toString()));
-                finishTest();
-            }
-        });
-    }
+      @Override
+      public void dataLoadingEnd() {
+        assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
+            beginCalled);
+        LookupKey usCaMtvKey = new LookupKey.Builder(KeyType.DATA)
+            .setAddressData(US_CA_ADDRESS).build();
+        LookupKey usKey = usCaMtvKey.getKeyForUpperLevelField(
+            AddressField.COUNTRY);
+        LookupKey usCaKey = usCaMtvKey.getKeyForUpperLevelField(
+            AddressField.ADMIN_AREA);
+        assertNotNull("key should be data/US/CA", usCaKey);
+        assertNotNull("key should be data/US/CA/Mt View", usCaMtvKey);
+        assertNotNull(clientData.get(usKey.toString()));
+        assertNotNull(clientData.get(usCaKey.toString()));
+        assertNull(clientData.get(usCaMtvKey.toString()));
+        finishTest();
+      }
+    });
+  }
 
-    public void testRequestDataForBadAddress() {
-        final AddressData address = new AddressData.Builder(US_CA_ADDRESS)
-                .setAdminArea("FOOBAR")
-                .setLocality("KarKar")
-                .build();
+  public void testRequestDataForBadAddress() {
+    final AddressData address = new AddressData.Builder(US_CA_ADDRESS)
+        .setAdminArea("FOOBAR")
+        .setLocality("KarKar")
+        .build();
 
-        final FormController controller = new FormController(clientData, "en", "US");
+    final FormController controller = new FormController(clientData, "en", "US");
 
-        delayTestFinish(15000);
+    delayTestFinish(15000);
 
-        controller.requestDataForAddress(address, new DataLoadListener() {
-            boolean beginCalled = false;
-            @Override
-            public void dataLoadingBegin() {
-                beginCalled = true;
-            }
+    controller.requestDataForAddress(address, new DataLoadListener() {
+      boolean beginCalled = false;
+      @Override
+      public void dataLoadingBegin() {
+        beginCalled = true;
+      }
 
-            @Override
-            public void dataLoadingEnd() {
-                assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
-                           beginCalled);
-                LookupKey badKey = new LookupKey.Builder(KeyType.DATA)
-                        .setAddressData(address).build();
-                LookupKey usKey = badKey.getKeyForUpperLevelField(AddressField.COUNTRY);
+      @Override
+      public void dataLoadingEnd() {
+        assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
+            beginCalled);
+        LookupKey badKey = new LookupKey.Builder(KeyType.DATA)
+            .setAddressData(address).build();
+        LookupKey usKey = badKey.getKeyForUpperLevelField(AddressField.COUNTRY);
 
-                List<RegionData> rdata = controller.getRegionData(usKey);
-                assertTrue(rdata.size() > 0);
-                String subkey = rdata.get(0).getKey();
-                assertNotNull("Should be the first US state", subkey);
-                LookupKey usFirstStateKey =
-                        new LookupKey.Builder(usKey.toString() + "/" + subkey).build();
+        List<RegionData> rdata = controller.getRegionData(usKey);
+        assertTrue(rdata.size() > 0);
+        String subkey = rdata.get(0).getKey();
+        assertNotNull("Should be the first US state", subkey);
+        LookupKey usFirstStateKey =
+            new LookupKey.Builder(usKey.toString() + "/" + subkey).build();
 
-                assertNotNull(clientData.get(usKey.toString()));
-                assertNotNull(clientData.get(usFirstStateKey.toString()));
-                assertNull(clientData.get(badKey.toString()));
-                finishTest();
-            }
-        });
-    }
+        assertNotNull(clientData.get(usKey.toString()));
+        assertNotNull(clientData.get(usFirstStateKey.toString()));
+        assertNull(clientData.get(badKey.toString()));
+        finishTest();
+      }
+    });
+  }
 
-    public void testRequestDataForCountry() {
-        final FormController controller = new FormController(clientData, "en", "US");
+  public void testRequestDataForCountry() {
+    final FormController controller = new FormController(clientData, "en", "US");
 
-        delayTestFinish(15000);
+    delayTestFinish(15000);
 
-        controller.requestDataForAddress(US_ADDRESS, new DataLoadListener() {
-            boolean beginCalled = false;
-            @Override
-            public void dataLoadingBegin() {
-                beginCalled = true;
-            }
+    controller.requestDataForAddress(US_ADDRESS, new DataLoadListener() {
+      boolean beginCalled = false;
+      @Override
+      public void dataLoadingBegin() {
+        beginCalled = true;
+      }
 
-            @Override
-            public void dataLoadingEnd() {
-                assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
-                           beginCalled);
-                LookupKey usKey = new LookupKey.Builder(KeyType.DATA)
-                        .setAddressData(US_ADDRESS).build();
-                assertNotNull("key should be data/US", usKey);
-                List<RegionData> rdata = controller.getRegionData(usKey);
-                assertTrue(rdata.size() > 0);
-                String subkey = rdata.get(0).getKey();
-                assertNotNull("Should be the first US state", subkey);
-                LookupKey usFirstStateKey =
-                        new LookupKey.Builder(usKey.toString() + "/" + subkey).build();
-                assertNotNull(clientData.get(usKey.toString()));
-                assertNotNull(clientData.get(usFirstStateKey.toString()));
-                finishTest();
-            }
-        });
-    }
+      @Override
+      public void dataLoadingEnd() {
+        assertTrue("dataLoadingBegin should be called before dataLoadingEnd",
+            beginCalled);
+        LookupKey usKey = new LookupKey.Builder(KeyType.DATA)
+            .setAddressData(US_ADDRESS).build();
+        assertNotNull("key should be data/US", usKey);
+        List<RegionData> rdata = controller.getRegionData(usKey);
+        assertTrue(rdata.size() > 0);
+        String subkey = rdata.get(0).getKey();
+        assertNotNull("Should be the first US state", subkey);
+        LookupKey usFirstStateKey =
+            new LookupKey.Builder(usKey.toString() + "/" + subkey).build();
+        assertNotNull(clientData.get(usKey.toString()));
+        assertNotNull(clientData.get(usFirstStateKey.toString()));
+        finishTest();
+      }
+    });
+  }
 }

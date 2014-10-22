@@ -30,218 +30,218 @@ import java.util.Set;
  */
 public class JsoMapTest extends TestCase {
 
-    private static final String VALID_JSON = "{\"a\":\"b\",\"c\":1,\"d\":{\"e\":\"f\"}}";
-    private static final String INVALID_JSON = "!";
+  private static final String VALID_JSON = "{\"a\":\"b\",\"c\":1,\"d\":{\"e\":\"f\"}}";
+  private static final String INVALID_JSON = "!";
 
-    public void testBuildJsoMap() throws Exception {
-        assertNotNull(JsoMap.buildJsoMap(VALID_JSON));
+  public void testBuildJsoMap() throws Exception {
+    assertNotNull(JsoMap.buildJsoMap(VALID_JSON));
 
-        try {
-            JsoMap.buildJsoMap(INVALID_JSON);
-            fail("Expected JSONException.");
-        } catch (JSONException e) {
-            // Expected.
-        }
+    try {
+      JsoMap.buildJsoMap(INVALID_JSON);
+      fail("Expected JSONException.");
+    } catch (JSONException e) {
+      // Expected.
+    }
+  }
+
+  public void testCreateEmptyJsoMap() throws Exception {
+    assertNotNull(JsoMap.createEmptyJsoMap());
+  }
+
+  public void testDelKey() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+
+    assertEquals("b", map.get("a"));
+    map.delKey("a");
+    assertNull(map.get("a"));
+
+    map.delKey("b");
+    map.delKey("c");
+    map.delKey("d");
+  }
+
+  public void testGet() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    assertEquals("b", map.get("a"));
+    assertNull(map.get("b"));
+
+    try {
+      map.get("c");
+      fail("Expected IllegalArgumentException.");
+    } catch (IllegalArgumentException e) {
+      // Expected.
     }
 
-    public void testCreateEmptyJsoMap() throws Exception {
-        assertNotNull(JsoMap.createEmptyJsoMap());
+    try {
+      map.get("d");
+      fail("Expected ClassCastException.");
+    } catch (ClassCastException e) {
+      // Expected.
+    }
+  }
+
+  public void testGetInt() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+
+    try {
+      map.getInt("a");
+      fail("Expected RuntimeException.");
+    } catch (RuntimeException e) {
+      // Expected.
     }
 
-    public void testDelKey() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    assertEquals(-1, map.getInt("b"));
+    assertEquals(1, map.getInt("c"));
 
-        assertEquals("b", map.get("a"));
-        map.delKey("a");
-        assertNull(map.get("a"));
+    try {
+      map.getInt("d");
+      fail("Expected RuntimeException.");
+    } catch (RuntimeException e) {
+      // Expected.
+    }
+  }
 
-        map.delKey("b");
-        map.delKey("c");
-        map.delKey("d");
+  public void testGetKeys() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    JSONArray keys = map.getKeys();
+    assertNotNull(keys);
+    assertEquals(3, keys.length());
+    Set<String> keySet = new HashSet<String>(keys.length());
+    for (int i = 0; i < keys.length(); i++) {
+      keySet.add(keys.getString(i));
+    }
+    assertEquals(new HashSet<String>(Arrays.asList("a", "c", "d")), keySet);
+  }
+
+  public void testGetObj() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+
+    try {
+      map.getObj("a");
+      fail("Expected ClassCastException.");
+    } catch (ClassCastException e) {
+      // Expected.
     }
 
-    public void testGet() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
-        assertEquals("b", map.get("a"));
-        assertNull(map.get("b"));
+    assertNull(map.getObj("b"));
 
-        try {
-            map.get("c");
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected.
-        }
-
-        try {
-            map.get("d");
-            fail("Expected ClassCastException.");
-        } catch (ClassCastException e) {
-            // Expected.
-        }
+    try {
+      map.getObj("c");
+      fail("Expected IllegalArgumentException.");
+    } catch (IllegalArgumentException e) {
+      // Expected.
     }
 
-    public void testGetInt() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    JsoMap obj = map.getObj("d");
+    assertNotNull(obj);
+    assertEquals("f", obj.get("e"));
+  }
 
-        try {
-            map.getInt("a");
-            fail("Expected RuntimeException.");
-        } catch (RuntimeException e) {
-            // Expected.
-        }
+  public void testContainsKey() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    assertTrue(map.containsKey("a"));
+    assertFalse(map.containsKey("b"));
+    assertTrue(map.containsKey("c"));
+    assertTrue(map.containsKey("d"));
+  }
 
-        assertEquals(-1, map.getInt("b"));
-        assertEquals(1, map.getInt("c"));
+  public void testMergeData() throws Exception {
+    JsoMap mapA = JsoMap.createEmptyJsoMap();
+    JsoMap mapB = JsoMap.createEmptyJsoMap();
 
-        try {
-            map.getInt("d");
-            fail("Expected RuntimeException.");
-        } catch (RuntimeException e) {
-            // Expected.
-        }
+    mapA.putInt("a", 1);
+    mapA.putInt("b", 2);
+
+    mapB.putInt("b", 3);
+    mapB.putInt("c", 4);
+
+    mapA.mergeData(mapB);
+    assertEquals(1, mapA.getInt("a"));
+    assertEquals(2, mapA.getInt("b"));
+    assertEquals(4, mapA.getInt("c"));
+  }
+
+  public void testPut() throws Exception {
+    JsoMap map = JsoMap.createEmptyJsoMap();
+
+    map.put("a", "b");
+    assertEquals("b", map.get("a"));
+
+    map.put("a", "c");
+    assertEquals("c", map.get("a"));
+  }
+
+  public void testPutInt() throws Exception {
+    JsoMap map = JsoMap.createEmptyJsoMap();
+
+    map.putInt("a", 1);
+    assertEquals(1, map.getInt("a"));
+
+    map.putInt("a", 2);
+    assertEquals(2, map.getInt("a"));
+  }
+
+  public void testPutObj() throws Exception {
+    JsoMap map = JsoMap.createEmptyJsoMap();
+    JsoMap obj = JsoMap.createEmptyJsoMap();
+
+    obj.putInt("a", 1);
+    map.putObj("b", obj);
+    assertEquals(obj.toString(), map.getObj("b").toString());
+
+    obj.putInt("a", 2);
+    map.putObj("b", obj);
+    assertEquals(obj.toString(), map.getObj("b").toString());
+  }
+
+  public void testString() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+
+    try {
+      // This should fail on the integer "c" or the map "d".
+      map.string();
+      fail("Expected IllegalArgumentException.");
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    } catch (ClassCastException e) {
+      // Expected.
     }
 
-    public void testGetKeys() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
-        JSONArray keys = map.getKeys();
-        assertNotNull(keys);
-        assertEquals(3, keys.length());
-        Set<String> keySet = new HashSet<String>(keys.length());
-        for (int i = 0; i < keys.length(); i++) {
-            keySet.add(keys.getString(i));
-        }
-        assertEquals(new HashSet<String>(Arrays.asList("a", "c", "d")), keySet);
+    map.delKey("c");
+    try {
+      // This should fail on the object "d".
+      map.string();
+      fail("Expected ClassCastException.");
+    } catch (ClassCastException e) {
+      // Expected.
     }
 
-    public void testGetObj() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    map.delKey("d");
+    assertEquals("JsoMap[\n(a:b)\n]", map.string());
+  }
 
-        try {
-            map.getObj("a");
-            fail("Expected ClassCastException.");
-        } catch (ClassCastException e) {
-            // Expected.
-        }
-
-        assertNull(map.getObj("b"));
-
-        try {
-            map.getObj("c");
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected.
-        }
-
-        JsoMap obj = map.getObj("d");
-        assertNotNull(obj);
-        assertEquals("f", obj.get("e"));
+  public void testMap() throws Exception {
+    JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
+    try {
+      // This should fail on the string "a" or the integer "c".
+      map.map();
+      fail("Expected ClassCastException.");
+    } catch (ClassCastException e) {
+      // Expected.
+    } catch (IllegalArgumentException e) {
+      // Expected.
     }
 
-    public void testContainsKey() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
-        assertTrue(map.containsKey("a"));
-        assertFalse(map.containsKey("b"));
-        assertTrue(map.containsKey("c"));
-        assertTrue(map.containsKey("d"));
+    map.delKey("a");
+    try {
+      // This should fail on the integer "c".
+      map.map();
+      fail("Expected IllegalArgumentException.");
+    } catch (IllegalArgumentException e) {
+      // Expected.
     }
 
-    public void testMergeData() throws Exception {
-        JsoMap mapA = JsoMap.createEmptyJsoMap();
-        JsoMap mapB = JsoMap.createEmptyJsoMap();
-
-        mapA.putInt("a", 1);
-        mapA.putInt("b", 2);
-
-        mapB.putInt("b", 3);
-        mapB.putInt("c", 4);
-
-        mapA.mergeData(mapB);
-        assertEquals(1, mapA.getInt("a"));
-        assertEquals(2, mapA.getInt("b"));
-        assertEquals(4, mapA.getInt("c"));
-    }
-
-    public void testPut() throws Exception {
-        JsoMap map = JsoMap.createEmptyJsoMap();
-
-        map.put("a", "b");
-        assertEquals("b", map.get("a"));
-
-        map.put("a", "c");
-        assertEquals("c", map.get("a"));
-    }
-
-    public void testPutInt() throws Exception {
-        JsoMap map = JsoMap.createEmptyJsoMap();
-
-        map.putInt("a", 1);
-        assertEquals(1, map.getInt("a"));
-
-        map.putInt("a", 2);
-        assertEquals(2, map.getInt("a"));
-    }
-
-    public void testPutObj() throws Exception {
-        JsoMap map = JsoMap.createEmptyJsoMap();
-        JsoMap obj = JsoMap.createEmptyJsoMap();
-
-        obj.putInt("a", 1);
-        map.putObj("b", obj);
-        assertEquals(obj.toString(), map.getObj("b").toString());
-
-        obj.putInt("a", 2);
-        map.putObj("b", obj);
-        assertEquals(obj.toString(), map.getObj("b").toString());
-    }
-
-    public void testString() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
-
-        try {
-            // This should fail on the integer "c" or the map "d".
-            map.string();
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected.
-        } catch (ClassCastException e) {
-            // Expected.
-        }
-
-        map.delKey("c");
-        try {
-            // This should fail on the object "d".
-            map.string();
-            fail("Expected ClassCastException.");
-        } catch (ClassCastException e) {
-            // Expected.
-        }
-
-        map.delKey("d");
-        assertEquals("JsoMap[\n(a:b)\n]", map.string());
-    }
-
-    public void testMap() throws Exception {
-        JsoMap map = JsoMap.buildJsoMap(VALID_JSON);
-        try {
-            // This should fail on the string "a" or the integer "c".
-            map.map();
-            fail("Expected ClassCastException.");
-        } catch (ClassCastException e) {
-            // Expected.
-        } catch (IllegalArgumentException e) {
-            // Expected.
-        }
-
-        map.delKey("a");
-        try {
-            // This should fail on the integer "c".
-            map.map();
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected.
-        }
-
-        map.delKey("c");
-        assertEquals("JsoMap[\n(d:JsoMap[\n(e:f)\n])\n]", map.map());
-    }
+    map.delKey("c");
+    assertEquals("JsoMap[\n(d:JsoMap[\n(e:f)\n])\n]", map.map());
+  }
 }
