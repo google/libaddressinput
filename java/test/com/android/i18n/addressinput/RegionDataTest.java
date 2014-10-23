@@ -22,28 +22,28 @@ import junit.framework.TestCase;
  * Small unit tests for the RegionData class.
  */
 public class RegionDataTest extends TestCase {
-    public void testBuilder() throws Exception {
-        RegionData data = new RegionData.Builder().setKey("CA").setName("California").build();
-        assertEquals("CA", data.getKey());
-        assertEquals("California", data.getName());
-        assertTrue(data.isValidName("CA"));
-        // Should match either the key or the name.
-        assertTrue(data.isValidName("California"));
-        // Matching should be case-insensitive.
-        assertTrue(data.isValidName("ca"));
-        assertFalse(data.isValidName("Cat"));
-    }
+  public void testBuilder() throws Exception {
+    RegionData data = new RegionData.Builder().setKey("CA").setName("California").build();
+    assertEquals("CA", data.getKey());
+    assertEquals("California", data.getName());
+    assertTrue(data.isValidName("CA"));
+    // Should match either the key or the name.
+    assertTrue(data.isValidName("California"));
+    // Matching should be case-insensitive.
+    assertTrue(data.isValidName("ca"));
+    assertFalse(data.isValidName("Cat"));
+  }
 
-    public void testBuilderNoName() throws Exception {
-        RegionData data = new RegionData.Builder().setKey("CA").build();
-        assertEquals("CA", data.getKey());
-        assertEquals(null, data.getName());
-    }
+  public void testBuilderNoName() throws Exception {
+    RegionData data = new RegionData.Builder().setKey("CA").build();
+    assertEquals("CA", data.getKey());
+    assertEquals(null, data.getName());
+  }
 
-    public void testBuilderWhitespaceName() throws Exception {
-        RegionData data = new RegionData.Builder().setKey("CA").setName("  ").build();
-        assertEquals("CA", data.getKey());
-        assertEquals(null, data.getName());
-        assertEquals("CA", data.getDisplayName());
-    }
+  public void testBuilderWhitespaceName() throws Exception {
+    RegionData data = new RegionData.Builder().setKey("CA").setName("  ").build();
+    assertEquals("CA", data.getKey());
+    assertEquals(null, data.getName());
+    assertEquals("CA", data.getDisplayName());
+  }
 }

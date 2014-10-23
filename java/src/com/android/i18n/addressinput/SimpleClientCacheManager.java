@@ -20,20 +20,20 @@ package com.android.i18n.addressinput;
  * A simple implementation of ClientCacheManager which doesn't do any caching on its own.
  */
 public class SimpleClientCacheManager implements ClientCacheManager {
-    // URL to get public address data.
-    private static final String PUBLIC_ADDRESS_SERVER = "http://i18napis.appspot.com/address";
+  // URL to get public address data.
+  private static final String PUBLIC_ADDRESS_SERVER = "http://i18napis.appspot.com/address";
 
-    @Override
-    public String get(String key) {
-        return "";
-    }
+  @Override
+  public String get(String key) {
+    return "";
+  }
 
-    @Override
-    public void put(String key, String data) {
-    }
+  @Override
+  public void put(String key, String data) {
+  }
 
-    @Override
-    public String getAddressServerUrl() {
-        return PUBLIC_ADDRESS_SERVER;
-    }
+  @Override
+  public String getAddressServerUrl() {
+    return PUBLIC_ADDRESS_SERVER;
+  }
 }

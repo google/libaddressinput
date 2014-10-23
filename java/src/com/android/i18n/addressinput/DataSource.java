@@ -20,6 +20,6 @@ package com.android.i18n.addressinput;
 // removed when we have created code for static loading of data without using the
 // AddressVerificationData class.
 public interface DataSource {
-    AddressVerificationNodeData getDefaultData(String key);
-    AddressVerificationNodeData get(String key);
+  AddressVerificationNodeData getDefaultData(String key);
+  AddressVerificationNodeData get(String key);
 }

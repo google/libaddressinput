@@ -22,23 +22,23 @@ import junit.framework.TestCase;
  * Test for building form options.
  */
 public class FormOptionsTest extends TestCase {
-    public void testRequiredField() throws Exception {
-        FormOptions options = new FormOptions.Builder().required(AddressField.COUNTRY).build();
-        assertTrue(options.isRequired(AddressField.COUNTRY));
-        assertFalse(options.isRequired(AddressField.LOCALITY));
-        assertTrue(options.getRequiredFields().contains(AddressField.COUNTRY));
-        assertFalse(options.getRequiredFields().contains(AddressField.LOCALITY));
-    }
+  public void testRequiredField() throws Exception {
+    FormOptions options = new FormOptions.Builder().required(AddressField.COUNTRY).build();
+    assertTrue(options.isRequired(AddressField.COUNTRY));
+    assertFalse(options.isRequired(AddressField.LOCALITY));
+    assertTrue(options.getRequiredFields().contains(AddressField.COUNTRY));
+    assertFalse(options.getRequiredFields().contains(AddressField.LOCALITY));
+  }
 
-    public void testReadonlyField() throws Exception {
-        FormOptions options = new FormOptions.Builder().readonly(AddressField.COUNTRY).build();
-        assertTrue(options.isReadonly(AddressField.COUNTRY));
-        assertFalse(options.isReadonly(AddressField.LOCALITY));
-    }
+  public void testReadonlyField() throws Exception {
+    FormOptions options = new FormOptions.Builder().readonly(AddressField.COUNTRY).build();
+    assertTrue(options.isReadonly(AddressField.COUNTRY));
+    assertFalse(options.isReadonly(AddressField.LOCALITY));
+  }
 
-    public void testHiddenField() throws Exception {
-        FormOptions options = new FormOptions.Builder().hide(AddressField.COUNTRY).build();
-        assertTrue(options.isHidden(AddressField.COUNTRY));
-        assertFalse(options.isHidden(AddressField.LOCALITY));
-    }
+  public void testHiddenField() throws Exception {
+    FormOptions options = new FormOptions.Builder().hide(AddressField.COUNTRY).build();
+    assertTrue(options.isHidden(AddressField.COUNTRY));
+    assertFalse(options.isHidden(AddressField.LOCALITY));
+  }
 }

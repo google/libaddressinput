@@ -23,11 +23,11 @@ import junit.framework.TestCase;
  */
 public class AddressFieldTest extends TestCase {
 
-    public void testOf() throws Exception {
-        assertEquals(AddressField.COUNTRY, AddressField.of('R'));
-    }
+  public void testOf() throws Exception {
+    assertEquals(AddressField.COUNTRY, AddressField.of('R'));
+  }
 
-    public void testGetChar() throws Exception {
-        assertEquals('R', AddressField.COUNTRY.getChar());
-    }
+  public void testGetChar() throws Exception {
+    assertEquals('R', AddressField.COUNTRY.getChar());
+  }
 }

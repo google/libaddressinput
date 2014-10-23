@@ -22,16 +22,16 @@ import junit.framework.TestCase;
  * Tests for the AddressProblems class.
  */
 public class AddressProblemsTest extends TestCase {
-    public void testAddError() {
-        AddressProblems ap = new AddressProblems();
-        ap.add(AddressField.POSTAL_CODE, AddressProblemType.MISSING_REQUIRED_FIELD);
-        assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
-                     ap.getProblem(AddressField.POSTAL_CODE));
-    }
+  public void testAddError() {
+    AddressProblems ap = new AddressProblems();
+    ap.add(AddressField.POSTAL_CODE, AddressProblemType.MISSING_REQUIRED_FIELD);
+    assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
+        ap.getProblem(AddressField.POSTAL_CODE));
+  }
 
-    public void testEmptyErrorList() {
-        AddressProblems ap = new AddressProblems();
-        assertNull(ap.getProblem(AddressField.POSTAL_CODE));
-        assertTrue(ap.isEmpty());
-    }
+  public void testEmptyErrorList() {
+    AddressProblems ap = new AddressProblems();
+    assertNull(ap.getProblem(AddressField.POSTAL_CODE));
+    assertTrue(ap.isEmpty());
+  }
 }

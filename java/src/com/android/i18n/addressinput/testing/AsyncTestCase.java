@@ -25,51 +25,51 @@ import java.util.concurrent.TimeoutException;
  * like the corresponding methods in GWTTestCase for testing asynchronous code.
  */
 public abstract class AsyncTestCase extends TestCase {
-    /**
-     * Tracks whether this test is completely done.
-     */
-    private boolean mTestIsFinished;
+  /**
+   * Tracks whether this test is completely done.
+   */
+  private boolean testIsFinished;
 
-    /**
-     * The system time in milliseconds when the test should time out.
-     */
-    private long mTestTimeoutMillis;
+  /**
+   * The system time in milliseconds when the test should time out.
+   */
+  private long testTimeoutMillis;
 
-    /**
-     * Puts the current test in asynchronous mode.
-     *
-     * @param timeoutMillis time to wait before failing the test for timing out
-     */
-    protected void delayTestFinish(int timeoutMillis) {
-        mTestTimeoutMillis = System.currentTimeMillis() + timeoutMillis;
+  /**
+   * Puts the current test in asynchronous mode.
+   *
+   * @param timeoutMillis time to wait before failing the test for timing out
+   */
+  protected void delayTestFinish(int timeoutMillis) {
+    testTimeoutMillis = System.currentTimeMillis() + timeoutMillis;
+  }
+
+  /**
+   * Causes this test to succeed during asynchronous mode.
+   */
+  protected void finishTest() {
+    testIsFinished = true;
+    synchronized (this) {
+      notify();
     }
+  }
 
-    /**
-     * Causes this test to succeed during asynchronous mode.
-     */
-    protected void finishTest() {
-        mTestIsFinished = true;
+  @Override
+  protected void runTest() throws Throwable {
+    testIsFinished = false;
+    testTimeoutMillis = 0;
+    super.runTest();
+
+    if (testTimeoutMillis > 0) {
+      long timeoutMillis = testTimeoutMillis - System.currentTimeMillis();
+      if (timeoutMillis > 0) {
         synchronized (this) {
-            notify();
+          wait(timeoutMillis);
         }
+      }
+      if (!testIsFinished) {
+        throw new TimeoutException("Waited " + timeoutMillis + " ms!");
+      }
     }
-
-    @Override
-    protected void runTest() throws Throwable {
-        mTestIsFinished = false;
-        mTestTimeoutMillis = 0;
-        super.runTest();
-
-        if (mTestTimeoutMillis > 0) {
-            long timeoutMillis = mTestTimeoutMillis - System.currentTimeMillis();
-            if (timeoutMillis > 0) {
-                synchronized (this) {
-                    wait(timeoutMillis);
-                }
-            }
-            if (!mTestIsFinished) {
-                throw new TimeoutException("Waited " + timeoutMillis + " ms!");
-            }
-        }
-    }
+  }
 }

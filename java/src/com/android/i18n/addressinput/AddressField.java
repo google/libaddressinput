@@ -24,64 +24,64 @@ import java.util.Map;
  * formatting. Note that the metadata also has a character for newlines, which is not defined here.
  */
 public enum AddressField {
-    ADMIN_AREA('S'),
-    LOCALITY('C'),
-    RECIPIENT('N'),
-    ORGANIZATION('O'),
-    // Deprecated - use A instead.
-    ADDRESS_LINE_1('1'),
-    // Deprecated - use A instead.
-    ADDRESS_LINE_2('2'),
-    DEPENDENT_LOCALITY('D'),
-    POSTAL_CODE('Z'),
-    SORTING_CODE('X'),
-    STREET_ADDRESS('A'),
+  ADMIN_AREA('S'),
+  LOCALITY('C'),
+  RECIPIENT('N'),
+  ORGANIZATION('O'),
+  // Deprecated - use A instead.
+  ADDRESS_LINE_1('1'),
+  // Deprecated - use A instead.
+  ADDRESS_LINE_2('2'),
+  DEPENDENT_LOCALITY('D'),
+  POSTAL_CODE('Z'),
+  SORTING_CODE('X'),
+  STREET_ADDRESS('A'),
 
-    COUNTRY('R');
+  COUNTRY('R');
 
-    /**
-     * Enum for width types of address input fields.
-     */
-    public enum WidthType {
-        LONG,
-        SHORT;
+  /**
+   * Enum for width types of address input fields.
+   */
+  public enum WidthType {
+    LONG,
+    SHORT;
+  }
+
+  private static final Map<Character, AddressField> FIELD_MAPPING
+      = new HashMap<Character, AddressField>();
+
+  static {
+    for (AddressField value : values()) {
+      FIELD_MAPPING.put(value.getChar(), value);
     }
+  }
 
-    private static final Map<Character, AddressField> FIELD_MAPPING
-            = new HashMap<Character, AddressField>();
+  private final char field;
 
-    static {
-        for (AddressField value : values()) {
-            FIELD_MAPPING.put(value.getChar(), value);
-        }
-    }
+  private AddressField(char field) {
+    this.field = field;
+  }
 
-    private final char mField;
+  /**
+   * Gets the corresponding AddressField for the character code. Returns null if the character is
+   * not recognized.
+   */
+  static AddressField of(char field) {
+    return FIELD_MAPPING.get(field);
+  }
 
-    private AddressField(char field) {
-        mField = field;
-    }
+  /**
+   * Gets the field's identification character, as used in the metadata.
+   *
+   * @return identification char.
+   */
+  char getChar() {
+    return field;
+  }
 
-    /**
-     * Gets the corresponding AddressField for the character code. Returns null if the character is
-     * not recognized.
-     */
-    static AddressField of(char field) {
-        return FIELD_MAPPING.get(field);
-    }
-
-    /**
-     * Gets the field's identification character, as used in the metadata.
-     *
-     * @return identification char.
-     */
-    char getChar() {
-        return mField;
-    }
-
-    /** Returns default width type of the address field. */
-    WidthType getDefaulWidthType() {
-        return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE)
-                ? WidthType.SHORT : WidthType.LONG;
-    }
+  /** Returns default width type of the address field. */
+  WidthType getDefaulWidthType() {
+    return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE)
+        ? WidthType.SHORT : WidthType.LONG;
+  }
 }

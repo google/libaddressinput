@@ -37,63 +37,63 @@ import com.android.i18n.addressinput.AddressField.WidthType;
  * alongside the address widget.
  */
 public class AddressWidgetUiComponentProvider {
-    protected Context mContext;
-    protected LayoutInflater mInflater;
+  protected Context context;
+  protected LayoutInflater inflater;
 
-    public AddressWidgetUiComponentProvider(Context context) {
-        mContext = context;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
+  public AddressWidgetUiComponentProvider(Context context) {
+    this.context = context;
+    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+  }
 
-    /**
-     * Creates a label, e.g. "State", for an address input field.
-     *
-     * @param label the label of the address input field
-     * @param widthType {@link WidthType} of the field
-     * @return a custom {@link TextView} created for the field
-     */
-    protected TextView createUiLabel(CharSequence label, WidthType widthType) {
-        TextView textView = (TextView) mInflater.inflate(R.layout.address_textview, null, false);
-        textView.setText(label);
-        return textView;
-    }
+  /**
+   * Creates a label, e.g. "State", for an address input field.
+   *
+   * @param label the label of the address input field
+   * @param widthType {@link WidthType} of the field
+   * @return a custom {@link TextView} created for the field
+   */
+  protected TextView createUiLabel(CharSequence label, WidthType widthType) {
+    TextView textView = (TextView) inflater.inflate(R.layout.address_textview, null, false);
+    textView.setText(label);
+    return textView;
+  }
 
-    /**
-     * Creates a text input view for an address input field.
-     *
-     * @param widthType {@link WidthType} of the field
-     * @return a custom {@link EditText} created for the field
-     */
-    protected EditText createUiTextField(WidthType widthType) {
-        return (EditText) mInflater.inflate(R.layout.address_edittext, null, false);
-    }
+  /**
+   * Creates a text input view for an address input field.
+   *
+   * @param widthType {@link WidthType} of the field
+   * @return a custom {@link EditText} created for the field
+   */
+  protected EditText createUiTextField(WidthType widthType) {
+    return (EditText) inflater.inflate(R.layout.address_edittext, null, false);
+  }
 
-    /**
-     * Creates a {@link Spinner} for a input field that uses UI picker.
-     *
-     * @param widthType {@link WidthType} of the field
-     * @return a custom {@link Spinner} created for the field
-     */
-    protected Spinner createUiPickerSpinner(WidthType widthType) {
-        return (Spinner) mInflater.inflate(R.layout.address_spinner, null, false);
-    }
+  /**
+   * Creates a {@link Spinner} for a input field that uses UI picker.
+   *
+   * @param widthType {@link WidthType} of the field
+   * @return a custom {@link Spinner} created for the field
+   */
+  protected Spinner createUiPickerSpinner(WidthType widthType) {
+    return (Spinner) inflater.inflate(R.layout.address_spinner, null, false);
+  }
 
-    /**
-     * Creates an {@link ArrayAdapter} to work with the custom {@link Spinner} of a input field that
-     * uses UI picker.
-     *
-     * @param widthType {@link WidthType} of the field
-     * @return a custom {@link ArrayAdapter} for the field
-     */
-    protected ArrayAdapter<String> createUiPickerAdapter(WidthType widthType) {
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
-    }
+  /**
+   * Creates an {@link ArrayAdapter} to work with the custom {@link Spinner} of a input field that
+   * uses UI picker.
+   *
+   * @param widthType {@link WidthType} of the field
+   * @return a custom {@link ArrayAdapter} for the field
+   */
+  protected ArrayAdapter<String> createUiPickerAdapter(WidthType widthType) {
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item);
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    return adapter;
+  }
 
-    /** Gets an activity indicator to show that a task is in progress. */
-    protected ProgressDialog getUiActivityIndicatorView() {
-        return new ProgressDialog(mContext);
-    }
+  /** Gets an activity indicator to show that a task is in progress. */
+  protected ProgressDialog getUiActivityIndicatorView() {
+    return new ProgressDialog(context);
+  }
 }

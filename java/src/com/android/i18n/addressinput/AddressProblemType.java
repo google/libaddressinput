@@ -21,50 +21,50 @@ package com.android.i18n.addressinput;
  */
 public enum AddressProblemType {
 
-    /**
-     * The field is not null and not whitespace, and the field should not be used for this country.
-     *
-     * <p>For example, in the U.S. the SORTING_CODE field is unused, so its presence is an error.
-     */
-    USING_UNUSED_FIELD,
+  /**
+   * The field is not null and not whitespace, and the field should not be used for this country.
+   *
+   * <p>For example, in the U.S. the SORTING_CODE field is unused, so its presence is an error.
+   */
+  USING_UNUSED_FIELD,
 
-    /**
-     * The field is null or whitespace, and the field is required.
-     *
-     * <p>For example, in the U.S. ADMIN_AREA is a required field.
-     */
-    MISSING_REQUIRED_FIELD,
+  /**
+   * The field is null or whitespace, and the field is required.
+   *
+   * <p>For example, in the U.S. ADMIN_AREA is a required field.
+   */
+  MISSING_REQUIRED_FIELD,
 
-    /**
-     * A list of values for the field is defined and the value does not occur in the list. Applies
-     * to hierarchical elements like REGION, ADMIN_AREA, LOCALITY, and DEPENDENT_LOCALITY.
-     *
-     * <p>For example, in the U.S. the only valid values for ADMIN_AREA are the two-letter state
-     * codes.
-     */
-    UNKNOWN_VALUE,
+  /**
+   * A list of values for the field is defined and the value does not occur in the list. Applies
+   * to hierarchical elements like REGION, ADMIN_AREA, LOCALITY, and DEPENDENT_LOCALITY.
+   *
+   * <p>For example, in the U.S. the only valid values for ADMIN_AREA are the two-letter state
+   * codes.
+   */
+  UNKNOWN_VALUE,
 
-    /**
-     * A format for the field is defined and the value does not match. This is used to match
-     * POSTAL_CODE against the the format pattern generally.
-     *
-     * <p>For example, in the U.S. postal codes are five digits with an optional hyphen followed by
-     * four digits.
-     */
-    UNRECOGNIZED_FORMAT,
+  /**
+   * A format for the field is defined and the value does not match. This is used to match
+   * POSTAL_CODE against the the format pattern generally.
+   *
+   * <p>For example, in the U.S. postal codes are five digits with an optional hyphen followed by
+   * four digits.
+   */
+  UNRECOGNIZED_FORMAT,
 
-    /**
-     * A pattern for the field is defined and the value does not match. This is used to match
-     * POSTAL_CODE against a regular expression.
-     *
-     * <p>For example, in the U.S. postal codes in the state of California start with '9'.
-     */
-    MISMATCHING_VALUE;
+  /**
+   * A pattern for the field is defined and the value does not match. This is used to match
+   * POSTAL_CODE against a regular expression.
+   *
+   * <p>For example, in the U.S. postal codes in the state of California start with '9'.
+   */
+  MISMATCHING_VALUE;
 
-    /**
-     * Returns a unique string identifying this problem (for use in a message catalog).
-     */
-    public String keyname() {
-        return name().toLowerCase();
-    }
+  /**
+   * Returns a unique string identifying this problem (for use in a message catalog).
+   */
+  public String keyname() {
+    return name().toLowerCase();
+  }
 }
