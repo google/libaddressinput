@@ -110,7 +110,7 @@ final class LookupKey {
     this.scriptType = builder.script;
     this.nodes = builder.nodes;
     this.languageCode = builder.languageCode;
-    this.keyString = getKeyString();
+    this.keyString = createKeyString();
   }
 
   /**
@@ -208,9 +208,9 @@ final class LookupKey {
   }
 
   /**
-   * Gets a key in string format. E.g., "data/US/CA".
+   * Creates the string format of the given key. E.g., "data/US/CA".
    */
-  private String getKeyString() {
+  private String createKeyString() {
     StringBuilder keyBuilder = new StringBuilder(keyType.name().toLowerCase());
 
     if (keyType == KeyType.DATA) {
@@ -218,13 +218,11 @@ final class LookupKey {
         if (!nodes.containsKey(field)) {
           break;
         }
-        if (field == AddressField.COUNTRY && languageCode != null) {
-          keyBuilder.append(SLASH_DELIM)
-              .append(nodes.get(field)).append(DASH_DELIM)
-              .append(languageCode);
-        } else {
-          keyBuilder.append(SLASH_DELIM).append(nodes.get(field));
-        }
+        keyBuilder.append(SLASH_DELIM).append(nodes.get(field));
+      }
+      // Only append the language if this is not the root key and there was a language.
+      if (languageCode != null && nodes.size() > 0) {
+        keyBuilder.append(DASH_DELIM).append(languageCode);
       }
     } else {
       if (nodes.containsKey(AddressField.COUNTRY)) {
@@ -280,11 +278,9 @@ final class LookupKey {
     private KeyType keyType;
 
     // Default to LOCAL script.
-
     private ScriptType script = ScriptType.LOCAL;
 
-    private Map<AddressField, String> nodes = new EnumMap<AddressField, String>(
-        AddressField.class);
+    private Map<AddressField, String> nodes = new EnumMap<AddressField, String>(AddressField.class);
 
     private String languageCode;
 
@@ -333,31 +329,26 @@ final class LookupKey {
       if (parts[0].equals("data")) {
         keyType = KeyType.DATA;
 
-        // Parses country and language info.
-        if (parts.length > 1) {
-          String substr = Util.trimToNull(parts[1]);
+        // Process all parts of the key, starting from the country.
+        for (int i = 1; i < parts.length; i++) {
+          // TODO: We shouldn't need the trimToNull here.
+          String substr = Util.trimToNull(parts[i]);
+          if (substr == null) {
+            break;
+          }
+          // If a language code specification was present, extract this. This should only be there
+          // (if it ever is) on the last node.
           if (substr.contains(DASH_DELIM)) {
             String[] s = substr.split(DASH_DELIM);
             if (s.length != 2) {
               throw new RuntimeException(
-                  "Wrong format: Substring should be country "
-                  + "code--language code");
+                  "Wrong format: Substring should be"
+                  + "<last node value>--<language code>");
             }
             substr = s[0];
             languageCode = s[1];
           }
-          this.nodes.put(HIERARCHY[0], substr);
-        }
-
-        // Parses sub-country info.
-        if (parts.length > 2) {
-          for (int i = 2; i < parts.length; ++i) {
-            String substr = Util.trimToNull(parts[i]);
-            if (substr == null) {
-              break;
-            }
-            this.nodes.put(HIERARCHY[i - 1], substr);
-          }
+          this.nodes.put(HIERARCHY[i - 1], substr);
         }
       } else if (parts[0].equals("examples")) {
         keyType = KeyType.EXAMPLES;

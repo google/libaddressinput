@@ -47,9 +47,13 @@ enum AddressDataKey {
      */
     KEY,
     /**
-     * The language of this data, if known.
+     * The default language of any data for this region, if known.
      */
     LANG,
+    /**
+     * The languages used by any data for this region, if known.
+     */
+    LANGUAGES,
     /**
      * The latin format string {@link #FMT} used when a country defines an alternative format for
      * use with the latin script, such as in China.
