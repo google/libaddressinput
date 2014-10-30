@@ -43,46 +43,25 @@ public class StandardAddressVerifier {
 
   protected final FieldVerifier rootVerifier;
 
-  protected final VerifierRefiner refiner;
-
   protected final Map<AddressField, List<AddressProblemType>> problemMap;
 
   /**
-   * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the standard checks on the
-   * address fields, as defined in {@link StandardChecks}.
+   * Uses the rootVerifier to perform the standard checks on the address fields, as defined in
+   * {@link StandardChecks}.
    */
   public StandardAddressVerifier(FieldVerifier rootVerifier) {
-    this(rootVerifier, DEFAULT_REFINER, StandardChecks.PROBLEM_MAP);
+    this(rootVerifier, StandardChecks.PROBLEM_MAP);
   }
 
   /**
-   * Uses the rootVerifier and the refiner to perform the standard checks on the address fields,
-   * as defined in {@link StandardChecks}.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner) {
-    this(rootVerifier, refiner, StandardChecks.PROBLEM_MAP);
-  }
-
-  /**
-   * Uses the rootVerifier and {@link #DEFAULT_REFINER} to perform the given checks on the address
-   * fields. A reference to problemMap is maintained. It is not modified by this class, and should
-   * not be modified subsequent to this call.
+   * Uses the rootVerifier to perform the given checks on the address fields. A reference to
+   * problemMap is maintained. It is not modified by this class, and should not be modified
+   * subsequent to this call.
    */
   public StandardAddressVerifier(FieldVerifier rootVerifier,
       Map<AddressField, List<AddressProblemType>> problemMap) {
-    this(rootVerifier, DEFAULT_REFINER, problemMap);
-  }
-
-  /**
-   * Uses the rootVerifier and the refiner to perform the given checks on the address fields. A
-   * reference to problemMap is maintained. It is not modified by this class, and should not be
-   * modified subsequent to this call.
-   */
-  public StandardAddressVerifier(FieldVerifier rootVerifier, VerifierRefiner refiner,
-      Map<AddressField, List<AddressProblemType>> problemMap) {
     this.rootVerifier = rootVerifier;
-    this.refiner = refiner;
-    this.problemMap = StandardChecks.PROBLEM_MAP;
+    this.problemMap = problemMap;
   }
 
   public void verify(AddressData address, AddressProblems problems) {
@@ -211,31 +190,4 @@ public class StandardAddressVerifier {
       String datum, AddressProblems problems) {
     return verifier.check(script, problem, field, datum, problems);
   }
-
-  /**
-   * This gets called with the hierarchical fields COUNTRY, ADMIN_AREA, LOCALITY,
-   * DEPENDENT_LOCALITY in order, returning the refined verifier at each step.
-   *
-   * <p>The default implementation is stateless, and delegates to the verifier to do the
-   * refinement.
-   */
-  public static class VerifierRefiner {
-
-    /**
-     * Refines the verifier.  This delegates to the verifier to perform the refinement.
-     */
-    public FieldVerifier refineVerifier(FieldVerifier v, AddressField field, String subkey) {
-      return v.refineVerifier(subkey);
-    }
-
-    /**
-     * Returns a clean version of the refiner.  Since this implementation is stateless, returns
-     * this.
-     */
-    public VerifierRefiner newInstance() {
-      return this;
-    }
-  }
-
-  private static final VerifierRefiner DEFAULT_REFINER = new VerifierRefiner();
 }
