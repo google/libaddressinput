@@ -87,6 +87,40 @@ public class FieldVerifierTest extends TestCase {
     assertTrue(problems.isEmpty());
   }
 
+  public void testHongKongInvalidDistrictInEnglish() {
+    AddressData addr = new AddressData.Builder()
+        .setCountry("HK")
+        .setAdminArea("New Territories")
+        .setLocality("Cheung Sha Lantau")
+        .setLanguageCode("en")
+        .build();
+    VERIFIER.verify(addr, problems);
+    assertFalse(problems.isEmpty());
+
+    // The administrative area matches a known value, so we shouldn't get any problem.
+    assertNull(problems.getProblem(AddressField.ADMIN_AREA));
+    assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
+        problems.getProblem(AddressField.STREET_ADDRESS));
+    // However, the locality does not.
+    assertEquals(AddressProblemType.UNKNOWN_VALUE, problems.getProblem(AddressField.LOCALITY));
+  }
+
+  public void testHongKongNoStreetInEnglish() {
+    AddressData addr = new AddressData.Builder()
+        .setCountry("HK")
+        .setAdminArea("New Territories")
+        .setLocality("Cheung Sha Lantau Island")
+        .setLanguageCode("en")
+        .build();
+    VERIFIER.verify(addr, problems);
+    assertFalse(problems.isEmpty());
+
+    assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
+        problems.getProblem(AddressField.STREET_ADDRESS));
+    assertNull(problems.getProblem(AddressField.ADMIN_AREA));
+    assertNull(problems.getProblem(AddressField.LOCALITY));
+  }
+
   public void testGermanAddress() {
     AddressData addr = new AddressData.Builder().setCountry("DE")
         .setLocality("Berlin")

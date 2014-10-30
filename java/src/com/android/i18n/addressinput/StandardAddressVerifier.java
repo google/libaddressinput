@@ -39,6 +39,8 @@ import java.util.Map;
  */
 public class StandardAddressVerifier {
 
+  private static final String LOCALE_DELIMITER = "--";
+
   protected final FieldVerifier rootVerifier;
 
   protected final VerifierRefiner refiner;
@@ -129,15 +131,19 @@ public class StandardAddressVerifier {
       // order.
       verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
       if (problems.isEmpty()) {
-        v = v.refineVerifier(address.getPostalCountry());
+        // Ensure we start with the right language country sub-key.
+        String countrySubKey = address.getPostalCountry();
+        if (address.getLanguageCode() != null && !address.getLanguageCode().equals("")) {
+          countrySubKey += (LOCALE_DELIMITER + address.getLanguageCode());
+        }
+        v = v.refineVerifier(countrySubKey);
         verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
         if (problems.isEmpty()) {
           v = v.refineVerifier(address.getAdministrativeArea());
           verifyField(script, v, LOCALITY, address.getLocality(), problems);
           if (problems.isEmpty()) {
             v = v.refineVerifier(address.getLocality());
-            verifyField(script, v, DEPENDENT_LOCALITY,
-                address.getDependentLocality(), problems);
+            verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
             if (problems.isEmpty()) {
               v = v.refineVerifier(address.getDependentLocality());
             }

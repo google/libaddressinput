@@ -30,6 +30,8 @@ public class LookupKeyTest extends TestCase {
   private static final String ROOT_KEY = "data";
   private static final String ROOT_EXAMPLE_KEY = "examples";
   private static final String US_KEY = "data/US";
+  private static final String HK_NEW_TERRITORIES_KEY_EN = "data/HK/New Territories--en";
+  private static final String HK_DISTRICT_KEY_EN = "data/HK/New Territories/District--en";
   private static final String CALIFORNIA_KEY = "data/US/CA";
   private static final String EXAMPLE_LOCAL_US_KEY = "examples/US/local/_default";
 
@@ -51,6 +53,14 @@ public class LookupKeyTest extends TestCase {
 
     LookupKey key2 = new LookupKey.Builder(key.toString()).build();
     assertEquals(ROOT_KEY, key2.toString());
+  }
+
+  public void testLanguageKeysRoundTrip() {
+    LookupKey key = new LookupKey.Builder(HK_NEW_TERRITORIES_KEY_EN).build();
+    assertEquals(HK_NEW_TERRITORIES_KEY_EN, key.toString());
+
+    LookupKey districtKey = new LookupKey.Builder(HK_DISTRICT_KEY_EN).build();
+    assertEquals(HK_DISTRICT_KEY_EN, districtKey.toString());
   }
 
   public void testDataKeys() {
@@ -162,6 +172,33 @@ public class LookupKeyTest extends TestCase {
     } catch (RuntimeException e) {
       // Expected.
     }
+  }
+
+  public void testBuildKeyFromAddressWithLanguageSpecified() {
+    AddressData address = new AddressData.Builder().setCountry("US")
+        .setAdminArea("CA")
+        .setLocality("Mt View")
+        .setDependentLocality("El Camino")
+        .setLanguageCode("en")
+        .build();
+
+    LookupKey key = new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
+    assertEquals("data/US/CA/Mt View/El Camino--en", key.toString());
+
+    key = key.getParentKey();
+    assertEquals("data/US/CA/Mt View--en", key.toString());
+
+    key = key.getParentKey();
+    assertEquals("data/US/CA--en", key.toString());
+
+    key = key.getParentKey();
+    assertEquals("data/US--en", key.toString());
+
+    key = key.getParentKey();
+    assertEquals("data", key.toString());
+
+    key = key.getParentKey();
+    assertNull("root key's parent should be null", key);
   }
 
   public void testGetParentKey() {
