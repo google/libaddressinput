@@ -29,8 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import junit.framework.Assert;
-
 /**
  * Test class for {@link AddressWidgetUiComponentProvider}.
  */
@@ -122,18 +120,18 @@ public class AddressWidgetUiComponentProviderTest
     }
 
     protected TextView createUiLabel(CharSequence label, AddressField.WidthType widthType) {
-      TextView result = new TextView(mContext);
+      TextView result = new TextView(context);
       result.setText(label);
       AddressWidgetUiComponentProviderTest.this.increaseTextViewCounter();
       return result;
     }
 
     protected EditText createUiTextField(AddressField.WidthType widthType) {
-      return new CustomEditText(mContext);
+      return new CustomEditText(context);
     }
 
     protected Spinner createUiPickerSpinner(AddressField.WidthType widthType) {
-      return new CustomSpinner(mContext);
+      return new CustomSpinner(context);
     }
 
     protected ArrayAdapter<String> createUiPickerAdapter(AddressField.WidthType widthType) {

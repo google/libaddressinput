@@ -318,8 +318,8 @@ final class LookupKey {
     Builder(String keyString) {
       String[] parts = keyString.split(SLASH_DELIM);
       // Check some pre-conditions.
-      if (!parts[0].equals(KeyType.DATA.name().toLowerCase()) &&
-          !parts[0].equals(KeyType.EXAMPLES.name().toLowerCase())) {
+      if (!parts[0].equals(KeyType.DATA.name().toLowerCase())
+          && !parts[0].equals(KeyType.EXAMPLES.name().toLowerCase())) {
         throw new RuntimeException("Wrong key type: " + parts[0]);
       }
       if (parts.length > HIERARCHY.length + 1) {

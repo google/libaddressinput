@@ -167,9 +167,9 @@ public class ClientData implements DataSource {
     /* Creates verification data for key="data". This will be used for the
      * root FieldVerifier.
      */
-    String str = "{\"id\":\"data\",\"" +
-        AddressDataKey.COUNTRIES.toString().toLowerCase() +
-        "\": \"" + countries.toString() + "\"}";
+    String str = "{\"id\":\"data\",\""
+        + AddressDataKey.COUNTRIES.toString().toLowerCase()
+        + "\": \"" + countries.toString() + "\"}";
     JsoMap jsoData = null;
     try {
       jsoData = JsoMap.buildJsoMap(str);

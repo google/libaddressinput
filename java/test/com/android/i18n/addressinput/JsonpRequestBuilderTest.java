@@ -144,7 +144,7 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
 
     private HttpServer(long waitMillis, String response) throws IOException {
       this.waitMillis = waitMillis;
-      this.response = (header + response).getBytes();
+      this.response = (HEADER + response).getBytes();
       serverSocket = new ServerSocket(0);
     }
 
@@ -152,6 +152,6 @@ public class JsonpRequestBuilderTest extends AsyncTestCase {
     private byte[] response;
     private ServerSocket serverSocket;
 
-    private static final String header = "HTTP/1.0 200 OK\nContent-Type: text/plain\n\n";
+    private static final String HEADER = "HTTP/1.0 200 OK\nContent-Type: text/plain\n\n";
   }
 }

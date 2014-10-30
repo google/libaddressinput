@@ -18,10 +18,10 @@ package com.android.i18n.addressinput;
 
 import com.android.i18n.addressinput.LookupKey.ScriptType;
 
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for the FormatInterpreter class.

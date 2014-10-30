@@ -18,10 +18,10 @@ package com.android.i18n.addressinput;
 
 import com.android.i18n.addressinput.LookupKey.KeyType;
 
+import junit.framework.TestCase;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 /**
  * Unit tests for the LookupKey class.
@@ -159,8 +159,8 @@ public class LookupKeyTest extends TestCase {
     assertNull("should return null for field not contained in current key", newKey);
 
     newKey = key.getKeyForUpperLevelField(AddressField.RECIPIENT);
-    assertNull("should return null since field '" + AddressField.RECIPIENT +
-        "' is not in address hierarchy", newKey);
+    assertNull("should return null since field '" + AddressField.RECIPIENT
+        + "' is not in address hierarchy", newKey);
   }
 
   public void testGetKeyForUpperLevelFieldWithExampleKey() {
