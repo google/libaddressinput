@@ -18,6 +18,11 @@ package com.android.i18n.addressinput;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Spot check the standard data set for various cases of interest. This is not an exhaustive test.
  */
@@ -31,6 +36,50 @@ public class StandardAddressVerifierTest extends TestCase {
     problems.clear();
     verifier = new StandardAddressVerifier(new FieldVerifier(new ClientData(new CacheData())),
         StandardChecks.PROBLEM_MAP);
+  }
+
+  public void testCustomProblemMapRespected() {
+    AddressData usAddress = new AddressData.Builder().setCountry("US")
+        .setAdminArea("Fake")
+        .setAddress("1234 Somewhere")
+        .setPostalCode("9402")
+        .build();
+    verifier.verify(usAddress, problems);
+    assertFalse(problems.toString(), problems.isEmpty());
+
+    assertEquals(AddressProblemType.UNRECOGNIZED_FORMAT,
+        problems.getProblem(AddressField.POSTAL_CODE));
+    assertEquals(AddressProblemType.UNKNOWN_VALUE,
+        problems.getProblem(AddressField.ADMIN_AREA));
+    // TODO: The standard address verifier fails to properly validate lower-level fields if a
+    // higher-level field is of the wrong value. This is incorrect, and needs to be fixed.
+    // assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
+    //      problems.getProblem(AddressField.LOCALITY));
+
+    // Now pass in a custom problem map.
+    Map<AddressField, List<AddressProblemType>> customProblems =
+        new HashMap<AddressField, List<AddressProblemType>>();
+    StandardAddressVerifier emptyProblemVerifier = new StandardAddressVerifier(
+        new FieldVerifier(new ClientData(new CacheData())), customProblems);
+    problems.clear();
+    emptyProblemVerifier.verify(usAddress, problems);
+    // We aren't looking for any problems, so shouldn't find any.
+    assertTrue(problems.toString(), problems.isEmpty());
+
+    // Lastly try with a map that only looks for postal code problems.
+    List<AddressProblemType> postalCodeProblems = new ArrayList<AddressProblemType>();
+    postalCodeProblems.add(AddressProblemType.UNRECOGNIZED_FORMAT);
+    postalCodeProblems.add(AddressProblemType.MISSING_REQUIRED_FIELD);
+    customProblems.put(AddressField.POSTAL_CODE, postalCodeProblems);
+
+    StandardAddressVerifier postalCodeProblemVerifier = new StandardAddressVerifier(
+        new FieldVerifier(new ClientData(new CacheData())), customProblems);
+    problems.clear();
+    postalCodeProblemVerifier.verify(usAddress, problems);
+    assertFalse(problems.toString(), problems.isEmpty());
+    assertEquals(AddressProblemType.UNRECOGNIZED_FORMAT,
+        problems.getProblem(AddressField.POSTAL_CODE));
+    assertNull(problems.getProblem(AddressField.ADMIN_AREA));
   }
 
   public void testUnitedStatesOk() {
