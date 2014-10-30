@@ -250,8 +250,8 @@ public class FieldVerifier {
       if (latinNames[n].equalsIgnoreCase(sublevel)) {
         // We found a match - we should try looking up a key with the local name at the same
         // index.
-        // TODO: Think about local names and language... does this make sense to append?
-        currentFullKey = id + KEY_NODE_DELIMITER + localNames[n];
+        currentFullKey =
+            new LookupKey.Builder(id + KEY_NODE_DELIMITER + localNames[n]).build().toString();
         nodeData = dataSource.get(currentFullKey);
         if (nodeData != null) {
           return new FieldVerifier(this, nodeData);
