@@ -197,8 +197,8 @@ public class CacheDataTest extends AsyncTestCase {
         if (listenerInvokeCount == maxCount) {
           reachedMaxCount = true;
         }
-        assertTrue("CounterListener's dataLoadingBegin should not be invoked for more " +
-            "than " + maxCount + " times",
+        assertTrue("CounterListener's dataLoadingBegin should not be invoked for more "
+            + "than " + maxCount + " times",
             listenerInvokeCount <= maxCount);
       }
 
@@ -207,11 +207,11 @@ public class CacheDataTest extends AsyncTestCase {
         listenerInvokeCount--;
         assertTrue(listenerInvokeCount >= 0);
         if (listenerInvokeCount == 0) {
-          assertTrue("Expect to see key " + key + " cached when CounterListener's " +
-              " dataLoadingEnd is invoked",
+          assertTrue("Expect to see key " + key + " cached when CounterListener's "
+              + " dataLoadingEnd is invoked",
               cache.containsKey(key.toString()));
-          assertTrue("Expect CounterListener's dataLoadingEnd to be triggered " +
-              maxCount + " times in total", reachedMaxCount);
+          assertTrue("Expect CounterListener's dataLoadingEnd to be triggered "
+              + maxCount + " times in total", reachedMaxCount);
           finishTest();
         }
       }

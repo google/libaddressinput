@@ -19,8 +19,8 @@ package com.android.i18n.addressinput;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

@@ -347,8 +347,8 @@ public final class CacheData {
       try {
         cache.putObj(key.toString(), JsoMap.buildJsoMap(data));
       } catch (JSONException e) {
-        Log.w(TAG, "Failed to parse data for key " + key +
-            " from RegionDataConstants");
+        Log.w(TAG, "Failed to parse data for key " + key
+              + " from RegionDataConstants");
       }
     }
   }

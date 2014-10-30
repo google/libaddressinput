@@ -44,7 +44,9 @@ public class NotifyingListener implements DataLoadListener {
 
   void waitLoadingEnd() throws InterruptedException {
     synchronized (this) {
-      if (done) return;
+      if (done) {
+        return;
+      }
     }
     synchronized (sleeper) {
       sleeper.wait();

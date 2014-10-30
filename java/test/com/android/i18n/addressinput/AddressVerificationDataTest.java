@@ -59,9 +59,9 @@ public class AddressVerificationDataTest extends TestCase {
     assertEquals("en", nodeData.get(AddressDataKey.LANG));
 
     assertEquals("AB~BC~MB~NB~NL~NT~NS~NU~ON~PE~QC~SK~YT", keys);
-    assertEquals("Alberta~British Columbia~Manitoba~New Brunswick" +
-        "~Newfoundland and Labrador~Northwest Territories~Nova Scotia~Nunavut" +
-        "~Ontario~Prince Edward Island~Quebec~Saskatchewan~Yukon",
+    assertEquals("Alberta~British Columbia~Manitoba~New Brunswick"
+        + "~Newfoundland and Labrador~Northwest Territories~Nova Scotia~Nunavut"
+        + "~Ontario~Prince Edward Island~Quebec~Saskatchewan~Yukon",
         names);
   }
 
@@ -96,8 +96,8 @@ public class AddressVerificationDataTest extends TestCase {
     assertNotNull("Expects example data.", AddressDataMapLoader.DATA.get("examples"));
     assertNotNull("Expects example US address.",
         AddressDataMapLoader.DATA.get("examples/US/local/en"));
-    assertEquals("'examples/TW/local/zh_Hant' and 'examples/TW/local/_default' should " +
-        "return same value.",
+    assertEquals("'examples/TW/local/zh_Hant' and 'examples/TW/local/_default' should "
+        + "return same value.",
         AddressDataMapLoader.DATA.get("examples/TW/local/zh_Hant"),
         AddressDataMapLoader.DATA.get("examples/TW/local/_default"));
   }

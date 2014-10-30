@@ -175,8 +175,8 @@ class FormController {
     String key = lookupKey.toString() + SLASH_DELIM + subKey;
 
     // Country level key
-    if (subKeys.length == 1 &&
-        languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
+    if (subKeys.length == 1
+        && languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
       key += DASH_DELIM + languageCodeSubTag.toString();
     }
     return new LookupKey.Builder(key).build();
@@ -197,8 +197,8 @@ class FormController {
     String defaultLanguage = data.get(AddressDataKey.LANG);
 
     // Current language is not the default language for the country.
-    if (Util.trimToNull(defaultLanguage) != null &&
-        !Util.getLanguageSubtag(languageCode).equals(Util.getLanguageSubtag(languageCode))) {
+    if (Util.trimToNull(defaultLanguage) != null
+        && !Util.getLanguageSubtag(languageCode).equals(Util.getLanguageSubtag(languageCode))) {
       return false;
     }
     return true;
