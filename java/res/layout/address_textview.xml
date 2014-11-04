@@ -22,4 +22,5 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="4dip"
     android:layout_marginLeft="3dip"
-    android:textColor="?android:attr/textColorPrimary" />
+    android:textColor="?android:attr/textColorPrimary"
+    android:focusableInTouchMode="true" />
