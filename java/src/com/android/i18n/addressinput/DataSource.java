@@ -20,6 +20,17 @@ package com.android.i18n.addressinput;
 // removed when we have created code for static loading of data without using the
 // AddressVerificationData class.
 public interface DataSource {
+  /**
+   * Returns the default JSON data for the given key string (this method should complete immediately
+   * and must not trigger any network requests.
+   */
   AddressVerificationNodeData getDefaultData(String key);
+
+  /**
+   * A <b>blocking</b> method to return the JSON data for the given key string. This method will
+   * block the current thread until data is available or until a timeout occurs (at which point the
+   * default data will be returned). All networking and failure states are hidden from the caller by
+   * this API.
+   */
   AddressVerificationNodeData get(String key);
 }

@@ -17,13 +17,13 @@
 package com.android.i18n.addressinput;
 
 /**
- *  Used by AddressWidget to handle caching in client-specific ways.
+ * Used by AddressWidget to handle caching in client-specific ways.
  */
 public interface ClientCacheManager {
   /** Get the data that is cached for the given key. */
   public String get(String key);
   /** Put the data for the given key into the cache. */
   public void put(String key, String data);
-  /** Get the Url of the server that serves address metadata. */
+  /** Get the URL of the server that serves address metadata. */
   public String getAddressServerUrl();
 }

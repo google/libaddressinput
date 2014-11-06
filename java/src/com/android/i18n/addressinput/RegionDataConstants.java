@@ -27,13 +27,10 @@ import java.util.Map;
  * and a list of all the regions that the widget can support. Data has been sorted below for ease of
  * editing.
  */
-class RegionDataConstants {
-
-  private static final Map<String, String> COUNTRY_FORMAT_MAP =
-      new HashMap<String, String>();
+final class RegionDataConstants {
+  private static final Map<String, String> COUNTRY_FORMAT_MAP = new HashMap<String, String>();
 
   private enum RegionDataEnum {
-
     AC(new String[]{
       "name", "ASCENSION ISLAND",
     }),

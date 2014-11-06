@@ -21,26 +21,22 @@ import java.util.Map;
 
 /**
  * A builder for creating keys that are used to lookup data in the local cache and fetch data from
- * the server. There are two key types: {@code KeyType#DATA} or {@code KeyType#EXAMPLES}.
- *
- * <p> The {@code KeyType#DATA} key is built based on a universal Address hierarchy, which is:<br>
- *
- * {@code AddressField#Country} -> {@code AddressField#ADMIN_AREA} -> {@code AddressField#Locality}
- * -> {@code AddressField#DEPENDENT_LOCALITY} </p>
- *
- * <p> The {@code KeyType#EXAMPLES} key is built with the following format:<br>
- *
- * {@code AddressField#Country} -> {@code ScriptType} -> language. </p>
+ * the server. There are two key types: {@link KeyType#DATA} or {@link KeyType#EXAMPLES}.
+ * <p>
+ * The {@link KeyType#DATA} key is built based on a universal Address hierarchy, which is:<br>
+ * {@link AddressField#COUNTRY} -> {@link AddressField#ADMIN_AREA} -> {@link AddressField#LOCALITY}
+ * -> {@link AddressField#DEPENDENT_LOCALITY}
+ * <p>
+ * The {@link KeyType#EXAMPLES} key is built with the following format:<br>
+ * {@link AddressField#COUNTRY} -> {@link ScriptType} -> language. </p>
  */
 final class LookupKey {
-
   /**
    * Key types. Address Widget organizes address info based on key types. For example, if you want
    * to know how to verify or format an US address, you need to use {@link KeyType#DATA} to get
    * that info; if you want to get an example address, you use {@link KeyType#EXAMPLES} instead.
    */
   enum KeyType {
-
     /**
      * Key type for getting address data.
      */
@@ -55,13 +51,11 @@ final class LookupKey {
    * Script types. This is used for countries that do not use Latin script, but accept it for
    * transcribing their addresses. For example, you can write a Japanese address in Latin script
    * instead of Japanese:
-   *
-   * <p> 7-2, Marunouchi 2-Chome, Chiyoda-ku, Tokyo 100-8799 </p>
-   *
+   * <pre>7-2, Marunouchi 2-Chome, Chiyoda-ku, Tokyo 100-8799 </pre>
+   * <p>
    * Notice that {@link ScriptType} is based on country/region, not language.
    */
   enum ScriptType {
-
     /**
      * The script that uses Roman characters like ABC (as opposed to scripts like Cyrillic or
      * Arabic).
@@ -80,7 +74,7 @@ final class LookupKey {
 
   /**
    * The universal address hierarchy. Notice that sub-administrative area is neglected here since
-   * it is not required to fill out address form.
+   * it is not required to fill out address forms.
    */
   private static final AddressField[] HIERARCHY = {
     AddressField.COUNTRY,
@@ -98,7 +92,7 @@ final class LookupKey {
 
   private final ScriptType scriptType;
 
-  // Values for hierarchy address fields.
+  // Values for each address field in the hierarchy.
   private final Map<AddressField, String> nodes;
 
   private final String keyString;
@@ -114,14 +108,14 @@ final class LookupKey {
   }
 
   /**
-   * Gets lookup key for the input address field. This method does not allow key with key type of
-   * {@link KeyType#EXAMPLES}.
+   * Gets a lookup key built from the values of nodes in the hierarchy up to and including the input
+   * address field. This method does not allow keys with a key type of {@link KeyType#EXAMPLES}.
    *
    * @param field a field in the address hierarchy.
    * @return key of the specified address field. If address field is not in the hierarchy, or is
-   *         more granular than the current key has, returns null. For example, if your current
-   *         key is "data/US" (down to country level), and you want to get the key for Locality
-   *         (more granular than country), it will return null.
+   *         more granular than the data present in the current key, returns null. For example,
+   *         if your current key is "data/US" (down to COUNTRY level), and you want to get the key
+   *         for LOCALITY (more granular than COUNTRY), it will return null.
    */
   LookupKey getKeyForUpperLevelField(AddressField field) {
     if (keyType != KeyType.DATA) {
@@ -227,9 +221,12 @@ final class LookupKey {
     } else {
       if (nodes.containsKey(AddressField.COUNTRY)) {
         // Example key. E.g., "examples/TW/local/_default".
-        keyBuilder.append(SLASH_DELIM).append(nodes.get(AddressField.COUNTRY))
-            .append(SLASH_DELIM).append(scriptType.name().toLowerCase())
-            .append(SLASH_DELIM).append(DEFAULT_LANGUAGE);
+        keyBuilder.append(SLASH_DELIM)
+            .append(nodes.get(AddressField.COUNTRY))
+            .append(SLASH_DELIM)
+            .append(scriptType.name().toLowerCase())
+            .append(SLASH_DELIM)
+            .append(DEFAULT_LANGUAGE);
       }
     }
 
@@ -317,14 +314,12 @@ final class LookupKey {
      */
     Builder(String keyString) {
       String[] parts = keyString.split(SLASH_DELIM);
-      // Check some pre-conditions.
       if (!parts[0].equals(KeyType.DATA.name().toLowerCase())
           && !parts[0].equals(KeyType.EXAMPLES.name().toLowerCase())) {
         throw new RuntimeException("Wrong key type: " + parts[0]);
       }
       if (parts.length > HIERARCHY.length + 1) {
-        throw new RuntimeException(
-            "input key '" + keyString + "' deeper than supported hierarchy");
+        throw new RuntimeException("input key '" + keyString + "' deeper than supported hierarchy");
       }
       if (parts[0].equals("data")) {
         keyType = KeyType.DATA;

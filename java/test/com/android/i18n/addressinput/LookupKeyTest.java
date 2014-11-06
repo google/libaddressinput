@@ -77,9 +77,7 @@ public class LookupKeyTest extends TestCase {
   }
 
   public void testExampleKeys() {
-    AddressData address = new AddressData.Builder().setCountry("US")
-        .setLanguageCode("en")
-        .build();
+    AddressData address = new AddressData.Builder().setCountry("US").setLanguageCode("en").build();
 
     LookupKey key = new LookupKey.Builder(KeyType.EXAMPLES).setAddressData(address).build();
     assertEquals(EXAMPLE_LOCAL_US_KEY, key.toString());
@@ -100,9 +98,7 @@ public class LookupKeyTest extends TestCase {
 
   public void testFallbackToCountry() {
     // Admin Area is missing.
-    AddressData address = new AddressData.Builder().setCountry("US")
-        .setLocality("Mt View")
-        .build();
+    AddressData address = new AddressData.Builder().setCountry("US").setLocality("Mt View").build();
 
     LookupKey key = new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
 
@@ -117,11 +113,10 @@ public class LookupKeyTest extends TestCase {
   }
 
   public void testNonUsAddress() {
-    AddressData address = new AddressData.Builder().setCountry("TW")
-        // Taipei City
-        .setAdminArea("\u53F0\u5317\u5E02")
-        // Da-an District
-        .setLocality("\u5927\u5B89\u5340")
+    AddressData address = new AddressData.Builder()
+        .setCountry("TW")
+        .setAdminArea("\u53F0\u5317\u5E02")  // Taipei City
+        .setLocality("\u5927\u5B89\u5340")  // Da-an District
         .build();
 
     LookupKey key = new LookupKey.Builder(KeyType.DATA).setAddressData(address).build();
@@ -136,7 +131,8 @@ public class LookupKeyTest extends TestCase {
   }
 
   public void testGetKeyForUpperLevelFieldWithDataKey() {
-    AddressData address = new AddressData.Builder().setCountry("US")
+    AddressData address = new AddressData.Builder()
+        .setCountry("US")
         .setAdminArea("CA")
         .setLocality("Mt View")
         .build();
@@ -174,7 +170,7 @@ public class LookupKeyTest extends TestCase {
     }
   }
 
-  public void testBuildKeyFromAddressWithLanguageSpecified() {
+  public void testGetParentKeyStartingFromAddressWithLanguageSpecified() {
     AddressData address = new AddressData.Builder().setCountry("US")
         .setAdminArea("CA")
         .setLocality("Mt View")
@@ -201,8 +197,9 @@ public class LookupKeyTest extends TestCase {
     assertNull("root key's parent should be null", key);
   }
 
-  public void testGetParentKey() {
-    AddressData address = new AddressData.Builder().setCountry("US")
+  public void testGetParentKeyStartingFromAddress() {
+    AddressData address = new AddressData.Builder()
+        .setCountry("US")
         .setAdminArea("CA")
         .setLocality("Mt View")
         .setDependentLocality("El Camino")
@@ -237,16 +234,16 @@ public class LookupKeyTest extends TestCase {
   }
 
   /**
-   * Ensures that even when the input key string is random, we still create a key. (We do not
-   * verify if the key maps to an real world entity like a city or country).
+   * Ensures that even when the input key string is random, we still create a key. (We do not verify
+   * if the key maps to an real world entity like a city or country).
    */
-  public void testWeDontVerifyKeyName() {
+  public void testWeDoNotVerifyKeyName() {
     LookupKey key = new LookupKey.Builder(RANDOM_COUNTRY_KEY).build();
     assertEquals(RANDOM_COUNTRY_KEY, key.toString());
   }
 
   public void testHash() {
-    String keys[] = { ROOT_KEY, ROOT_EXAMPLE_KEY, US_KEY, CALIFORNIA_KEY };
+    String keys[] = {ROOT_KEY, ROOT_EXAMPLE_KEY, US_KEY, CALIFORNIA_KEY};
     Map<LookupKey, String> map = new HashMap<LookupKey, String>();
 
     for (String key : keys) {

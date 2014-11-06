@@ -19,6 +19,7 @@ package com.android.i18n.addressinput.testing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,31 +27,30 @@ import java.util.Map;
  * Helper class to load JSON data for testing.
  */
 public class AddressDataMapLoader {
-
   private static final String DATA_PATH = "/countryinfo.txt";
 
   private AddressDataMapLoader() {
   }
 
-  public static final Map<String, String> DATA;
+  public static final Map<String, String> TEST_COUNTRY_DATA = loadImmutableTestDataMap();
 
-  static {
-    DATA = new HashMap<String, String>();
+  private static Map<String, String> loadImmutableTestDataMap() {
+    HashMap<String, String> map = new HashMap<String, String>();
     try {
-      BufferedReader br = new BufferedReader(
-          new InputStreamReader(AddressDataMapLoader.class.getResourceAsStream(DATA_PATH),
-            "utf-8"));
-      String line = null;
+      BufferedReader br = new BufferedReader(new InputStreamReader(
+          AddressDataMapLoader.class.getResourceAsStream(DATA_PATH), "UTF-8"));
+      String line;
       while (null != (line = br.readLine())) {
         line = line.trim();
         if (line.length() == 0 || line.charAt(0) == '#') {
           continue;
         }
         int x = line.indexOf('=');
-        DATA.put(line.substring(0, x), line.substring(x + 1));
+        map.put(line.substring(0, x), line.substring(x + 1));
       }
     } catch (IOException e) {
       System.err.println("unable to create map: " + e.getMessage());
     }
+    return Collections.unmodifiableMap(map);
   }
 }

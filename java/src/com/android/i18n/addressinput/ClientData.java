@@ -18,8 +18,6 @@ package com.android.i18n.addressinput;
 
 import com.android.i18n.addressinput.LookupKey.KeyType;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -28,18 +26,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Access point for the cached address verification data. The data contained here will mainly be
- * used to build {@link FieldVerifier}'s. This class is implemented as a singleton.
+ * used to build {@link FieldVerifier}'s.
  */
-public class ClientData implements DataSource {
-
-  private static final String TAG = "ClientData";
+public final class ClientData implements DataSource {
+  private static final Logger logger = Logger.getLogger(ClientData.class.getName());
 
   /**
-   * Data to bootstrap the process. The data are all regional (country level)
-   * data. Keys are like "data/US/CA"
+   * Data to bootstrap the process. The data are all regional (country level) data. Keys are like
+   * "data/US/CA"
    */
   private final Map<String, JsoMap> bootstrapMap = new HashMap<String, JsoMap>();
 
@@ -91,11 +89,7 @@ public class ClientData implements DataSource {
     }
 
     String[] parts = hierarchyKey.split("/");
-
-    return new StringBuilder().append(parts[0])
-        .append("/")
-        .append(parts[1])
-        .toString();
+    return parts[0] + "/" + parts[1];
   }
 
   private boolean isCountryKey(String hierarchyKey) {
@@ -108,8 +102,7 @@ public class ClientData implements DataSource {
    * Returns the contents of the JSON-format string as a map.
    */
   protected AddressVerificationNodeData createNodeData(JsoMap jso) {
-    Map<AddressDataKey, String> map =
-        new EnumMap<AddressDataKey, String>(AddressDataKey.class);
+    Map<AddressDataKey, String> map = new EnumMap<AddressDataKey, String>(AddressDataKey.class);
 
     JSONArray arr = jso.getKeys();
     for (int i = 0; i < arr.length(); i++) {
@@ -167,9 +160,7 @@ public class ClientData implements DataSource {
     /* Creates verification data for key="data". This will be used for the
      * root FieldVerifier.
      */
-    String str = "{\"id\":\"data\",\""
-        + AddressDataKey.COUNTRIES.toString().toLowerCase()
-        + "\": \"" + countries.toString() + "\"}";
+    String str = "{\"id\":\"data\",\"countries\": \"" + countries.toString() + "\"}";
     JsoMap jsoData = null;
     try {
       jsoData = JsoMap.buildJsoMap(str);
@@ -183,14 +174,14 @@ public class ClientData implements DataSource {
    * Fetches data from remote server if it is not cached yet.
    *
    * @param key The key for data that being requested. Key can be either a data key (starts with
-   *            "data") or example key (starts with "examples")
+   *     "data") or example key (starts with "examples")
    */
   private void fetchDataIfNotAvailable(String key) {
     JsoMap jso = cacheData.getObj(key);
     if (jso == null) {
       // If there is bootstrap data for the key, pass the data to fetchDynamicData
       JsoMap regionalData = bootstrapMap.get(key);
-      NotifyingListener listener = new NotifyingListener(this);
+      NotifyingListener listener = new NotifyingListener();
       // If the key was invalid, we don't want to attempt to fetch it.
       if (LookupKey.hasValidKeyPrefix(key)) {
         LookupKey lookupKey = new LookupKey.Builder(key).build();
@@ -200,7 +191,7 @@ public class ClientData implements DataSource {
           // Check to see if there is data for this key now.
           if (cacheData.getObj(key) == null && isCountryKey(key)) {
             // If not, see if there is data in RegionDataConstants.
-            Log.i(TAG, "Server failure: looking up key in region data constants.");
+            logger.info("Server failure: looking up key in region data constants.");
             cacheData.getFromRegionDataConstants(lookupKey);
           }
         } catch (InterruptedException e) {
@@ -224,24 +215,20 @@ public class ClientData implements DataSource {
     Set<RecursiveLoader> loaders = new HashSet<RecursiveLoader>();
     listener.dataLoadingBegin();
     cacheData.fetchDynamicData(
-        new LookupKey.Builder(key).build(),
-        null,
-        new RecursiveLoader(key, loaders, listener));
+        new LookupKey.Builder(key).build(), null, new RecursiveLoader(key, loaders, listener));
   }
 
   /**
    * A helper class to recursively load all sub keys using fetchDynamicData().
    */
   private class RecursiveLoader implements DataLoadListener {
-
     private final String key;
 
     private final Set<RecursiveLoader> loaders;
 
     private final DataLoadListener listener;
 
-    public RecursiveLoader(String key, Set<RecursiveLoader> loaders,
-        DataLoadListener listener) {
+    public RecursiveLoader(String key, Set<RecursiveLoader> loaders, DataLoadListener listener) {
       this.key = key;
       this.loaders = loaders;
       this.listener = listener;
@@ -261,8 +248,8 @@ public class ClientData implements DataSource {
       final String subMores = AddressDataKey.SUB_MORES.name().toLowerCase();
 
       JsoMap map = cacheData.getObj(key);
-
-      if (map.containsKey(subMores)) {
+      // It is entirely possible that data loading failed and that the map is null.
+      if (map != null && map.containsKey(subMores)) {
         // This key could have sub keys.
         String[] mores = map.get(subMores).split("~");
         String[] keys = {};
@@ -279,9 +266,7 @@ public class ClientData implements DataSource {
           if (mores[i].equalsIgnoreCase("true")) {
             // This key should have sub keys.
             String subKey = key + "/" + keys[i];
-            cacheData.fetchDynamicData(
-                new LookupKey.Builder(subKey).build(),
-                null,
+            cacheData.fetchDynamicData(new LookupKey.Builder(subKey).build(), null,
                 new RecursiveLoader(subKey, loaders, listener));
           }
         }

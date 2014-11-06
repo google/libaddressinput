@@ -214,7 +214,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   /** TODO: Add region-dependent width types for address fields. */
   private WidthType getFieldWidthType(AddressUiComponent field) {
-    return field.getId().getDefaulWidthType();
+    return field.getId().getDefaultWidthType();
   }
 
   private void createView(ViewGroup rootView, AddressUiComponent field, String defaultKey,
@@ -728,7 +728,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       case UNKNOWN_VALUE:
         String currentValue = address.getFieldValue(field);
         return String.format(context.getString(R.string.unknown_entry), currentValue);
-      case UNRECOGNIZED_FORMAT:
+      case INVALID_FORMAT:
         // We only support this error type for the Postal Code field.
         return (zipLabel == ZipLabel.POSTAL
             ? context.getString(R.string.unrecognized_format_postal_code)

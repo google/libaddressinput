@@ -16,72 +16,120 @@
 
 package com.android.i18n.addressinput;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Defines the character codes used in the metadata to specify the types of fields used in address
- * formatting. Note that the metadata also has a character for newlines, which is not defined here.
+ * Identifiers for the input fields of the address widget, used to control options related to
+ * visibility and ordering of UI elements. Note that one {@code AddressField} may represent more
+ * than one input field in the UI (eg, {@link #STREET_ADDRESS}), but each input field can be
+ * identified by exactly one {@code AddressField}.
+ * <p>
+ * In certain use cases not all fields are necessary, and you can hide fields using
+ * {@link FormOptions#setHidden}. An example of this is when you are collecting postal addresses not
+ * intended for delivery and wish to suppress the collection of a recipient's name or organization.
+ * <p>
+ * An alternative to hiding fields is to make them read-only, using {@link FormOptions#setReadonly}.
+ * An example of this would be in the case that the country of an address was already determined but
+ * we wish to make it clear to the user that we have already taken it into account and do not want
+ * it entered again.
+ *
+ * @see FormOptions
  */
 public enum AddressField {
-  ADMIN_AREA('S'),
-  LOCALITY('C'),
-  RECIPIENT('N'),
-  ORGANIZATION('O'),
-  // Deprecated - use A instead.
-  ADDRESS_LINE_1('1'),
-  // Deprecated - use A instead.
-  ADDRESS_LINE_2('2'),
-  DEPENDENT_LOCALITY('D'),
-  POSTAL_CODE('Z'),
-  SORTING_CODE('X'),
-  STREET_ADDRESS('A'),
-
-  COUNTRY('R');
-
+  /** The drop-down menu used to select a region for {@link AddressData#getPostalCountry()}. */
+  COUNTRY('R'),
   /**
-   * Enum for width types of address input fields.
+   * The input field used to enter a value for {@link AddressData#getAddressLine1()}.
+   * @deprecated Use {@link #STREET_ADDRESS} instead.
    */
+  @Deprecated
+  ADDRESS_LINE_1('1'),
+  /**
+   * The input field used to enter a value for {@link AddressData#getAddressLine2()}.
+   * @deprecated Use {@link #STREET_ADDRESS} instead.
+   */
+  @Deprecated
+  ADDRESS_LINE_2('2'),
+  /** The input field(s) used to enter values for {@link AddressData#getAddressLines()}. */
+  STREET_ADDRESS('A'),
+  /** The input field used to enter a value for {@link AddressData#getAdministrativeArea()}. */
+  ADMIN_AREA('S'),
+  /** The input field used to enter a value for {@link AddressData#getLocality()}. */
+  LOCALITY('C'),
+  /** The input field used to enter a value for {@link AddressData#getDependentLocality()}. */
+  DEPENDENT_LOCALITY('D'),
+  /** The input field used to enter a value for {@link AddressData#getPostalCode()}. */
+  POSTAL_CODE('Z'),
+  /** The input field used to enter a value for {@link AddressData#getSortingCode()}. */
+  SORTING_CODE('X'),
+
+  /** The input field used to enter a value for {@link AddressData#getRecipient()}. */
+  RECIPIENT('N'),
+  /** The input field used to enter a value for {@link AddressData#getOrganization()}. */
+  ORGANIZATION('O');
+
+  /** Classification of the visual width of address input fields. */
   public enum WidthType {
+    /**
+     * Identifies an input field as accepting full-width input, such as address lines or recipient.
+     */
     LONG,
+    /**
+     * Identifies an input field as accepting short (often bounded) input, such as postal code.
+     */
     SHORT;
   }
 
-  private static final Map<Character, AddressField> FIELD_MAPPING
-      = new HashMap<Character, AddressField>();
+  private static final Map<Character, AddressField> FIELD_MAPPING;
 
   static {
+    Map<Character, AddressField> map = new HashMap<Character, AddressField>();
     for (AddressField value : values()) {
-      FIELD_MAPPING.put(value.getChar(), value);
+      map.put(value.getChar(), value);
     }
+    FIELD_MAPPING = Collections.unmodifiableMap(map);
   }
 
-  private final char field;
+  // Defines the character codes used in the metadata to specify the types of fields used in
+  // address formatting. Note that the metadata also has a character for newlines, which is
+  // not defined here.
+  private final char idChar;
 
-  private AddressField(char field) {
-    this.field = field;
+  private AddressField(char c) {
+    this.idChar = c;
   }
 
   /**
-   * Gets the corresponding AddressField for the character code. Returns null if the character is
-   * not recognized.
+   * Returns the AddressField corresponding to the given identification character.
+   *
+   * @throws IllegalArgumentException if the identifier does not correspond to a valid field.
    */
-  static AddressField of(char field) {
-    return FIELD_MAPPING.get(field);
+  static AddressField of(char c) {
+    AddressField field = FIELD_MAPPING.get(c);
+    if (field == null) {
+      throw new IllegalArgumentException("invalid field character: " + c);
+    }
+    return field;
   }
 
   /**
-   * Gets the field's identification character, as used in the metadata.
+   * Returns the field's identification character, as used in the metadata.
    *
    * @return identification char.
    */
   char getChar() {
-    return field;
+    return idChar;
   }
 
-  /** Returns default width type of the address field. */
-  WidthType getDefaulWidthType() {
-    return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE)
-        ? WidthType.SHORT : WidthType.LONG;
+  /**
+   * Returns default width of this address field. This may be overridden for a specific country when
+   * we have data for the possible inputs in that field and use a drop-down, rather than a text
+   * field, in the UI.
+   */
+  // TODO: We'd probably be better off just having a widthType field in the enum.
+  WidthType getDefaultWidthType() {
+    return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE) ? WidthType.SHORT : WidthType.LONG;
   }
 }

@@ -29,7 +29,6 @@ import java.util.Set;
  * Unit test for {@link JsoMap}.
  */
 public class JsoMapTest extends TestCase {
-
   private static final String VALID_JSON = "{\"a\":\"b\",\"c\":1,\"d\":{\"e\":\"f\"}}";
   private static final String INVALID_JSON = "!";
 

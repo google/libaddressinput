@@ -26,19 +26,17 @@ import java.util.List;
  */
 public class FormControllerTest extends AsyncTestCase {
 
-  private static final AddressData US_CA_ADDRESS;
-  private static final AddressData US_ADDRESS;
   private ClientData clientData;
 
-  static {
-    US_CA_ADDRESS = new AddressData.Builder().setCountry("US")
-        .setAdminArea("CA")
-        .setLocality("Mt View")
-        .setAddressLine1("1098 Alta Ave")
-        .setPostalCode("94043")
-        .build();
-    US_ADDRESS = new AddressData.Builder().setCountry("US").build();
-  }
+  private static final AddressData US_ADDRESS = new AddressData.Builder().setCountry("US").build();
+
+  private static final AddressData US_CA_ADDRESS = new AddressData.Builder()
+      .setCountry("US")
+      .setAdminArea("CA")
+      .setLocality("Mt View")
+      .setAddressLine1("1098 Alta Ave")
+      .setPostalCode("94043")
+      .build();
 
   @Override
   public void setUp() {

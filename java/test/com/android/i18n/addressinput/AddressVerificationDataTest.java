@@ -24,9 +24,8 @@ import junit.framework.TestCase;
  * Tests to ensure that {@code AddressVerificationData} can parse all the default data.
  */
 public class AddressVerificationDataTest extends TestCase {
-
   private static final AddressVerificationData ADDRESS_DATA =
-      new AddressVerificationData(AddressDataMapLoader.DATA);
+      new AddressVerificationData(AddressDataMapLoader.TEST_COUNTRY_DATA);
 
   public void testParseAllData() {
     for (String key : ADDRESS_DATA.keys()) {
@@ -93,12 +92,12 @@ public class AddressVerificationDataTest extends TestCase {
   }
 
   public void testExampleData() {
-    assertNotNull("Expects example data.", AddressDataMapLoader.DATA.get("examples"));
+    assertNotNull("Expects example data.", AddressDataMapLoader.TEST_COUNTRY_DATA.get("examples"));
     assertNotNull("Expects example US address.",
-        AddressDataMapLoader.DATA.get("examples/US/local/en"));
+        AddressDataMapLoader.TEST_COUNTRY_DATA.get("examples/US/local/en"));
     assertEquals("'examples/TW/local/zh_Hant' and 'examples/TW/local/_default' should "
         + "return same value.",
-        AddressDataMapLoader.DATA.get("examples/TW/local/zh_Hant"),
-        AddressDataMapLoader.DATA.get("examples/TW/local/_default"));
+        AddressDataMapLoader.TEST_COUNTRY_DATA.get("examples/TW/local/zh_Hant"),
+        AddressDataMapLoader.TEST_COUNTRY_DATA.get("examples/TW/local/_default"));
   }
 }

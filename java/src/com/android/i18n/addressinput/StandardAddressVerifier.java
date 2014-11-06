@@ -37,7 +37,7 @@ import java.util.Map;
  * Performs various consistency checks on an AddressData. This uses a {@link FieldVerifier} to check
  * each field in the address.
  */
-public class StandardAddressVerifier {
+public final class StandardAddressVerifier {
 
   private static final String LOCALE_DELIMITER = "--";
 
@@ -64,8 +64,11 @@ public class StandardAddressVerifier {
     this.problemMap = problemMap;
   }
 
+  /**
+   * Verifies the address, reporting problems to problems.
+   */
   public void verify(AddressData address, AddressProblems problems) {
-    NotifyingListener listener = new NotifyingListener(this);
+    NotifyingListener listener = new NotifyingListener();
     verifyAsync(address, problems, listener);
     try {
       listener.waitLoadingEnd();
@@ -74,8 +77,8 @@ public class StandardAddressVerifier {
     }
   }
 
-  public void verifyAsync(AddressData address, AddressProblems problems,
-      DataLoadListener listener) {
+  public void verifyAsync(
+      AddressData address, AddressProblems problems, DataLoadListener listener) {
     Thread verifier = new Thread(new Verifier(address, problems, listener));
     verifier.start();
   }
@@ -130,10 +133,13 @@ public class StandardAddressVerifier {
         }
       }
 
-      String street = Util.joinAndSkipNulls("\n", address.getAddressLine1(),
-          address.getAddressLine2());
+    // This concatenation is for the purpose of validation only - the important part is to check we
+    // have at least one value filled in for lower-level components.
+      String street =
+          Util.joinAndSkipNulls("\n", address.getAddressLine1(),
+              address.getAddressLine2());
 
-      // remaining calls don't change the field verifier
+      // Remaining calls don't change the field verifier.
       verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
       verifyField(script, v, STREET_ADDRESS, street, problems);
       verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
@@ -185,9 +191,8 @@ public class StandardAddressVerifier {
   /**
    * Hook for adding special checks for particular problems and/or fields.
    */
-  protected boolean verifyProblemField(LookupKey.ScriptType script,
-      FieldVerifier verifier, AddressProblemType problem, AddressField field,
-      String datum, AddressProblems problems) {
+  protected boolean verifyProblemField(LookupKey.ScriptType script, FieldVerifier verifier,
+      AddressProblemType problem, AddressField field, String datum, AddressProblems problems) {
     return verifier.check(script, problem, field, datum, problems);
   }
 }

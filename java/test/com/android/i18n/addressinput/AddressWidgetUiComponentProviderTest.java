@@ -18,7 +18,6 @@ package com.android.i18n.addressinput;
 
 import com.android.i18n.addressinput.testing.TestActivity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;

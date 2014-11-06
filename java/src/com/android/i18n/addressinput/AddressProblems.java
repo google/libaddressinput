@@ -28,8 +28,8 @@ public class AddressProblems {
       new HashMap<AddressField, AddressProblemType>();
 
   /**
-   * Only one address problem type is saved per addressField. Address field as used here refers to
-   * the different data parts in the AddressData class.
+   * Adds a problem of the given type for the given address field. Only one address problem is
+   * saved per address field.
    */
   void add(AddressField addressField, AddressProblemType problem) {
     problems.put(addressField, problem);

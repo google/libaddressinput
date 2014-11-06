@@ -24,21 +24,16 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Address format interpreter. A utility to find address format related info.
  */
-class FormatInterpreter {
+final class FormatInterpreter {
 
   private static final String NEW_LINE = "%n";
-
-  private final String defaultFormat;
 
   private final FormOptions formOptions;
 
@@ -46,12 +41,12 @@ class FormatInterpreter {
    * Creates a new instance of {@link FormatInterpreter}.
    */
   FormatInterpreter(FormOptions options) {
-    Util.checkNotNull(RegionDataConstants.getCountryFormatMap(),
-        "null country name map not allowed");
+    Util.checkNotNull(
+        RegionDataConstants.getCountryFormatMap(), "null country name map not allowed");
     Util.checkNotNull(options);
-    formOptions = options;
-    defaultFormat = getJsonValue("ZZ", AddressDataKey.FMT);
-    Util.checkNotNull(defaultFormat, "null default format not allowed");
+    this.formOptions = options;
+    Util.checkNotNull(getJsonValue("ZZ", AddressDataKey.FMT),
+        "Could not obtain a default address field order.");
   }
 
   /**
@@ -63,30 +58,33 @@ class FormatInterpreter {
   List<AddressField> getAddressFieldOrder(ScriptType scriptType, String regionCode) {
     Util.checkNotNull(scriptType);
     Util.checkNotNull(regionCode);
+    EnumSet<AddressField> visibleFields = EnumSet.noneOf(AddressField.class);
     List<AddressField> fieldOrder = new ArrayList<AddressField>();
+    // TODO: Change this to just enumerate the address fields directly.
     for (String substring : getFormatSubStrings(scriptType, regionCode)) {
       // Skips un-escaped characters and new lines.
       if (!substring.matches("%.") || substring.equals(NEW_LINE)) {
         continue;
       }
-
       AddressField field = AddressField.of(substring.charAt(1));
-      fieldOrder.add(field);
-    }
-
-    overrideFieldOrder(regionCode, fieldOrder);
-
-    // Uses two address lines instead of street address.
-    List<AddressField> finalFieldOrder = new ArrayList<AddressField>();
-    for (AddressField field : fieldOrder) {
-      if (field == AddressField.STREET_ADDRESS) {
-        finalFieldOrder.add(AddressField.ADDRESS_LINE_1);
-        finalFieldOrder.add(AddressField.ADDRESS_LINE_2);
-      } else {
-        finalFieldOrder.add(field);
+      // Accept only the first instance for any duplicate fields (which can occur because the
+      // string we start with defines format order, which can contain duplicate fields).
+      if (!visibleFields.contains(field)) {
+        visibleFields.add(field);
+        fieldOrder.add(field);
       }
     }
-    return finalFieldOrder;
+    applyFieldOrderOverrides(regionCode, fieldOrder);
+
+    // Uses two address lines instead of street address.
+    for (int n = 0; n < fieldOrder.size(); n++) {
+      if (fieldOrder.get(n) == AddressField.STREET_ADDRESS) {
+        fieldOrder.set(n, AddressField.ADDRESS_LINE_1);
+        fieldOrder.add(n + 1, AddressField.ADDRESS_LINE_2);
+        break;
+      }
+    }
+    return Collections.unmodifiableList(fieldOrder);
   }
 
   /**
@@ -98,42 +96,30 @@ class FormatInterpreter {
     return getAddressFieldOrder(ScriptType.LOCAL, regionCode);
   }
 
-  private void overrideFieldOrder(String regionCode, List<AddressField> fieldOrder) {
-    if (formOptions.getCustomFieldOrder(regionCode) == null) {
+  private void applyFieldOrderOverrides(String regionCode, List<AddressField> fieldOrder) {
+    List<AddressField> customFieldOrder = formOptions.getCustomFieldOrder(regionCode);
+    if (customFieldOrder == null) {
       return;
     }
 
-    // Constructs a hash for overridden field order.
-    final Map<AddressField, Integer> fieldPriority = new HashMap<AddressField, Integer>();
-    int i = 0;
-    for (AddressField field : formOptions.getCustomFieldOrder(regionCode)) {
-      fieldPriority.put(field, i);
-      i++;
+    // We can assert that fieldOrder and customFieldOrder contain no duplicates.
+    // We know this by the construction above and in FormOptions but we still have to think
+    // about fields in the custom ordering which aren't visible (the loop below will fail if
+    // a non-visible field appears in the custom ordering). However in that case it's safe to
+    // just ignore the extraneous field.
+    Set<AddressField> nonVisibleCustomFields = EnumSet.copyOf(customFieldOrder);
+    nonVisibleCustomFields.removeAll(fieldOrder);
+    if (nonVisibleCustomFields.size() > 0) {
+      // Local mutable copy to remove non visible fields - this shouldn't happen often.
+      customFieldOrder = new ArrayList<AddressField>(customFieldOrder);
+      customFieldOrder.removeAll(nonVisibleCustomFields);
     }
-
-    // Finds union of input fields and priority list.
-    List<AddressField> union = new ArrayList<AddressField>();
-    List<Integer> slots = new ArrayList<Integer>();
-    i = 0;
-    for (AddressField field : fieldOrder) {
-      if (fieldPriority.containsKey(field)) {
-        union.add(field);
-        slots.add(i);
+    // It is vital for this loop to work correctly that every element in customFieldOrder
+    // appears in fieldOrder exactly once.
+    for (int fieldIdx = 0, customIdx = 0; fieldIdx < fieldOrder.size(); fieldIdx++) {
+      if (customFieldOrder.contains(fieldOrder.get(fieldIdx))) {
+        fieldOrder.set(fieldIdx, customFieldOrder.get(customIdx++));
       }
-      i++;
-    }
-
-    // Overrides field order with priority list.
-    Collections.sort(union, new Comparator<AddressField>() {
-      @Override
-      public int compare(AddressField o1, AddressField o2) {
-        return fieldPriority.get(o1) - fieldPriority.get(o2);
-      }
-    });
-
-    // Puts reordered fields in slots.
-    for (int j = 0; j < union.size(); ++j) {
-      fieldOrder.set(slots.get(j), union.get(j));
     }
   }
 
@@ -183,23 +169,17 @@ class FormatInterpreter {
     StringBuilder currentLine = new StringBuilder();
     for (String formatSymbol : getFormatSubStrings(scriptType, regionCode)) {
       if (formatSymbol.equals(NEW_LINE)) {
-        String normalizedStr =
-            removeRedundantSpacesAndLeadingPunctuation(currentLine.toString());
+        String normalizedStr = removeRedundantSpacesAndLeadingPunctuation(currentLine.toString());
         if (normalizedStr.length() > 0) {
           lines.add(normalizedStr);
           currentLine.setLength(0);
         }
       } else if (formatSymbol.startsWith("%")) {
-        char c = formatSymbol.charAt(1);
-        AddressField field = AddressField.of(c);
-        Util.checkNotNull(field, "null address field for character " + c);
-
         String value = null;
-        switch (field) {
+        switch (AddressField.of(formatSymbol.charAt(1))) {
           case STREET_ADDRESS:
-            value = Util.joinAndSkipNulls("\n",
-                address.getAddressLine1(),
-                address.getAddressLine2());
+            value =
+                Util.joinAndSkipNulls("\n", address.getAddressLine1(), address.getAddressLine2());
             break;
           case COUNTRY:
             // Country name is treated separately.
@@ -243,8 +223,11 @@ class FormatInterpreter {
   /**
    * Tokenizes the format string and returns the token string list. "%" is treated as an escape
    * character. So for example "%n%a%nxyz" will be split into "%n", "%a", "%n", "x", "y", and "z".
-   * Escaped tokens correspond to either new line or address fields.
+   * Escaped tokens correspond to either new line or address fields. The output of this method
+   * may contain duplicates.
    */
+  // TODO: Create a common method which does field parsing in one place (there are about 4 other
+  // places in this library where format strings are parsed).
   private List<String> getFormatSubStrings(ScriptType scriptType, String regionCode) {
     String formatString = getFormatString(scriptType, regionCode);
     List<String> parts = new ArrayList<String>();
@@ -256,8 +239,8 @@ class FormatInterpreter {
         if (NEW_LINE.equals("%" + c)) {
           parts.add(NEW_LINE);
         } else {
-          Util.checkNotNull(AddressField.of(c), "Unrecognized character '" + c
-              + "' in format pattern: " + formatString);
+          // Checks that the character is valid.
+          AddressField.of(c);
           parts.add("%" + c);
         }
       } else if (c == '%') {
@@ -303,8 +286,7 @@ class FormatInterpreter {
       String parsedJsonString = jsonObj.getString(key.name().toLowerCase());
       return parsedJsonString;
     } catch (JSONException e) {
-      throw new RuntimeException("Invalid json for region code " + regionCode
-          + ": " + jsonString);
+      throw new RuntimeException("Invalid json for region code " + regionCode + ": " + jsonString);
     }
   }
 }
