@@ -46,8 +46,12 @@ class RegionDataConstants {
     }),
     AE(new String[]{
       "name", "UNITED ARAB EMIRATES",
-      "fmt", "%N%n%O%n%A%n%C",
-      "require", "AC",
+      "lang", "ar",
+      "languages", "ar",
+      "fmt", "%N%n%O%n%A%n%S",
+      "lfmt", "%N%n%O%n%A%n%S",
+      "require", "A",
+      "state_name_type", "emirate",
     }),
     AF(new String[]{
       "name", "AFGHANISTAN",
@@ -173,6 +177,9 @@ class RegionDataConstants {
       "name", "BOLIVIA",
       "upper", "AC",
     }),
+    BQ(new String[]{
+      "name", "BONAIRE, SINT EUSTATIUS, AND SABA",
+    }),
     BR(new String[]{
       "name", "BRAZIL",
       "lang", "pt",
@@ -279,6 +286,9 @@ class RegionDataConstants {
       "languages", "pt",
       "fmt", "%N%n%O%n%A%n%Z %C%n%S",
       "state_name_type", "island",
+    }),
+    CW(new String[]{
+      "name", "CURACAO",
     }),
     CX(new String[]{
       "name", "CHRISTMAS ISLAND",
@@ -980,7 +990,10 @@ class RegionDataConstants {
     }),
     RU(new String[]{
       "name", "RUSSIAN FEDERATION",
+      "lang", "ru",
+      "languages", "ru",
       "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
+      "lfmt", "%N%n%O%n%A%n%C%n%S%n%Z",
       "require", "ACZ",
       "upper", "AC",
       "state_name_type", "oblast",
@@ -1063,6 +1076,9 @@ class RegionDataConstants {
     ST(new String[]{
       "name", "SAO TOME AND PRINCIPE",
       "fmt", "%N%n%O%n%A%n%C %X",
+    }),
+    SX(new String[]{
+      "name", "SINT MAARTEN"
     }),
     SV(new String[]{
       "name", "EL SALVADOR",
@@ -1156,8 +1172,11 @@ class RegionDataConstants {
       "name", "TANZANIA (UNITED REP.)",
     }),
     UA(new String[]{
+      "lang", "uk",
+      "languages", "uk",
       "name", "UKRAINE",
       "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
+      "lfmt", "%N%n%O%n%A%n%C%n%S%n%Z",
       "require", "ACZ",
       "state_name_type", "oblast",
     }),

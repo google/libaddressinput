@@ -51,6 +51,10 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"ca\""
       "}"));
   region_data.insert(std::make_pair("AE", "{"
+      "\"fmt\":\"%N%n%O%n%A%n%S\","
+      "\"lfmt\":\"%N%n%O%n%A%n%S\","
+      "\"require\":\"A\","
+      "\"state_name_type\":\"emirate\","
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("AF", "{"
@@ -196,6 +200,9 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("BO", "{"
       "\"languages\":\"es~qu~ay\""
       "}"));
+  region_data.insert(std::make_pair("BQ", "{"
+      "\"languages\":\"pap~nl\""
+      "}"));
   region_data.insert(std::make_pair("BR", "{"
       "\"fmt\":\"%O%n%N%n%A%n%D%n%C-%S%n%Z\","
       "\"require\":\"ASCZ\","
@@ -302,6 +309,9 @@ std::map<std::string, std::string> InitRegionData() {
       "\"state_name_type\":\"island\","
       "\"zipex\":\"7600\","
       "\"languages\":\"pt\""
+      "}"));
+  region_data.insert(std::make_pair("CW", "{"
+      "\"languages\":\"pap~nl\""
       "}"));
   region_data.insert(std::make_pair("CX", "{"
       "\"fmt\":\"%O%n%N%n%A%n%C %S %Z\","
@@ -1073,6 +1083,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("RU", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
+      "\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"oblast\","
       "\"zipex\":\"125075,247112,103375\","
@@ -1161,6 +1172,9 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("ST", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %X\","
       "\"languages\":\"pt\""
+      "}"));
+  region_data.insert(std::make_pair("SX", "{"
+      "\"languages\":\"en~nl\""
       "}"));
   region_data.insert(std::make_pair("SV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z-%C%n%S\","
@@ -1255,6 +1269,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("UA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
+      "\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"oblast\","
       "\"zipex\":\"15432,01055,01001\","

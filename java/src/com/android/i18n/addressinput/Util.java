@@ -40,15 +40,19 @@ class Util {
   private static final Map<String, String> nonLatinLocalLanguageCountries =
       new HashMap<String, String>();
   static {
+    nonLatinLocalLanguageCountries.put("AE", "ar");
     nonLatinLocalLanguageCountries.put("AM", "hy");
     nonLatinLocalLanguageCountries.put("CN", "zh");
+    nonLatinLocalLanguageCountries.put("EG", "ar");
     nonLatinLocalLanguageCountries.put("HK", "zh");
     nonLatinLocalLanguageCountries.put("JP", "ja");
     nonLatinLocalLanguageCountries.put("KP", "ko");
     nonLatinLocalLanguageCountries.put("KR", "ko");
     nonLatinLocalLanguageCountries.put("MO", "zh");
+    nonLatinLocalLanguageCountries.put("RU", "ru");
     nonLatinLocalLanguageCountries.put("TH", "th");
     nonLatinLocalLanguageCountries.put("TW", "zh");
+    nonLatinLocalLanguageCountries.put("UA", "uk");
     nonLatinLocalLanguageCountries.put("VN", "vi");
   }
 
