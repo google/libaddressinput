@@ -178,13 +178,13 @@ INSTANTIATE_TEST_CASE_P(
         LanguageTestCase("AM", "hy", "hy", RECIPIENT),
         LanguageTestCase("AM", "en", "hy-Latn", RECIPIENT),
 
-        // P.R. China supports zh-Hans and has a Latin format.
-        LanguageTestCase("CN", "zh-hans", "zh-Hans", POSTAL_CODE),
-        LanguageTestCase("CN", "zh-hant", "zh-Hans", POSTAL_CODE),
-        LanguageTestCase("CN", "zh-hans-CN", "zh-Hans", POSTAL_CODE),
-        LanguageTestCase("CN", "zh", "zh-Hans", POSTAL_CODE),
-        LanguageTestCase("CN", "ZH_HANS", "zh-Hans", POSTAL_CODE),
-        LanguageTestCase("CN", "zh-cmn-Hans-CN", "zh-Hans", POSTAL_CODE),
+        // P.R. China supports zh and has a Latin format.
+        LanguageTestCase("CN", "zh-hans", "zh", POSTAL_CODE),
+        LanguageTestCase("CN", "zh-hant", "zh", POSTAL_CODE),
+        LanguageTestCase("CN", "zh-hans-CN", "zh", POSTAL_CODE),
+        LanguageTestCase("CN", "zh", "zh", POSTAL_CODE),
+        LanguageTestCase("CN", "ZH_HANS", "zh", POSTAL_CODE),
+        LanguageTestCase("CN", "zh-cmn-Hans-CN", "zh", POSTAL_CODE),
         LanguageTestCase("CN", "zh-Latn", "zh-Latn", RECIPIENT),
         LanguageTestCase("CN", "zh-latn-CN", "zh-Latn", RECIPIENT),
         LanguageTestCase("CN", "en", "zh-Latn", RECIPIENT),
