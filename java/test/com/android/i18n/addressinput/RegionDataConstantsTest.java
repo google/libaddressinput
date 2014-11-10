@@ -37,8 +37,9 @@ public class RegionDataConstantsTest extends TestCase {
     String[] input = { "key", "value", "key2", "value2" };
     // Input order is not maintained, since we build this using JSON objects. This is
     // unimportant, so long as the key-value mappings are maintained.
-    String expectedOutput = "{\"key2\":\"value2\",\"key\":\"value\"}";
+    String expectedOutput1 = "{\"key\":\"value\",\"key2\":\"value2\"}";
+    String expectedOutput2 = "{\"key2\":\"value2\",\"key\":\"value\"}";
     String actualOutput = RegionDataConstants.convertArrayToJsonString(input);
-    assertEquals(expectedOutput, actualOutput);
+    assertTrue(actualOutput.equals(expectedOutput1) || actualOutput.equals(expectedOutput2));
   }
 }
