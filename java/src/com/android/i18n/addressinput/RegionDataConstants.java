@@ -264,8 +264,8 @@ class RegionDataConstants {
     }),
     CN(new String[]{
       "name", "P.R. CHINA",
-      "lang", "zh-Hans",
-      "languages", "zh-Hans",
+      "lang", "zh",
+      "languages", "zh",
       "fmt", "%Z%n%S%C%D%n%A%n%O%n%N",
       "lfmt", "%N%n%O%n%A%n%D%n%C%n%S, %Z",
       "require", "ACSZ",

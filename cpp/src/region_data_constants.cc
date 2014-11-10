@@ -290,7 +290,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"sublocality_name_type\":\"district\","
       "\"zipex\":\"266033,317204,100096,100808\","
       "\"posturl\":\"http://www.cpdc.com.cn/postcdQueryAction.do\?reqCode=gotoQueryPostAddr\","
-      "\"languages\":\"zh-Hans\""
+      "\"languages\":\"zh\""
       "}"));
   region_data.insert(std::make_pair("CO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S\","
