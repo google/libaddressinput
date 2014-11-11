@@ -33,7 +33,7 @@ public class CacheDataTest extends AsyncTestCase {
 
   private static final String CALIFORNIA_KEY = "data/US/CA";
 
-  private static final String RANDOM_COUNTRY_KEY = "data/asIOSDxcowW";
+  private static final String INVALID_KEY = "data/asIOSDxcowW";
 
   private static final String EXAMPLE_LOCAL_US_KEY = "examples/US/local/_default";
 
@@ -56,7 +56,7 @@ public class CacheDataTest extends AsyncTestCase {
     String id = "data/CA";
     JSONObject jsonObject = null;
     try {
-      jsonObject = new JSONObject(AddressDataMapLoader.DATA.get(id));
+      jsonObject = new JSONObject(AddressDataMapLoader.TEST_COUNTRY_DATA.get(id));
     } catch (JSONException jsonException) {
       // If this throws an exception the test fails.
       fail("Can't parse json object");
@@ -73,7 +73,7 @@ public class CacheDataTest extends AsyncTestCase {
     // Creating cache with content.
     String id = "data/CA";
     try {
-      JSONObject jsonObject = new JSONObject(AddressDataMapLoader.DATA.get(id));
+      JSONObject jsonObject = new JSONObject(AddressDataMapLoader.TEST_COUNTRY_DATA.get(id));
       String jsonString = jsonObject.toString();
       jsonString = jsonString.substring(0, jsonString.length() / 2);
 
@@ -273,7 +273,7 @@ public class CacheDataTest extends AsyncTestCase {
   }
 
   public void testInvalidKey() {
-    final LookupKey key = new LookupKey.Builder(RANDOM_COUNTRY_KEY).build();
+    final LookupKey key = new LookupKey.Builder(INVALID_KEY).build();
 
     delayTestFinish(15000);
 

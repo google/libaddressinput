@@ -17,9 +17,11 @@
 package com.android.i18n.addressinput;
 
 /**
- * A simple class to hold region data. Instances of this class are immutable.
+ * A simple class to hold region data.
  */
-class RegionData {
+// This class used to purport to be immutable, but it is no such thing.
+// TODO: Make this class actually immutable and not just pretending to be immutable.
+final class RegionData {
 
   private String key;
   private String name;
@@ -37,8 +39,8 @@ class RegionData {
    */
   private RegionData(RegionData data) {
     Util.checkNotNull(data);
-    key = data.key;
-    name = data.name;
+    this.key = data.key;
+    this.name = data.name;
   }
 
   /**

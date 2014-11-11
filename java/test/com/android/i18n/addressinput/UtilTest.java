@@ -21,11 +21,7 @@ import junit.framework.TestCase;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Tests for util functions.
- */
 public class UtilTest extends TestCase {
-
   public void testIsExplicitLatinScript() throws Exception {
     // Should recognise Latin script in a variety of forms.
     assertTrue(Util.isExplicitLatinScript("zh-Latn"));
@@ -100,8 +96,7 @@ public class UtilTest extends TestCase {
     // No country in the Locale language.
     assertEquals("fr_latn", Util.getWidgetCompatibleLanguageCode(Locale.FRENCH, "CN"));
     // CJK language - but wrong country.
-    assertEquals("ko_latn",
-        Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "CN"));
+    assertEquals("ko_latn", Util.getWidgetCompatibleLanguageCode(Locale.KOREAN, "CN"));
     Locale chineseChina = new Locale("zh", "CN");
     assertEquals("zh_CN", Util.getWidgetCompatibleLanguageCode(chineseChina, "CN"));
   }
@@ -127,7 +122,7 @@ public class UtilTest extends TestCase {
   }
 
   public void testBuildNameToKeyMap() throws Exception {
-    String names[] = {"", "", "", "", "NEW PROVIDENCE" };
+    String names[] = {"", "", "", "", "NEW PROVIDENCE"};
     // We have one more key than name here.
     String keys[] = {"AB", "AC", "AD", "AE", "NP", "XX"};
     Map<String, String> result = Util.buildNameToKeyMap(keys, names, null);
@@ -141,7 +136,7 @@ public class UtilTest extends TestCase {
     Map<String, String> resultWithLatin = Util.buildNameToKeyMap(keys, null, names);
     // We should have the six keys and the one Latin-script name in the end result.
     assertEquals(keys.length + 1, resultWithLatin.size());
-    String lnames[] = { "Other name" };
+    String lnames[] = {"Other name"};
     resultWithLatin = Util.buildNameToKeyMap(keys, names, lnames);
     // We should have the keys, plus the names in lnames and names.
     assertEquals(keys.length + 2, resultWithLatin.size());

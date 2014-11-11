@@ -27,8 +27,7 @@ import java.util.Iterator;
 /**
  * Compatibility methods on top of the JSON data.
  */
-class JsoMap extends JSONObject {
-
+final class JsoMap extends JSONObject {
   /**
    * Construct a JsoMap object given some json text. This method directly evaluates the String
    * that you pass in; no error or safety checking is performed, so be very careful about the
@@ -81,7 +80,7 @@ class JsoMap extends JSONObject {
    * @throws ClassCastException, IllegalArgumentException.
    */
   @Override
-  public String get(String key) {  // throws ClassCastException, IllegalArgumentException
+  public String get(String key) {
     try {
       Object o = super.get(key);
       if (o instanceof String) {
@@ -132,7 +131,9 @@ class JsoMap extends JSONObject {
    * @return A JSONArray that contains all the keys.
    */
   JSONArray getKeys() {
-    return super.names();
+    // names() returns null if the array was empty!
+    JSONArray names = super.names();
+    return names != null ? names : new JSONArray();
   }
 
   /**
@@ -144,27 +145,26 @@ class JsoMap extends JSONObject {
    */
   @SuppressWarnings("unchecked")
   // JSONObject.keys() has no type information.
-      JsoMap getObj(String key)
-      throws ClassCastException, IllegalArgumentException {
-        try {
-          Object o = super.get(key);
-          if (o instanceof JSONObject) {
-            JSONObject value = (JSONObject) o;
-            ArrayList<String> keys = new ArrayList<String>(value.length());
-            for (Iterator<String> it = value.keys(); it.hasNext();) {
-              keys.add(it.next());
-            }
-            String[] names = new String[keys.size()];
-            return new JsoMap(value, keys.toArray(names));
-          } else if (o instanceof Integer) {
-            throw new IllegalArgumentException();
-          } else {
-            throw new ClassCastException();
-          }
-        } catch (JSONException e) {
-          return null;
+  JsoMap getObj(String key) throws ClassCastException, IllegalArgumentException {
+    try {
+      Object o = super.get(key);
+      if (o instanceof JSONObject) {
+        JSONObject value = (JSONObject) o;
+        ArrayList<String> keys = new ArrayList<String>(value.length());
+        for (Iterator<String> it = value.keys(); it.hasNext(); ) {
+          keys.add(it.next());
         }
+        String[] names = new String[keys.size()];
+        return new JsoMap(value, keys.toArray(names));
+      } else if (o instanceof Integer) {
+        throw new IllegalArgumentException();
+      } else {
+        throw new ClassCastException();
       }
+    } catch (JSONException e) {
+      return null;
+    }
+  }
 
   /**
    * Check if the object has specified key.
@@ -259,7 +259,7 @@ class JsoMap extends JSONObject {
       } catch (JSONException e) {
         throw new RuntimeException(e);
       }
-      sb.append('(').append(key).append(':').append(get(key)).append(')').append('\n');
+      sb.append('(').append(key).append(':').append(get(key)).append(")\n");
     }
     sb.append(']');
     return sb.toString();
@@ -275,8 +275,7 @@ class JsoMap extends JSONObject {
       } catch (JSONException e) {
         throw new RuntimeException(e);
       }
-      sb.append('(').append(key).append(':').append(getObj(key).string()).append(')')
-          .append('\n');
+      sb.append('(').append(key).append(':').append(getObj(key).string()).append(")\n");
     }
     sb.append(']');
     return sb.toString();

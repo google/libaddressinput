@@ -27,8 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Wraps a Map of address property data to provide the AddressVerificationData API.
  */
-class AddressVerificationData implements DataSource {
-
+final class AddressVerificationData implements DataSource {
   private final Map<String, String> propertiesMap;
 
   private static final Pattern KEY_VALUES_PATTERN = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
@@ -43,10 +42,28 @@ class AddressVerificationData implements DataSource {
     this.propertiesMap = propertiesMap;
   }
 
+  /**
+   * This will not return null.
+   */
+  @Override
+  public AddressVerificationNodeData getDefaultData(String key) {
+    // gets country key
+    if (key.split("/").length > 1) {
+      String[] parts = key.split("/");
+      key = parts[0] + "/" + parts[1];
+    }
+
+    AddressVerificationNodeData data = get(key);
+    if (data == null) {
+      throw new RuntimeException("failed to get default data with key " + key);
+    }
+    return data;
+  }
+
   @Override
   public AddressVerificationNodeData get(String key) {
     String json = propertiesMap.get(key);
-    if (json != null && isValidKey(key)) {
+    if (json != null && isValidDataKey(key)) {
       return createNodeData(json);
     }
     return null;
@@ -59,7 +76,7 @@ class AddressVerificationData implements DataSource {
   Set<String> keys() {
     Set<String> result = new HashSet<String>();
     for (String key : propertiesMap.keySet()) {
-      if (isValidKey(key)) {
+      if (isValidDataKey(key)) {
         result.add(key);
       }
     }
@@ -67,10 +84,9 @@ class AddressVerificationData implements DataSource {
   }
 
   /**
-   * We can be initialized with the full set of address information, but validation only uses
-   * info prefixed with "data" (in particular, no info prefixed with "examples").
+   * Returns whether the key is a "data" key rather than an "examples" key.
    */
-  private boolean isValidKey(String key) {
+  private boolean isValidDataKey(String key) {
     return key.startsWith("data");
   }
 
@@ -80,8 +96,7 @@ class AddressVerificationData implements DataSource {
   AddressVerificationNodeData createNodeData(String json) {
     // Remove leading and trailing { and }.
     json = json.substring(1, json.length() - 1);
-    Map<AddressDataKey, String> map =
-        new EnumMap<AddressDataKey, String>(AddressDataKey.class);
+    Map<AddressDataKey, String> map = new EnumMap<AddressDataKey, String>(AddressDataKey.class);
 
     // our objects are very simple so we parse manually
     // - no double quotes within strings
@@ -138,20 +153,5 @@ class AddressVerificationData implements DataSource {
     }
 
     return new AddressVerificationNodeData(map);
-  }
-
-  @Override
-  public AddressVerificationNodeData getDefaultData(String key) {
-    // gets country key
-    if (key.split("/").length > 1) {
-      String[] parts = key.split("/");
-      key = parts[0] + "/" + parts[1];
-    }
-
-    AddressVerificationNodeData data = get(key);
-    if (data == null) {
-      throw new RuntimeException("failed to get default data with key " + key);
-    }
-    return data;
   }
 }

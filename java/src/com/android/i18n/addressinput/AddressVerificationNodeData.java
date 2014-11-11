@@ -26,8 +26,7 @@ import java.util.Map;
  * as a single string using '~' to separate the elements of the array, depending on the
  * AddressDataKey.
  */
-public class AddressVerificationNodeData {
-
+public final class AddressVerificationNodeData {
   private final Map<AddressDataKey, String> map;
 
   public AddressVerificationNodeData(Map<AddressDataKey, String> map) {

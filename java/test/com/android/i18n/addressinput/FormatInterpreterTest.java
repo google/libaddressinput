@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tests for the FormatInterpreter class.
+ * Tests for {@link FormatInterpreter}.
  */
 public class FormatInterpreterTest extends TestCase {
   private static final AddressData US_CA_ADDRESS;
@@ -33,14 +33,16 @@ public class FormatInterpreterTest extends TestCase {
   private FormatInterpreter formatInterpreter;
 
   static {
-    US_CA_ADDRESS = new AddressData.Builder().setCountry("US")
+    US_CA_ADDRESS = new AddressData.Builder()
+        .setCountry("US")
         .setAdminArea("CA")
         .setLocality("Mt View")
         .setAddressLine1("1098 Alta Ave")
         .setPostalCode("94043")
         .build();
 
-    TW_ADDRESS = new AddressData.Builder().setCountry("TW")
+    TW_ADDRESS = new AddressData.Builder()
+        .setCountry("TW")
         .setAdminArea("\u53F0\u5317\u5E02")  // Taipei city
         .setLocality("\u5927\u5B89\u5340")  // Da-an district
         .setAddressLine1("Sec. 3 Hsin-yi Rd.")
@@ -57,14 +59,13 @@ public class FormatInterpreterTest extends TestCase {
 
   public void testIterateUsAddressFields() {
     AddressField[] format = {
-      AddressField.RECIPIENT,
-      AddressField.ORGANIZATION,
-      AddressField.ADDRESS_LINE_1,
-      AddressField.ADDRESS_LINE_2,
-      AddressField.LOCALITY,
-      AddressField.ADMIN_AREA,
-      AddressField.POSTAL_CODE
-    };
+        AddressField.RECIPIENT,
+        AddressField.ORGANIZATION,
+        AddressField.ADDRESS_LINE_1,
+        AddressField.ADDRESS_LINE_2,
+        AddressField.LOCALITY,
+        AddressField.ADMIN_AREA,
+        AddressField.POSTAL_CODE};
 
     int currIndex = 0;
     for (AddressField field : formatInterpreter.getAddressFieldOrder(ScriptType.LOCAL, "US")) {
@@ -80,11 +81,11 @@ public class FormatInterpreterTest extends TestCase {
    */
   public void testIterateVuAddressFields() {
     AddressField[] format = {
-      AddressField.RECIPIENT,
-      AddressField.ORGANIZATION,
-      AddressField.ADDRESS_LINE_1,
-      AddressField.ADDRESS_LINE_2,
-      AddressField.LOCALITY,
+        AddressField.RECIPIENT,
+        AddressField.ORGANIZATION,
+        AddressField.ADDRESS_LINE_1,
+        AddressField.ADDRESS_LINE_2,
+        AddressField.LOCALITY,
     };
 
     int currIndex = 0;
@@ -97,21 +98,19 @@ public class FormatInterpreterTest extends TestCase {
 
   public void testOverrideFieldOrder() {
     AddressField[] expectedOrder = {
-      AddressField.ADMIN_AREA,
-      AddressField.ORGANIZATION,
-      AddressField.ADDRESS_LINE_1,
-      AddressField.ADDRESS_LINE_2,
-      AddressField.LOCALITY,
-      AddressField.RECIPIENT,
-      AddressField.POSTAL_CODE
-    };
+        AddressField.ADMIN_AREA,
+        AddressField.ORGANIZATION,
+        AddressField.ADDRESS_LINE_1,
+        AddressField.ADDRESS_LINE_2,
+        AddressField.LOCALITY,
+        AddressField.RECIPIENT,
+        AddressField.POSTAL_CODE};
 
     FormatInterpreter myInterpreter = new FormatInterpreter(
         new FormOptions.Builder().customizeFieldOrder("US",
-          AddressField.ADMIN_AREA,
-          AddressField.RECIPIENT,
-          AddressField.SORTING_CODE,
-          AddressField.POSTAL_CODE).build());
+            AddressField.ADMIN_AREA, AddressField.RECIPIENT,
+            AddressField.SORTING_CODE, AddressField.POSTAL_CODE)
+        .build());
 
     int currIndex = 0;
     for (AddressField field : myInterpreter.getAddressFieldOrder(ScriptType.LOCAL, "US")) {
@@ -127,14 +126,13 @@ public class FormatInterpreterTest extends TestCase {
 
   public void testIterateTwLatinAddressFields() {
     AddressField[] format = {
-      AddressField.RECIPIENT,
-      AddressField.ORGANIZATION,
-      AddressField.ADDRESS_LINE_1,
-      AddressField.ADDRESS_LINE_2,
-      AddressField.LOCALITY,
-      AddressField.ADMIN_AREA,
-      AddressField.POSTAL_CODE
-    };
+        AddressField.RECIPIENT,
+        AddressField.ORGANIZATION,
+        AddressField.ADDRESS_LINE_1,
+        AddressField.ADDRESS_LINE_2,
+        AddressField.LOCALITY,
+        AddressField.ADMIN_AREA,
+        AddressField.POSTAL_CODE};
 
     int currIndex = 0;
     for (AddressField field : formatInterpreter.getAddressFieldOrder(ScriptType.LATIN, "TW")) {
@@ -150,7 +148,6 @@ public class FormatInterpreterTest extends TestCase {
     expected.add("Mt View, CA 94043");
 
     List<String> real = formatInterpreter.getEnvelopeAddress(US_CA_ADDRESS);
-
     assertEquals(expected, real);
   }
 
@@ -174,11 +171,10 @@ public class FormatInterpreterTest extends TestCase {
     expected.add("1098 Alta Ave");
     expected.add("CA 94043");
 
-    AddressData address = new AddressData.Builder().set(US_CA_ADDRESS)
-        .set(AddressField.LOCALITY, null).build();
+    AddressData address =
+        new AddressData.Builder().set(US_CA_ADDRESS).set(AddressField.LOCALITY, null).build();
 
     List<String> real = formatInterpreter.getEnvelopeAddress(address);
-
     assertEquals(expected, real);
   }
 
@@ -193,7 +189,8 @@ public class FormatInterpreterTest extends TestCase {
   public void testEnvelopeAddressLeadingPostPrefix() {
     List<String> expected = new ArrayList<String>();
     expected.add("CH-8047 Herrliberg");
-    AddressData address = new AddressData.Builder().setCountry("CH")
+    AddressData address = new AddressData.Builder()
+        .setCountry("CH")
         .setPostalCode("8047")
         .setLocality("Herrliberg")
         .build();
@@ -203,7 +200,8 @@ public class FormatInterpreterTest extends TestCase {
   }
 
   public void testSvAddress() {
-    final AddressData svAddress = new AddressData.Builder().setCountry("SV")
+    AddressData svAddress = new AddressData.Builder()
+        .setCountry("SV")
         .setAdminArea("Ahuachapán")
         .setLocality("Ahuachapán")
         .setAddressLine1("Some Street 12")
@@ -217,9 +215,8 @@ public class FormatInterpreterTest extends TestCase {
     List<String> real = formatInterpreter.getEnvelopeAddress(svAddress);
     assertEquals(expected, real);
 
-    final AddressData svAddressWithPostCode = new AddressData.Builder(svAddress)
-        .setPostalCode("CP 2101")
-        .build();
+    AddressData svAddressWithPostCode =
+        new AddressData.Builder(svAddress).setPostalCode("CP 2101").build();
 
     expected = new ArrayList<String>();
     expected.add("Some Street 12");

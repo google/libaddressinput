@@ -28,7 +28,7 @@ import java.util.Queue;
  * Responsible for looking up data for address fields. This fetches possible
  * values for the next level down in the address hierarchy, if these are known.
  */
-class FormController {
+final class FormController {
   // For address hierarchy in lookup key.
   private static final String SLASH_DELIM = "/";
   // For joined values.
@@ -38,15 +38,14 @@ class FormController {
   private static final LookupKey ROOT_KEY = FormController.getDataKeyForRoot();
   private static final String DEFAULT_REGION_CODE = "ZZ";
   private static final AddressField[] ADDRESS_HIERARCHY = {
-    AddressField.COUNTRY,
-    AddressField.ADMIN_AREA,
-    AddressField.LOCALITY,
-    AddressField.DEPENDENT_LOCALITY
-  };
+      AddressField.COUNTRY,
+      AddressField.ADMIN_AREA,
+      AddressField.LOCALITY,
+      AddressField.DEPENDENT_LOCALITY};
 
   // Current user language.
   private String languageCode;
-  private ClientData integratedData;
+  private final ClientData integratedData;
   private String currentCountry;
 
   /**
@@ -128,8 +127,8 @@ class FormController {
     requestDataRecursively(ROOT_KEY, subkeys, listener);
   }
 
-  private void requestDataRecursively(final LookupKey key,
-      final Queue<String> subkeys, final DataLoadListener listener) {
+  private void requestDataRecursively(
+      final LookupKey key, final Queue<String> subkeys, final DataLoadListener listener) {
     Util.checkNotNull(key, "Null key not allowed");
     Util.checkNotNull(subkeys, "Null subkeys not allowed");
 
@@ -175,8 +174,8 @@ class FormController {
     String key = lookupKey.toString() + SLASH_DELIM + subKey;
 
     // Country level key
-    if (subKeys.length == 1
-        && languageCodeSubTag != null && !isDefaultLanguage(languageCodeSubTag)) {
+    if (subKeys.length == 1 && languageCodeSubTag != null
+        && !isDefaultLanguage(languageCodeSubTag)) {
       key += DASH_DELIM + languageCodeSubTag.toString();
     }
     return new LookupKey.Builder(key).build();
@@ -192,8 +191,7 @@ class FormController {
     }
     AddressData addr = new AddressData.Builder().setCountry(currentCountry).build();
     LookupKey lookupKey = getDataKeyFor(addr);
-    AddressVerificationNodeData data =
-        integratedData.getDefaultData(lookupKey.toString());
+    AddressVerificationNodeData data = integratedData.getDefaultData(lookupKey.toString());
     String defaultLanguage = data.get(AddressDataKey.LANG);
 
     // Current language is not the default language for the country.
@@ -208,9 +206,8 @@ class FormController {
    * Gets a list of {@link RegionData} for sub-regions for a given key. For example, sub regions
    * for "data/US" are AL/Alabama, AK/Alaska, etc.
    *
-   * <p> TODO: It seems more straight forward to return a list of pairs instead of RegionData.
-   * Actually, we can remove RegionData since it does not contain anything more than key/value
-   * pairs now.
+   * <p> TODO: Rename/simplify RegionData to avoid confusion with RegionDataConstants elsewhere
+   * since it does not contain anything more than key/value pairs now.
    *
    * @return A list of sub-regions, each sub-region represented by a {@link RegionData}.
    */
@@ -224,21 +221,16 @@ class FormController {
 
     // Root key.
     if (normalizedKey.equals(ROOT_KEY)) {
-      AddressVerificationNodeData data =
-          integratedData.getDefaultData(normalizedKey.toString());
+      AddressVerificationNodeData data = integratedData.getDefaultData(normalizedKey.toString());
       String[] countries = splitData(data.get(AddressDataKey.COUNTRIES));
       for (int i = 0; i < countries.length; i++) {
-        RegionData rd = new RegionData.Builder()
-            .setKey(countries[i])
-            .setName(countries[i])
-            .build();
+        RegionData rd = new RegionData.Builder().setKey(countries[i]).setName(countries[i]).build();
         results.add(rd);
       }
       return results;
     }
 
-    AddressVerificationNodeData data =
-        integratedData.get(normalizedKey.toString());
+    AddressVerificationNodeData data = integratedData.get(normalizedKey.toString());
     if (data != null) {
       String[] keys = splitData(data.get(AddressDataKey.SUB_KEYS));
       String[] names = (getScriptType() == ScriptType.LOCAL)
@@ -264,7 +256,7 @@ class FormController {
    * @return an array of strings
    */
   private String[] splitData(String raw) {
-    if (raw == null || raw.length() == 0) {
+    if (raw == null || raw.isEmpty()) {
       return new String[]{};
     }
     return raw.split(TILDE_DELIM);
@@ -284,7 +276,7 @@ class FormController {
    * replaced with CA. The normalization goes from top (country) to bottom (dependent locality)
    * and if any field value is empty, unknown, or invalid, it will stop and return whatever it
    * gets. For example, a key "data/US/California/foobar/kar" will be normalized into
-   * "data/US/CA/foobar/kar" since "foobar" is unknown. This method supports only key of
+   * "data/US/CA/foobar/kar" since "foobar" is unknown. This method supports only keys of
    * {@link KeyType#DATA} type.
    *
    * @return normalized {@link LookupKey}.
@@ -304,7 +296,7 @@ class FormController {
 
     StringBuilder sb = new StringBuilder(subStr[0]);
     for (int i = 1; i < subStr.length; ++i) {
-      // Strips the language code if contained.
+      // Strips the language code if there was one.
       String languageCode = null;
       if (i == 1 && subStr[i].contains(DASH_DELIM)) {
         String[] s = subStr[i].split(DASH_DELIM);
@@ -312,8 +304,7 @@ class FormController {
         languageCode = s[1];
       }
 
-      String normalizedSubKey = getSubKey(new LookupKey.Builder(sb.toString()).build(),
-          subStr[i]);
+      String normalizedSubKey = getSubKey(new LookupKey.Builder(sb.toString()).build(), subStr[i]);
 
       // Can't find normalized sub-key; assembles the lookup key with the
       // remaining sub-keys and returns it.

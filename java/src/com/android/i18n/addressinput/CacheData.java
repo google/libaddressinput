@@ -20,27 +20,22 @@ import static com.android.i18n.addressinput.Util.checkNotNull;
 
 import com.android.i18n.addressinput.JsonpRequestBuilder.AsyncCallback;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 /**
  * Cache for dynamic address data.
  */
 public final class CacheData {
+  private static final Logger logger = Logger.getLogger(CacheData.class.getName());
 
   /**
-   * Used to identify the source of a log message.
-   */
-  private static final String TAG = "CacheData";
-
-  /**
-   * Time out value for the server to respond in millisecond.
+   * Time-out value for the server to respond in milliseconds.
    */
   private static final int TIMEOUT = 5000;
 
@@ -92,23 +87,25 @@ public final class CacheData {
    */
   public CacheData(ClientCacheManager clientCacheManager) {
     this.clientCacheManager = clientCacheManager;
-    setUrl(clientCacheManager.getAddressServerUrl());
-    cache = JsoMap.createEmptyJsoMap();
+    setUrl(this.clientCacheManager.getAddressServerUrl());
+    this.cache = JsoMap.createEmptyJsoMap();
   }
 
   /**
-   * This constructor is meant to be used together with external caching.
-   *
-   * Use case:
-   *
+   * This constructor is meant to be used together with external caching. Use case:
+   * <p>
    * After having finished using the address widget:
-   * String allCachedData = getJsonString();
-   * Cache (save) allCachedData wherever makes sense for your service / activity
-   *
+   * <ol>
+   * <li>String allCachedData = getJsonString();
+   * <li>Cache (save) allCachedData wherever makes sense for your service / activity
+   * </ol>
+   * <p>
    * Before using it next time:
-   * Get the saved allCachedData string
-   * new ClientData(new CacheData(allCachedData))
-   *
+   * <ol>
+   * <li>Get the saved allCachedData string
+   * <li>new ClientData(new CacheData(allCachedData))
+   * </ol>
+   * <p>
    * If you don't have any saved data you can either just pass an empty string to
    * this constructor or use the other constructor.
    *
@@ -123,7 +120,7 @@ public final class CacheData {
     } catch (JSONException jsonE) {
       // If parsing the JSON string throws an exception, default to
       // starting with an empty cache.
-      Log.w(TAG, "Could not parse json string, creating empty cache instead.");
+      logger.warning("Could not parse json string, creating empty cache instead.");
       tempMap = JsoMap.createEmptyJsoMap();
     } finally {
       cache = tempMap;
@@ -135,7 +132,6 @@ public final class CacheData {
    * requests of the same key is dispatched and server has not responded yet.
    */
   private static interface CacheListener extends EventListener {
-
     /**
      * The function that will be called when valid data is about to be put in the cache.
      *
@@ -148,7 +144,6 @@ public final class CacheData {
    * Class to handle JSON response.
    */
   private class JsonHandler {
-
     /**
      * Key for the requested data.
      */
@@ -164,7 +159,7 @@ public final class CacheData {
     /**
      * Constructs a JsonHandler instance.
      *
-     * @param key    The key for requested data.
+     * @param key The key for requested data.
      * @param oldJso Pre-existing data for this key or null.
      */
     private JsonHandler(String key, JSONObject oldJso, DataLoadListener listener) {
@@ -186,7 +181,7 @@ public final class CacheData {
     private void handleJson(JsoMap map) {
       // Can this ever happen?
       if (map == null) {
-        Log.w(TAG, "server returns null for key:" + key);
+        logger.warning("server returns null for key:" + key);
         badKeys.add(key);
         notifyListenersAfterJobDone(key);
         triggerDataLoadingEndIfNotNull(listener);
@@ -196,7 +191,7 @@ public final class CacheData {
       JSONObject json = map;
       String idKey = AddressDataKey.ID.name().toLowerCase();
       if (!json.has(idKey)) {
-        Log.w(TAG, "invalid or empty data returned for key: " + key);
+        logger.warning("invalid or empty data returned for key: " + key);
         badKeys.add(key);
         notifyListenersAfterJobDone(key);
         triggerDataLoadingEndIfNotNull(listener);
@@ -260,15 +255,13 @@ public final class CacheData {
    * DataLoadListener#dataLoadingEnd()} method before it returns.
    *
    * @param existingJso Pre-existing data for this key or null if none.
-   * @param listener    An optional listener to call when done.
+   * @param listener An optional listener to call when done.
    */
-  void fetchDynamicData(final LookupKey key, JSONObject existingJso,
-      final DataLoadListener listener) {
+  void fetchDynamicData(
+      final LookupKey key, JSONObject existingJso, final DataLoadListener listener) {
     checkNotNull(key, "null key not allowed.");
 
-    if (listener != null) {
-      listener.dataLoadingBegin();
-    }
+    notifyStart(listener);
 
     // Key is valid and cached.
     if (cache.containsKey(key.toString())) {
@@ -284,7 +277,7 @@ public final class CacheData {
 
     // Already requested the key, and is still waiting for server's response.
     if (!requestedKeys.add(key.toString())) {
-      Log.d(TAG, "data for key " + key + " requested but not cached yet");
+      logger.fine("data for key " + key + " requested but not cached yet");
       addListenerToTempStore(key, new CacheListener() {
         @Override
         public void onAdd(String myKey) {
@@ -297,37 +290,32 @@ public final class CacheData {
     // Key is in the cache maintained by the client of the AddressWidget.
     String dataFromClientCache = clientCacheManager.get(key.toString());
     if (dataFromClientCache != null && dataFromClientCache.length() > 0) {
-      final JsonHandler handler = new JsonHandler(key.toString(),
-          existingJso, listener);
+      final JsonHandler handler = new JsonHandler(key.toString(), existingJso, listener);
       try {
         handler.handleJson(JsoMap.buildJsoMap(dataFromClientCache));
         return;
       } catch (JSONException e) {
-        Log.w(TAG, "Data from client's cache is in the wrong format: "
-            + dataFromClientCache);
+        logger.warning("Data from client's cache is in the wrong format: " + dataFromClientCache);
       }
     }
 
     // Key is not cached yet, now sending the request to the server.
+    final JsonHandler handler = new JsonHandler(key.toString(), existingJso, listener);
     JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
     jsonp.setTimeout(TIMEOUT);
-    final JsonHandler handler = new JsonHandler(key.toString(),
-        existingJso, listener);
-    jsonp.requestObject(serviceUrl + "/" + key.toString(),
-        new AsyncCallback<JsoMap>() {
-          @Override
-          public void onFailure(Throwable caught) {
-            Log.w(TAG, "Request for key " + key + " failed");
-            requestedKeys.remove(key.toString());
-            notifyListenersAfterJobDone(key.toString());
-            triggerDataLoadingEndIfNotNull(listener);
-          }
+    jsonp.requestObject(serviceUrl + "/" + key.toString(), new AsyncCallback<JsoMap>() {
+      @Override
+      public void onFailure(Throwable caught) {
+        logger.warning("Request for key " + key + " failed");
+        requestedKeys.remove(key.toString());
+        notifyListenersAfterJobDone(key.toString());
+        triggerDataLoadingEndIfNotNull(listener);
+      }
 
-          @Override
-          public void onSuccess(JsoMap result) {
-            handler.handleJson(result);
-            // Put metadata into the cache maintained by the client of the
-            // AddressWidget.
+      @Override
+      public void onSuccess(JsoMap result) {
+        handler.handleJson(result);
+        // Put metadata into the cache maintained by the client of the AddressWidget.
             String dataRetrieved = result.toString();
             clientCacheManager.put(key.toString(), dataRetrieved);
           }
@@ -335,9 +323,9 @@ public final class CacheData {
   }
 
   /**
-   * Gets region data from our compiled-in java file and stores it in the
-   * cache. This is only called when data cannot be obtained from the server,
-   * so there will be no pre-existing data for this key.
+   * Gets region data from our compiled-in java file and stores it in the cache. This is only called
+   * when data cannot be obtained from the server, so there will be no pre-existing data for this
+   * key.
    */
   void getFromRegionDataConstants(final LookupKey key) {
     checkNotNull(key, "null key not allowed.");
@@ -347,8 +335,7 @@ public final class CacheData {
       try {
         cache.putObj(key.toString(), JsoMap.buildJsoMap(data));
       } catch (JSONException e) {
-        Log.w(TAG, "Failed to parse data for key " + key
-              + " from RegionDataConstants");
+        logger.warning("Failed to parse data for key " + key + " from RegionDataConstants");
       }
     }
   }
@@ -375,6 +362,13 @@ public final class CacheData {
     return cache.getObj(key);
   }
 
+  /** Notifies the listener when we start loading data. */
+  private void notifyStart(DataLoadListener listener) {
+    if (listener != null) {
+      listener.dataLoadingBegin();
+    }
+  }
+
   private void notifyListenersAfterJobDone(String key) {
     LookupKey lookupKey = new LookupKey.Builder(key).build();
     HashSet<CacheListener> listeners = temporaryListenerStore.get(lookupKey);
@@ -398,8 +392,8 @@ public final class CacheData {
   }
 
   /**
-   * Added for testing purposes.
-   * Adds a new object into the cache.
+   * Added for testing purposes. Adds a new object into the cache.
+   *
    * @param id string of the format "data/country/.." ie. "data/US/CA"
    * @param object The JSONObject to be put into cache.
    */
@@ -408,8 +402,8 @@ public final class CacheData {
   }
 
   /**
-   * Added for testing purposes.
-   * Checks to see if the cache is empty,
+   * Added for testing purposes. Checks to see if the cache is empty,
+   *
    * @return true if the internal cache is empty
    */
   boolean isEmpty() {

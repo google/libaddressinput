@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Utility functions used by the address widget.
  */
-class Util {
+final class Util {
   /**
    * This variable is in upper-case, since we convert the language code to upper case before doing
    * string comparison.
@@ -36,6 +36,7 @@ class Util {
    * Map of countries that have non-latin local names, with the language that their local names
    * are in. We only list a country here if we have the appropriate data. Only language sub-tags
    * are listed.
+   * TODO: Delete this: the information should be read from RegionDataConstants.java.
    */
   private static final Map<String, String> nonLatinLocalLanguageCountries =
       new HashMap<String, String>();
@@ -87,8 +88,7 @@ class Util {
    * malformed, returns "und".
    */
   static String getLanguageSubtag(String languageCode) {
-    final Pattern languageCodePattern = Pattern
-        .compile("(\\w{2,3})(?:[-_]\\w{4})?(?:[-_]\\w{2})?");
+    final Pattern languageCodePattern = Pattern.compile("(\\w{2,3})(?:[-_]\\w{4})?(?:[-_]\\w{2})?");
     Matcher m = languageCodePattern.matcher(languageCode);
     if (m.matches()) {
       return m.group(1).toLowerCase();
@@ -111,17 +111,18 @@ class Util {
   /**
    * Throws an exception if the object is null, with a generic error message.
    */
-  static void checkNotNull(Object o) throws NullPointerException {
-    checkNotNull(o, "This object should not be null.");
+  static <T> T checkNotNull(T o) {
+    return checkNotNull(o, "This object should not be null.");
   }
 
   /**
    * Throws an exception if the object is null, with the error message supplied.
    */
-  static void checkNotNull(Object o, String message) throws NullPointerException {
+  static <T> T checkNotNull(T o, String message) {
     if (o == null) {
       throw new NullPointerException(message);
     }
+    return o;
   }
 
   /**
@@ -163,9 +164,8 @@ class Util {
     }
     if (names != null) {
       if (names.length > keyLength) {
-        throw new IllegalStateException(
-            "names length (" + names.length + ") is greater than keys length (" +
-            keys.length + ")");
+        throw new IllegalStateException("names length (" + names.length
+            + ") is greater than keys length (" + keys.length + ")");
       }
       for (int i = 0; i < keyLength; i++) {
         // If we have less names than keys, we ignore all missing names. This happens
@@ -179,9 +179,8 @@ class Util {
     }
     if (lnames != null) {
       if (lnames.length > keyLength) {
-        throw new IllegalStateException(
-            "lnames length (" + lnames.length + ") is greater than keys length (" +
-            keys.length + ")");
+        throw new IllegalStateException("lnames length (" + lnames.length
+            + ") is greater than keys length (" + keys.length + ")");
       }
       for (int i = 0; i < keyLength; i++) {
         if (i < lnames.length && lnames[i].length() > 0) {

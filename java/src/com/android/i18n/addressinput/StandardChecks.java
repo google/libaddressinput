@@ -16,6 +16,21 @@
 
 package com.android.i18n.addressinput;
 
+import static com.android.i18n.addressinput.AddressField.ADMIN_AREA;
+import static com.android.i18n.addressinput.AddressField.COUNTRY;
+import static com.android.i18n.addressinput.AddressField.DEPENDENT_LOCALITY;
+import static com.android.i18n.addressinput.AddressField.LOCALITY;
+import static com.android.i18n.addressinput.AddressField.ORGANIZATION;
+import static com.android.i18n.addressinput.AddressField.POSTAL_CODE;
+import static com.android.i18n.addressinput.AddressField.RECIPIENT;
+import static com.android.i18n.addressinput.AddressField.SORTING_CODE;
+import static com.android.i18n.addressinput.AddressField.STREET_ADDRESS;
+import static com.android.i18n.addressinput.AddressProblemType.INVALID_FORMAT;
+import static com.android.i18n.addressinput.AddressProblemType.MISMATCHING_VALUE;
+import static com.android.i18n.addressinput.AddressProblemType.MISSING_REQUIRED_FIELD;
+import static com.android.i18n.addressinput.AddressProblemType.UNEXPECTED_FIELD;
+import static com.android.i18n.addressinput.AddressProblemType.UNKNOWN_VALUE;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,8 +40,7 @@ import java.util.Map;
 /**
  * Loader for a map defining the standard checks to perform on AddressFields.
  */
-public class StandardChecks {
-
+public final class StandardChecks {
   private StandardChecks() {
   }
 
@@ -36,31 +50,21 @@ public class StandardChecks {
     Map<AddressField, List<AddressProblemType>> map =
         new HashMap<AddressField, List<AddressProblemType>>();
 
-    addToMap(map, AddressField.COUNTRY, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
-    addToMap(map, AddressField.ADMIN_AREA, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
-    addToMap(map, AddressField.LOCALITY, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
-    addToMap(map, AddressField.DEPENDENT_LOCALITY, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNKNOWN_VALUE);
-    addToMap(map, AddressField.POSTAL_CODE, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD, AddressProblemType.UNRECOGNIZED_FORMAT,
-        AddressProblemType.MISMATCHING_VALUE);
-    addToMap(map, AddressField.STREET_ADDRESS, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD);
-    addToMap(map, AddressField.SORTING_CODE, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD);
-    addToMap(map, AddressField.ORGANIZATION, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD);
-    addToMap(map, AddressField.RECIPIENT, AddressProblemType.USING_UNUSED_FIELD,
-        AddressProblemType.MISSING_REQUIRED_FIELD);
+    addToMap(map, COUNTRY, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD, UNKNOWN_VALUE);
+    addToMap(map, ADMIN_AREA, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD, UNKNOWN_VALUE);
+    addToMap(map, LOCALITY, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD, UNKNOWN_VALUE);
+    addToMap(map, DEPENDENT_LOCALITY, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD, UNKNOWN_VALUE);
+    addToMap(map, POSTAL_CODE, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD, INVALID_FORMAT,
+        MISMATCHING_VALUE);
+    addToMap(map, STREET_ADDRESS, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD);
+    addToMap(map, SORTING_CODE, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD);
+    addToMap(map, ORGANIZATION, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD);
+    addToMap(map, RECIPIENT, UNEXPECTED_FIELD, MISSING_REQUIRED_FIELD);
 
     PROBLEM_MAP = Collections.unmodifiableMap(map);
   }
 
-  private static void addToMap(Map<AddressField, List<AddressProblemType>> map,
-      AddressField field,
+  private static void addToMap(Map<AddressField, List<AddressProblemType>> map, AddressField field,
       AddressProblemType... problems) {
     map.put(field, Collections.unmodifiableList(Arrays.asList(problems)));
   }
