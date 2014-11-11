@@ -53,6 +53,11 @@ limitations under the License.
     Street address
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_PIN_CODE_LABEL"
+      desc="PIN (Postal Index Number) Code. Values are numeric. Used in India.">
+    PIN code
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL"
       desc="Postal Code. Values are frequently alphanumeric. Used in countries
             such as Switzerland.">

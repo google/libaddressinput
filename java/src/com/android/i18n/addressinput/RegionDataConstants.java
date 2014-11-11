@@ -550,6 +550,7 @@ class RegionDataConstants {
       "languages", "en",
       "fmt", "%N%n%O%n%A%n%C %Z%n%S",
       "require", "ACSZ",
+      "zip_name_type", "pin",
       "state_name_type", "state",
     }),
     IO(new String[]{
@@ -1077,9 +1078,6 @@ class RegionDataConstants {
       "name", "SAO TOME AND PRINCIPE",
       "fmt", "%N%n%O%n%A%n%C %X",
     }),
-    SX(new String[]{
-      "name", "SINT MAARTEN"
-    }),
     SV(new String[]{
       "name", "EL SALVADOR",
       "lang", "es",
@@ -1087,6 +1085,9 @@ class RegionDataConstants {
       "fmt", "%N%n%O%n%A%n%Z-%C%n%S",
       "require", "ACS",
       "upper", "CSZ",
+    }),
+    SX(new String[]{
+      "name", "SINT MAARTEN"
     }),
     SZ(new String[]{
       "name", "SWAZILAND",
