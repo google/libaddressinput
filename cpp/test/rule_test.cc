@@ -270,6 +270,8 @@ TEST_P(PostalCodeNameParseTest, ParsedCorrectly) {
 INSTANTIATE_TEST_CASE_P(
     AllPostalCodeNames, PostalCodeNameParseTest,
     testing::Values(
+        std::make_pair("{\"zip_name_type\":\"pin\"}",
+                       IDS_LIBADDRESSINPUT_PIN_CODE_LABEL),
         std::make_pair("{\"zip_name_type\":\"postal\"}",
                        IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL),
         std::make_pair("{\"zip_name_type\":\"zip\"}",

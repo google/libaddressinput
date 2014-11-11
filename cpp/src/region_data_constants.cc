@@ -601,6 +601,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("IN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\","
       "\"require\":\"ACSZ\","
+      "\"zip_name_type\":\"pin\","
       "\"state_name_type\":\"state\","
       "\"zipex\":\"110034,110001\","
       "\"posturl\":\"http://www.indiapost.gov.in/pin/pinsearch.aspx\","
@@ -1173,14 +1174,14 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%N%n%O%n%A%n%C %X\","
       "\"languages\":\"pt\""
       "}"));
-  region_data.insert(std::make_pair("SX", "{"
-      "\"languages\":\"en~nl\""
-      "}"));
   region_data.insert(std::make_pair("SV", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z-%C%n%S\","
       "\"require\":\"ACS\","
       "\"zipex\":\"CP 1101\","
       "\"languages\":\"es\""
+      "}"));
+  region_data.insert(std::make_pair("SX", "{"
+      "\"languages\":\"en~nl\""
       "}"));
   region_data.insert(std::make_pair("SZ", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","

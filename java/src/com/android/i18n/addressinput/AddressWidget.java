@@ -96,7 +96,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   // The appropriate label that should be applied to the zip code field of the current country.
   private enum ZipLabel {
     ZIP,
-    POSTAL
+    POSTAL,
+    PIN
   }
 
   private ZipLabel zipLabel;
@@ -318,14 +319,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     localityUi.initializeCandidatesList(localityList);
   }
 
-  // ZIP code is called postal code in some countries. This method returns the appropriate name
-  // for the given countryNode.
+  // ZIP code is called postal code in some countries, and PIN code in India. This method returns
+  // the appropriate name for the given countryNode.
   private String getZipFieldName(AddressVerificationNodeData countryNode) {
     String zipName;
     String zipType = countryNode.get(AddressDataKey.ZIP_NAME_TYPE);
     if (zipType == null) {
       zipLabel = ZipLabel.POSTAL;
       zipName = context.getString(R.string.i18n_postal_code_label);
+    } else if (zipType.equals("pin")) {
+      zipLabel = ZipLabel.PIN;
+      zipName = context.getString(R.string.i18n_pin_code_label);
     } else {
       zipLabel = ZipLabel.ZIP;
       zipName = context.getString(R.string.i18n_zip_code_label);

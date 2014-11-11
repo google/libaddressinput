@@ -61,6 +61,10 @@
     <!-- Street-level part of an address, e.g. "18th Street, Unit 3". [CHAR LIMIT=30] -->
     <string name="i18n_address_line1_label">Street address</string>
 
+    <!-- PIN (Postal Index Number) Code. Values are numeric. Used in India.
+         [CHAR LIMIT=30] -->
+    <string name="i18n_pin_code_label">PIN code</string>
+
     <!-- Postal Code. Values are frequently alphanumeric. Used in countries such as Switzerland.
          [CHAR LIMIT=30] -->
     <string name="i18n_postal_code_label">Postal code</string>
