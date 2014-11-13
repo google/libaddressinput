@@ -619,6 +619,11 @@ std::map<std::string, std::string> InitRegionData() {
       "\"zipex\":\"31001\","
       "\"languages\":\"ar\""
       "}"));
+  region_data.insert(std::make_pair("IR", "{"
+      "\"languages\":\"fa\","
+      "\"fmt\":\"%O%n%N%n%S%n%C, %D%n%A%n%Z\","
+      "\"sublocality_name_type\":\"neighborhood\""
+      "}"));
   region_data.insert(std::make_pair("IS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"320,121,220,110\","
@@ -822,6 +827,9 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("ML", "{"
       "\"languages\":\"fr\""
+      "}"));
+  region_data.insert(std::make_pair("MM", "{"
+      "\"languages\":\"my\""
       "}"));
   region_data.insert(std::make_pair("MN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%S %C-%X%n%Z\","
@@ -1169,6 +1177,9 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("SR", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %X%n%S\","
       "\"languages\":\"nl\""
+      "}"));
+  region_data.insert(std::make_pair("SS", "{"
+      "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("ST", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C %X\","
