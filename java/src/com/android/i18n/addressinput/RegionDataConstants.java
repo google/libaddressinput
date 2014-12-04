@@ -260,7 +260,7 @@ final class RegionDataConstants {
       "name", "CAMEROON",
     }),
     CN(new String[]{
-      "name", "P.R. CHINA",
+      "name", "CHINA",
       "lang", "zh",
       "languages", "zh",
       "fmt", "%Z%n%S%C%D%n%A%n%O%n%N",
