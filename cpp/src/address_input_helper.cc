@@ -168,19 +168,16 @@ void AddressInputHelper::CheckChildrenForPostCodeMatches(
     node->parent = parent;
     node->rule = rule;
 
-    // If children are not used, do not check them.
-    if (!IsFieldUsed(static_cast<AddressField>(lookup_key.GetDepth() + 1),
-                     address.region_code)) {
-      return;
-    }
-
-    // If children are used and present, check the children.
-    for (std::vector<std::string>::const_iterator child_it =
-             rule->GetSubKeys().begin();
-         child_it != rule->GetSubKeys().end(); ++child_it) {
-      LookupKey child_key;
-      child_key.FromLookupKey(lookup_key, *child_it);
-      CheckChildrenForPostCodeMatches(address, child_key, node, hierarchy);
+    if (IsFieldUsed(LookupKey::kHierarchy[lookup_key.GetDepth() + 1],
+                    address.region_code)) {
+      // If children are used and present, check them too.
+      for (std::vector<std::string>::const_iterator child_it =
+               rule->GetSubKeys().begin();
+           child_it != rule->GetSubKeys().end(); ++child_it) {
+        LookupKey child_key;
+        child_key.FromLookupKey(lookup_key, *child_it);
+        CheckChildrenForPostCodeMatches(address, child_key, node, hierarchy);
+      }
     }
   }
 }
