@@ -16,6 +16,7 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
+#include <libaddressinput/address_metadata.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
 
@@ -167,13 +168,16 @@ void AddressInputHelper::CheckChildrenForPostCodeMatches(
     node->parent = parent;
     node->rule = rule;
 
-    // If there are children, check them too.
-    for (std::vector<std::string>::const_iterator child_it =
-             rule->GetSubKeys().begin();
-         child_it != rule->GetSubKeys().end(); ++child_it) {
-      LookupKey child_key;
-      child_key.FromLookupKey(lookup_key, *child_it);
-      CheckChildrenForPostCodeMatches(address, child_key, node, hierarchy);
+    if (IsFieldUsed(LookupKey::kHierarchy[lookup_key.GetDepth() + 1],
+                    address.region_code)) {
+      // If children are used and present, check them too.
+      for (std::vector<std::string>::const_iterator child_it =
+               rule->GetSubKeys().begin();
+           child_it != rule->GetSubKeys().end(); ++child_it) {
+        LookupKey child_key;
+        child_key.FromLookupKey(lookup_key, *child_it);
+        CheckChildrenForPostCodeMatches(address, child_key, node, hierarchy);
+      }
     }
   }
 }
