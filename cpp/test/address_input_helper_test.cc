@@ -238,6 +238,19 @@ TEST_F(AddressInputHelperTest, AddressWithInvalidOrMissingRegionCode) {
   EXPECT_EQ(expected, address);
 }
 
+TEST_F(AddressInputHelperTest, RegionWithUnusedAdminAreaNames) {
+  AddressData address;
+  address.region_code = "CH";
+  address.postal_code = "1111";
+  address.language_code = "de-CH";
+
+  // Administrative area should not be filled because it's not used. Locality
+  // should not be filled because there's no data for it.
+  AddressData expected = address;
+  FillAddress(&address);
+  EXPECT_EQ(expected, address);
+}
+
 class AddressInputHelperMockDataTest : public testing::Test {
  protected:
   AddressInputHelperMockDataTest()
