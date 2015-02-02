@@ -82,7 +82,6 @@ final class RegionDataConstants {
       "languages", "es",
       "fmt", "%N%n%O%n%A%n%Z %C%n%S",
       "upper", "ACZ",
-      "state_name_type", "state",
     }),
     AS(new String[]{
       "name", "AMERICAN SAMOA",
@@ -254,7 +253,6 @@ final class RegionDataConstants {
       "lang", "es",
       "languages", "es",
       "fmt", "%N%n%O%n%A%n%Z %C%n%S",
-      "state_name_type", "state",
     }),
     CM(new String[]{
       "name", "CAMEROON",
