@@ -631,7 +631,7 @@ final class RegionDataConstants {
       "state_name_type", "island",
     }),
     KR(new String[]{
-      "name", "KOREA (REP.)",
+      "name", "SOUTH KOREA",
       "lang", "ko",
       "languages", "ko",
       "fmt", "%S %C%D%n%A%n%O%n%N%n%Z",
