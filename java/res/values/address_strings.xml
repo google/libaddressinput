@@ -86,9 +86,13 @@
 
     <string name="unknown_entry" translation_description="Occurs when the user fills out the wrong value for an address field. For example, this would be shown when putting 'Cupertino' in United States' State field. [CHAR LIMIT=60]">%1$s is not recognized as a known value for this field.</string>
 
+    <string name="unrecognized_format_pin_code" translation_description="Occurs when the user fills out a PIN code that does not conform to the country's PIN code format. For example, this would be shown when using '123' as an Indian PIN code, which is normally 6 digits long. [CHAR LIMIT=60]">This PIN code format is not recognized.</string>
+
     <string name="unrecognized_format_postal_code" translation_description="Occurs when the user fills out a postal code that does not conform to the country's postal code format. For example, this would be shown when using '80' as a Swiss postal code, which is normally 4 digits long. [CHAR LIMIT=60]">This postal code format is not recognized.</string>
 
     <string name="unrecognized_format_zip_code" translation_description="Occurs when the user fills out a ZIP code that does not conform to the country's ZIP code format. For example, this would be shown when using '901' as a ZIP code for the United States. [CHAR LIMIT=60]">This ZIP code format is not recognized.</string>
+
+    <string name="mismatching_value_pin_code" translation_description="Occurs when the user fills out the wrong PIN code for a certain location. For example, this would be shown when using 456001 for New Delhi, India. [CHAR LIMIT=70]">This PIN code does not appear to match the rest of this address.</string>
 
     <string name="mismatching_value_postal_code" translation_description="Occurs when the user fills out the wrong postal code for a certain location. For example, this would be shown when using Z3Z 2Y7 for Alberta, Canada. [CHAR LIMIT=70]">This postal code does not appear to match the rest of this address.</string>
 

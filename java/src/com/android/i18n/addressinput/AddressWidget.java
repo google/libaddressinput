@@ -734,14 +734,22 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         return String.format(context.getString(R.string.unknown_entry), currentValue);
       case INVALID_FORMAT:
         // We only support this error type for the Postal Code field.
-        return (zipLabel == ZipLabel.POSTAL
-            ? context.getString(R.string.unrecognized_format_postal_code)
-            : context.getString(R.string.unrecognized_format_zip_code));
+        if (zipLabel == ZipLabel.POSTAL) {
+          return context.getString(R.string.unrecognized_format_postal_code);
+        } else if (zipLabel = ZipLabel.PIN) {
+          return context.getString(R.string.unrecognized_format_pin_code);
+        } else {
+          return context.getString(R.string.unrecognized_format_zip_code);
+        }
       case MISMATCHING_VALUE:
         // We only support this error type for the Postal Code field.
-        return (zipLabel == ZipLabel.POSTAL
-            ? context.getString(R.string.mismatching_value_postal_code)
-            : context.getString(R.string.mismatching_value_zip_code));
+        if (zipLabel == ZipLabel.POSTAL) {
+          return context.getString(R.string.mismatching_value_postal_code);
+        } else if (zipLabel == ZipLabel.PIN) {
+          return context.getString(R.string.mismatching_value_pin_code);
+        } else {
+          return context.getString(R.string.mismatching_value_zip_code);
+        }
     }
     return "";
   }
