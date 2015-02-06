@@ -736,7 +736,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         // We only support this error type for the Postal Code field.
         if (zipLabel == ZipLabel.POSTAL) {
           return context.getString(R.string.unrecognized_format_postal_code);
-        } else if (zipLabel = ZipLabel.PIN) {
+        } else if (zipLabel == ZipLabel.PIN) {
           return context.getString(R.string.unrecognized_format_pin_code);
         } else {
           return context.getString(R.string.unrecognized_format_zip_code);
