@@ -324,7 +324,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private String getZipFieldName(AddressVerificationNodeData countryNode) {
     String zipName;
     String zipType = countryNode.get(AddressDataKey.ZIP_NAME_TYPE);
-    if (zipType == null) {
+    if (zipType == null || zipType.equals("postal")) {
       zipLabel = ZipLabel.POSTAL;
       zipName = context.getString(R.string.i18n_postal_code_label);
     } else if (zipType.equals("pin")) {
