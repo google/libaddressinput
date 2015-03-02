@@ -64,5 +64,5 @@ std::string DoReplaceStringPlaceholders(const std::string& format_string,
   return formatted;
 }
 
-}  // addressinput
-}  // i18n
+}  // namespace addressinput
+}  // namespace i18n
