@@ -589,6 +589,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     // Postal country must be 2 letter country code. Otherwise default to US.
     if (currentRegion == null || currentRegion.length() != 2) {
       currentRegion = "US";
+    } else {
+      currentRegion = currentRegion.toUpperCase();
     }
     init(context, rootView, formOptions, cacheManager);
     renderFormWithSavedAddress(savedAddress);
@@ -679,14 +681,14 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
    * @return the formatted address
    */
   public List<String> getEnvelopeAddress() {
-    return formatInterpreter.getEnvelopeAddress(getAddressData());
+    return getEnvelopeAddress(getAddressData());
   }
 
   /**
    * Gets the formatted address based on the AddressData passed in.
    */
   public List<String> getEnvelopeAddress(AddressData address) {
-    return formatInterpreter.getEnvelopeAddress(address);
+    return getEnvelopeAddress(formatInterpreter, address);
   }
 
   /**
@@ -694,7 +696,25 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
    * fields hidden.
    */
   public static List<String> getFullEnvelopeAddress(AddressData address) {
-    return new FormatInterpreter(SHOW_ALL_FIELDS).getEnvelopeAddress(address);
+    return getEnvelopeAddress(new FormatInterpreter(SHOW_ALL_FIELDS), address);
+  }
+
+  /**
+   * Helper function for getting the formatted address based on the FormatInterpreter and
+   * AddressData passed in.
+   */
+  private static List<String> getEnvelopeAddress(FormatInterpreter interpreter,
+      AddressData address) {
+    String countryCode = address.getPostalCountry();
+    if (countryCode.length() != 2) {
+      return Collections.emptyList();
+    }
+    // Avoid crashes due to lower-case country codes (leniency at the input).
+    String upperCountryCode = countryCode.toUpperCase();
+    if (!countryCode.equals(upperCountryCode)) {
+      address = AddressData.builder(address).setCountry(upperCountryCode).build();
+    }
+    return interpreter.getEnvelopeAddress(address);
   }
 
   /**

@@ -63,7 +63,6 @@ public final class FormOptions {
     serverUrl = builder.serverUrl;
   }
 
-
   boolean isHidden(AddressField field) {
     return hiddenFields.contains(field);
   }

@@ -421,7 +421,6 @@ public class FieldVerifierTest extends TestCase {
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
         problems.getProblem(AddressField.POSTAL_CODE));
 
-
     AddressData addressMX = new AddressData.Builder().setCountry("MX").build();
 
     problems.clear();
