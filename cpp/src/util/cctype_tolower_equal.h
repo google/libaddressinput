@@ -29,7 +29,7 @@ struct EqualToTolowerString
                          const second_argument_type& b) const;
 };
 
-}  // namespace addressinput
-}  // namespace i18n
+}  // addressinput
+}  // i18n
 
 #endif  // I18N_ADDRESSINPUT_UTIL_CCTYPE_TOLOWER_EQUAL_H_

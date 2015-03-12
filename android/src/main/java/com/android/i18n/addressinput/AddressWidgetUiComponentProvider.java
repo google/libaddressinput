@@ -16,6 +16,8 @@
 
 package com.android.i18n.addressinput;
 
+import com.google.i18n.addressinput.common.AddressField.WidthType;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,17 +26,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.i18n.addressinput.AddressField.WidthType;
-
 /**
  * Base class for customizing widgets for address input.
- *
  * <p>
- * Clients can optionally override this class and use
- * {@link AddressWidget#setUiComponentProvider(AddressWidgetUiComponentProvider)} to set the the
- * componentProvider field of the address widget, which will be invoked by the widget to create UI
- * components that provide consistent look-and-feel with other UI components clients might use
- * alongside the address widget.
+ * Clients can optionally override this class and pass it to {@link AddressWidget} the constructor.
+ * This will be invoked by the widget to create UI components that provide consistent look-and-feel
+ * with other UI components clients might use alongside the address widget.
  */
 public class AddressWidgetUiComponentProvider {
   protected Context context;

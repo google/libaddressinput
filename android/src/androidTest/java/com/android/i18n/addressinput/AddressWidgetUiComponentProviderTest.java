@@ -16,7 +16,10 @@
 
 package com.android.i18n.addressinput;
 
-import com.android.i18n.addressinput.testing.TestActivity;
+import com.google.i18n.addressinput.common.AddressData;
+import com.google.i18n.addressinput.common.AddressField;
+import com.google.i18n.addressinput.common.FormOptions;
+import com.google.i18n.addressinput.common.SimpleClientCacheManager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,6 +30,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.android.i18n.addressinput.testing.TestActivity;
 
 /**
  * Test class for {@link AddressWidgetUiComponentProvider}.
@@ -51,7 +56,7 @@ public class AddressWidgetUiComponentProviderTest
     AddressData.Builder builder = new AddressData.Builder()
         .setCountry("US")
         .setLanguageCode("en")
-        .setAddressLine1("1098 Alta Ave")
+        .setAddress("1098 Alta Ave")
         .setAdminArea("CA");
     address = builder.build();
     context = getActivity();
@@ -62,7 +67,7 @@ public class AddressWidgetUiComponentProviderTest
     customTextViewCounter = 0;
     customProgressDialogCounter = 0;
     componentProvider = new TestComponentProvider(context);
-    widget = new AddressWidget(context, container, new FormOptions.Builder().build(),
+    widget = new AddressWidget(context, container, new FormOptions(),
         new SimpleClientCacheManager(), componentProvider);
     widget.renderFormWithSavedAddress(address);
 
@@ -107,7 +112,7 @@ public class AddressWidgetUiComponentProviderTest
     }
   }
 
-  private class CustomArrayAdapter<String> extends ArrayAdapter {
+  private class CustomArrayAdapter<String> extends ArrayAdapter<String> {
     CustomArrayAdapter(Context context, int id) {
       super(context, id);
     }
@@ -118,6 +123,7 @@ public class AddressWidgetUiComponentProviderTest
       super(context);
     }
 
+    @Override
     protected TextView createUiLabel(CharSequence label, AddressField.WidthType widthType) {
       TextView result = new TextView(context);
       result.setText(label);
@@ -125,14 +131,17 @@ public class AddressWidgetUiComponentProviderTest
       return result;
     }
 
+    @Override
     protected EditText createUiTextField(AddressField.WidthType widthType) {
       return new CustomEditText(context);
     }
 
+    @Override
     protected Spinner createUiPickerSpinner(AddressField.WidthType widthType) {
       return new CustomSpinner(context);
     }
 
+    @Override
     protected ArrayAdapter<String> createUiPickerAdapter(AddressField.WidthType widthType) {
       ArrayAdapter<String> result = new CustomArrayAdapter<String>(
           context, android.R.layout.simple_spinner_item);
@@ -140,6 +149,7 @@ public class AddressWidgetUiComponentProviderTest
       return result;
     }
 
+    @Override
     protected ProgressDialog getUiActivityIndicatorView() {
       AddressWidgetUiComponentProviderTest.this.increaseProgressDialogCounter();
       return super.getUiActivityIndicatorView();

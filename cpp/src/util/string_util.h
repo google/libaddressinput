@@ -22,7 +22,7 @@ namespace addressinput {
 std::string DoReplaceStringPlaceholders(const std::string& format_string,
                                         const std::vector<std::string>& subst);
 
-}  // namespace addressinput
-}  // namespace i18n
+}  // addressinput
+}  // i18n
 
 #endif  // I18N_ADDRESSINPUT_UTIL_STRING_UTIL_H_

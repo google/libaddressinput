@@ -96,7 +96,7 @@ void FillAddressFromMatchedRules(
   }
 }
 
-}  // namespace
+}  // namespace;
 
 AddressInputHelper::AddressInputHelper(PreloadSupplier* supplier)
     : supplier_(supplier) {
