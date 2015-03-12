@@ -8,16 +8,13 @@ http://tools.android.com/tech-docs/new-build-system
 http://www.gradle.org/
 
 
-Prerequisite dependencies for using Gradle
-------------------------------------------
+Prerequisite dependencies for using Gradle with Android
+-------------------------------------------------------
 Android Studio: https://developer.android.com/sdk/index.html
 or
 Android SDK Tools: https://developer.android.com/sdk/index.html#Other
 
 Set the ANDROID_HOME environment variable to the root of the SDK.
-
-Remember to run the "android" SDK tools utility as root/admin to allow it
-permission to install new packages (ie, "sudo ./android sdk").
 
 Install the following packages:
 * Tools/Android SDK Build-tools (Rev. 19.1)

@@ -16,12 +16,33 @@
 
 package com.android.i18n.addressinput;
 
+import com.google.i18n.addressinput.common.AddressData;
+import com.google.i18n.addressinput.common.AddressDataKey;
+import com.google.i18n.addressinput.common.AddressField;
+import com.google.i18n.addressinput.common.AddressField.WidthType;
+import com.google.i18n.addressinput.common.AddressProblemType;
+import com.google.i18n.addressinput.common.AddressProblems;
+import com.google.i18n.addressinput.common.AddressVerificationNodeData;
+import com.google.i18n.addressinput.common.CacheData;
+import com.google.i18n.addressinput.common.ClientCacheManager;
+import com.google.i18n.addressinput.common.ClientData;
+import com.google.i18n.addressinput.common.DataLoadListener;
+import com.google.i18n.addressinput.common.FieldVerifier;
+import com.google.i18n.addressinput.common.FormController;
+import com.google.i18n.addressinput.common.FormOptions;
+import com.google.i18n.addressinput.common.FormatInterpreter;
+import com.google.i18n.addressinput.common.LookupKey;
+import com.google.i18n.addressinput.common.LookupKey.KeyType;
+import com.google.i18n.addressinput.common.LookupKey.ScriptType;
+import com.google.i18n.addressinput.common.RegionData;
+import com.google.i18n.addressinput.common.StandardAddressVerifier;
+import com.google.i18n.addressinput.common.Util;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,10 +53,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.i18n.addressinput.AddressField.WidthType;
 import com.android.i18n.addressinput.AddressUiComponent.UiComponent;
-import com.android.i18n.addressinput.LookupKey.KeyType;
-import com.android.i18n.addressinput.LookupKey.ScriptType;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -51,15 +69,17 @@ import java.util.Map;
  * customs.
  */
 public class AddressWidget implements AdapterView.OnItemSelectedListener {
+
   private Context context;
 
   private ViewGroup rootView;
 
-  private LayoutInflater inflater;
-
   private CacheData cacheData;
 
+  private ClientData clientData;
+
   // A map for all address fields.
+  // TODO(user): Fix this to avoid needing to map specific address lines.
   private final EnumMap<AddressField, AddressUiComponent> inputWidgets =
       new EnumMap<AddressField, AddressUiComponent>(AddressField.class);
 
@@ -67,7 +87,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private FormatInterpreter formatInterpreter;
 
-  private FormOptions formOptions;
+  private FormOptions.Snapshot formOptions;
 
   private StandardAddressVerifier verifier;
 
@@ -91,7 +111,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   // Examples include "suburb" or "neighborhood".
   private static final Map<String, Integer> SUBLOCALITY_LABELS;
 
-  private static final FormOptions SHOW_ALL_FIELDS = new FormOptions.Builder().build();
+  private static final FormOptions.Snapshot SHOW_ALL_FIELDS = new FormOptions().createSnapshot();
 
   // The appropriate label that should be applied to the zip code field of the current country.
   private enum ZipLabel {
@@ -260,8 +280,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private void buildFieldWidgets() {
     AddressData data = new AddressData.Builder().setCountry(currentRegion).build();
     LookupKey key = new LookupKey.Builder(LookupKey.KeyType.DATA).setAddressData(data).build();
-    AddressVerificationNodeData countryNode =
-        (new ClientData(cacheData)).getDefaultData(key.toString());
+    AddressVerificationNodeData countryNode = clientData.getDefaultData(key.toString());
 
     // Set up AddressField.ADMIN_AREA
     AddressUiComponent adminAreaUi = new AddressUiComponent(AddressField.ADMIN_AREA);
@@ -507,9 +526,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private void setWidgetLocaleAndScript() {
     widgetLocale = Util.getWidgetCompatibleLanguageCode(Locale.getDefault(), currentRegion);
     formController.setLanguageCode(widgetLocale);
-    script = Util.isExplicitLatinScript(widgetLocale)
-        ? ScriptType.LATIN
-        : ScriptType.LOCAL;
+    script = Util.isExplicitLatinScript(widgetLocale) ? ScriptType.LATIN : ScriptType.LOCAL;
   }
 
   private List<RegionData> getRegionData(AddressField parentField) {
@@ -519,7 +536,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     // lookup key, which neglects default language. For example, instead of "data/US--en/CA",
     // the right lookup key is "data/US/CA".
     if (formController.isDefaultLanguage(address.getLanguageCode())) {
-      address = new AddressData.Builder(address).setLanguageCode(null).build();
+      address = AddressData.builder(address).setLanguageCode(null).build();
     }
 
     LookupKey parentKey = formController.getDataKeyFor(address).getKeyForUpperLevelField(
@@ -563,7 +580,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     if (currentRegion.length() == 0) {
       currentRegion = "US";
     }
-    init(context, rootView, formOptions, cacheManager);
+    init(context, rootView, formOptions.createSnapshot(), cacheManager);
     renderForm();
   }
 
@@ -592,7 +609,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     } else {
       currentRegion = currentRegion.toUpperCase();
     }
-    init(context, rootView, formOptions, cacheManager);
+    init(context, rootView, formOptions.createSnapshot(), cacheManager);
     renderFormWithSavedAddress(savedAddress);
   }
 
@@ -618,17 +635,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
   }
 
-  private void init(Context context, ViewGroup rootView, FormOptions formOptions,
+  private void init(Context context, ViewGroup rootView, FormOptions.Snapshot formOptions,
       ClientCacheManager cacheManager) {
     this.context = context;
     this.rootView = rootView;
     this.formOptions = formOptions;
-    this.cacheData = new CacheData(cacheManager);
-    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    this.formController =
-        new FormController(new ClientData(cacheData), widgetLocale, currentRegion);
+    // Inject Adnroid specific async request implementation here.
+    this.cacheData = new CacheData(cacheManager, new AndroidAsyncRequestApi());
+    this.clientData = new ClientData(cacheData);
+    this.formController = new FormController(clientData, widgetLocale, currentRegion);
     this.formatInterpreter = new FormatInterpreter(formOptions);
-    this.verifier = new StandardAddressVerifier(new FieldVerifier(new ClientData(cacheData)));
+    this.verifier = new StandardAddressVerifier(new FieldVerifier(clientData));
     if (!formOptions.isHidden(AddressField.COUNTRY)) {
       buildCountryListBox();
       createView(rootView, inputWidgets.get(AddressField.COUNTRY),
@@ -642,13 +659,12 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
    *
    * @param url The service URL.
    */
+  // TODO: Remove this method and set the URL in the constructor or via the cacheData directly.
   public void setUrl(String url) {
     cacheData.setUrl(url);
   }
 
-  /**
-   * Gets user input address in AddressData format.
-   */
+  /** Gets user input address in AddressData format. */
   public AddressData getAddressData() {
     AddressData.Builder builder = new AddressData.Builder();
     builder.setCountry(currentRegion);
@@ -674,7 +690,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   /**
    * Gets the formatted address.
-   *
+   * <p>
    * This method does not validate addresses. Also, it will "normalize" the result strings by
    * removing redundant spaces and empty lines.
    *
@@ -770,8 +786,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         } else {
           return context.getString(R.string.mismatching_value_zip_code);
         }
+      case UNEXPECTED_FIELD:
+        throw new IllegalStateException("unexpected problem type: " + problem);
+      default:
+        throw new IllegalStateException("unknown problem type: " + problem);
     }
-    return "";
   }
 
   /**

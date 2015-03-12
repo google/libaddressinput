@@ -5,13 +5,13 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
-
+        android:minSdkVersion="9"
+        android:targetSdkVersion="21" />
+<!--
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.android.i18n.addressinput" />
-
+-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application

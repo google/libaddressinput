@@ -16,6 +16,9 @@
 
 package com.android.i18n.addressinput;
 
+import com.google.i18n.addressinput.common.AddressField;
+import com.google.i18n.addressinput.common.RegionData;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;

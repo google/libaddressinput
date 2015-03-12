@@ -14,30 +14,8 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-    }
-}
-
-apply plugin: 'com.android.library'
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-dependencies {
-    compile project(':common')
-}
-
-android {
-    /* If these are modified, update the README to reflect the new versions *
-     * and update any related settings in the AdroidManifest.xml file.      */
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
-}
-
+/*
+ * The Android address input widget is formed from the common (non-UI) classes
+ * and the Android specific classes.
+ */
+include 'android', 'common'
