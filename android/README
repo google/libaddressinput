@@ -17,8 +17,8 @@ Android SDK Tools: https://developer.android.com/sdk/index.html#Other
 Set the ANDROID_HOME environment variable to the root of the SDK.
 
 Install the following packages:
-* Tools/Android SDK Build-tools (Rev. 19.1)
-* Android 4.4.2 (API 19)
+* Tools/Android SDK Build-tools (Rev. 21.1.2)
+* Android 5.1 (API 22)
 * Extras/Android Support Library
 
 Gradle (latest version):
