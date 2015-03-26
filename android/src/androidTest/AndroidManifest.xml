@@ -6,12 +6,14 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="22" />
+
 <!--
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.android.i18n.addressinput" />
 -->
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application

@@ -97,4 +97,8 @@
     <string name="mismatching_value_postal_code" translation_description="Occurs when the user fills out the wrong postal code for a certain location. For example, this would be shown when using Z3Z 2Y7 for Alberta, Canada. [CHAR LIMIT=70]">This postal code does not appear to match the rest of this address.</string>
 
     <string name="mismatching_value_zip_code" translation_description="Occurs when the user fills out the wrong ZIP code for a certain location. For example, this would be shown when using 10001 for Arizona state. [CHAR LIMIT=70]">This ZIP code does not appear to match the rest of this address.</string>
+
+    <string name="i18n_address_line1_accessibility_label" translation_description="Accessibility label for the text field of the first street address line. [CHAR LIMIT=50]">Street address: line 1</string>
+
+    <string name="i18n_address_line2_accessibility_label" translation_description="Accessibility label for the text field of the second street address line. [CHAR LIMIT=50]">Street address: line 2</string>
 </resources>

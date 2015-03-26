@@ -287,7 +287,7 @@ public class FieldVerifierTest {
         .setCountry("CN")
         .setAdminArea("Taiwan")
         .setLocality("Taichung City")
-        .setDependentLocality("Situn District")
+        .setDependentLocality("Xitun District")
         .setAddress("12345 Yitiao Lu")
         .setPostalCode("407")
         .build();
