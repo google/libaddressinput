@@ -114,7 +114,7 @@ public final class ClientData implements DataSource {
           continue;
         }
 
-        String value = jso.get(key.toString().toLowerCase());
+        String value = jso.get(Util.toLowerCaseLocaleIndependent(key.toString()));
         map.put(key, value);
       } catch (JSONException e) {
         // This should not happen - we should not be fetching a key from outside the bounds
@@ -241,8 +241,8 @@ public final class ClientData implements DataSource {
 
     @Override
     public void dataLoadingEnd() {
-      final String subKeys = AddressDataKey.SUB_KEYS.name().toLowerCase();
-      final String subMores = AddressDataKey.SUB_MORES.name().toLowerCase();
+      final String subKeys = Util.toLowerCaseLocaleIndependent(AddressDataKey.SUB_KEYS.name());
+      final String subMores = Util.toLowerCaseLocaleIndependent(AddressDataKey.SUB_MORES.name());
 
       JsoMap map = cacheData.getObj(key);
       // It is entirely possible that data loading failed and that the map is null.

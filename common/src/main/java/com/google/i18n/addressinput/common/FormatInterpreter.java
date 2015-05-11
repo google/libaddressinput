@@ -270,12 +270,12 @@ public final class FormatInterpreter {
 
     try {
       JSONObject jsonObj = new JSONObject(new JSONTokener(jsonString));
-      if (!jsonObj.has(key.name().toLowerCase())) {
+      if (!jsonObj.has(Util.toLowerCaseLocaleIndependent(key.name()))) {
         // Key not found. Return null.
         return null;
       }
       // Gets the string for this key.
-      String parsedJsonString = jsonObj.getString(key.name().toLowerCase());
+      String parsedJsonString = jsonObj.getString(Util.toLowerCaseLocaleIndependent(key.name()));
       return parsedJsonString;
     } catch (JSONException e) {
       throw new RuntimeException("Invalid json for region code " + regionCode + ": " + jsonString);

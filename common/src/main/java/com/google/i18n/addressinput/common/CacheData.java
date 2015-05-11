@@ -195,7 +195,7 @@ public final class CacheData {
       }
 
       JSONObject json = map;
-      String idKey = AddressDataKey.ID.name().toLowerCase();
+      String idKey = Util.toLowerCaseLocaleIndependent(AddressDataKey.ID.name());
       if (!json.has(idKey)) {
         logger.warning("invalid or empty data returned for key: " + key);
         badKeys.add(key);

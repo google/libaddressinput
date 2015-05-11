@@ -184,7 +184,8 @@ public final class FieldVerifier {
     // TODO: We should have a class that knows how to get information about the data, rather than
     // getting the node and extracting keys here.
     LookupKey lookupKey =
-        new LookupKey.Builder(KeyType.DATA.name().toLowerCase() + KEY_NODE_DELIMITER
+        new LookupKey.Builder(Util.toLowerCaseLocaleIndependent(KeyType.DATA.name())
+            + KEY_NODE_DELIMITER
             + regionCode).build();
     AddressVerificationNodeData countryNode = dataSource.getDefaultData(lookupKey.toString());
     String languages = countryNode.get(AddressDataKey.LANGUAGES);
@@ -337,7 +338,8 @@ public final class FieldVerifier {
     String trimmedValue = Util.trimToNull(value);
     Util.checkNotNull(trimmedValue);
     if (script == null) {
-      return (candidateValues == null || candidateValues.containsKey(trimmedValue.toLowerCase()));
+      return (candidateValues == null || candidateValues.containsKey(
+          Util.toLowerCaseLocaleIndependent(trimmedValue)));
     }
     // Otherwise, if we know the script, we want to restrict the candidates to only names in
     // that script.
@@ -345,12 +347,12 @@ public final class FieldVerifier {
     Set<String> candidates = new HashSet<String>();
     if (namesToConsider != null) {
       for (String name : namesToConsider) {
-        candidates.add(name.toLowerCase());
+        candidates.add(Util.toLowerCaseLocaleIndependent(name));
       }
     }
     if (keys != null) {
       for (String name : keys) {
-        candidates.add(name.toLowerCase());
+        candidates.add(Util.toLowerCaseLocaleIndependent(name));
       }
     }
 
@@ -358,7 +360,7 @@ public final class FieldVerifier {
       return true;
     }
 
-    return candidates.contains(value.toLowerCase());
+    return candidates.contains(Util.toLowerCaseLocaleIndependent(value));
   }
 
   /**

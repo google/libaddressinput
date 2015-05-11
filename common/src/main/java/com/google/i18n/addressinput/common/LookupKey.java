@@ -205,7 +205,7 @@ public final class LookupKey {
    * Creates the string format of the given key. E.g., "data/US/CA".
    */
   private String createKeyString() {
-    StringBuilder keyBuilder = new StringBuilder(keyType.name().toLowerCase());
+    StringBuilder keyBuilder = new StringBuilder(Util.toLowerCaseLocaleIndependent(keyType.name()));
 
     if (keyType == KeyType.DATA) {
       for (AddressField field : HIERARCHY) {
@@ -224,7 +224,7 @@ public final class LookupKey {
         keyBuilder.append(SLASH_DELIM)
             .append(nodes.get(AddressField.COUNTRY))
             .append(SLASH_DELIM)
-            .append(scriptType.name().toLowerCase())
+            .append(Util.toLowerCaseLocaleIndependent(scriptType.name()))
             .append(SLASH_DELIM)
             .append(DEFAULT_LANGUAGE);
       }
@@ -260,7 +260,7 @@ public final class LookupKey {
 
   static boolean hasValidKeyPrefix(String key) {
     for (KeyType type : KeyType.values()) {
-      if (key.startsWith(type.name().toLowerCase())) {
+      if (key.startsWith(Util.toLowerCaseLocaleIndependent(type.name()))) {
         return true;
       }
     }
@@ -315,8 +315,8 @@ public final class LookupKey {
      */
     public Builder(String keyString) {
       String[] parts = keyString.split(SLASH_DELIM);
-      if (!parts[0].equals(KeyType.DATA.name().toLowerCase())
-          && !parts[0].equals(KeyType.EXAMPLES.name().toLowerCase())) {
+      if (!parts[0].equals(Util.toLowerCaseLocaleIndependent(KeyType.DATA.name()))
+          && !parts[0].equals(Util.toLowerCaseLocaleIndependent(KeyType.EXAMPLES.name()))) {
         throw new RuntimeException("Wrong key type: " + parts[0]);
       }
       if (parts.length > HIERARCHY.length + 1) {

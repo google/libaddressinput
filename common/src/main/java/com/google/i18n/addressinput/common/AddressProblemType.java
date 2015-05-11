@@ -70,6 +70,6 @@ public enum AddressProblemType {
    * Returns a unique string identifying this problem (for use in a message catalog).
    */
   public String keyname() {
-    return name().toLowerCase();
+    return Util.toLowerCaseLocaleIndependent(name());
   }
 }
