@@ -69,7 +69,7 @@ public final class Util {
    */
   public static boolean isExplicitLatinScript(String languageCode) {
     // Convert to upper-case for easier comparison.
-    languageCode = languageCode.toUpperCase();
+    languageCode = toUpperCaseLocaleIndependent(languageCode);
     // Check to see if the language code contains a script modifier.
     final Pattern languageCodePattern = Pattern.compile("\\w{2,3}[-_](\\w{4})");
     Matcher m = languageCodePattern.matcher(languageCode);
@@ -91,7 +91,7 @@ public final class Util {
     final Pattern languageCodePattern = Pattern.compile("(\\w{2,3})(?:[-_]\\w{4})?(?:[-_]\\w{2})?");
     Matcher m = languageCodePattern.matcher(languageCode);
     if (m.matches()) {
-      return m.group(1).toLowerCase();
+      return toLowerCaseLocaleIndependent(m.group(1));
     }
     return "und";
   }
@@ -160,7 +160,7 @@ public final class Util {
 
     int keyLength = keys.length;
     for (String k : keys) {
-      nameToKeyMap.put(k.toLowerCase(), k);
+      nameToKeyMap.put(toLowerCaseLocaleIndependent(k), k);
     }
     if (names != null) {
       if (names.length > keyLength) {
@@ -173,7 +173,7 @@ public final class Util {
         // behave differently in the default case. Since missing names are fine, we opt to
         // be more robust here.
         if (i < names.length && names[i].length() > 0) {
-          nameToKeyMap.put(names[i].toLowerCase(), keys[i]);
+          nameToKeyMap.put(toLowerCaseLocaleIndependent(names[i]), keys[i]);
         }
       }
     }
@@ -184,7 +184,7 @@ public final class Util {
       }
       for (int i = 0; i < keyLength; i++) {
         if (i < lnames.length && lnames[i].length() > 0) {
-          nameToKeyMap.put(lnames[i].toLowerCase(), keys[i]);
+          nameToKeyMap.put(toLowerCaseLocaleIndependent(lnames[i]), keys[i]);
         }
       }
     }
@@ -203,7 +203,7 @@ public final class Util {
    * "en-US").
    */
   public static String getWidgetCompatibleLanguageCode(Locale language, String currentCountry) {
-    String country = currentCountry.toUpperCase();
+    String country = toUpperCaseLocaleIndependent(currentCountry);
     // Only do something if the country is one of those where we have names in the local
     // language as well as in latin script.
     if (nonLatinLocalLanguageCountries.containsKey(country)) {
@@ -225,5 +225,23 @@ public final class Util {
       }
     }
     return language.toString();
+  }
+
+  /**
+   * Converts all of the characters in this String to lower case using the rules of English. This is
+   * equivalent to calling toLowerCase(Locale.ENGLISH). Thus avoiding locale-sensitive case folding
+   * such as the Turkish i, which could mess e.g. with lookup keys and country codes.
+   */
+  public static String toLowerCaseLocaleIndependent(String value) {
+    return (value != null) ? value.toLowerCase(Locale.ENGLISH) : null;
+  }
+
+  /**
+   * Converts all of the characters in this String to upper case using the rules of English. This is
+   * equivalent to calling toUpperCase(Locale.ENGLISH). Thus avoiding locale-sensitive case folding
+   * such as the Turkish i, which could mess e.g. with lookup keys and country codes.
+   */
+  public static String toUpperCaseLocaleIndependent(String value) {
+    return (value != null) ? value.toUpperCase(Locale.ENGLISH) : null;
   }
 }

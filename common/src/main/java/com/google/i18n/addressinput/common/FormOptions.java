@@ -140,7 +140,7 @@ public final class FormOptions {
       throw new NullPointerException();
     }
     // TODO(addresswidget-team): Add region code validation against RegionDataConstants.
-    blacklistedRegions.add(regionCode.toUpperCase(Locale.ENGLISH));
+    blacklistedRegions.add(Util.toUpperCaseLocaleIndependent(regionCode));
     return this;
   }
 
@@ -183,7 +183,7 @@ public final class FormOptions {
     }
 
     boolean isBlacklistedRegion(String regionCode) {
-      return blacklistedRegions.contains(regionCode.toUpperCase(Locale.ENGLISH));
+      return blacklistedRegions.contains(Util.toUpperCaseLocaleIndependent(regionCode));
     }
   }
 }

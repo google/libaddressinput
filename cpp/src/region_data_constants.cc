@@ -45,7 +45,6 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("AD", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
-      "\"require\":\"A\","
       "\"zipex\":\"AD100,AD501,AD700\","
       "\"posturl\":\"http://www.correos.es/comun/CodigosPostales/1010_s-CodPostal.asp\?Provincia=\","
       "\"languages\":\"ca\""
@@ -53,7 +52,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("AE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%S\","
       "\"lfmt\":\"%N%n%O%n%A%n%S\","
-      "\"require\":\"A\","
+      "\"require\":\"AS\","
       "\"state_name_type\":\"emirate\","
       "\"languages\":\"ar\""
       "}"));
@@ -200,7 +199,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"es~qu~ay\""
       "}"));
   region_data.insert(std::make_pair("BQ", "{"
-      "\"languages\":\"pap~nl\""
+      "\"languages\":\"nl\""
       "}"));
   region_data.insert(std::make_pair("BR", "{"
       "\"fmt\":\"%O%n%N%n%A%n%D%n%C-%S%n%Z\","
@@ -208,7 +207,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"state_name_type\":\"state\","
       "\"sublocality_name_type\":\"neighborhood\","
       "\"zipex\":\"40301-110,70002-900\","
-      "\"posturl\":\"http://www.correios.com.br/servicos/cep/cep_default.cfm\","
+      "\"posturl\":\"http://www.buscacep.correios.com.br/\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("BS", "{"
@@ -256,7 +255,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"fr~sg\""
       "}"));
   region_data.insert(std::make_pair("CG", "{"
-      "\"languages\":\"fr~ln\""
+      "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("CH", "{"
       "\"fmt\":\"%O%n%N%n%A%nCH-%Z %C\","
@@ -361,7 +360,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("EC", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
       "\"zipex\":\"090105,EC090112,H0103C,P0133B,P0133A,P0133V\","
-      "\"languages\":\"es\""
+      "\"languages\":\"es~qu\""
       "}"));
   region_data.insert(std::make_pair("EE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
@@ -403,7 +402,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"fi~sv\""
       "}"));
   region_data.insert(std::make_pair("FJ", "{"
-      "\"languages\":\"en~fj\""
+      "\"languages\":\"en~hif-Deva~fj\""
       "}"));
   region_data.insert(std::make_pair("FK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
@@ -418,7 +417,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"state_name_type\":\"state\","
       "\"zipex\":\"96941,96944\","
       "\"posturl\":\"http://zip4.usps.com/zip4/welcome.jsp\","
-      "\"languages\":\"chk~pon~kos~yap~en~uli\""
+      "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("FO", "{"
       "\"fmt\":\"%N%n%O%n%A%nFO%Z %C\","
@@ -481,7 +480,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"3900,3950,3911\","
-      "\"languages\":\"kl~da\""
+      "\"languages\":\"kl\""
       "}"));
   region_data.insert(std::make_pair("GM", "{"
       "\"languages\":\"en\""
@@ -618,9 +617,10 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"ar\""
       "}"));
   region_data.insert(std::make_pair("IR", "{"
-      "\"languages\":\"fa\","
       "\"fmt\":\"%O%n%N%n%S%n%C, %D%n%A%n%Z\","
-      "\"sublocality_name_type\":\"neighborhood\""
+      "\"sublocality_name_type\":\"neighborhood\","
+      "\"zipex\":\"11936-12345\","
+      "\"languages\":\"fa\""
       "}"));
   region_data.insert(std::make_pair("IS", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
@@ -821,12 +821,14 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("MK", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"1314,1321,1443,1062\","
-      "\"languages\":\"mk~sq\""
+      "\"languages\":\"mk\""
       "}"));
   region_data.insert(std::make_pair("ML", "{"
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("MM", "{"
+      "\"fmt\":\"%N%n%O%n%A%n%C, %Z\","
+      "\"zipex\":\"11181\","
       "\"languages\":\"my\""
       "}"));
   region_data.insert(std::make_pair("MN", "{"
@@ -871,7 +873,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("MU", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z%n%C\","
-      "\"zipex\":\"742CU001\","
+      "\"zipex\":\"42602\","
       "\"languages\":\"en~fr\""
       "}"));
   region_data.insert(std::make_pair("MV", "{"
@@ -1093,7 +1095,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\","
       "\"require\":\"ACZ\","
       "\"state_name_type\":\"oblast\","
-      "\"zipex\":\"125075,247112,103375\","
+      "\"zipex\":\"247112,103375,188300\","
       "\"posturl\":\"http://info.russianpost.ru/servlet/department\","
       "\"languages\":\"ru\""
       "}"));
@@ -1164,7 +1166,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("SN", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"12500,46024,16556,10000\","
-      "\"languages\":\"fr~wo\""
+      "\"languages\":\"wo~fr\""
       "}"));
   region_data.insert(std::make_pair("SO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S %Z\","
@@ -1322,7 +1324,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("VA", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"00120\","
-      "\"languages\":\"la\""
+      "\"languages\":\"it~la\""
       "}"));
   region_data.insert(std::make_pair("VC", "{"
       "\"zipex\":\"VC0100,VC0110,VC0400\","
@@ -1389,7 +1391,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"require\":\"ACZ\","
       "\"zipex\":\"0083,1451,0001\","
       "\"posturl\":\"http://www.postoffice.co.za/tools/postalcode.html\","
-      "\"languages\":\"en~zu~xh~af~nso~tn~st~ts~ss~ve~nr\""
+      "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("ZM", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","

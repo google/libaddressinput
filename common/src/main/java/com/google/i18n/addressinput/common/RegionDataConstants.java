@@ -40,7 +40,6 @@ public final class RegionDataConstants {
       "lang", "ca",
       "languages", "ca",
       "fmt", "%N%n%O%n%A%n%Z %C",
-      "require", "A",
     }),
     AE(new String[]{
       "name", "UNITED ARAB EMIRATES",
@@ -48,7 +47,7 @@ public final class RegionDataConstants {
       "languages", "ar",
       "fmt", "%N%n%O%n%A%n%S",
       "lfmt", "%N%n%O%n%A%n%S",
-      "require", "A",
+      "require", "AS",
       "state_name_type", "emirate",
     }),
     AF(new String[]{
@@ -561,6 +560,11 @@ public final class RegionDataConstants {
       "require", "ACS",
       "upper", "CS",
     }),
+    IR(new String[]{
+      "name", "IRAN",
+      "fmt", "%O%n%N%n%S%n%C, %D%n%A%n%Z",
+      "sublocality_name_type", "neighborhood",
+    }),
     IS(new String[]{
       "name", "ICELAND",
       "fmt", "%N%n%O%n%A%n%Z %C",
@@ -747,6 +751,10 @@ public final class RegionDataConstants {
     }),
     ML(new String[]{
       "name", "MALI",
+    }),
+    MM(new String[]{
+      "name", "MYANMAR",
+      "fmt", "%N%n%O%n%A%n%C, %Z",
     }),
     MN(new String[]{
       "name", "MONGOLIA",
@@ -1070,12 +1078,12 @@ public final class RegionDataConstants {
       "fmt", "%N%n%O%n%A%n%C %X%n%S",
       "upper", "AS",
     }),
+    SS(new String[]{
+      "name", "SOUTH SUDAN",
+    }),
     ST(new String[]{
       "name", "SAO TOME AND PRINCIPE",
       "fmt", "%N%n%O%n%A%n%C %X",
-    }),
-    SX(new String[]{
-      "name", "SINT MAARTEN"
     }),
     SV(new String[]{
       "name", "EL SALVADOR",
@@ -1084,6 +1092,9 @@ public final class RegionDataConstants {
       "fmt", "%N%n%O%n%A%n%Z-%C%n%S",
       "require", "ACS",
       "upper", "CSZ",
+    }),
+    SX(new String[]{
+      "name", "SINT MAARTEN",
     }),
     SZ(new String[]{
       "name", "SWAZILAND",
@@ -1169,9 +1180,9 @@ public final class RegionDataConstants {
       "name", "TANZANIA (UNITED REP.)",
     }),
     UA(new String[]{
+      "name", "UKRAINE",
       "lang", "uk",
       "languages", "uk",
-      "name", "UKRAINE",
       "fmt", "%N%n%O%n%A%n%C%n%S%n%Z",
       "lfmt", "%N%n%O%n%A%n%C%n%S%n%Z",
       "require", "ACZ",

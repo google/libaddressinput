@@ -110,7 +110,7 @@ public enum AddressDataKey {
    * matches.
    */
   static AddressDataKey get(String keyname) {
-    return ADDRESS_KEY_NAME_MAP.get(keyname.toLowerCase());
+    return ADDRESS_KEY_NAME_MAP.get(Util.toLowerCaseLocaleIndependent(keyname));
   }
 
   private static final Map<String, AddressDataKey> ADDRESS_KEY_NAME_MAP =
@@ -119,7 +119,7 @@ public enum AddressDataKey {
   static {
     // Populates the map of enums against their lower-cased string values for easy look-up.
     for (AddressDataKey field : values()) {
-      ADDRESS_KEY_NAME_MAP.put(field.toString().toLowerCase(), field);
+      ADDRESS_KEY_NAME_MAP.put(Util.toLowerCaseLocaleIndependent(field.toString()), field);
     }
   }
 }
