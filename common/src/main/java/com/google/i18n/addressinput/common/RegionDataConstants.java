@@ -269,7 +269,8 @@ public final class RegionDataConstants {
     }),
     CO(new String[]{
       "name", "COLOMBIA",
-      "fmt", "%N%n%O%n%A%n%C, %S",
+      "fmt", "%N%n%O%n%A%n%C, %S, %Z",
+      "state_name_type", "department",
     }),
     CR(new String[]{
       "name", "COSTA RICA",
