@@ -290,9 +290,10 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"zh\""
       "}"));
   region_data.insert(std::make_pair("CO", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%C, %S\","
+      "\"fmt\":\"%N%n%O%n%A%n%C, %S, %Z\","
       "\"zipex\":\"111221,130001,760011\","
-      "\"posturl\":\"http://www.codigopostal4-72.com.co/codigosPostales/\","
+      "\"posturl\":\"http://www.codigopostal.gov.co/\","
+      "\"state_name_type\":\"department\","
       "\"languages\":\"es\""
       "}"));
   region_data.insert(std::make_pair("CR", "{"
