@@ -46,7 +46,7 @@
 
     <string name="i18n_address_line1_label" translation_description="Street-level part of an address, e.g. &quot;18th Street, Unit 3&quot;. [CHAR LIMIT=30]">Street address</string>
 
-    <string name="i18n_pin_code_label" translation_description="PIN (Postal Index Number) Code. Values are numeric. Used in India. [CHAR LIMIT=30]">PIN code</string>
+    <string name="i18n_pin_code_label" translation_description="PIN (Postal Index Number) Code. Values are numeric. Used in India. [CHAR LIMIT=30]">Pincode</string>
 
     <string name="i18n_postal_code_label" translation_description="Postal Code. Values are frequently alphanumeric. Used in countries such as Switzerland. [CHAR LIMIT=30]">Postal code</string>
 
@@ -82,21 +82,21 @@
 
     <string name="i18n_organization_label" translation_description="Label for the field of organization, firm, company, or institution in an address. Examples of values in this field: Google, Department of Transportation, University of Cambridge. [CHAR LIMIT=30]">Organization</string>
 
-    <string name="i18n_missing_required_field" translation_description="Error message shown with a UI field when it is a required field and the user has not filled it out. [CHAR LIMIT=30]">You can\u0027t leave this empty.</string>
+    <string name="i18n_missing_required_field" translation_description="Error message shown with a UI field when it is a required field and the user has not filled it out. [CHAR LIMIT=20]">Required field</string>
 
-    <string name="unknown_entry" translation_description="Occurs when the user fills out the wrong value for an address field. For example, this would be shown when putting 'Cupertino' in United States' State field. [CHAR LIMIT=60]">%1$s is not recognized as a known value for this field.</string>
+    <string name="unknown_entry" translation_description="Occurs when the user fills out the wrong value for an address field. For example, this would be shown when putting 'Cupertino' in United States' State field. [CHAR LIMIT=20]">Invalid entry</string>
 
-    <string name="unrecognized_format_pin_code" translation_description="Occurs when the user fills out a PIN code that does not conform to the country's PIN code format. For example, this would be shown when using '123' as an Indian PIN code, which is normally 6 digits long. [CHAR LIMIT=60]">This PIN code format is not recognized.</string>
+    <string name="unrecognized_format_pin_code" translation_description="Occurs when the user fills out a PIN code that does not conform to the country's PIN code format. For example, this would be shown when using '123' as an Indian PIN code, which is normally 6 digits long. [CHAR LIMIT=20]">Enter valid Pincode</string>
 
-    <string name="unrecognized_format_postal_code" translation_description="Occurs when the user fills out a postal code that does not conform to the country's postal code format. For example, this would be shown when using '80' as a Swiss postal code, which is normally 4 digits long. [CHAR LIMIT=60]">This postal code format is not recognized.</string>
+    <string name="unrecognized_format_postal_code" translation_description="Occurs when the user fills out a postal code that does not conform to the country's postal code format. For example, this would be shown when using '80' as a Swiss postal code, which is normally 4 digits long. [CHAR LIMIT=20]">Enter valid code</string>
 
-    <string name="unrecognized_format_zip_code" translation_description="Occurs when the user fills out a ZIP code that does not conform to the country's ZIP code format. For example, this would be shown when using '901' as a ZIP code for the United States. [CHAR LIMIT=60]">This ZIP code format is not recognized.</string>
+    <string name="unrecognized_format_zip_code" translation_description="Occurs when the user fills out a ZIP code that does not conform to the country's ZIP code format. For example, this would be shown when using '901' as a ZIP code for the United States. [CHAR LIMIT=20]">Enter valid ZIP</string>
 
-    <string name="mismatching_value_pin_code" translation_description="Occurs when the user fills out the wrong PIN code for a certain location. For example, this would be shown when using 456001 for New Delhi, India. [CHAR LIMIT=70]">This PIN code does not appear to match the rest of this address.</string>
+    <string name="mismatching_value_pin_code" translation_description="Occurs when the user fills out the wrong PIN code for a certain location. For example, this would be shown when using 456001 for New Delhi, India. [CHAR LIMIT=20]">Must match address</string>
 
-    <string name="mismatching_value_postal_code" translation_description="Occurs when the user fills out the wrong postal code for a certain location. For example, this would be shown when using Z3Z 2Y7 for Alberta, Canada. [CHAR LIMIT=70]">This postal code does not appear to match the rest of this address.</string>
+    <string name="mismatching_value_postal_code" translation_description="Occurs when the user fills out the wrong postal code for a certain location. For example, this would be shown when using Z3Z 2Y7 for Alberta, Canada. [CHAR LIMIT=20]">Must match address</string>
 
-    <string name="mismatching_value_zip_code" translation_description="Occurs when the user fills out the wrong ZIP code for a certain location. For example, this would be shown when using 10001 for Arizona state. [CHAR LIMIT=70]">This ZIP code does not appear to match the rest of this address.</string>
+    <string name="mismatching_value_zip_code" translation_description="Occurs when the user fills out the wrong ZIP code for a certain location. For example, this would be shown when using 10001 for Arizona state. [CHAR LIMIT=20]">Must match address</string>
 
     <string name="i18n_address_line1_accessibility_label" translation_description="Accessibility label for the text field of the first street address line. [CHAR LIMIT=50]">Street address: line 1</string>
 

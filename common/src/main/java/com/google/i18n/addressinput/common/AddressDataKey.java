@@ -92,6 +92,10 @@ public enum AddressDataKey {
    */
   SUB_NAMES,
   /**
+   * Encodes width overrides for specific fields.
+   */
+  WIDTH_OVERRIDES,
+  /**
    * Encodes the {@link #ZIP} value for the subtree beneath this region.
    */
   XZIP,

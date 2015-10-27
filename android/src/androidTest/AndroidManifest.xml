@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.i18n.addressinput"
+    package="com.android.i18n.addressinput.test"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -8,11 +8,12 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="22" />
 
-<!--
+    <!-- Gradle generates an <instrumentation> block during the build process,
+         but in order to work with other build systems, that don't do that,
+         there must be such a block declared here. -->
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.android.i18n.addressinput" />
--->
+        android:targetPackage="com.android.i18n.addressinput.test" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -20,7 +21,8 @@
         android:allowBackup="false"
         android:icon="@android:drawable/sym_def_app_icon" >
         <uses-library android:name="android.test.runner" />
-        <activity android:name=".testing.TestActivity" />
+        <activity
+            android:name="com.android.i18n.addressinput.testing.TestActivity" />
     </application>
 
 </manifest>

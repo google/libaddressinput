@@ -233,9 +233,9 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private AddressWidgetUiComponentProvider componentProvider;
 
-  /** TODO: Add region-dependent width types for address fields. */
   private WidthType getFieldWidthType(AddressUiComponent field) {
-    return field.getId().getDefaultWidthType();
+    // TODO(user): For drop-downs (spinners), derive the width-type from the list of values.
+    return field.getId().getWidthTypeForRegion(currentRegion);
   }
 
   private void createView(ViewGroup rootView, AddressUiComponent field, String defaultKey,
@@ -760,14 +760,13 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     return null;
   }
 
-  private String getErrorMessageForInvalidEntry(AddressData address, AddressField field,
+  public String getErrorMessageForInvalidEntry(AddressData address, AddressField field,
       AddressProblemType problem) {
     switch (problem) {
       case MISSING_REQUIRED_FIELD:
         return context.getString(R.string.i18n_missing_required_field);
       case UNKNOWN_VALUE:
-        String currentValue = address.getFieldValue(field);
-        return String.format(context.getString(R.string.unknown_entry), currentValue);
+        return context.getString(R.string.unknown_entry);
       case INVALID_FORMAT:
         // We only support this error type for the Postal Code field.
         if (zipLabel == ZipLabel.POSTAL) {

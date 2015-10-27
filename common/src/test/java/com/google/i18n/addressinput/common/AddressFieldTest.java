@@ -18,6 +18,8 @@ package com.google.i18n.addressinput.common;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.i18n.addressinput.common.AddressField.WidthType;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,5 +32,24 @@ public class AddressFieldTest {
 
   @Test public void testGetChar() throws Exception {
     assertEquals('R', AddressField.COUNTRY.getChar());
+  }
+
+  @Test public void testGetWidthTypeForPostalCode() throws Exception {
+    // Postal (& sorting) code always have SHORT width.
+    assertEquals(WidthType.SHORT, AddressField.POSTAL_CODE.getWidthTypeForRegion("US"));
+    assertEquals(WidthType.SHORT, AddressField.SORTING_CODE.getWidthTypeForRegion("DE"));
+  }
+
+  @Test public void testGetWidthTypeForCountry() throws Exception {
+    // No overrides for country, so we use the default, LONG.
+    assertEquals(WidthType.LONG, AddressField.COUNTRY.getWidthTypeForRegion("US"));
+    assertEquals(WidthType.LONG, AddressField.COUNTRY.getWidthTypeForRegion("CH"));
+  }
+
+  @Test public void testGetWidthTypeWithOverride() throws Exception {
+    // With an override.
+    assertEquals(WidthType.SHORT, AddressField.LOCALITY.getWidthTypeForRegion("CN"));
+    // Without an override.
+    assertEquals(WidthType.LONG, AddressField.LOCALITY.getWidthTypeForRegion("US"));
   }
 }

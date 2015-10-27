@@ -89,6 +89,18 @@ TEST(LookupKeyTest, AddressDepthNonContiguous) {
   EXPECT_EQ("data/111/222", lookup_key.ToKeyString(kMaxDepth));
 }
 
+TEST(LookupKeyTest, AddressDepthTerminateOnSlash) {
+  AddressData address;
+  address.region_code = "111";
+  address.administrative_area = "222";
+  address.locality = "3/3";  // No data should be requested for this LOCALITY.
+  address.dependent_locality = "444";
+  LookupKey lookup_key;
+  lookup_key.FromAddress(address);
+  EXPECT_EQ(1, lookup_key.GetDepth());
+  EXPECT_EQ("data/111/222", lookup_key.ToKeyString(kMaxDepth));
+}
+
 TEST(LookupKeyTest, RequestDepth) {
   AddressData address;
   address.region_code = "111";

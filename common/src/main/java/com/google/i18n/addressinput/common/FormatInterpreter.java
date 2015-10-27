@@ -16,6 +16,7 @@
 
 package com.google.i18n.addressinput.common;
 
+import com.google.i18n.addressinput.common.AddressField.WidthType;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
 
 import org.json.JSONException;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -137,6 +139,56 @@ public final class FormatInterpreter {
       required = getJsonValue("ZZ", AddressDataKey.REQUIRE);
     }
     return required;
+  }
+
+  /**
+   * Returns the field width override for the specified country, or null if there's none. This is
+   * based upon the "width_overrides" field in RegionDataConstants for {@code regionCode}.
+   */
+  static WidthType getWidthOverride(AddressField field, String regionCode) {
+    return getWidthOverride(field, regionCode, RegionDataConstants.getCountryFormatMap());
+  }
+
+  /**
+   * Visible for Testing - same as {@link #getWidthOverride(AddressField, String)} but testable with
+   * fake data.
+   */
+  static WidthType getWidthOverride(
+      AddressField field, String regionCode, Map<String, String> regionDataMap) {
+    Util.checkNotNull(regionCode);
+    String overridesString =
+        getJsonValue(regionCode, AddressDataKey.WIDTH_OVERRIDES, regionDataMap);
+    if (overridesString == null || overridesString.isEmpty()) {
+      return null;
+    }
+
+    // The field width overrides string starts with a %, so we skip the first one.
+    // Example string: "%C:L%S:S" which is a repeated string of
+    // '<%> field_character <:> width_character'.
+    for (int pos = 0; pos != -1;) {
+      int keyStartIndex = pos + 1;
+      int valueStartIndex = overridesString.indexOf(':', keyStartIndex + 1) + 1;
+      if (valueStartIndex == 0 || valueStartIndex == overridesString.length()) {
+        // Malformed string -- % not followed by ':' or trailing ':'
+        return null;
+      }
+      // Prepare for next iteration.
+      pos = overridesString.indexOf('%', valueStartIndex + 1);
+      if (valueStartIndex != keyStartIndex + 2 ||
+          overridesString.charAt(keyStartIndex) != field.getChar()) {
+        // Key is not a high level field (unhandled by this code) or does not match.
+        // Also catches malformed string where key is of zero length (skip, not error).
+        continue;
+      }
+      int valueLength = (pos != -1 ? pos : overridesString.length()) - valueStartIndex;
+      if (valueLength != 1) {
+        // Malformed string -- value has length other than 1
+        return null;
+      }
+      return WidthType.of(overridesString.charAt(valueStartIndex));
+    }
+
+    return null;
   }
 
   /**
@@ -264,8 +316,16 @@ public final class FormatInterpreter {
   }
 
   private static String getJsonValue(String regionCode, AddressDataKey key) {
+    return getJsonValue(regionCode, key, RegionDataConstants.getCountryFormatMap());
+  }
+
+  /**
+   * Visible for testing only.
+   */
+  static String getJsonValue(
+      String regionCode, AddressDataKey key, Map<String, String> regionDataMap) {
     Util.checkNotNull(regionCode);
-    String jsonString = RegionDataConstants.getCountryFormatMap().get(regionCode);
+    String jsonString = regionDataMap.get(regionCode);
     Util.checkNotNull(jsonString, "no json data for region code " + regionCode);
 
     try {
