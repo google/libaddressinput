@@ -80,6 +80,19 @@ public enum AddressField {
      * Identifies an input field as accepting short (often bounded) input, such as postal code.
      */
     SHORT;
+
+    static WidthType of(char c) {
+      switch (c) {
+        // In case we need a 'narrow'. Map it to 'S' for now to facilitate the rollout.
+        case 'N':
+        case 'S':
+          return SHORT;
+        case 'L':
+          return LONG;
+        default:
+          throw new IllegalArgumentException("invalid width character: " + c);
+      }
+    }
   }
 
   private static final Map<Character, AddressField> FIELD_MAPPING;
@@ -129,7 +142,18 @@ public enum AddressField {
    * field, in the UI.
    */
   // TODO: We'd probably be better off just having a widthType field in the enum.
-  public WidthType getDefaultWidthType() {
+  private WidthType getDefaultWidthType() {
     return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE) ? WidthType.SHORT : WidthType.LONG;
+  }
+
+  /**
+   * Returns default width of this address field. Takes per-country heuristics into account for
+   * text input fields. This may be overridden for a specific country when we have data for the
+   * possible inputs in that field and use a drop-down, rather than a text field, in the UI.
+   */
+  public WidthType getWidthTypeForRegion(String regionCode) {
+    Util.checkNotNull(regionCode);
+    WidthType width = FormatInterpreter.getWidthOverride(this, regionCode);
+    return width != null ? width : getDefaultWidthType();
   }
 }

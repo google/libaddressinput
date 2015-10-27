@@ -17,6 +17,7 @@
 package com.google.i18n.addressinput.common;
 
 import static com.google.common.truth.Truth.assertThat;
+import com.google.i18n.addressinput.common.AddressField.WidthType;
 import static java.util.Arrays.asList;
 
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
@@ -24,6 +25,9 @@ import com.google.i18n.addressinput.common.LookupKey.ScriptType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class FormatInterpreterTest {
@@ -173,5 +177,55 @@ public class FormatInterpreterTest {
         AddressData.builder(svAddress).setPostalCode("CP 2101").build();
     assertThat(formatInterpreter.getEnvelopeAddress(svAddressWithPostCode))
         .containsExactly("Some Street 12", "CP 2101-Ahuachapán", "Ahuachapán").inOrder();
+  }
+
+  private Map<String, String> createWidthOverrideRegionData(String overridesString) {
+    Map<String, String> map = new HashMap<String, String>(1);
+    map.put("US", "{\"width_overrides\":\"" + overridesString + "\"}");
+    return map;
+  }
+
+  @Test public void testGetWidthOverride_goodData() {
+    Map<String, String> fakeData = createWidthOverrideRegionData("%S:L%C:S");
+    assertThat(FormatInterpreter.getWidthOverride(AddressField.LOCALITY, "US", fakeData))
+        .isEqualTo(WidthType.SHORT);
+    assertThat(FormatInterpreter.getWidthOverride(AddressField.ADMIN_AREA, "US", fakeData))
+        .isEqualTo(WidthType.LONG);
+    assertThat(FormatInterpreter.getWidthOverride(AddressField.POSTAL_CODE, "US", fakeData))
+        .isNull();
+  }
+
+  @Test public void testGetWidthOverride_singleOverride() {
+    Map<String, String> fakeData = createWidthOverrideRegionData("%S:S");
+    assertThat(FormatInterpreter.getWidthOverride(AddressField.ADMIN_AREA, "US", fakeData))
+        .isEqualTo(WidthType.SHORT);
+    assertThat(FormatInterpreter.getWidthOverride(AddressField.LOCALITY, "US", fakeData)).isNull();
+  }
+
+  @Test public void testGetWidthOverride_badData() {
+    // Doesn't test that the parsing code actually just skips bad keys/values. That's nice, but
+    // not essential.
+    for (String overridesString : new String[]{
+        "", "%", ":", "%%", "%:", "%CX", "%CX:", "C:S", "%C:", "%C:SS", "%C:SS%Q:L"}) {
+      Map<String, String> fakeData = createWidthOverrideRegionData(overridesString);
+      for (AddressField field : AddressField.values()) {
+        assertThat(FormatInterpreter.getWidthOverride(field, "US", fakeData))
+            .named("With field " + field + " and overrides string '" + overridesString + "'")
+            .isNull();
+      }
+    }
+  }
+
+  @Test public void testGetWidthOverride_skipTooLongKeys() {
+    for (String overridesString : new String[]{
+        "%NH:L%C:S", "%Z:L%BG:S%C:S", "%C:S%NH:S", "%NH:QL%C:S", "%NH:L%C:S%BG:L"}) {
+      Map<String, String> fakeData = createWidthOverrideRegionData(overridesString);
+        assertThat(FormatInterpreter.getWidthOverride(AddressField.LOCALITY, "US", fakeData))
+            .named("For LOCALITY (C) and overrides string '" + overridesString + "'")
+            .isEqualTo(WidthType.SHORT);
+        assertThat(FormatInterpreter.getWidthOverride(AddressField.ADMIN_AREA, "US", fakeData))
+            .named("For ADMIN_AREA (S) and overrides string '" + overridesString + "'")
+            .isNull();
+    }
   }
 }

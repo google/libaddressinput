@@ -90,8 +90,15 @@ void LookupKey::FromAddress(const AddressData& address) {
   } else {
     for (size_t i = 0; i < arraysize(kHierarchy); ++i) {
       AddressField field = kHierarchy[i];
+      if (address.IsFieldEmpty(field)) {
+        // It would be impossible to find any data for an empty field value.
+        break;
+      }
       const std::string& value = address.GetFieldValue(field);
-      if (value.empty()) {
+      if (value.find('/') != std::string::npos) {
+        // The address metadata server does not have data for any fields with a
+        // slash in their value. The slash is used as a syntax character in the
+        // lookup key format.
         break;
       }
       nodes_.insert(std::make_pair(field, value));

@@ -291,6 +291,7 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("CO", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C, %S, %Z\","
+      "\"require\":\"AS\","
       "\"zipex\":\"111221,130001,760011\","
       "\"posturl\":\"http://www.codigopostal.gov.co/\","
       "\"state_name_type\":\"department\","
@@ -568,13 +569,14 @@ std::map<std::string, std::string> InitRegionData() {
       "}"));
   region_data.insert(std::make_pair("HU", "{"
       "\"fmt\":\"%N%n%O%n%C%n%A%n%Z\","
+      "\"require\":\"ACZ\","
       "\"zipex\":\"1037,2380,1540\","
       "\"posturl\":\"http://posta.hu/ugyfelszolgalat/iranyitoszam_kereso\","
       "\"languages\":\"hu\""
       "}"));
   region_data.insert(std::make_pair("ID", "{"
       "\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\","
-      "\"state_name_type\":\"district\","
+      "\"require\":\"AS\","
       "\"zipex\":\"40115\","
       "\"languages\":\"id\""
       "}"));

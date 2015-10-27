@@ -39,14 +39,4 @@ public class RegionDataConstantsTest {
     assertNotNull("Data for 'ZZ' is missing (needed for default region info.)",
         RegionDataConstants.getCountryFormatMap().get("ZZ"));
   }
-
-  @Test public void testStringsAreConvertedIntoJson() throws Exception {
-    String[] input = {"key", "value", "key2", "value2"};
-    // Input order is not maintained, since we build this using JSON objects. This is
-    // unimportant, so long as the key-value mappings are maintained.
-    String expectedOutput1 = "{\"key\":\"value\",\"key2\":\"value2\"}";
-    String expectedOutput2 = "{\"key2\":\"value2\",\"key\":\"value\"}";
-    String actualOutput = RegionDataConstants.convertArrayToJsonString(input);
-    assertTrue(actualOutput.equals(expectedOutput1) || actualOutput.equals(expectedOutput2));
-  }
 }
