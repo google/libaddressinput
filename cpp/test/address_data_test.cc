@@ -196,18 +196,21 @@ TEST(AddressDataTest, TestEquals) {
 
 TEST(AddressDataTest, GetFieldValueInvalid) {
   AddressData address;
-  ASSERT_DEATH(address.GetFieldValue(STREET_ADDRESS), "ssertion.*failed");
+  ASSERT_DEATH_IF_SUPPORTED(address.GetFieldValue(STREET_ADDRESS),
+                            "ssertion.*failed");
 }
 
 TEST(AddressDataTest, GetVectorFieldValueInvalid) {
   AddressData address;
-  ASSERT_DEATH(address.GetRepeatedFieldValue(COUNTRY), "ssertion.*failed");
+  ASSERT_DEATH_IF_SUPPORTED(address.GetRepeatedFieldValue(COUNTRY),
+                            "ssertion.*failed");
 }
 
 TEST(AddressDataTest, IsFieldEmptyInvalid) {
   static const AddressField invalid_field = static_cast<AddressField>(-1);
   AddressData address;
-  ASSERT_DEATH(address.IsFieldEmpty(invalid_field), "ssertion.*failed");
+  ASSERT_DEATH_IF_SUPPORTED(address.IsFieldEmpty(invalid_field),
+                            "ssertion.*failed");
 }
 
 #endif  // NDEBUG
