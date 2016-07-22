@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * Wraps a Map of address property data to provide the AddressVerificationData API.
  */
-final class AddressVerificationData implements DataSource {
+public final class AddressVerificationData implements DataSource {
   private final Map<String, String> propertiesMap;
 
   private static final Pattern KEY_VALUES_PATTERN = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\"");
@@ -38,7 +38,7 @@ final class AddressVerificationData implements DataSource {
    * Constructs from a map of address property data.  This keeps a reference to the map.  This
    * does not mutate the map. The map should not be mutated subsequent to this call.
    */
-  AddressVerificationData(Map<String, String> propertiesMap) {
+  public AddressVerificationData(Map<String, String> propertiesMap) {
     this.propertiesMap = propertiesMap;
   }
 

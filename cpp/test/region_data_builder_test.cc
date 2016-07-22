@@ -108,7 +108,7 @@ TEST_F(RegionDataBuilderTest,
   EXPECT_EQ(
       "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",  /* "강원도" */
       tree.sub_regions().front()->key());
-  EXPECT_EQ("Gangwon-do", tree.sub_regions().front()->name());
+  EXPECT_EQ("Gangwon", tree.sub_regions().front()->name());
 }
 
 TEST_F(RegionDataBuilderTest, KrWithKoKrLanguageHasKoreanKeysAndNames) {

@@ -22,7 +22,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -125,16 +124,6 @@ public final class FormOptions {
     return this;
   }
 
-  /**
-   * Blacklist the given CLDR (Common Locale Data Repository) region (country) code
-   * (http://goto/iii) indicating countries that for legal or other reasons should not be available.
-   * <p>
-   * Calls are cumulative, call this method once for each region that needs to be blacklisted.
-   * <p>
-   * We reserve the right to change this API from taking individual regions to taking a set. Before
-   * this can happen we need to decouple the iOS I18NFormOptions class from this class (j2objc) to
-   * ensure that Java vargs / collection args don't spill over to the iOS API.
-   */
   public FormOptions blacklistRegion(String regionCode) {
     if (regionCode == null) {
       throw new NullPointerException();

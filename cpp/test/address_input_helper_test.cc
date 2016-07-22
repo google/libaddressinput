@@ -107,7 +107,7 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevel) {
   address.region_code = "TW";
   address.postal_code = "53012";
 
-  /* This matches 二水鄉 - Ershui Township. */
+  /* This matches 二水鄉 - Ershuei Township. */
   AddressData expected = address;
   /* This locality is in 彰化縣 - Changhua County. */
   expected.administrative_area = "\xE5\xBD\xB0\xE5\x8C\x96\xE7\xB8\xA3";
@@ -130,10 +130,10 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevelLatin) {
   address.postal_code = "53012";
   address.language_code = "zh-Latn";
 
-  /* This matches 二水鄉 - Ershui Township. */
+  /* This matches 二水鄉 - Ershuei Township. */
   AddressData expected = address;
   /* This locality is in 彰化縣 - Changhua County. */
-  expected.locality = "Ershui Township";
+  expected.locality = "Ershuei Township";
   expected.administrative_area = "Changhua County";
   FillAddress(&address);
   EXPECT_EQ(expected, address);
@@ -154,7 +154,7 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
   address.postal_code = "425-111";
 
   AddressData expected = address;
-  /* The province is Gyeonggi-do - 경기도. */
+  /* The province is Gyeonggi - 경기도. */
   expected.administrative_area = "\xEA\xB2\xBD\xEA\xB8\xB0\xEB\x8F\x84";
   /* The city is Ansan-si - 안산시. */
   expected.locality = "\xEC\x95\x88\xEC\x82\xB0\xEC\x8B\x9C";
@@ -170,8 +170,8 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
   address_ko_latn.language_code = "ko-latn";
 
   expected = address_ko_latn;
-  /* The province is Gyeonggi-do - 경기도. */
-  expected.administrative_area = "Gyeonggi-do";
+  /* The province is Gyeonggi - 경기도. */
+  expected.administrative_area = "Gyeonggi";
   /* The city is Ansan-si - 안산시. */
   expected.locality = "Ansan-si";
   /* The district is Danwon-gu - 단원구 */

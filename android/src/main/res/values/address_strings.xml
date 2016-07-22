@@ -42,6 +42,8 @@
 
     <string name="i18n_suburb" translation_description="Smaller part of a city used in some addresses in countries like New Zealand to give a more specific location in a postal address. [CHAR LIMIT=30]">Suburb</string>
 
+    <string name="i18n_townland" translation_description="A small geographical division of land in Ireland, shown as part of an address input. Semantically similar to a neighborhood or local district, this is typically the smallest division of land which can be named in an address. See: http://en.wikipedia.org/wiki/Townland">Townland</string>
+
     <string name="i18n_village_township" translation_description="A unit used in postal addresses in Malaysia, which is smaller than the city/town, and represents a village, township, or precinct. [CHAR LIMIT=30]">Village / Township</string>
 
     <string name="i18n_address_line1_label" translation_description="Street-level part of an address, e.g. &quot;18th Street, Unit 3&quot;. [CHAR LIMIT=30]">Street address</string>
