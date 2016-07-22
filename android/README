@@ -38,7 +38,7 @@ $ gradle build
 With an Android emulator running or an Android device connected, the following
 command line then builds the library and runs the tests:
 
-$ gradle connectedAndroidTest
+$ gradle connectedInstrumentTest
 
 The test runner logs to the system log, which can be viewed using logcat:
 

@@ -42,6 +42,14 @@ limitations under the License.
     Suburb
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_TOWNLAND"
+      desc="A small geographical division of land in Ireland, shown as part of
+            an address input. Semantically similar to a neighborhood or local
+            district, this is typically the smallest division of land which can
+            be named in an address. See: http://en.wikipedia.org/wiki/Townland">
+    Townland
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP"
       desc="A unit used in postal addresses in Malaysia, which is smaller than the
             city/town, and represents a village, township, or precinct.">
