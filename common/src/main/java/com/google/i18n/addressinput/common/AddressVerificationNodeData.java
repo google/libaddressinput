@@ -29,7 +29,7 @@ public final class AddressVerificationNodeData {
   private final Map<AddressDataKey, String> map;
 
   public AddressVerificationNodeData(Map<AddressDataKey, String> map) {
-    Util.checkNotNull("Cannot construct StandardNodeData with null map");
+    Util.checkNotNull(map, "Cannot construct StandardNodeData with null map");
     this.map = map;
   }
 
