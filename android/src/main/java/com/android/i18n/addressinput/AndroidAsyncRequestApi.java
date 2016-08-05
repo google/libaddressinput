@@ -19,15 +19,12 @@ package com.android.i18n.addressinput;
 import com.google.i18n.addressinput.common.AsyncRequestApi;
 import com.google.i18n.addressinput.common.JsoMap;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 /**
@@ -38,41 +35,54 @@ import java.net.URLEncoder;
  * issues regarding interruption and cancellation). Ultimately this class should be revisited and
  * most likely rewritten.
  */
-// TODO: Reimplement this class according to current bast-practice for asynchronous requests.
+// TODO: Reimplement this class according to current best-practice for asynchronous requests.
 public class AndroidAsyncRequestApi implements AsyncRequestApi {
   /** Simple implementation of asynchronous HTTP GET. */
   private static class AsyncHttp extends Thread {
-    private final HttpUriRequest request;
+    private final String requestUrlString;
     private final AsyncCallback callback;
+    private final int timeoutMillis;
 
-    protected AsyncHttp(HttpUriRequest request, AsyncCallback callback) {
-      this.request = request;
+    protected AsyncHttp(String requestUrlString, AsyncCallback callback, int timeoutMillis) {
+      this.requestUrlString = requestUrlString;
       this.callback = callback;
+      this.timeoutMillis = timeoutMillis;
     }
 
     @Override
     public void run() {
       try {
-        final String response;
-        // TODO: Figure out if this synchronization is even vaguely necessary.
-        synchronized (CLIENT) {
-          response = CLIENT.execute(request, new BasicResponseHandler());
+        // While MalformedURLException from URL's constructor is a different kind of error than
+        // issues with the HTTP request, we're handling them the same way because the URLs are often
+        // generated based on data returned by previous HTTP requests and we need robust, graceful
+        // handling of any issues.
+        URL url = encodeUrl(requestUrlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(timeoutMillis);
+        connection.setReadTimeout(timeoutMillis);
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+          BufferedReader responseReader = new BufferedReader(
+              new InputStreamReader(connection.getInputStream(), "UTF-8"));
+          StringBuilder responseJson = new StringBuilder();
+          String line;
+          while ((line = responseReader.readLine()) != null) {
+            responseJson.append(line);
+          }
+          responseReader.close();
+          callback.onSuccess(JsoMap.buildJsoMap(responseJson.toString()));
+        } else {
+          callback.onFailure();
         }
-        callback.onSuccess(JsoMap.buildJsoMap(response));
+        connection.disconnect();
       } catch (Exception e) {
         callback.onFailure();
       }
     }
   }
 
-  private static final HttpClient CLIENT = new DefaultHttpClient();
-
   @Override public void requestObject(String url, AsyncCallback callback, int timeoutMillis) {
-    HttpParams params = CLIENT.getParams();
-    HttpConnectionParams.setConnectionTimeout(params, timeoutMillis);
-    HttpConnectionParams.setSoTimeout(params, timeoutMillis);
-    HttpUriRequest request = new HttpGet(encodeUrl(url));
-    (new AsyncHttp(request, callback)).start();
+    (new AsyncHttp(url, callback, timeoutMillis)).start();
   }
 
   /**
@@ -81,7 +91,7 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
    * TODO: Refactor the code to stop passing URLs around as strings, to eliminate the need for
    * this broken hack.
    */
-  private static String encodeUrl(String url) {
+  private static URL encodeUrl(String url) throws MalformedURLException {
     int length = url.length();
     StringBuilder tmp = new StringBuilder(length);
 
@@ -109,6 +119,6 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
     } catch (UnsupportedEncodingException e) {
       throw new AssertionError(e);  // Impossible.
     }
-    return tmp.toString();
+    return new URL(tmp.toString());
   }
 }

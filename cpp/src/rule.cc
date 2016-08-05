@@ -119,6 +119,8 @@ NameMessageIdMap InitSublocalityMessageIds() {
   message_ids.insert(std::make_pair(
       "neighborhood", IDS_LIBADDRESSINPUT_NEIGHBORHOOD));
   message_ids.insert(std::make_pair(
+      "townland", IDS_LIBADDRESSINPUT_TOWNLAND));
+  message_ids.insert(std::make_pair(
       "village_township", IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP));
   return message_ids;
 }
