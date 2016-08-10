@@ -27,20 +27,20 @@ public final class RegionDataConstants {
 
   private static Map<String, String> createMap() {
     TreeMap<String, String> map = new TreeMap<String, String>();
-    map.put("AC", "{\"name\":\"ASCENSION ISLAND\"}");
+    map.put("AC", "{\"name\":\"ASCENSION ISLAND\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("AD", "{\"name\":\"ANDORRA\",\"lang\":\"ca\",\"languages\":\"ca\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("AE", "{\"name\":\"UNITED ARAB EMIRATES\",\"lang\":\"ar\",\"languages\":\"ar\",\"lfmt\":\"%N%n%O%n%A%n%S\",\"fmt\":\"%N%n%O%n%A%n%S\",\"require\":\"AS\",\"state_name_type\":\"emirate\"}");
-    map.put("AF", "{\"name\":\"AFGHANISTAN\"}");
+    map.put("AF", "{\"name\":\"AFGHANISTAN\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("AG", "{\"name\":\"ANTIGUA AND BARBUDA\",\"require\":\"A\"}");
-    map.put("AI", "{\"name\":\"ANGUILLA\"}");
-    map.put("AL", "{\"name\":\"ALBANIA\"}");
+    map.put("AI", "{\"name\":\"ANGUILLA\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
+    map.put("AL", "{\"name\":\"ALBANIA\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\"}");
     map.put("AM", "{\"name\":\"ARMENIA\",\"lang\":\"hy\",\"languages\":\"hy\",\"lfmt\":\"%N%n%O%n%A%n%Z%n%C%n%S\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C%n%S\"}");
     map.put("AO", "{\"name\":\"ANGOLA\"}");
     map.put("AQ", "{\"name\":\"ANTARCTICA\"}");
     map.put("AR", "{\"name\":\"ARGENTINA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\",\"upper\":\"ACZ\"}");
     map.put("AS", "{\"name\":\"AMERICAN SAMOA\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
     map.put("AT", "{\"name\":\"AUSTRIA\",\"fmt\":\"%O%n%N%n%A%n%Z %C\",\"require\":\"ACZ\"}");
-    map.put("AU", "{\"name\":\"AUSTRALIA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%O%n%N%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
+    map.put("AU", "{\"name\":\"AUSTRALIA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%O%n%N%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"locality_name_type\":\"suburb\",\"state_name_type\":\"state\"}");
     map.put("AW", "{\"name\":\"ARUBA\"}");
     map.put("AX", "{\"name\":\"FINLAND\",\"fmt\":\"%O%n%N%n%A%nAX-%Z %C%nÅLAND\",\"require\":\"ACZ\",\"postprefix\":\"AX-\"}");
     map.put("AZ", "{\"name\":\"AZERBAIJAN\",\"fmt\":\"%N%n%O%n%A%nAZ %Z %C\",\"postprefix\":\"AZ \"}");
@@ -60,7 +60,7 @@ public final class RegionDataConstants {
     map.put("BQ", "{\"name\":\"BONAIRE, SINT EUSTATIUS, AND SABA\"}");
     map.put("BR", "{\"name\":\"BRAZIL\",\"lang\":\"pt\",\"languages\":\"pt\",\"fmt\":\"%O%n%N%n%A%n%D%n%C-%S%n%Z\",\"require\":\"ASCZ\",\"upper\":\"CS\",\"sublocality_name_type\":\"neighborhood\",\"state_name_type\":\"state\",\"width_overrides\":\"%C:L%S:S\"}");
     map.put("BS", "{\"name\":\"BAHAMAS\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%C, %S\",\"state_name_type\":\"island\"}");
-    map.put("BT", "{\"name\":\"BHUTAN\"}");
+    map.put("BT", "{\"name\":\"BHUTAN\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
     map.put("BV", "{\"name\":\"BOUVET ISLAND\"}");
     map.put("BW", "{\"name\":\"BOTSWANA\"}");
     map.put("BY", "{\"name\":\"BELARUS\",\"fmt\":\"%S%n%Z %C %X%n%A%n%O%n%N\"}");
@@ -184,7 +184,7 @@ public final class RegionDataConstants {
     map.put("MW", "{\"name\":\"MALAWI\",\"fmt\":\"%N%n%O%n%A%n%C %X\"}");
     map.put("MX", "{\"name\":\"MEXICO\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C, %S\",\"require\":\"ACZ\",\"upper\":\"CSZ\",\"sublocality_name_type\":\"neighborhood\",\"state_name_type\":\"state\",\"width_overrides\":\"%S:S\"}");
     map.put("MY", "{\"name\":\"MALAYSIA\",\"lang\":\"ms\",\"languages\":\"ms\",\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C%n%S\",\"require\":\"ACZ\",\"upper\":\"CS\",\"sublocality_name_type\":\"village_township\",\"state_name_type\":\"state\"}");
-    map.put("MZ", "{\"name\":\"MOZAMBIQUE\"}");
+    map.put("MZ", "{\"name\":\"MOZAMBIQUE\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("NA", "{\"name\":\"NAMIBIA\"}");
     map.put("NC", "{\"name\":\"NEW CALEDONIA\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("NE", "{\"name\":\"NIGER\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
@@ -199,7 +199,7 @@ public final class RegionDataConstants {
     map.put("NZ", "{\"name\":\"NEW ZEALAND\",\"fmt\":\"%N%n%O%n%A%n%D%n%C %Z\",\"require\":\"ACZ\"}");
     map.put("OM", "{\"name\":\"OMAN\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\"}");
     map.put("PA", "{\"name\":\"PANAMA (REP.)\",\"fmt\":\"%N%n%O%n%A%n%C%n%S\",\"upper\":\"CS\"}");
-    map.put("PE", "{\"name\":\"PERU\"}");
+    map.put("PE", "{\"name\":\"PERU\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\"}");
     map.put("PF", "{\"name\":\"FRENCH POLYNESIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"state_name_type\":\"island\"}");
     map.put("PG", "{\"name\":\"PAPUA NEW GUINEA\",\"fmt\":\"%N%n%O%n%A%n%C %Z %S\",\"require\":\"ACS\"}");
     map.put("PH", "{\"name\":\"PHILIPPINES\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D, %C%n%Z %S\"}");
@@ -237,7 +237,7 @@ public final class RegionDataConstants {
     map.put("SV", "{\"name\":\"EL SALVADOR\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z-%C%n%S\",\"require\":\"ACS\",\"upper\":\"CSZ\"}");
     map.put("SX", "{\"name\":\"SINT MAARTEN\"}");
     map.put("SZ", "{\"name\":\"SWAZILAND\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"upper\":\"ACZ\"}");
-    map.put("TA", "{\"name\":\"TRISTAN DA CUNHA\"}");
+    map.put("TA", "{\"name\":\"TRISTAN DA CUNHA\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("TC", "{\"name\":\"TURKS AND CAICOS ISLANDS\",\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("TD", "{\"name\":\"CHAD\"}");
     map.put("TF", "{\"name\":\"FRENCH SOUTHERN TERRITORIES\"}");
@@ -261,7 +261,7 @@ public final class RegionDataConstants {
     map.put("UY", "{\"name\":\"URUGUAY\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"upper\":\"CS\"}");
     map.put("UZ", "{\"name\":\"UZBEKISTAN\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\",\"upper\":\"CS\"}");
     map.put("VA", "{\"name\":\"VATICAN\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
-    map.put("VC", "{\"name\":\"SAINT VINCENT AND THE GRENADINES (ANTILLES)\"}");
+    map.put("VC", "{\"name\":\"SAINT VINCENT AND THE GRENADINES (ANTILLES)\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
     map.put("VE", "{\"name\":\"VENEZUELA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%C %Z, %S\",\"require\":\"ACS\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
     map.put("VG", "{\"name\":\"VIRGIN ISLANDS (BRITISH)\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"A\"}");
     map.put("VI", "{\"name\":\"VIRGIN ISLANDS (U.S.)\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
