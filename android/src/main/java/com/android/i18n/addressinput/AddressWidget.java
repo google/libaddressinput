@@ -142,6 +142,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     localityLabelMap.put("city", R.string.i18n_locality_label);
     localityLabelMap.put("district", R.string.i18n_district);
     localityLabelMap.put("post_town", R.string.i18n_post_town);
+    localityLabelMap.put("suburb", R.string.i18n_suburb);
     LOCALITY_LABELS = Collections.unmodifiableMap(localityLabelMap);
 
     Map<String, Integer> sublocalityLabelMap = new HashMap<String, Integer>(2);
