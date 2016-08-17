@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +98,99 @@ public class FormatInterpreterTest {
         .inOrder();
   }
 
+  @Test public void testGetEnvelopeAddress_MissingFields_LiteralsBetweenFields() {
+    FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
+    AddressData.Builder addressBuilder = AddressData.builder()
+        .setCountry("US");
+
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build())).isEmpty();
+
+    addressBuilder.setAdminArea("CA");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("CA");
+
+    addressBuilder.setLocality("Los Angeles");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("Los Angeles, CA");
+
+    addressBuilder.setPostalCode("90291");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("Los Angeles, CA 90291");
+
+    addressBuilder.setAdminArea("");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("Los Angeles 90291");
+
+    addressBuilder.setLocality("");
+    addressBuilder.setAdminArea("CA");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("CA 90291");
+  }
+
+  @Test public void testGetEnvelopeAddress_MissingFields_LiteralsOnSeparateLine() {
+    FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
+    AddressData.Builder addressBuilder = AddressData.builder()
+        .setCountry("AX");
+
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("ÅLAND");
+
+    addressBuilder.setLocality("City");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("City", "ÅLAND").inOrder();
+
+    addressBuilder.setPostalCode("123");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("AX-123 City", "ÅLAND").inOrder();
+  }
+
+  @Test public void testGetEnvelopeAddress_MissingFields_LiteralBeforeField() {
+    FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
+    AddressData.Builder addressBuilder = AddressData.builder()
+        .setCountry("JP")
+        .setLanguageCode("ja");
+
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build())).isEmpty();
+
+    addressBuilder.setPostalCode("123");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("〒123");
+
+    addressBuilder.setAdminArea("Prefecture");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("〒123", "Prefecture").inOrder();
+
+    addressBuilder.setPostalCode("");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("Prefecture");
+  }
+
+  @Test public void testGetEnvelopeAddress_MissingFields_DuplicateField() {
+    FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
+    AddressData.Builder addressBuilder = AddressData.builder()
+        .setCountry("CI");
+
+    addressBuilder.setSortingCode("123");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("123 123");
+
+    addressBuilder.setAddressLine1("456 Main St");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("123 456 Main St 123");
+
+    addressBuilder.setLocality("Yamoussoukro");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("123 456 Main St Yamoussoukro 123");
+
+    addressBuilder.setSortingCode("");
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("456 Main St Yamoussoukro");
+
+    addressBuilder.setAddressLines(new ArrayList<String>());
+    assertThat(formatInterpreter.getEnvelopeAddress(addressBuilder.build()))
+        .containsExactly("Yamoussoukro");
+  }
+
   @Test public void testUsEnvelopeAddress() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData address = AddressData.builder()
@@ -132,7 +226,7 @@ public class FormatInterpreterTest {
         .inOrder();
   }
 
-  @Test public void testEnvelopeAddressIncompleteAddress() {
+  @Test public void testGetEnvelopeAddressIncompleteAddress() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData address = AddressData.builder()
         .setCountry("US")
@@ -145,13 +239,13 @@ public class FormatInterpreterTest {
         .containsExactly("1098 Alta Ave", "CA 94043").inOrder();
   }
 
-  @Test public void testEnvelopeAddressEmptyAddress() {
+  @Test public void testGetEnvelopeAddressEmptyAddress() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData address = AddressData.builder().setCountry("US").build();
     assertThat(formatInterpreter.getEnvelopeAddress(address)).isEmpty();
   }
 
-  @Test public void testEnvelopeAddressLeadingPostPrefix() {
+  @Test public void testGetEnvelopeAddressLeadingPostPrefix() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData address = AddressData.builder()
         .setCountry("CH")

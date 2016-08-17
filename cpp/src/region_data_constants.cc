@@ -231,7 +231,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en~tn\""
       "}"));
   region_data.insert(std::make_pair("BY", "{"
-      "\"fmt\":\"%S%n%Z %C %X%n%A%n%O%n%N\","
+      "\"fmt\":\"%S%n%Z %C%n%A%n%O%n%N\","
       "\"zipex\":\"223016,225860,220050\","
       "\"posturl\":\"http://zip.belpost.by\","
       "\"languages\":\"be~ru\""
@@ -252,7 +252,6 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("CD", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%C %X\","
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("CF", "{"
@@ -412,7 +411,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en~hif-Latn~fj\""
       "}"));
   region_data.insert(std::make_pair("FK", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"FIQQ 1ZZ\","
       "\"languages\":\"en\""
@@ -467,7 +466,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("GG", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%nGUERNSEY%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%nGUERNSEY%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"GY1 1AA,GY2 2BT\","
       "\"posturl\":\"http://www.guernseypost.com/postcode_finder/\","
@@ -514,7 +513,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"el\""
       "}"));
   region_data.insert(std::make_pair("GS", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"SIQQ 1ZZ\""
       "}"));
@@ -565,7 +564,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"hr\""
       "}"));
   region_data.insert(std::make_pair("HT", "{"
-      "\"fmt\":\"%N%n%O%n%A%nHT%Z %C %X\","
+      "\"fmt\":\"%N%n%O%n%A%nHT%Z %C\","
       "\"zipex\":\"6120,5310,6110,8510\","
       "\"languages\":\"ht~fr\""
       "}"));
@@ -597,7 +596,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"iw~ar\""
       "}"));
   region_data.insert(std::make_pair("IM", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"IM2 1AA,IM99 1PS\","
       "\"posturl\":\"http://www.gov.im/post/postal/fr_main.asp\","
@@ -613,7 +612,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("IO", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"BBND 1ZZ\","
       "\"languages\":\"en\""
@@ -644,7 +643,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"it\""
       "}"));
   region_data.insert(std::make_pair("JE", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%nJERSEY%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%nJERSEY%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"JE1 1AA,JE2 2BT\","
       "\"posturl\":\"http://www.jerseypost.com/tools/postcode-address-finder/\","
@@ -676,7 +675,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"sw~en\""
       "}"));
   region_data.insert(std::make_pair("KG", "{"
-      "\"fmt\":\"%Z %C %X%n%A%n%O%n%N\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"720001\","
       "\"languages\":\"ky-Cyrl~ru\""
       "}"));
@@ -754,7 +753,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"si~ta\""
       "}"));
   region_data.insert(std::make_pair("LR", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%Z %C %X\","
+      "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"1000\","
       "\"languages\":\"en\""
       "}"));
@@ -840,7 +839,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"my\""
       "}"));
   region_data.insert(std::make_pair("MN", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%S %C-%X%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\","
       "\"zipex\":\"65030,65270\","
       "\"posturl\":\"http://www.zipcode.mn/\","
       "\"languages\":\"mn-Cyrl\""
@@ -1042,7 +1041,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"fr\""
       "}"));
   region_data.insert(std::make_pair("PN", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"PCRN 1ZZ\","
       "\"languages\":\"en\""
@@ -1142,7 +1141,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en~zh-Hans~ms-Latn~ta\""
       "}"));
   region_data.insert(std::make_pair("SH", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"STHL 1ZZ\","
       "\"languages\":\"en\""
@@ -1188,14 +1187,13 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"so\""
       "}"));
   region_data.insert(std::make_pair("SR", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%C %X%n%S\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%S\","
       "\"languages\":\"nl\""
       "}"));
   region_data.insert(std::make_pair("SS", "{"
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("ST", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%C %X\","
       "\"languages\":\"pt\""
       "}"));
   region_data.insert(std::make_pair("SV", "{"
@@ -1219,7 +1217,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("TC", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%Z\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%Z\","
       "\"require\":\"ACZ\","
       "\"zipex\":\"TKCA 1ZZ\","
       "\"languages\":\"en\""
@@ -1276,7 +1274,7 @@ std::map<std::string, std::string> InitRegionData() {
       "\"languages\":\"en\""
       "}"));
   region_data.insert(std::make_pair("TV", "{"
-      "\"fmt\":\"%N%n%O%n%A%n%X%n%C%n%S\","
+      "\"fmt\":\"%N%n%O%n%A%n%C%n%S\","
       "\"state_name_type\":\"island\","
       "\"languages\":\"tyv\""
       "}"));
