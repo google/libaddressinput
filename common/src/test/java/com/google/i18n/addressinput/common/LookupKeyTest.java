@@ -16,9 +16,14 @@
 
 package com.google.i18n.addressinput.common;
 
-import com.google.i18n.addressinput.common.LookupKey.KeyType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import com.google.i18n.addressinput.common.LookupKey.KeyType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(JUnit4.class)
-public class LookupKeyTest extends TestCase {
+public class LookupKeyTest {
   private static final String ROOT_KEY = "data";
   private static final String ROOT_EXAMPLE_KEY = "examples";
   private static final String US_KEY = "data/US";
@@ -96,6 +101,20 @@ public class LookupKeyTest extends TestCase {
     } catch (RuntimeException e) {
       // Expected.
     }
+  }
+
+  @Test public void testKeyStringWithAdditionalTokenIsConsideredPartOfName() {
+    String stringWithExtraToken = "data/BR/TO/Palmas/Plano Diretor S/N";
+    LookupKey key = new LookupKey.Builder(stringWithExtraToken).build();
+    assertEquals(
+        "Plano Diretor S/N", key.getValueForUpperLevelField(AddressField.DEPENDENT_LOCALITY));
+  }
+
+  @Test public void testKeyStringWithMultipleExtraTokensIsConsideredPartOfName() {
+    String stringWithTwoExtraTokens = "data/BR/TO/Palmas/Couple/Of/Slashes";
+    LookupKey key = new LookupKey.Builder(stringWithTwoExtraTokens).build();
+    assertEquals(
+        "Couple/Of/Slashes", key.getValueForUpperLevelField(AddressField.DEPENDENT_LOCALITY));
   }
 
   @Test public void testFallbackToCountry() {

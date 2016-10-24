@@ -23,7 +23,7 @@ package com.google.i18n.addressinput.common;
 // TODO: Review public API for external classes and tidy JavaDoc.
 public final class SimpleClientCacheManager implements ClientCacheManager {
   // URL to get public address data.
-  static final String PUBLIC_ADDRESS_SERVER = "https://i18napis.appspot.com/address";
+  static final String PUBLIC_ADDRESS_SERVER = "https://chromium-i18n.appspot.com/ssl-address";
 
   @Override
   public String get(String key) {

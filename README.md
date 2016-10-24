@@ -7,8 +7,7 @@ implemented in C++, one implemented in Java for Android) that use
 [address metadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata)
 from
 [Google](https://developers.google.com/)'s
-[I18n Services](https://i18napis.appspot.com/)
-[Address Data Service](https://i18napis.appspot.com/address)
+[Address Data Service](https://chromium-i18n.appspot.com/ssl-address/data)
 to assist application developers in collecting and handling _postal addresses_
 from all over the world.
 

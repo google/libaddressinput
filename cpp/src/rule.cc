@@ -79,6 +79,8 @@ const NameMessageIdMap& GetAdminAreaMessageIds() {
 NameMessageIdMap InitPostalCodeMessageIds() {
   NameMessageIdMap message_ids;
   message_ids.insert(std::make_pair(
+      "eircode", IDS_LIBADDRESSINPUT_EIR_CODE_LABEL));
+  message_ids.insert(std::make_pair(
       "pin", IDS_LIBADDRESSINPUT_PIN_CODE_LABEL));
   message_ids.insert(std::make_pair(
       "postal", IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL));

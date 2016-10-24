@@ -160,9 +160,9 @@ void TestdataSource::Get(const std::string& key,
   if (success) {
     data = new std::string(data_it->second);
   } else {
-    // URLs that start with "https://i18napis.appspot.com/ssl-address/" or
-    // "https://i18napis.appspot.com/ssl-aggregate-address/" prefix, but do not
-    // have associated data will always return "{}" with status code 200.
+    // URLs that start with "https://chromium-i18n.appspot.com/ssl-address/" or
+    // "https://chromium-i18n.appspot.com/ssl-aggregate-address/" prefix, but do
+    // not have associated data will always return "{}" with status code 200.
     // TestdataSource imitates this behavior.
     success = true;
     data = new std::string("{}");
