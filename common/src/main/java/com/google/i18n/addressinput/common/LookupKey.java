@@ -16,6 +16,7 @@
 
 package com.google.i18n.addressinput.common;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -158,17 +159,11 @@ public final class LookupKey {
    * string if the key does not have this field in it.
    */
   String getValueForUpperLevelField(AddressField field) {
-    // First, get the key for this field.
-    LookupKey key = getKeyForUpperLevelField(field);
-    // Now we know the last value in the string is the value for this field.
-    if (key != null) {
-      String keyString = key.toString();
-      int lastSlashPosition = keyString.lastIndexOf(SLASH_DELIM);
-      if (lastSlashPosition > 0 && lastSlashPosition != keyString.length()) {
-        return keyString.substring(lastSlashPosition + 1);
-      }
+    if (!this.nodes.containsKey(field)) {
+      return "";
     }
-    return "";
+
+    return this.nodes.get(field);
   }
 
   /**
@@ -278,7 +273,8 @@ public final class LookupKey {
     // Default to LOCAL script.
     private ScriptType script = ScriptType.LOCAL;
 
-    private Map<AddressField, String> nodes = new EnumMap<AddressField, String>(AddressField.class);
+    private final Map<AddressField, String> nodes =
+        new EnumMap<AddressField, String>(AddressField.class);
 
     private String languageCode;
 
@@ -315,13 +311,31 @@ public final class LookupKey {
      */
     public Builder(String keyString) {
       String[] parts = keyString.split(SLASH_DELIM);
+
       if (!parts[0].equals(Util.toLowerCaseLocaleIndependent(KeyType.DATA.name()))
           && !parts[0].equals(Util.toLowerCaseLocaleIndependent(KeyType.EXAMPLES.name()))) {
         throw new RuntimeException("Wrong key type: " + parts[0]);
       }
       if (parts.length > HIERARCHY.length + 1) {
-        throw new RuntimeException("input key '" + keyString + "' deeper than supported hierarchy");
+        // Assume that any extra elements found in the key belong in the 'dependent locality' field.
+        // This means that a key string of /EXAMPLES/C/A/L/D/E would result in a dependent locality
+        // value of 'D/E'. This also means that if it's the actual locality name has a slash in it
+        // (for example 'L/D'), the locality field which we break down will be incorrect
+        // (for example: 'L'). Regardless, the actual breakdown of the key doesn't impact the server
+        // lookup, so there will be no problems.
+        String[] extraParts = Arrays.copyOfRange(parts, HIERARCHY.length + 1, parts.length + 1);
+
+        // Update the original array to only contain the number of elements which we expect.
+        parts = Arrays.copyOfRange(parts, 0, HIERARCHY.length + 1);
+
+        // Append the extra parts to the last element (dependent locality).
+        for (String element : extraParts) {
+          if (element != null) {
+            parts[4] += SLASH_DELIM + element;
+          }
+        }
       }
+
       if (parts[0].equals("data")) {
         keyType = KeyType.DATA;
 
@@ -338,12 +352,12 @@ public final class LookupKey {
             String[] s = substr.split(DASH_DELIM);
             if (s.length != 2) {
               throw new RuntimeException(
-                  "Wrong format: Substring should be"
-                  + "<last node value>--<language code>");
+                  "Wrong format: Substring should be <last node value>--<language code>");
             }
             substr = s[0];
             languageCode = s[1];
           }
+
           this.nodes.put(HIERARCHY[i - 1], substr);
         }
       } else if (parts[0].equals("examples")) {

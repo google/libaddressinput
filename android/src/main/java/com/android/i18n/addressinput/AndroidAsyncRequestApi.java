@@ -18,7 +18,6 @@ package com.android.i18n.addressinput;
 
 import com.google.i18n.addressinput.common.AsyncRequestApi;
 import com.google.i18n.addressinput.common.JsoMap;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +25,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.Provider;
+import java.security.Security;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Android implementation of AsyncRequestApi.
@@ -60,6 +64,19 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(timeoutMillis);
         connection.setReadTimeout(timeoutMillis);
+
+        Provider[] providers = Security.getProviders();
+        if (providers.length > 0 && providers[0].getName().equals("GmsCore_OpenSSL")) {
+          // GMS security provider requires special handling of HTTPS connections. (b/29555362)
+          if (connection instanceof HttpsURLConnection) {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null /* KeyManager */, null /* TrustManager */, null /* SecureRandom */);
+            SSLSocketFactory sslSocketFactory = context.getSocketFactory();
+            if (sslSocketFactory != null) {
+              ((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
+            }
+          }
+        }
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           BufferedReader responseReader = new BufferedReader(

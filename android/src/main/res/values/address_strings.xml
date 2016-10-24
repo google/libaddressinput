@@ -48,6 +48,8 @@
 
     <string name="i18n_address_line1_label" translation_description="Street-level part of an address, e.g. &quot;18th Street, Unit 3&quot;. [CHAR LIMIT=30]">Street address</string>
 
+    <string name="i18n_eir_code_label" translation_description="Eircode. A two part, seven character alpha-numeric code used by the postcode system in Ireland. [CHAR LIMIT=30]">Eircode</string>
+
     <string name="i18n_pin_code_label" translation_description="PIN (Postal Index Number) Code. Values are numeric. Used in India. [CHAR LIMIT=30]">Pincode</string>
 
     <string name="i18n_postal_code_label" translation_description="Postal Code. Values are frequently alphanumeric. Used in countries such as Switzerland. [CHAR LIMIT=30]">Postal code</string>
@@ -88,11 +90,15 @@
 
     <string name="unknown_entry" translation_description="Occurs when the user fills out the wrong value for an address field. For example, this would be shown when putting 'Cupertino' in United States' State field. [CHAR LIMIT=20]">Invalid entry</string>
 
+    <string name="unrecognized_format_eir_code" translation_description="Occurs when the user fills out an Eircode that does not conform to Ireland's two-part, seven alpha-numeric character format. [CHAR LIMIT=20]">Enter valid Eircode</string>
+
     <string name="unrecognized_format_pin_code" translation_description="Occurs when the user fills out a PIN code that does not conform to the country's PIN code format. For example, this would be shown when using '123' as an Indian PIN code, which is normally 6 digits long. [CHAR LIMIT=20]">Enter valid Pincode</string>
 
     <string name="unrecognized_format_postal_code" translation_description="Occurs when the user fills out a postal code that does not conform to the country's postal code format. For example, this would be shown when using '80' as a Swiss postal code, which is normally 4 digits long. [CHAR LIMIT=20]">Enter valid code</string>
 
     <string name="unrecognized_format_zip_code" translation_description="Occurs when the user fills out a ZIP code that does not conform to the country's ZIP code format. For example, this would be shown when using '901' as a ZIP code for the United States. [CHAR LIMIT=20]">Enter valid ZIP</string>
+
+    <string name="mismatching_value_eir_code" translation_description="Occurs when the user fills out the wrong Eircode for a certain location. [CHAR LIMIT=20]">Must match address</string>
 
     <string name="mismatching_value_pin_code" translation_description="Occurs when the user fills out the wrong PIN code for a certain location. For example, this would be shown when using 456001 for New Delhi, India. [CHAR LIMIT=20]">Must match address</string>
 

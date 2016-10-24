@@ -117,7 +117,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private enum ZipLabel {
     ZIP,
     POSTAL,
-    PIN
+    PIN,
+    EIRCODE
   }
 
   private ZipLabel zipLabel;
@@ -262,6 +263,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       Spinner spinner = componentProvider.createUiPickerSpinner(widthType);
 
       field.setView(spinner);
+      spinner.setEnabled(!readOnly);
       rootView.addView(spinner, lp);
       spinner.setAdapter(adapter);
       AddressSpinnerInfo spinnerInfo =
@@ -348,6 +350,9 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     if (zipType == null || zipType.equals("postal")) {
       zipLabel = ZipLabel.POSTAL;
       zipName = context.getString(R.string.i18n_postal_code_label);
+    } else if (zipType.equals("eircode")) {
+      zipLabel = ZipLabel.EIRCODE;
+      zipName = context.getString(R.string.i18n_eir_code_label);
     } else if (zipType.equals("pin")) {
       zipLabel = ZipLabel.PIN;
       zipName = context.getString(R.string.i18n_pin_code_label);

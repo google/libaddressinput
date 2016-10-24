@@ -61,6 +61,12 @@ limitations under the License.
     Street address
   </message>
   <message
+      name="IDS_LIBADDRESSINPUT_EIR_CODE_LABEL"
+      desc="Eircode. A two part, seven character alpha-numeric code used by
+            the postcode system in Ireland.">
+    Eircode
+  </message>
+  <message
       name="IDS_LIBADDRESSINPUT_PIN_CODE_LABEL"
       desc="PIN (Postal Index Number) Code. Values are numeric. Used in India.">
     PIN code
