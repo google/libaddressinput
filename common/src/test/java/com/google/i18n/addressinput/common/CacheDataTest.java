@@ -143,7 +143,7 @@ public class CacheDataTest {
         + "\"fmt\":\"%N%n%O%n%A%n%C %S %Z\","
         + "\"require\":\"ACSZ\","
         + "\"upper\":\"ACNOSZ\","
-        + "\"zip\":\"[A-Z]\\d[A-Z][ ]?\\d[A-Z]\\d\","
+        + "\"zip\":\"[A-Z]\\\\d[A-Z][ ]?\\\\d[A-Z]\\\\d\","
         + "\"zipex\":\"H3Z 2Y7,V8X 3X4\","
         + "\"posturl\":\"http://www.canadapost.ca\","
         + "\"sub_keys\":\"AB~BC~YT\","
