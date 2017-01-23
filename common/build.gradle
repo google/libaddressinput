@@ -59,7 +59,7 @@ dependencies {
   compile 'com.google.guava:guava-gwt:18.0'
   /* Note that gradle will warn about this not being the same version as *
    * the Android JSON library (but will not compile if it's removed).    */
-  compile 'org.json:json:20090211'
+  compile 'org.json:json:20160810'
   testCompile 'junit:junit:4.11'
   testCompile 'com.google.truth:truth:0.25'
   testCompile 'org.mockito:mockito-core:1.9.5'
