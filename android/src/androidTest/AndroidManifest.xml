@@ -11,9 +11,9 @@
     <!-- Gradle generates an <instrumentation> block during the build process,
          but in order to work with other build systems, that don't do that,
          there must be such a block declared here. -->
-    <instrumentation
-        android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.android.i18n.addressinput.test" />
+    <!--<instrumentation-->
+        <!--android:name="android.test.InstrumentationTestRunner"-->
+        <!--android:targetPackage="com.android.i18n.addressinput.test" />-->
 
     <uses-permission android:name="android.permission.INTERNET" />
 
