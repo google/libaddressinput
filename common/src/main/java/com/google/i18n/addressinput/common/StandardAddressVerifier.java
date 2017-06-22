@@ -29,6 +29,7 @@ import static com.google.i18n.addressinput.common.AddressField.STREET_ADDRESS;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -83,15 +84,31 @@ public final class StandardAddressVerifier {
     verifier.start();
   }
 
+  /**
+   * Verifies only the specified fields in the address.
+   */
+  public void verifyFields(
+      AddressData address, AddressProblems problems, EnumSet<AddressField> addressFieldsToVerify) {
+    new Verifier(address, problems, new NotifyingListener(), addressFieldsToVerify).run();
+  }
+
   private class Verifier implements Runnable {
     private AddressData address;
     private AddressProblems problems;
     private DataLoadListener listener;
+    private EnumSet<AddressField> addressFieldsToVerify;
 
     Verifier(AddressData address, AddressProblems problems, DataLoadListener listener) {
+      this(address, problems, listener, EnumSet.allOf(AddressField.class));
+    }
+
+    Verifier(
+        AddressData address, AddressProblems problems, DataLoadListener listener,
+        EnumSet<AddressField> addressFieldsToVerify) {
       this.address = address;
       this.problems = problems;
       this.listener = listener;
+      this.addressFieldsToVerify = addressFieldsToVerify;
     }
 
     @Override
@@ -111,22 +128,23 @@ public final class StandardAddressVerifier {
 
       // The first four calls refine the verifier, so must come first, and in this
       // order.
-      verifyField(script, v, COUNTRY, address.getPostalCountry(), problems);
-      if (problems.isEmpty()) {
+      verifyFieldIfSelected(script, v, COUNTRY, address.getPostalCountry(), problems);
+      if (isFieldSelected(COUNTRY) && problems.isEmpty()) {
         // Ensure we start with the right language country sub-key.
         String countrySubKey = address.getPostalCountry();
         if (address.getLanguageCode() != null && !address.getLanguageCode().equals("")) {
           countrySubKey += (LOCALE_DELIMITER + address.getLanguageCode());
         }
         v = v.refineVerifier(countrySubKey);
-        verifyField(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
-        if (problems.isEmpty()) {
+        verifyFieldIfSelected(script, v, ADMIN_AREA, address.getAdministrativeArea(), problems);
+        if (isFieldSelected(ADMIN_AREA) && problems.isEmpty()) {
           v = v.refineVerifier(address.getAdministrativeArea());
-          verifyField(script, v, LOCALITY, address.getLocality(), problems);
-          if (problems.isEmpty()) {
+          verifyFieldIfSelected(script, v, LOCALITY, address.getLocality(), problems);
+          if (isFieldSelected(LOCALITY) && problems.isEmpty()) {
             v = v.refineVerifier(address.getLocality());
-            verifyField(script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
-            if (problems.isEmpty()) {
+            verifyFieldIfSelected(
+                script, v, DEPENDENT_LOCALITY, address.getDependentLocality(), problems);
+            if (isFieldSelected(DEPENDENT_LOCALITY) && problems.isEmpty()) {
               v = v.refineVerifier(address.getDependentLocality());
             }
           }
@@ -140,15 +158,31 @@ public final class StandardAddressVerifier {
               address.getAddressLine2());
 
       // Remaining calls don't change the field verifier.
-      verifyField(script, v, POSTAL_CODE, address.getPostalCode(), problems);
-      verifyField(script, v, STREET_ADDRESS, street, problems);
-      verifyField(script, v, SORTING_CODE, address.getSortingCode(), problems);
-      verifyField(script, v, ORGANIZATION, address.getOrganization(), problems);
-      verifyField(script, v, RECIPIENT, address.getRecipient(), problems);
+      verifyFieldIfSelected(script, v, POSTAL_CODE, address.getPostalCode(), problems);
+      verifyFieldIfSelected(script, v, STREET_ADDRESS, street, problems);
+      verifyFieldIfSelected(script, v, SORTING_CODE, address.getSortingCode(), problems);
+      verifyFieldIfSelected(script, v, ORGANIZATION, address.getOrganization(), problems);
+      verifyFieldIfSelected(script, v, RECIPIENT, address.getRecipient(), problems);
 
       postVerify(v, address, problems);
 
       listener.dataLoadingEnd();
+    }
+
+    /**
+     * Skips address fields that are not included in {@code addressFieldsToVerify}.
+     */
+    private boolean verifyFieldIfSelected(LookupKey.ScriptType script, FieldVerifier verifier,
+        AddressField field, String value, AddressProblems problems) {
+      if (!isFieldSelected(field)) {
+        return true;
+      }
+
+      return verifyField(script, verifier, field, value, problems);
+    }
+
+    private boolean isFieldSelected(AddressField field) {
+      return addressFieldsToVerify.contains(field);
     }
   }
 

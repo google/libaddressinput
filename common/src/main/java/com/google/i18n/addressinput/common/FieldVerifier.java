@@ -18,7 +18,6 @@ package com.google.i18n.addressinput.common;
 
 import com.google.i18n.addressinput.common.LookupKey.KeyType;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +46,7 @@ public final class FieldVerifier {
   // Package-private so it can be accessed by tests.
   String id;
   private DataSource dataSource;
+  private boolean useRegionDataConstants;
 
   // Package-private so they can be accessed by tests.
   Set<AddressField> possiblyUsedFields;
@@ -71,10 +71,19 @@ public final class FieldVerifier {
   private Pattern match;
 
   /**
-   * Creates the root field verifier for a particular data source.
+   * Creates the root field verifier for a particular data source. Defaults useRegionDataConstants
+   * to true.
    */
   public FieldVerifier(DataSource dataSource) {
+    this(dataSource, true /* useRegionDataConstants */);
+  }
+
+  /**
+   * Creates the root field verifier for a particular data source.
+   */
+  public FieldVerifier(DataSource dataSource, boolean useRegionDataConstants) {
     this.dataSource = dataSource;
+    this.useRegionDataConstants = useRegionDataConstants;
     populateRootVerifier();
   }
 
@@ -85,9 +94,10 @@ public final class FieldVerifier {
    */
   FieldVerifier(FieldVerifier parent, AddressVerificationNodeData nodeData) {
     // Most information is inherited from the parent.
-    possiblyUsedFields = parent.possiblyUsedFields;
-    required = parent.required;
+    possiblyUsedFields = new HashSet<AddressField>(parent.possiblyUsedFields);
+    required = new HashSet<AddressField>(parent.required);
     dataSource = parent.dataSource;
+    useRegionDataConstants = parent.useRegionDataConstants;
     format = parent.format;
     match = parent.match;
     // Here we add in any overrides from this particular node as well as information such as
@@ -158,8 +168,6 @@ public final class FieldVerifier {
         && keys.length == latinNames.length) {
       localNames = keys;
     }
-    // These fields are populated from RegionDataConstants so that the metadata server can be
-    // updated without needing to be in sync with clients.
     if (isCountryKey()) {
       populatePossibleAndRequired(getRegionCodeFromKey(id));
     }
@@ -183,11 +191,7 @@ public final class FieldVerifier {
   private Set<String> getAcceptableAlternateLanguages(String regionCode) {
     // TODO: We should have a class that knows how to get information about the data, rather than
     // getting the node and extracting keys here.
-    LookupKey lookupKey =
-        new LookupKey.Builder(Util.toLowerCaseLocaleIndependent(KeyType.DATA.name())
-            + KEY_NODE_DELIMITER
-            + regionCode).build();
-    AddressVerificationNodeData countryNode = dataSource.getDefaultData(lookupKey.toString());
+    AddressVerificationNodeData countryNode = getCountryNode(regionCode);
     String languages = countryNode.get(AddressDataKey.LANGUAGES);
     String defaultLanguage = countryNode.get(AddressDataKey.LANG);
     Set<String> alternateLanguages = new HashSet<String>();
@@ -204,7 +208,40 @@ public final class FieldVerifier {
     return alternateLanguages;
   }
 
+  private AddressVerificationNodeData getCountryNode(String regionCode) {
+    LookupKey lookupKey = new LookupKey.Builder(KeyType.DATA)
+        .setAddressData(new AddressData.Builder().setCountry(regionCode).build())
+        .build();
+    return dataSource.getDefaultData(lookupKey.toString());
+  }
+
   private void populatePossibleAndRequired(String regionCode) {
+    // If useRegionDataConstants is true, these fields are populated from RegionDataConstants so
+    // that the metadata server can be updated without needing to be in sync with clients;
+    // otherwise, these fields are populated from dataSource.
+    if (!useRegionDataConstants) {
+      AddressVerificationNodeData countryNode = getCountryNode(regionCode);
+      AddressVerificationNodeData defaultNode = getCountryNode("ZZ");
+
+      String formatString = countryNode.get(AddressDataKey.FMT);
+      if (formatString == null) {
+        formatString = defaultNode.get(AddressDataKey.FMT);
+      }
+      if (formatString != null) {
+        List<AddressField> possible =
+            FORMAT_INTERPRETER.getAddressFieldOrder(formatString, regionCode);
+        possiblyUsedFields.addAll(convertAddressFieldsToPossiblyUsedSet(possible));
+      }  /* else: shouldn't ever happen */
+      String requireString = countryNode.get(AddressDataKey.REQUIRE);
+      if (requireString == null) {
+        requireString = defaultNode.get(AddressDataKey.REQUIRE);
+      }
+      if (requireString != null) {
+        required = FormatInterpreter.getRequiredFields(requireString, regionCode);
+      }  /* else: shouldn't ever happen */
+      return;
+    }
+
     List<AddressField> possible =
         FORMAT_INTERPRETER.getAddressFieldOrder(ScriptType.LOCAL, regionCode);
     possiblyUsedFields = convertAddressFieldsToPossiblyUsedSet(possible);

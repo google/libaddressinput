@@ -17,6 +17,8 @@
 package com.google.i18n.addressinput.common;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.i18n.addressinput.common.AddressField.ADMIN_AREA;
+import static com.google.i18n.addressinput.common.AddressField.COUNTRY;
 import static com.google.i18n.addressinput.common.AddressField.DEPENDENT_LOCALITY;
 import static com.google.i18n.addressinput.common.AddressField.LOCALITY;
 import static com.google.i18n.addressinput.common.AddressField.POSTAL_CODE;
@@ -34,7 +36,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -258,5 +260,53 @@ public class StandardAddressVerifierTest {
     assertEquals(ImmutableMap.of(
         POSTAL_CODE, MISSING_REQUIRED_FIELD),
         verify(address).getProblems());
+  }
+
+  @Test public void testVerifyCountryOnly_Valid() {
+    AddressData address = AddressData.builder()
+        .setCountry("US")
+        .setAdminArea("Invalid admin area") // Non-selected field should be ignored
+        .build();
+    AddressProblems problems = new AddressProblems();
+    verifierFor(StandardChecks.PROBLEM_MAP)
+        .verifyFields(address, problems, EnumSet.of(COUNTRY));
+    assertThat(problems.getProblems()).isEmpty();
+  }
+
+  @Test public void testVerifyCountryOnly_InvalidCountry() {
+    AddressData address = AddressData.builder()
+        .setCountry("USA")
+        .setAdminArea("Invalid admin area") // Non-selected field should be ignored
+        .build();
+    AddressProblems problems = new AddressProblems();
+    verifierFor(StandardChecks.PROBLEM_MAP)
+        .verifyFields(address, problems, EnumSet.of(COUNTRY));
+    assertThat(problems.getProblem(COUNTRY)).isEqualTo(UNKNOWN_VALUE);
+    assertThat(problems.getProblem(ADMIN_AREA)).isNull();
+  }
+
+  @Test public void testVerifyCountryAndPostalCodeOnly_Valid() {
+    AddressData address = AddressData.builder()
+        .setCountry("US")
+        .setPostalCode("94043")
+        .setAdminArea("Invalid admin area") // Non-selected field should be ignored
+        .build();
+    AddressProblems problems = new AddressProblems();
+    verifierFor(StandardChecks.PROBLEM_MAP)
+        .verifyFields(address, problems, EnumSet.of(COUNTRY, POSTAL_CODE));
+    assertThat(problems.getProblems()).isEmpty();
+  }
+
+  @Test public void testVerifyCountryAndPostalCodeOnly_InvalidPostalCode() {
+    AddressData address = AddressData.builder()
+        .setCountry("US")
+        .setPostalCode("094043")
+        .setAdminArea("Invalid admin area") // Non-selected field should be ignored
+        .build();
+    AddressProblems problems = new AddressProblems();
+    verifierFor(StandardChecks.PROBLEM_MAP)
+        .verifyFields(address, problems, EnumSet.of(COUNTRY, POSTAL_CODE));
+    assertThat(problems.getProblem(POSTAL_CODE)).isEqualTo(INVALID_FORMAT);
+    assertThat(problems.getProblem(ADMIN_AREA)).isNull();
   }
 }

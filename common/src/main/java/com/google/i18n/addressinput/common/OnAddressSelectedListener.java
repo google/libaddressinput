@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-/**
- * Copyright (C) 2010 Google Inc.
+/*
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/address_text_view"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/address_textview_margin_top"
-    android:layout_marginLeft="@dimen/address_textview_margin_left"
-    android:textColor="?android:attr/textColorPrimary"
-    android:focusableInTouchMode="true" />
+
+package com.google.i18n.addressinput.common;
+
+/**
+ * If autocomplete is enabled on the AddressWidget, setting an OnAddressSelectedListener
+ * will cause onAddressSelected to be called when the user clicks on an autocomplete
+ * suggestion in the dropdown list.
+ */
+public interface OnAddressSelectedListener {
+  void onAddressSelected(AddressData addressData);
+}

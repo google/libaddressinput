@@ -16,24 +16,22 @@
 
 package com.android.i18n.addressinput;
 
+import com.android.i18n.addressinput.testing.AsyncTestCase;
 import com.google.i18n.addressinput.common.AsyncRequestApi;
 import com.google.i18n.addressinput.common.AsyncRequestApi.AsyncCallback;
 import com.google.i18n.addressinput.common.JsoMap;
-
-import com.android.i18n.addressinput.testing.AsyncTestCase;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class AndroidAsyncRequestApiTest extends AsyncTestCase {
+public class AndroidAsyncEncodedRequestApiTest extends AsyncTestCase {
   private AsyncRequestApi requestApi;
 
   @Override
   public void setUp() {
-    requestApi = new AndroidAsyncRequestApi();
+    requestApi = new AndroidAsyncEncodedRequestApi();
   }
 
   public void testRequestObject() throws Exception {

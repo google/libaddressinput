@@ -150,4 +150,171 @@ public class AddressDataTest {
     address = AddressData.builder(address).setLanguageCode("zh-latn").build();
     assertEquals("zh-latn", address.getLanguageCode());
   }
+
+  @Test
+  public void testEqualsIsSymmetric() {
+    AddressData addressData1 = AddressData.builder().build();
+    AddressData addressData2 = AddressData.builder().build();
+
+    assertThat(addressData1).isEqualTo(addressData2);
+    assertThat(addressData2).isEqualTo(addressData1);
+  }
+
+  @Test
+  public void testEqualsIsSymmetricNotEquals() {
+    AddressData addressData1 = AddressData.builder().setCountry("US").build();
+    AddressData addressData2 = AddressData.builder().build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData2).isNotEqualTo(addressData1);
+  }
+
+  @Test
+  public void testEqualsIsTransitive() {
+    AddressData addressData1 = AddressData.builder().build();
+    AddressData addressData2 = AddressData.builder().build();
+    AddressData addressData3 = AddressData.builder().build();
+
+    assertThat(addressData1).isEqualTo(addressData2);
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData1).isEqualTo(addressData3);
+  }
+
+  @Test
+  public void testEqualsIsNullSafe() {
+    AddressData addressData1 = AddressData.builder().build();
+    AddressData addressData2 = null;
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData2).isNotEqualTo(addressData1);
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareCountry() {
+    AddressData addressData1 = AddressData.builder().setCountry("X").build();
+    AddressData addressData2 = AddressData.builder().setCountry("Y").build();
+    AddressData addressData3 = AddressData.builder().setCountry("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareAddressLines() {
+    AddressData addressData1 = AddressData.builder().setAddress("X").build();
+    AddressData addressData2 = AddressData.builder().setAddress("Y").build();
+    AddressData addressData3 = AddressData.builder().setAddress("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareAdminArea() {
+    AddressData addressData1 = AddressData.builder().setAdminArea("X").build();
+    AddressData addressData2 = AddressData.builder().setAdminArea("Y").build();
+    AddressData addressData3 = AddressData.builder().setAdminArea("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareLocality() {
+    AddressData addressData1 = AddressData.builder().setLocality("X").build();
+    AddressData addressData2 = AddressData.builder().setLocality("Y").build();
+    AddressData addressData3 = AddressData.builder().setLocality("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareDependentLocality() {
+    AddressData addressData1 = AddressData.builder().setDependentLocality("X").build();
+    AddressData addressData2 = AddressData.builder().setDependentLocality("Y").build();
+    AddressData addressData3 = AddressData.builder().setDependentLocality("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeComparePostalCode() {
+    AddressData addressData1 = AddressData.builder().setPostalCode("X").build();
+    AddressData addressData2 = AddressData.builder().setPostalCode("Y").build();
+    AddressData addressData3 = AddressData.builder().setPostalCode("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareSortingCode() {
+    AddressData addressData1 = AddressData.builder().setSortingCode("X").build();
+    AddressData addressData2 = AddressData.builder().setSortingCode("Y").build();
+    AddressData addressData3 = AddressData.builder().setSortingCode("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareOrganization() {
+    AddressData addressData1 = AddressData.builder().setOrganization("X").build();
+    AddressData addressData2 = AddressData.builder().setOrganization("Y").build();
+    AddressData addressData3 = AddressData.builder().setOrganization("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareRecipient() {
+    AddressData addressData1 = AddressData.builder().setRecipient("X").build();
+    AddressData addressData2 = AddressData.builder().setRecipient("Y").build();
+    AddressData addressData3 = AddressData.builder().setRecipient("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
+
+  @Test
+  public void testEqualsAndHashCodeCompareLanguageCode() {
+    AddressData addressData1 = AddressData.builder().setLanguageCode("X").build();
+    AddressData addressData2 = AddressData.builder().setLanguageCode("Y").build();
+    AddressData addressData3 = AddressData.builder().setLanguageCode("Y").build();
+
+    assertThat(addressData1).isNotEqualTo(addressData2);
+    assertThat(addressData1.hashCode()).isNotEqualTo(addressData2.hashCode());
+
+    assertThat(addressData2).isEqualTo(addressData3);
+    assertThat(addressData2.hashCode()).isEqualTo(addressData3.hashCode());
+  }
 }

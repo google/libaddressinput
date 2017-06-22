@@ -136,6 +136,9 @@ public final class AddressData {
   // BCP-47 language code for the address. Can be set to null.
   private final String languageCode;
 
+  // NOTE: If you add a new field which is semantically significant, you must also add a check for
+  // that field in {@link equals} and {@link hashCode}.
+
   private AddressData(Builder builder) {
     this.postalCountry = builder.fields.get(AddressField.COUNTRY);
     this.administrativeArea = builder.fields.get(AddressField.ADMIN_AREA);
@@ -203,6 +206,76 @@ public final class AddressData {
         + "RECIPIENT=" + recipient
         + ")");
     return output.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof AddressData)) {
+      return false;
+    }
+    AddressData addressData = (AddressData) o;
+
+    return (postalCountry == null
+            ? addressData.getPostalCountry() == null
+            : postalCountry.equals(addressData.getPostalCountry()))
+        && (addressLines == null
+            ? addressData.getAddressLines() == null
+            : addressLines.equals(addressData.getAddressLines()))
+        && (administrativeArea == null
+            ? addressData.getAdministrativeArea() == null
+            : this.getAdministrativeArea().equals(addressData.getAdministrativeArea()))
+        && (locality == null
+            ? addressData.getLocality() == null
+            : locality.equals(addressData.getLocality()))
+        && (dependentLocality == null
+            ? addressData.getDependentLocality() == null
+            : dependentLocality.equals(addressData.getDependentLocality()))
+        && (postalCode == null
+            ? addressData.getPostalCode() == null
+            : postalCode.equals(addressData.getPostalCode()))
+        && (sortingCode == null
+            ? addressData.getSortingCode() == null
+            : sortingCode.equals(addressData.getSortingCode()))
+        && (organization == null
+            ? addressData.getOrganization() == null
+            : organization.equals(addressData.getOrganization()))
+        && (recipient == null
+            ? addressData.getRecipient() == null
+            : recipient.equals(addressData.getRecipient()))
+        && (languageCode == null
+            ? this.getLanguageCode() == null
+            : languageCode.equals(addressData.getLanguageCode()));
+  }
+
+  @Override
+  public int hashCode() {
+    // 17 and 31 are arbitrary seed values.
+    int result = 17;
+
+    String[] fields =
+        new String[] {
+          postalCountry,
+          administrativeArea,
+          locality,
+          dependentLocality,
+          postalCode,
+          sortingCode,
+          organization,
+          recipient,
+          languageCode
+        };
+
+    for (String field : fields) {
+      result = 31 * result + (field == null ? 0 : field.hashCode());
+    }
+
+    // The only significant field which is not a String.
+    result = 31 * result + (addressLines == null ? 0 : addressLines.hashCode());
+
+    return result;
   }
 
   /**

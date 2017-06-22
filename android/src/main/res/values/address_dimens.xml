@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 /**
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
  * limitations under the License.
  */
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/address_text_view"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/address_textview_margin_top"
-    android:layout_marginLeft="@dimen/address_textview_margin_left"
-    android:textColor="?android:attr/textColorPrimary"
-    android:focusableInTouchMode="true" />
+<resources>
+  <dimen name="address_textview_margin_top">4dp</dimen>
+  <dimen name="address_textview_margin_left">3dp</dimen>
+
+  <dimen name="address_autocomplete_dropdown_item_padding_vertical">5dp</dimen>
+</resources>
