@@ -1,5 +1,4 @@
-Intro
-=====
+# Intro
 
 The C++ version of libaddressinput library provides UI layout information and
 validation for address input forms.
@@ -15,8 +14,7 @@ When including the library in your project, you can override the dependencies
 and include directories in libaddressinput.gypi to link with your own
 third-party libraries.
 
-Dependencies
-============
+# Dependencies
 
 The library depends on these tools and libraries:
 
@@ -59,8 +57,7 @@ https://code.google.com/p/googletest/
 http://python.org/
 https://code.google.com/p/re2/
 
-Build
-=====
+# Build
 
 Building the library involves generating an out/Default/build.ninja file and
 running ninja:
@@ -74,8 +71,7 @@ GYP_DEFINES environment variable before running gyp:
 
 $ export GYP_DEFINES="gtest_dir='/xxx/include' gtest_src_dir='/xxx'"
 
-Test
-====
+# Test
 
 This command will execute the unit tests for the library:
 

@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -73,6 +74,17 @@ public class AddressWidgetUiComponentProvider {
    */
   protected Spinner createUiPickerSpinner(WidthType widthType) {
     return (Spinner) inflater.inflate(R.layout.address_spinner, null, false);
+  }
+
+  /**
+   * Creates an {@link AutoCompleteTextView} for an input field that uses autocomplete.
+   *
+   * @param widthType {@link WidthType} of the field
+   * @return a custom {@link AutoCompleteTextView} created for the field
+   */
+  protected AutoCompleteTextView createUiAutoCompleteTextField(WidthType widthType) {
+    return (AutoCompleteTextView)
+        inflater.inflate(R.layout.address_autocomplete_textview, null, false);
   }
 
   /**

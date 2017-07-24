@@ -20,11 +20,9 @@ import com.google.i18n.addressinput.common.AsyncRequestApi;
 import com.google.i18n.addressinput.common.JsoMap;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.security.Provider;
 import java.security.Security;
 import javax.net.ssl.HttpsURLConnection;
@@ -41,14 +39,16 @@ import javax.net.ssl.SSLSocketFactory;
  */
 // TODO: Reimplement this class according to current best-practice for asynchronous requests.
 public class AndroidAsyncRequestApi implements AsyncRequestApi {
+  private static final String TAG = "AsyncRequestApi";
+
   /** Simple implementation of asynchronous HTTP GET. */
   private static class AsyncHttp extends Thread {
-    private final String requestUrlString;
+    private final URL requestUrl;
     private final AsyncCallback callback;
     private final int timeoutMillis;
 
-    protected AsyncHttp(String requestUrlString, AsyncCallback callback, int timeoutMillis) {
-      this.requestUrlString = requestUrlString;
+    protected AsyncHttp(URL requestUrl, AsyncCallback callback, int timeoutMillis) {
+      this.requestUrl = requestUrl;
       this.callback = callback;
       this.timeoutMillis = timeoutMillis;
     }
@@ -60,8 +60,7 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
         // issues with the HTTP request, we're handling them the same way because the URLs are often
         // generated based on data returned by previous HTTP requests and we need robust, graceful
         // handling of any issues.
-        URL url = encodeUrl(requestUrlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         connection.setConnectTimeout(timeoutMillis);
         connection.setReadTimeout(timeoutMillis);
 
@@ -99,43 +98,14 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
   }
 
   @Override public void requestObject(String url, AsyncCallback callback, int timeoutMillis) {
-    (new AsyncHttp(url, callback, timeoutMillis)).start();
+    try {
+      (new AsyncHttp(stringToUrl(url), callback, timeoutMillis)).start();
+    } catch (MalformedURLException e) {
+      callback.onFailure();
+    }
   }
 
-  /**
-   * A quick hack to transform a string into an RFC 3986 compliant URL.
-   *
-   * TODO: Refactor the code to stop passing URLs around as strings, to eliminate the need for
-   * this broken hack.
-   */
-  private static URL encodeUrl(String url) throws MalformedURLException {
-    int length = url.length();
-    StringBuilder tmp = new StringBuilder(length);
-
-    try {
-      for (int i = 0; i < length; i++) {
-        int j = i;
-        char c = '\0';
-        for (; j < length; j++) {
-          c = url.charAt(j);
-          if (c == ':' || c == '/') {
-            break;
-          }
-        }
-        if (j == length) {
-          tmp.append(URLEncoder.encode(url.substring(i), "UTF-8"));
-          break;
-        } else if (j > i) {
-          tmp.append(URLEncoder.encode(url.substring(i, j), "UTF-8"));
-          tmp.append(c);
-          i = j;
-        } else {
-          tmp.append(c);
-        }
-      }
-    } catch (UnsupportedEncodingException e) {
-      throw new AssertionError(e);  // Impossible.
-    }
-    return new URL(tmp.toString());
+  protected URL stringToUrl(String url) throws MalformedURLException {
+    return new URL(url);
   }
 }

@@ -16,6 +16,23 @@
 
 package com.android.i18n.addressinput;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Handler;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.Spinner;
+import android.widget.TextView;
+import com.android.i18n.addressinput.AddressUiComponent.UiComponent;
+import com.google.i18n.addressinput.common.AddressAutocompleteApi;
 import com.google.i18n.addressinput.common.AddressData;
 import com.google.i18n.addressinput.common.AddressDataKey;
 import com.google.i18n.addressinput.common.AddressField;
@@ -34,27 +51,10 @@ import com.google.i18n.addressinput.common.FormatInterpreter;
 import com.google.i18n.addressinput.common.LookupKey;
 import com.google.i18n.addressinput.common.LookupKey.KeyType;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
+import com.google.i18n.addressinput.common.OnAddressSelectedListener;
 import com.google.i18n.addressinput.common.RegionData;
 import com.google.i18n.addressinput.common.StandardAddressVerifier;
 import com.google.i18n.addressinput.common.Util;
-
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.Handler;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import com.android.i18n.addressinput.AddressUiComponent.UiComponent;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,6 +94,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private ProgressDialog progressDialog;
 
   private String currentRegion;
+
+  private boolean autocompleteEnabled = false;
+
+  private AddressAutocompleteController autocompleteController;
 
   // The current language the widget uses in BCP47 format. It differs from the default locale of
   // the phone in that it contains information on the script to use.
@@ -254,10 +258,33 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       rootView.addView(textView, lp);
     }
     if (field.getUiType().equals(UiComponent.EDIT)) {
-      EditText editText = componentProvider.createUiTextField(widthType);
-      field.setView(editText);
-      editText.setEnabled(!readOnly);
-      rootView.addView(editText, lp);
+      if (autocompleteEnabled && field.getId() == AddressField.ADDRESS_LINE_1) {
+        AutoCompleteTextView autocomplete =
+            componentProvider.createUiAutoCompleteTextField(widthType);
+        autocomplete.setEnabled(!readOnly);
+        autocompleteController.setView(autocomplete);
+        autocompleteController.setOnAddressSelectedListener(
+            new OnAddressSelectedListener() {
+              @Override
+              public void onAddressSelected(AddressData addressData) {
+                // Autocompletion will never return the recipient or the organization, so we don't
+                // want to overwrite those fields. We copy the recipient and organization fields
+                // over to avoid this.
+                AddressData current = AddressWidget.this.getAddressData();
+                AddressWidget.this.renderFormWithSavedAddress(AddressData.builder(addressData)
+                    .setRecipient(current.getRecipient())
+                    .setOrganization(current.getOrganization())
+                    .build());
+              }
+            });
+        field.setView(autocomplete);
+        rootView.addView(autocomplete, lp);
+      } else {
+        EditText editText = componentProvider.createUiTextField(widthType);
+        field.setView(editText);
+        editText.setEnabled(!readOnly);
+        rootView.addView(editText, lp);
+      }
     } else if (field.getUiType().equals(UiComponent.SPINNER)) {
       ArrayAdapter<String> adapter = componentProvider.createUiPickerAdapter(widthType);
       Spinner spinner = componentProvider.createUiPickerSpinner(widthType);
@@ -275,6 +302,20 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       }
       spinner.setOnItemSelectedListener(this);
       spinners.add(spinnerInfo);
+    }
+  }
+
+  private void createViewForCountry() {
+    if (!formOptions.isHidden(AddressField.COUNTRY)) {
+      // For initialization when the form is first created.
+      if (!inputWidgets.containsKey(AddressField.COUNTRY)) {
+        buildCountryListBox();
+      }
+      createView(
+          rootView,
+          inputWidgets.get(AddressField.COUNTRY),
+          getLocalCountryName(currentRegion),
+          formOptions.isReadonly(AddressField.COUNTRY));
     }
   }
 
@@ -428,6 +469,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private void updateFields() {
     removePreviousViews();
+    createViewForCountry();
     buildFieldWidgets();
     initializeDropDowns();
     layoutAddressFields();
@@ -437,15 +479,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     if (rootView == null) {
       return;
     }
-    int childCount = rootView.getChildCount();
-    if (formOptions.isHidden(AddressField.COUNTRY)) {
-      if (childCount > 0) {
-        rootView.removeAllViews();
-      }
-    } else if (childCount > 2) {
-      // Keep the TextView and Spinner for Country and remove everything else.
-      rootView.removeViews(2, rootView.getChildCount() - 2);
-    }
+    rootView.removeAllViews();
   }
 
   private void layoutAddressFields() {
@@ -510,6 +544,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   public void renderForm() {
+    createViewForCountry();
     setWidgetLocaleAndScript();
     AddressData data = new AddressData.Builder().setCountry(currentRegion)
         .setLanguageCode(widgetLocale).build();
@@ -620,10 +655,46 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     renderFormWithSavedAddress(savedAddress);
   }
 
+  /*
+   * Enables autocompletion for the ADDRESS_LINE_1 field. With autocompletion enabled, the user
+   * will see suggested addresses in a dropdown menu below the ADDRESS_LINE_1 field as they are
+   * typing, and when they select an address, the form fields will be autopopulated with the
+   * selected address.
+   *
+   * NOTE: This feature is currently experimental.
+   *
+   * If the AddressAutocompleteApi is not configured correctly, then the AddressWidget will degrade
+   * gracefully to an ordinary plain text input field without autocomplete.
+   */
+  public void enableAutocomplete(
+      AddressAutocompleteApi autocompleteApi, PlaceDetailsApi placeDetailsApi) {
+    AddressAutocompleteController autocompleteController =
+        new AddressAutocompleteController(context, autocompleteApi, placeDetailsApi);
+    if (autocompleteApi.isConfiguredCorrectly()) {
+      this.autocompleteEnabled = true;
+      this.autocompleteController = autocompleteController;
+
+      // The autocompleteEnabled variable set above is used in createView to determine whether to
+      // use an EditText or an AutoCompleteTextView. Re-rendering the form here ensures that
+      // createView is called with the updated value of autocompleteEnabled.
+      renderFormWithSavedAddress(getAddressData());
+    } else {
+      Log.w(
+          this.toString(),
+          "Autocomplete not configured correctly, falling back to a plain text " + "input field.");
+    }
+  }
+
+  public void disableAutocomplete() {
+    this.autocompleteEnabled = false;
+  }
+
   public void renderFormWithSavedAddress(AddressData savedAddress) {
     setWidgetLocaleAndScript();
     removePreviousViews();
+    createViewForCountry();
     buildFieldWidgets();
+    initializeDropDowns();
     layoutAddressFields();
     initializeFieldsWithAddress(savedAddress);
   }
@@ -634,10 +705,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       if (value == null) {
         value = "";
       }
+
       AddressUiComponent uiComponent = inputWidgets.get(field);
-      EditText view = (EditText) uiComponent.getView();
-      if (view != null) {
-        view.setText(value);
+      if (uiComponent != null) {
+        uiComponent.setValue(value);
       }
     }
   }
@@ -648,17 +719,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     this.rootView = rootView;
     this.formOptions = formOptions;
     // Inject Adnroid specific async request implementation here.
-    this.cacheData = new CacheData(cacheManager, new AndroidAsyncRequestApi());
+    this.cacheData = new CacheData(cacheManager, new AndroidAsyncEncodedRequestApi());
     this.clientData = new ClientData(cacheData);
     this.formController = new FormController(clientData, widgetLocale, currentRegion);
     this.formatInterpreter = new FormatInterpreter(formOptions);
     this.verifier = new StandardAddressVerifier(new FieldVerifier(clientData));
-    if (!formOptions.isHidden(AddressField.COUNTRY)) {
-      buildCountryListBox();
-      createView(rootView, inputWidgets.get(AddressField.COUNTRY),
-          getLocalCountryName(currentRegion),
-          formOptions.isReadonly(AddressField.COUNTRY));
-    }
   }
 
   /**

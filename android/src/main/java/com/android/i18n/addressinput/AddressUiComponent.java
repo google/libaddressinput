@@ -20,6 +20,7 @@ import com.google.i18n.addressinput.common.AddressField;
 import com.google.i18n.addressinput.common.RegionData;
 
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -106,6 +107,37 @@ class AddressUiComponent {
         return ((EditText) view).getText().toString();
       default:
         return "";
+    }
+  }
+
+  /**
+   * Sets the value displayed in the input field.
+   */
+  void setValue(String value) {
+    if (view == null) {
+      return;
+    }
+
+    switch(uiType) {
+      case SPINNER:
+        for (int i = 0; i < candidatesList.size(); i++) {
+          // Assumes that the indices in the candidate list are the same as those used in the
+          // Adapter backing the Spinner.
+          if (candidatesList.get(i).getKey().equals(value)) {
+            ((Spinner) view).setSelection(i);
+          }
+        }
+        return;
+      case EDIT:
+        if (view instanceof AutoCompleteTextView) {
+          // Prevent the AutoCompleteTextView from showing the dropdown.
+          ((AutoCompleteTextView) view).setText(value, false);
+        } else {
+          ((EditText) view).setText(value);
+        }
+        return;
+      default:
+        return;
     }
   }
 

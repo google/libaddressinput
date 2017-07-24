@@ -18,6 +18,7 @@ package com.google.i18n.addressinput.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * This structure keeps track of any errors found when validating the AddressData.
@@ -64,5 +65,14 @@ public final class AddressProblems {
    */
   public Map<AddressField, AddressProblemType> getProblems() {
     return problems;
+  }
+
+  /**
+   * Adds all problems this object contains to the given {@link AddressProblems} object.
+   */
+  public void copyInto(AddressProblems other) {
+    for (Entry<AddressField, AddressProblemType> problem : problems.entrySet()) {
+      other.add(problem.getKey(), problem.getValue());
+    }
   }
 }

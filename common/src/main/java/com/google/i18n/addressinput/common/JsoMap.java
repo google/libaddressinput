@@ -102,7 +102,7 @@ public final class JsoMap extends JSONObject {
    * @return The object associated with the key.
    * @throws JSONException if the key is not found.
    */
-  private Object getObject(String name) throws JSONException {
+  public Object getObject(String name) throws JSONException {
     return super.get(name);
   }
 

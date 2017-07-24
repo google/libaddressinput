@@ -108,9 +108,16 @@ typedef signed int         char32;
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
 #if !defined(DISALLOW_COPY_AND_ASSIGN)
+#if __cplusplus >= 201103L
+// Use C++11 deleted destructor since they provide better error messages.
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&) = delete;      \
+  TypeName& operator=(const TypeName&) = delete
+#else  // Not C++11
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
+#endif  // Not C++11
 #endif
 
 // The arraysize(arr) macro returns the # of elements in an array arr.
@@ -120,7 +127,7 @@ typedef signed int         char32;
 //
 // One caveat is that arraysize() doesn't accept any array of an
 // anonymous type or a type defined inside a function.  In these rare
-// cases, you have to use the unsafe ARRAYSIZE_UNSAFE() macro below.  This is
+// cases, you have to use the unsafe ARRAYSIZE() macro below.  This is
 // due to a limitation in C++'s template system.  The limitation might
 // eventually be removed, but it hasn't happened yet.
 
@@ -142,26 +149,26 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 #define arraysize(array) (sizeof(ArraySizeHelper(array)))
 #endif
 
-// ARRAYSIZE_UNSAFE performs essentially the same calculation as arraysize,
+// ARRAYSIZE performs essentially the same calculation as arraysize,
 // but can be used on anonymous types or types defined inside
 // functions.  It's less safe than arraysize as it accepts some
 // (although not all) pointers.  Therefore, you should use arraysize
 // whenever possible.
 //
-// The expression ARRAYSIZE_UNSAFE(a) is a compile-time constant of type
+// The expression ARRAYSIZE(a) is a compile-time constant of type
 // size_t.
 //
-// ARRAYSIZE_UNSAFE catches a few type errors.  If you see a compiler error
+// ARRAYSIZE catches a few type errors.  If you see a compiler error
 //
 //   "warning: division by zero in ..."
 //
-// when using ARRAYSIZE_UNSAFE, you are (wrongfully) giving it a pointer.
-// You should only use ARRAYSIZE_UNSAFE on statically allocated arrays.
+// when using ARRAYSIZE, you are (wrongfully) giving it a pointer.
+// You should only use ARRAYSIZE on statically allocated arrays.
 //
 // The following comments are on the implementation details, and can
 // be ignored by the users.
 //
-// ARRAYSIZE_UNSAFE(arr) works by inspecting sizeof(arr) (the # of bytes in
+// ARRAYSIZE(arr) works by inspecting sizeof(arr) (the # of bytes in
 // the array) and sizeof(*(arr)) (the # of bytes in one array
 // element).  If the former is divisible by the latter, perhaps arr is
 // indeed an array, in which case the division result is the # of
@@ -179,8 +186,8 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 // where a pointer is 4 bytes, this means all pointers to a type whose
 // size is 3 or greater than 4 will be (righteously) rejected.
 
-#if !defined(ARRAYSIZE_UNSAFE)
-#define ARRAYSIZE_UNSAFE(a) \
+#if !defined(ARRAYSIZE)
+#define ARRAYSIZE(a) \
   ((sizeof(a) / sizeof(*(a))) / \
    static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 #endif
@@ -189,7 +196,7 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 // expression is true. For example, you could use it to verify the
 // size of a static array:
 //
-//   COMPILE_ASSERT(ARRAYSIZE_UNSAFE(content_type_names) == CONTENT_NUM_TYPES,
+//   COMPILE_ASSERT(ARRAYSIZE(content_type_names) == CONTENT_NUM_TYPES,
 //                  content_type_names_incorrect_size);
 //
 // or to make sure a struct is smaller than a certain size:
@@ -200,14 +207,23 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 // the expression is false, most compilers will issue a warning/error
 // containing the name of the variable.
 
+#if !defined(COMPILE_ASSERT)
+
+#if __cplusplus >= 201103L
+// Use static_assert() directly when using a C++11 compiler.
+// This provides human-friendly error messages.
+#define COMPILE_ASSERT(expr, msg) static_assert((expr), #msg)
+#else  // Not C++11
+// Otherwise, use a compile-time type error.
 template <bool>
 struct CompileAssert {
 };
 
-#if !defined(COMPILE_ASSERT)
 #define COMPILE_ASSERT(expr, msg) \
   typedef CompileAssert<(bool(expr))> msg[bool(expr) ? 1 : -1]
-#endif
+
+#endif  // Not C++11
+#endif  // !defined(COMPILE_ASSERT)
 
 #endif  // I18N_ADDRESSINPUT_UTIL_BASICTYPES_H_
 #endif  // I18N_ADDRESSINPUT_USE_BASICTYPES_OVERRIDE

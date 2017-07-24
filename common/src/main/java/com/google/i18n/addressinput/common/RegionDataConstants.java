@@ -94,7 +94,7 @@ public final class RegionDataConstants {
     map.put("EG", "{\"name\":\"EGYPT\",\"lang\":\"ar\",\"languages\":\"ar\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\"}");
     map.put("EH", "{\"name\":\"WESTERN SAHARA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("ER", "{\"name\":\"ERITREA\"}");
-    map.put("ES", "{\"name\":\"SPAIN\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"width_overrides\":\"%S:S\"}");
+    map.put("ES", "{\"name\":\"SPAIN\",\"lang\":\"es\",\"languages\":\"es~ca~gl~eu\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"width_overrides\":\"%S:S\"}");
     map.put("ET", "{\"name\":\"ETHIOPIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("FI", "{\"name\":\"FINLAND\",\"fmt\":\"%O%n%N%n%A%nFI-%Z %C\",\"require\":\"ACZ\",\"postprefix\":\"FI-\"}");
     map.put("FJ", "{\"name\":\"FIJI\"}");
@@ -118,7 +118,7 @@ public final class RegionDataConstants {
     map.put("GR", "{\"name\":\"GREECE\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\"}");
     map.put("GS", "{\"name\":\"SOUTH GEORGIA\",\"fmt\":\"%N%n%O%n%A%n%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("GT", "{\"name\":\"GUATEMALA\",\"fmt\":\"%N%n%O%n%A%n%Z- %C\"}");
-    map.put("GU", "{\"name\":\"GUAM\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
+    map.put("GU", "{\"name\":\"GUAM\",\"fmt\":\"%N%n%O%n%A%n%C %Z\",\"require\":\"ACZ\",\"upper\":\"ACNO\",\"zip_name_type\":\"zip\"}");
     map.put("GW", "{\"name\":\"GUINEA-BISSAU\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("GY", "{\"name\":\"GUYANA\"}");
     map.put("HK", "{\"name\":\"HONG KONG\",\"lang\":\"zh-Hant\",\"languages\":\"zh-Hant~en\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S\",\"fmt\":\"%S%n%C%n%A%n%O%n%N\",\"require\":\"AS\",\"upper\":\"S\",\"locality_name_type\":\"district\",\"state_name_type\":\"area\",\"width_overrides\":\"%S:S%C:L\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"地区\",\"lang\":\"zh\"},{\"field\":\"C\",\"label\":\"地區\",\"lang\":\"zh-HK\"},{\"field\":\"C\",\"label\":\"地區\",\"lang\":\"zh-TW\"},{\"field\":\"CS\",\"label\":\"Flat / Room\",\"lang\":\"en\"},{\"field\":\"CS\",\"label\":\"單位編號\",\"lang\":\"zh-HK\"},{\"field\":\"BG\",\"label\":\"大廈名稱\",\"lang\":\"zh-HK\"}]}");
@@ -131,7 +131,7 @@ public final class RegionDataConstants {
     map.put("IE", "{\"name\":\"IRELAND\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D%n%C%n%S %Z\",\"sublocality_name_type\":\"townland\",\"state_name_type\":\"county\",\"zip_name_type\":\"eircode\",\"label_overrides\":[{\"field\":\"S\",\"label\":\"郡\",\"lang\":\"zh\"}]}");
     map.put("IL", "{\"name\":\"ISRAEL\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
     map.put("IM", "{\"name\":\"ISLE OF MAN\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
-    map.put("IN", "{\"name\":\"INDIA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\",\"require\":\"ACSZ\",\"state_name_type\":\"state\",\"zip_name_type\":\"pin\"}");
+    map.put("IN", "{\"name\":\"INDIA\",\"lang\":\"en\",\"languages\":\"en~hi\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\",\"require\":\"ACSZ\",\"state_name_type\":\"state\",\"zip_name_type\":\"pin\"}");
     map.put("IO", "{\"name\":\"BRITISH INDIAN OCEAN TERRITORY\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("IQ", "{\"name\":\"IRAQ\",\"fmt\":\"%O%n%N%n%A%n%C, %S%n%Z\",\"require\":\"ACS\",\"upper\":\"CS\"}");
     map.put("IR", "{\"name\":\"IRAN\",\"fmt\":\"%O%n%N%n%S%n%C, %D%n%A%n%Z\",\"sublocality_name_type\":\"neighborhood\"}");
@@ -189,7 +189,7 @@ public final class RegionDataConstants {
     map.put("NC", "{\"name\":\"NEW CALEDONIA\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("NE", "{\"name\":\"NIGER\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("NF", "{\"name\":\"NORFOLK ISLAND\",\"fmt\":\"%O%n%N%n%A%n%C %S %Z\",\"upper\":\"CS\"}");
-    map.put("NG", "{\"name\":\"NIGERIA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
+    map.put("NG", "{\"name\":\"NIGERIA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D%n%C %Z%n%S\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
     map.put("NI", "{\"name\":\"NICARAGUA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C, %S\",\"upper\":\"CS\",\"state_name_type\":\"department\"}");
     map.put("NL", "{\"name\":\"NETHERLANDS\",\"fmt\":\"%O%n%N%n%A%n%Z %C\",\"require\":\"ACZ\"}");
     map.put("NO", "{\"name\":\"NORWAY\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\",\"locality_name_type\":\"post_town\"}");
@@ -265,7 +265,7 @@ public final class RegionDataConstants {
     map.put("VE", "{\"name\":\"VENEZUELA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%C %Z, %S\",\"require\":\"ACS\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
     map.put("VG", "{\"name\":\"VIRGIN ISLANDS (BRITISH)\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"A\"}");
     map.put("VI", "{\"name\":\"VIRGIN ISLANDS (U.S.)\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
-    map.put("VN", "{\"name\":\"VIET NAM\",\"lang\":\"vi\",\"languages\":\"vi\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\"}");
+    map.put("VN", "{\"name\":\"VIET NAM\",\"lang\":\"vi\",\"languages\":\"vi\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Ward/Township/Commune\"},{\"field\":\"S1\",\"label\":\"Phường/Thị trấn/Xã\",\"lang\":\"vi\"}]}");
     map.put("VU", "{\"name\":\"VANUATU\"}");
     map.put("WF", "{\"name\":\"WALLIS AND FUTUNA ISLANDS\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("WS", "{\"name\":\"SAMOA\"}");

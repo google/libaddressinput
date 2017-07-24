@@ -61,10 +61,15 @@ public final class FormatInterpreter {
   public List<AddressField> getAddressFieldOrder(ScriptType scriptType, String regionCode) {
     Util.checkNotNull(scriptType);
     Util.checkNotNull(regionCode);
+    String formatString = getFormatString(scriptType, regionCode);
+    return getAddressFieldOrder(formatString, regionCode);
+  }
+
+  List<AddressField> getAddressFieldOrder(String formatString, String regionCode) {
     EnumSet<AddressField> visibleFields = EnumSet.noneOf(AddressField.class);
     List<AddressField> fieldOrder = new ArrayList<AddressField>();
     // TODO: Change this to just enumerate the address fields directly.
-    for (String substring : getFormatSubstrings(scriptType, regionCode)) {
+    for (String substring : getFormatSubstrings(formatString)) {
       // Skips un-escaped characters and new lines.
       if (!substring.matches("%.") || substring.equals(NEW_LINE)) {
         continue;
@@ -153,7 +158,10 @@ public final class FormatInterpreter {
   static Set<AddressField> getRequiredFields(String regionCode) {
     Util.checkNotNull(regionCode);
     String requireString = getRequiredString(regionCode);
+    return getRequiredFields(requireString, regionCode);
+  }
 
+  static Set<AddressField> getRequiredFields(String requireString, String regionCode) {
     EnumSet<AddressField> required = EnumSet.of(AddressField.COUNTRY);
     for (char c : requireString.toCharArray()) {
       required.add(AddressField.of(c));
@@ -241,7 +249,8 @@ public final class FormatInterpreter {
     }
 
     List<String> prunedFormat = new ArrayList<String>();
-    List<String> formatSubstrings = getFormatSubstrings(scriptType, regionCode);
+    String formatString = getFormatString(scriptType, regionCode);
+    List<String> formatSubstrings = getFormatSubstrings(formatString);
     for (int i = 0; i < formatSubstrings.size(); i++) {
       String formatSubstring = formatSubstrings.get(i);
       // Always keep the newlines.
@@ -335,8 +344,7 @@ public final class FormatInterpreter {
    */
   // TODO: Create a common method which does field parsing in one place (there are about 4 other
   // places in this library where format strings are parsed).
-  private List<String> getFormatSubstrings(ScriptType scriptType, String regionCode) {
-    String formatString = getFormatString(scriptType, regionCode);
+  private List<String> getFormatSubstrings(String formatString) {
     List<String> parts = new ArrayList<String>();
 
     boolean escaped = false;
