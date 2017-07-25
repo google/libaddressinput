@@ -58,6 +58,61 @@ class AddressNormalizerTest : public testing::Test {
   DISALLOW_COPY_AND_ASSIGN(AddressNormalizerTest);
 };
 
+TEST_F(AddressNormalizerTest, CountryWithNoLanguageNoAdminArea) {
+  // This test is to make sure that Normalize would not crash for the case where
+  // there is neither a language, nor an admin area listed for the rule.
+  supplier_.LoadRules("IR", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.region_code = "IR";
+  address.administrative_area = "Tehran";
+  normalizer_.Normalize(&address);
+  EXPECT_EQ("Tehran", address.administrative_area);
+}
+
+TEST_F(AddressNormalizerTest, BrazilAdminAreaAndLocality) {
+  // A country with more than two levels of data
+  supplier_.LoadRules("BR", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.region_code = "BR";
+  address.administrative_area = "Maranhão";
+  address.locality = "Cantanhede";
+  normalizer_.Normalize(&address);
+  EXPECT_EQ("MA", address.administrative_area);  // For Maranhão
+  EXPECT_EQ("Cantanhede", address.locality);
+}
+
+TEST_F(AddressNormalizerTest, FrenchCanadaNameLanguageNotConsistent) {
+  supplier_.LoadRules("CA", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.language_code = "en-CA";
+  address.region_code = "CA";
+  address.administrative_area = "Nouveau-Brunswick";
+  normalizer_.Normalize(&address);
+  // Normalize will look into every available language for that region,
+  // not only the supplied or the default language.
+  EXPECT_EQ("NB", address.administrative_area);
+}
+
+TEST_F(AddressNormalizerTest, FrenchCanadaName) {
+  supplier_.LoadRules("CA", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.language_code = "fr-CA";
+  address.region_code = "CA";
+  address.administrative_area = "Nouveau-Brunswick";
+  normalizer_.Normalize(&address);
+  EXPECT_EQ("NB", address.administrative_area);
+}
+
+TEST_F(AddressNormalizerTest, FrenchCanadaNameLanguageNotListed) {
+  supplier_.LoadRules("CA", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.language_code = "fa-CA";
+  address.region_code = "CA";
+  address.administrative_area = "Colombie-Britannique";
+  normalizer_.Normalize(&address);
+  EXPECT_EQ("BC", address.administrative_area);
+}
+
 TEST_F(AddressNormalizerTest, CaliforniaShortNameCa) {
   supplier_.LoadRules("US", *loaded_);
   AddressData address;
