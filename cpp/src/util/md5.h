@@ -3,12 +3,13 @@
 // found in the LICENSE file.
 //
 // The original source code is from:
-// http://src.chromium.org/viewvc/chrome/trunk/src/base/md5.h?revision=94203
+// https://chromium.googlesource.com/chromium/src/base/+/ec2c345/md5.h
 
 #ifndef I18N_ADDRESSINPUT_UTIL_MD5_H_
 #define I18N_ADDRESSINPUT_UTIL_MD5_H_
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 namespace i18n {
@@ -39,22 +40,18 @@ namespace addressinput {
 
 // The output of an MD5 operation.
 struct MD5Digest {
-  unsigned char a[16];
+  uint8_t a[16];
 };
 
 // Used for storing intermediate data during an MD5 computation. Callers
 // should not access the data.
 typedef char MD5Context[88];
 
-// Computes the MD5 sum of the given data buffer with the given length.
-// The given 'digest' structure will be filled with the result data.
-void MD5Sum(const void* data, size_t length, MD5Digest* digest);
-
 // Initializes the given MD5 context structure for subsequent calls to
 // MD5Update().
 void MD5Init(MD5Context* context);
 
-// For the given buffer of |data| as a StringPiece, updates the given MD5
+// For the given buffer of |data| as a std::string, updates the given MD5
 // context with the sum of the data. You can call this any number of times
 // during the computation, except that MD5Init() must have been called first.
 void MD5Update(MD5Context* context, const std::string& data);
@@ -62,8 +59,17 @@ void MD5Update(MD5Context* context, const std::string& data);
 // Finalizes the MD5 operation and fills the buffer with the digest.
 void MD5Final(MD5Digest* digest, MD5Context* context);
 
+// MD5IntermediateFinal() generates a digest without finalizing the MD5
+// operation.  Can be used to generate digests for the input seen thus far,
+// without affecting the digest generated for the entire input.
+void MD5IntermediateFinal(MD5Digest* digest, const MD5Context* context);
+
 // Converts a digest into human-readable hexadecimal.
 std::string MD5DigestToBase16(const MD5Digest& digest);
+
+// Computes the MD5 sum of the given data buffer with the given length.
+// The given 'digest' structure will be filled with the result data.
+void MD5Sum(const void* data, size_t length, MD5Digest* digest);
 
 // Returns the MD5 (in hexadecimal) of a string.
 std::string MD5String(const std::string& str);
