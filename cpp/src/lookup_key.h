@@ -60,6 +60,8 @@ class LookupKey {
   // Returns the depth. Must not be called on an empty object.
   size_t GetDepth() const;
 
+  void set_language(const std::string& language) { language_ = language; }
+
  private:
   std::map<AddressField, std::string> nodes_;
   // The language of the key, obtained from the address (empty for default

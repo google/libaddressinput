@@ -368,7 +368,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.insert(std::make_pair("EE", "{"
       "\"fmt\":\"%N%n%O%n%A%n%Z %C\","
       "\"zipex\":\"69501,11212\","
-      "\"posturl\":\"http://www.post.ee/\?op=sihtnumbriotsing\","
+      "\"posturl\":\"https://www.omniva.ee/era/sihtnumbrite_otsing\","
       "\"languages\":\"et\""
       "}"));
   region_data.insert(std::make_pair("EG", "{"

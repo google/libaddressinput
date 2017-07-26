@@ -20,6 +20,8 @@ import java.util.List;
 /**
  * GMSCore implementation of {@link com.google.i18n.addressinput.common.AddressAutocompleteApi}.
  *
+ * <p>Internal clients should use the gcoreclient implementation instead.
+ *
  * Callers should provide a GoogleApiClient with the Places.GEO_DATA_API and
  * LocationServices.API enabled. The GoogleApiClient should be connected before
  * it is passed to AddressWidget#enableAutocomplete. The caller will also need to request the
