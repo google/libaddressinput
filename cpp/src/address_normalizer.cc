@@ -50,6 +50,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
   assert(parent_rule != NULL);
 
   std::vector<std::string> languages(parent_rule->GetLanguages());
+
   if (languages.empty()) {
     languages.push_back("");
   } else {
@@ -65,27 +66,29 @@ void AddressNormalizer::Normalize(AddressData* address) const {
     }
     const std::string& field_value = address->GetFieldValue(field);
     bool no_match_found_yet = true;
-    for (std::vector<std::string>::const_iterator
-         key_it = parent_rule->GetSubKeys().begin();
-         key_it != parent_rule->GetSubKeys().end(); ++key_it) {
+
+    const std::vector<std::string>& sub_keys = parent_rule->GetSubKeys();
+
+    for (int i = 0; i < sub_keys.size(); i++) {
+      const std::string& sub_key = sub_keys[i];
       if (!no_match_found_yet)
         break;
       for (const std::string& language : languages) {
         lookup_key.set_language(language);
-        lookup_key.FromLookupKey(parent_key, *key_it);
+        lookup_key.FromLookupKey(parent_key, sub_key);
         const Rule* rule = supplier_->GetRule(lookup_key);
         assert(rule != NULL);
 
         bool matches_latin_name =
             compare_->NaturalEquals(field_value, rule->GetLatinName());
         bool matches_local_name_id =
-            compare_->NaturalEquals(field_value, *key_it) ||
+            compare_->NaturalEquals(field_value, sub_key) ||
             compare_->NaturalEquals(field_value, rule->GetName());
         if (matches_latin_name || matches_local_name_id) {
           address->SetFieldValue(
-              field, matches_latin_name ? rule->GetLatinName() : *key_it);
+              field, matches_latin_name ? rule->GetLatinName() : sub_key);
           no_match_found_yet = false;
-          parent_key.FromLookupKey(parent_key, *key_it);
+          parent_key.FromLookupKey(parent_key, sub_key);
           parent_rule = supplier_->GetRule(parent_key);
           assert(parent_rule != NULL);
           break;

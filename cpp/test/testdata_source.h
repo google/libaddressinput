@@ -29,13 +29,17 @@ namespace addressinput {
 // Gets address metadata from a text file. Sample usage:
 //    class MyClass {
 //     public:
-//      MyClass() : source_(),
-//                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {}
+//      MyClass() : data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {
+//        base::FilePath src_path;
+//        CHECK(PathService::Get(base::DIR_SOURCE_ROOT, &src_path));
+//        source_ = new TestdataSource(/*aggregate=*/true,
+//                                     src_path.value() + '/');
+//      }
 //
-//      ~MyClass() {}
+//      ~MyClass() { delete source_; }
 //
 //      void GetData(const std::string& key) {
-//        source_.Get(key, *data_ready_);
+//        source_->Get(key, *data_ready_);
 //      }
 //
 //     private:
@@ -46,8 +50,8 @@ namespace addressinput {
 //        delete data;
 //      }
 //
-//      TestdataSource source_;
 //      const scoped_ptr<const Source::Callback> data_ready_;
+//      const TestdataSource* source_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };
@@ -55,6 +59,9 @@ class TestdataSource : public Source {
  public:
   // Will return aggregate data if |aggregate| is set to true.
   explicit TestdataSource(bool aggregate);
+  // |src_path| is the root of the source tree.
+  TestdataSource(bool aggregate, const std::string& src_path);
+
   virtual ~TestdataSource();
 
   // Source implementation.
@@ -62,6 +69,8 @@ class TestdataSource : public Source {
 
  private:
   const bool aggregate_;
+  const std::string src_path_;
+
   DISALLOW_COPY_AND_ASSIGN(TestdataSource);
 };
 

@@ -39,14 +39,18 @@ class TestdataSourceTest : public testing::TestWithParam<std::string> {
  protected:
   TestdataSourceTest()
       : source_(false),
+        source_with_path_(false, ""),
         aggregate_source_(true),
+        aggregate_source_with_path_(true, ""),
         success_(false),
         key_(),
         data_(),
         data_ready_(BuildCallback(this, &TestdataSourceTest::OnDataReady)) {}
 
   TestdataSource source_;
+  TestdataSource source_with_path_;
   TestdataSource aggregate_source_;
+  TestdataSource aggregate_source_with_path_;
   bool success_;
   std::string key_;
   std::string data_;
@@ -104,6 +108,16 @@ TEST_P(TestdataSourceTest, TestdataSourceHasValidDataForRegion) {
   EXPECT_TRUE(DataIsValid(data_, key));
 };
 
+// Verifies that TestdataSource gets valid data for a region code.
+TEST_P(TestdataSourceTest, TestdataSourceWithPathHasValidDataForRegion) {
+  std::string key = "data/" + GetParam();
+  source_with_path_.Get(key, *data_ready_);
+
+  EXPECT_TRUE(success_);
+  EXPECT_EQ(key, key_);
+  EXPECT_TRUE(DataIsValid(data_, key));
+};
+
 // Returns testing::AssertionSuccess if |data| is valid aggregated callback
 // data for |key|.
 testing::AssertionResult AggregateDataIsValid(const std::string& data,
@@ -136,6 +150,18 @@ testing::AssertionResult AggregateDataIsValid(const std::string& data,
 TEST_P(TestdataSourceTest, TestdataSourceHasValidAggregatedDataForRegion) {
   std::string key = "data/" + GetParam();
   aggregate_source_.Get(key, *data_ready_);
+
+  EXPECT_TRUE(success_);
+  EXPECT_EQ(key, key_);
+  EXPECT_TRUE(AggregateDataIsValid(data_, key));
+};
+
+// Verifies that TestdataSource gets valid aggregated data for a region code.
+TEST_P(TestdataSourceTest,
+    TestdataSourceWithPathHasValidAggregatedDataForRegion) {
+
+  std::string key = "data/" + GetParam();
+  aggregate_source_with_path_.Get(key, *data_ready_);
 
   EXPECT_TRUE(success_);
   EXPECT_EQ(key, key_);
