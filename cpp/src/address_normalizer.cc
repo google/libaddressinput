@@ -69,7 +69,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
 
     const std::vector<std::string>& sub_keys = parent_rule->GetSubKeys();
 
-    for (int i = 0; i < sub_keys.size(); i++) {
+    for (size_t i = 0; i < sub_keys.size(); i++) {
       const std::string& sub_key = sub_keys[i];
       if (!no_match_found_yet)
         break;
