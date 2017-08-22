@@ -51,11 +51,12 @@ const size_t kCldrRegionCodeLength = 2;
 const size_t kAggregateDataKeyLength =
     kDataKeyPrefixLength + kCldrRegionCodeLength;
 
-std::map<std::string, std::string> InitData() {
+std::map<std::string, std::string> InitData(const std::string& src_path) {
   std::map<std::string, std::string> data;
-  std::ifstream file(kDataFileName);
+  std::string data_file_name = src_path + kDataFileName;
+  std::ifstream file(data_file_name);
   if (!file.is_open()) {
-    std::cerr << "Error opening \"" << kDataFileName << "\"." << std::endl;
+    std::cerr << "Error opening \"" << data_file_name << "\"." << std::endl;
     std::exit(EXIT_FAILURE);
   }
 
@@ -138,14 +139,18 @@ std::map<std::string, std::string> InitData() {
   return data;
 }
 
-const std::map<std::string, std::string>& GetData() {
-  static const std::map<std::string, std::string> kData(InitData());
+const std::map<std::string, std::string>& GetData(const std::string& src_path) {
+  static const std::map<std::string, std::string> kData(InitData(src_path));
   return kData;
 }
 
 }  // namespace
 
-TestdataSource::TestdataSource(bool aggregate) : aggregate_(aggregate) {}
+TestdataSource::TestdataSource(bool aggregate, const std::string& src_path)
+    : aggregate_(aggregate), src_path_(src_path) {}
+
+TestdataSource::TestdataSource(bool aggregate)
+    : aggregate_(aggregate) {}
 
 TestdataSource::~TestdataSource() {}
 
@@ -154,8 +159,8 @@ void TestdataSource::Get(const std::string& key,
   std::string prefixed_key(1, aggregate_ ? kAggregatePrefix : kNormalPrefix);
   prefixed_key += key;
   std::map<std::string, std::string>::const_iterator data_it =
-      GetData().find(prefixed_key);
-  bool success = data_it != GetData().end();
+      GetData(src_path_).find(prefixed_key);
+  bool success = data_it != GetData(src_path_).end();
   std::string* data = NULL;
   if (success) {
     data = new std::string(data_it->second);
