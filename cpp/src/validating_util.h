@@ -29,11 +29,11 @@ namespace addressinput {
 
 // Wraps data with a checksum and a timestamp. Sample usage:
 //    std::string data = ...
-//    ValidatingUtil::Wrap(time(NULL), &data);
+//    ValidatingUtil::Wrap(time(nullptr), &data);
 //    Process(data);
 //
 //    std::string unwrapped = wrapped;
-//    if (ValidatingUtil::UnwrapTimestamp(&unwrapped, time(NULL)) &&
+//    if (ValidatingUtil::UnwrapTimestamp(&unwrapped, time(nullptr)) &&
 //        ValidatingUtil::UnwrapChecksum(&unwrapped)) {
 //      Process(unwrapped);
 //    }

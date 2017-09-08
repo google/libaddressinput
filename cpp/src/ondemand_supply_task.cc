@@ -45,8 +45,8 @@ OndemandSupplyTask::OndemandSupplyTask(
       supplied_(supplied),
       retrieved_(BuildCallback(this, &OndemandSupplyTask::Load)),
       success_(true) {
-  assert(rule_cache_ != NULL);
-  assert(retrieved_ != NULL);
+  assert(rule_cache_ != nullptr);
+  assert(retrieved_ != nullptr);
 }
 
 OndemandSupplyTask::~OndemandSupplyTask() {

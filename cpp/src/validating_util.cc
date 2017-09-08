@@ -56,9 +56,9 @@ bool UnwrapHeader(const char* header_prefix,
                   size_t header_prefix_length,
                   std::string* data,
                   std::string* header_value) {
-  assert(header_prefix != NULL);
-  assert(data != NULL);
-  assert(header_value != NULL);
+  assert(header_prefix != nullptr);
+  assert(data != nullptr);
+  assert(header_value != nullptr);
 
   if (data->compare(
           0, header_prefix_length, header_prefix, header_prefix_length) != 0) {
@@ -82,7 +82,7 @@ bool UnwrapHeader(const char* header_prefix,
 
 // static
 void ValidatingUtil::Wrap(time_t timestamp, std::string* data) {
-  assert(data != NULL);
+  assert(data != nullptr);
   char timestamp_string[2 + 3 * sizeof timestamp];
   int size =
       std::sprintf(timestamp_string, "%ld", static_cast<long>(timestamp));
@@ -105,7 +105,7 @@ void ValidatingUtil::Wrap(time_t timestamp, std::string* data) {
 
 // static
 bool ValidatingUtil::UnwrapTimestamp(std::string* data, time_t now) {
-  assert(data != NULL);
+  assert(data != nullptr);
   if (now < 0) {
     return false;
   }
@@ -133,7 +133,7 @@ bool ValidatingUtil::UnwrapTimestamp(std::string* data, time_t now) {
 
 // static
 bool ValidatingUtil::UnwrapChecksum(std::string* data) {
-  assert(data != NULL);
+  assert(data != nullptr);
   std::string checksum;
   if (!UnwrapHeader(kChecksumPrefix, kChecksumPrefixLength, data, &checksum)) {
     return false;

@@ -19,8 +19,8 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -38,7 +38,6 @@ using i18n::addressinput::Callback;
 using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::TestdataSource;
 
 class AddressInputHelperTest : public testing::Test {
@@ -65,7 +64,7 @@ class AddressInputHelperTest : public testing::Test {
 
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
   DISALLOW_COPY_AND_ASSIGN(AddressInputHelperTest);
 };
 
@@ -278,7 +277,7 @@ class AddressInputHelperMockDataTest : public testing::Test {
 
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
   DISALLOW_COPY_AND_ASSIGN(AddressInputHelperMockDataTest);
 };
 

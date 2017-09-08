@@ -33,7 +33,7 @@ FakeStorage::~FakeStorage() {
 }
 
 void FakeStorage::Put(const std::string& key, std::string* data) {
-  assert(data != NULL);
+  assert(data != nullptr);
   std::pair<std::map<std::string, std::string*>::iterator, bool> result =
       data_.insert(std::make_pair(key, data));
   if (!result.second) {
@@ -47,7 +47,8 @@ void FakeStorage::Get(const std::string& key,
                       const Callback& data_ready) const {
   std::map<std::string, std::string*>::const_iterator data_it = data_.find(key);
   bool success = data_it != data_.end();
-  data_ready(success, key, success ? new std::string(*data_it->second) : NULL);
+  data_ready(success, key,
+             success ? new std::string(*data_it->second) : nullptr);
 }
 
 }  // namespace addressinput

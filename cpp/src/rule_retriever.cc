@@ -16,10 +16,10 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cassert>
 #include <cstddef>
+#include <memory>
 #include <string>
 
 #include "retriever.h"
@@ -57,7 +57,7 @@ class Helper {
   }
 
   const RuleRetriever::Callback& rule_ready_;
-  const scoped_ptr<const Retriever::Callback> data_retrieved_;
+  const std::unique_ptr<const Retriever::Callback> data_retrieved_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };
@@ -66,7 +66,7 @@ class Helper {
 
 RuleRetriever::RuleRetriever(const Retriever* retriever)
     : data_retriever_(retriever) {
-  assert(data_retriever_ != NULL);
+  assert(data_retriever_ != nullptr);
 }
 
 RuleRetriever::~RuleRetriever() {}

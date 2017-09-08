@@ -17,9 +17,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -28,7 +28,6 @@ namespace {
 
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::NullStorage;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
 
 class NullStorageTest : public testing::Test {
@@ -40,16 +39,16 @@ class NullStorageTest : public testing::Test {
   bool success_;
   std::string key_;
   std::string data_;
-  const scoped_ptr<const Storage::Callback> data_ready_;
+  const std::unique_ptr<const Storage::Callback> data_ready_;
 
   static const char kKey[];
 
  private:
   void OnDataReady(bool success, const std::string& key, std::string* data) {
-    ASSERT_FALSE(success && data == NULL);
+    ASSERT_FALSE(success && data == nullptr);
     success_ = success;
     key_ = key;
-    if (data != NULL) {
+    if (data != nullptr) {
       data_ = *data;
       delete data;
     }

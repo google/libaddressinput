@@ -18,9 +18,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -37,7 +37,6 @@ using i18n::addressinput::LookupKey;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Rule;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::TestdataSource;
 
 class PreloadSupplierTest : public testing::Test {
@@ -47,7 +46,7 @@ class PreloadSupplierTest : public testing::Test {
         loaded_callback_(BuildCallback(this, &PreloadSupplierTest::OnLoaded)) {}
 
   PreloadSupplier supplier_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_callback_;
 
  private:
   void OnLoaded(bool success, const std::string& region_code, int num_rules) {
@@ -67,7 +66,7 @@ TEST_F(PreloadSupplierTest, GetUsRule) {
   us_address.region_code = "US";
   us_key.FromAddress(us_address);
   const Rule* rule = supplier_.GetRule(us_key);
-  ASSERT_TRUE(rule != NULL);
+  ASSERT_TRUE(rule != nullptr);
   EXPECT_EQ("data/US", rule->GetId());
 }
 
@@ -79,7 +78,7 @@ TEST_F(PreloadSupplierTest, GetUsCaRule) {
   ca_address.administrative_area = "CA";
   ca_key.FromAddress(ca_address);
   const Rule* rule = supplier_.GetRule(ca_key);
-  ASSERT_TRUE(rule != NULL);
+  ASSERT_TRUE(rule != nullptr);
   EXPECT_EQ("data/US/CA", rule->GetId());
 }
 
@@ -90,7 +89,7 @@ TEST_F(PreloadSupplierTest, GetZwRule) {
   zw_address.region_code = "ZW";
   zw_key.FromAddress(zw_address);
   const Rule* rule = supplier_.GetRule(zw_key);
-  ASSERT_TRUE(rule != NULL);
+  ASSERT_TRUE(rule != nullptr);
   EXPECT_EQ("data/ZW", rule->GetId());
 }
 
@@ -102,7 +101,7 @@ TEST_F(PreloadSupplierTest, GetUnknownRule) {
   unknown_address.administrative_area = "ZZ";
   unknown_key.FromAddress(unknown_address);
   const Rule* rule = supplier_.GetRule(unknown_key);
-  EXPECT_TRUE(rule == NULL);
+  EXPECT_TRUE(rule == nullptr);
 }
 
 TEST_F(PreloadSupplierTest, GetTooPreciseRule) {
@@ -114,7 +113,7 @@ TEST_F(PreloadSupplierTest, GetTooPreciseRule) {
   precise_address.locality = "Mountain View";
   precise_key.FromAddress(precise_address);
   const Rule* rule = supplier_.GetRule(precise_key);
-  EXPECT_TRUE(rule == NULL);
+  EXPECT_TRUE(rule == nullptr);
 }
 
 TEST_F(PreloadSupplierTest, GetRulesForRegion) {

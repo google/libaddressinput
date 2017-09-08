@@ -35,8 +35,8 @@ std::ostream& operator<<(std::ostream& o, AddressField field) {
     "ORGANIZATION",
     "RECIPIENT"
   };
-  COMPILE_ASSERT(COUNTRY == 0, bad_base);
-  COMPILE_ASSERT(RECIPIENT == arraysize(kFieldNames) - 1, bad_length);
+  static_assert(COUNTRY == 0, "bad_base");
+  static_assert(RECIPIENT == arraysize(kFieldNames) - 1, "bad_length");
 
   if (field < 0 || static_cast<size_t>(field) >= arraysize(kFieldNames)) {
     o << "[INVALID ENUM VALUE " << static_cast<int>(field) << "]";

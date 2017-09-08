@@ -18,11 +18,11 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
 #include <cstring>
 #include <map>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -42,7 +42,6 @@ using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplyTask;
 using i18n::addressinput::Retriever;
 using i18n::addressinput::Rule;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Supplier;
 
 class OndemandSupplyTaskTest : public testing::Test {
@@ -87,8 +86,8 @@ class OndemandSupplyTaskTest : public testing::Test {
   }
 
   std::map<std::string, const Rule*> rule_cache_;
-  const scoped_ptr<Retriever> retriever_;
-  const scoped_ptr<const Supplier::Callback> supplied_;
+  const std::unique_ptr<Retriever> retriever_;
+  const std::unique_ptr<const Supplier::Callback> supplied_;
   OndemandSupplyTask* const task_;
 
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTaskTest);
@@ -97,10 +96,10 @@ class OndemandSupplyTaskTest : public testing::Test {
 TEST_F(OndemandSupplyTaskTest, Empty) {
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] == NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] == nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_F(OndemandSupplyTaskTest, Invalid) {
@@ -119,17 +118,17 @@ TEST_F(OndemandSupplyTaskTest, Valid) {
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 
   EXPECT_EQ("data/XA", rule_[0]->GetId());
 
   // All rules on the COUNTRY level inherit from the default rule.
   EXPECT_FALSE(rule_[0]->GetFormat().empty());
   EXPECT_FALSE(rule_[0]->GetRequired().empty());
-  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() == NULL);
+  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() == nullptr);
 }
 
 TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
@@ -149,10 +148,10 @@ TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] != NULL);
-  EXPECT_TRUE(rule_[3] != NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] != nullptr);
+  EXPECT_TRUE(rule_[3] != nullptr);
 
   EXPECT_EQ("data/XA", rule_[0]->GetId());
   EXPECT_EQ("data/XA/aa", rule_[1]->GetId());
@@ -205,10 +204,10 @@ TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
 
   ASSERT_NO_FATAL_FAILURE(Retrieve());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 
   EXPECT_EQ("data/XA", rule_[0]->GetId());
 }

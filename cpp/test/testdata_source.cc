@@ -161,7 +161,7 @@ void TestdataSource::Get(const std::string& key,
   std::map<std::string, std::string>::const_iterator data_it =
       GetData(src_path_).find(prefixed_key);
   bool success = data_it != GetData(src_path_).end();
-  std::string* data = NULL;
+  std::string* data = nullptr;
   if (success) {
     data = new std::string(data_it->second);
   } else {

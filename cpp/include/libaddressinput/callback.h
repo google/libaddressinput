@@ -32,7 +32,7 @@ namespace addressinput {
 //      typedef Callback<const MyType&, const MyDataType&> MyCallback;
 //
 //      void GetDataAsynchronously() {
-//        scoped_ptr<MyCallback> callback(BuildCallback(
+//        std::unique_ptr<MyCallback> callback(BuildCallback(
 //            this, &MyClass::OnDataReady));
 //        bool success = ...
 //        MyKeyType key = ...
@@ -63,8 +63,8 @@ class CallbackImpl : public Callback<Key, Data> {
   CallbackImpl(Observer* observer, ObserveEvent observe_event)
       : observer_(observer),
         observe_event_(observe_event) {
-    assert(observer_ != NULL);
-    assert(observe_event_ != NULL);
+    assert(observer_ != nullptr);
+    assert(observe_event_ != nullptr);
   }
 
   virtual ~CallbackImpl() {}

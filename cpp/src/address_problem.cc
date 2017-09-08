@@ -32,8 +32,8 @@ std::ostream& operator<<(std::ostream& o, AddressProblem problem) {
     "MISMATCHING_VALUE",
     "USES_P_O_BOX"
   };
-  COMPILE_ASSERT(UNEXPECTED_FIELD == 0, bad_base);
-  COMPILE_ASSERT(USES_P_O_BOX == arraysize(kProblemNames) - 1, bad_length);
+  static_assert(UNEXPECTED_FIELD == 0, "bad_base");
+  static_assert(USES_P_O_BOX == arraysize(kProblemNames) - 1, "bad_length");
 
   if (problem < 0 || static_cast<size_t>(problem) >= arraysize(kProblemNames)) {
     o << "[INVALID ENUM VALUE " << static_cast<int>(problem) << "]";

@@ -40,26 +40,26 @@ std::string AddressData::*kStringField[] = {
   &AddressData::dependent_locality,
   &AddressData::sorting_code,
   &AddressData::postal_code,
-  NULL,
+  nullptr,
   &AddressData::organization,
   &AddressData::recipient
 };
 
 // Mapping from AddressField value to pointer to AddressData member.
 const std::vector<std::string> AddressData::*kVectorStringField[] = {
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   &AddressData::address_line,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };
 
-COMPILE_ASSERT(arraysize(kStringField) == arraysize(kVectorStringField),
-               field_mapping_array_size_mismatch);
+static_assert(arraysize(kStringField) == arraysize(kVectorStringField),
+              "field_mapping_array_size_mismatch");
 
 // A string is considered to be "empty" not only if it actually is empty, but
 // also if it contains nothing but whitespace.
@@ -73,7 +73,7 @@ bool IsStringEmpty(const std::string& str) {
 bool AddressData::IsFieldEmpty(AddressField field) const {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < arraysize(kStringField));
-  if (kStringField[field] != NULL) {
+  if (kStringField[field] != nullptr) {
     const std::string& value = GetFieldValue(field);
     return IsStringEmpty(value);
   } else {
@@ -88,14 +88,14 @@ const std::string& AddressData::GetFieldValue(
     AddressField field) const {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < arraysize(kStringField));
-  assert(kStringField[field] != NULL);
+  assert(kStringField[field] != nullptr);
   return this->*kStringField[field];
 }
 
 void AddressData::SetFieldValue(AddressField field, const std::string& value) {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < arraysize(kStringField));
-  assert(kStringField[field] != NULL);
+  assert(kStringField[field] != nullptr);
   (this->*kStringField[field]).assign(value);
 }
 
@@ -122,7 +122,7 @@ bool AddressData::operator==(const AddressData& other) const {
 bool AddressData::IsRepeatedFieldValue(AddressField field) {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < arraysize(kVectorStringField));
-  return kVectorStringField[field] != NULL;
+  return kVectorStringField[field] != nullptr;
 }
 
 }  // namespace addressinput

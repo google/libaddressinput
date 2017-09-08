@@ -38,7 +38,8 @@ namespace {
 // The maximum depth of lookup keys.
 static const size_t kLookupKeysMaxDepth = arraysize(LookupKey::kHierarchy) - 1;
 
-// Does not take ownership of |parent_region|, which is not allowed to be NULL.
+// Does not take ownership of |parent_region|, which is not allowed to be
+// nullptr.
 void BuildRegionTreeRecursively(
     const std::map<std::string, const Rule*>& rules,
     std::map<std::string, const Rule*>::const_iterator hint,
@@ -47,7 +48,7 @@ void BuildRegionTreeRecursively(
     const std::vector<std::string>& keys,
     bool prefer_latin_name,
     size_t region_max_depth) {
-  assert(parent_region != NULL);
+  assert(parent_region != nullptr);
 
   LookupKey lookup_key;
   for (std::vector<std::string>::const_iterator key_it = keys.begin();
@@ -65,7 +66,7 @@ void BuildRegionTreeRecursively(
     }
 
     const Rule* rule = hint->second;
-    assert(rule != NULL);
+    assert(rule != nullptr);
 
     const std::string& local_name = rule->GetName().empty()
         ? *key_it : rule->GetName();
@@ -102,7 +103,7 @@ RegionData* BuildRegion(const std::map<std::string, const Rule*>& rules,
   assert(hint != rules.end());
 
   const Rule* rule = hint->second;
-  assert(rule != NULL);
+  assert(rule != nullptr);
 
   RegionData* region = new RegionData(region_code);
 
@@ -129,7 +130,7 @@ RegionData* BuildRegion(const std::map<std::string, const Rule*>& rules,
 RegionDataBuilder::RegionDataBuilder(PreloadSupplier* supplier)
     : supplier_(supplier),
       cache_() {
-  assert(supplier_ != NULL);
+  assert(supplier_ != nullptr);
 }
 
 RegionDataBuilder::~RegionDataBuilder() {
@@ -149,7 +150,7 @@ const RegionData& RegionDataBuilder::Build(
     const std::string& ui_language_tag,
     std::string* best_region_tree_language_tag) {
   assert(supplier_->IsLoaded(region_code));
-  assert(best_region_tree_language_tag != NULL);
+  assert(best_region_tree_language_tag != nullptr);
 
   // Look up the region tree in cache first before building it.
   RegionCodeDataMap::const_iterator region_it = cache_.find(region_code);

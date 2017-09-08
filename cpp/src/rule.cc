@@ -171,7 +171,7 @@ Rule::Rule()
       required_(),
       sub_keys_(),
       languages_(),
-      postal_code_matcher_(NULL),
+      postal_code_matcher_(nullptr),
       sole_postal_code_(),
       admin_area_name_message_id_(INVALID_MESSAGE_ID),
       postal_code_name_message_id_(INVALID_MESSAGE_ID),
@@ -187,8 +187,8 @@ Rule::~Rule() {}
 // static
 const Rule& Rule::GetDefault() {
   // Allocated once and leaked on shutdown.
-  static Rule* default_rule = NULL;
-  if (default_rule == NULL) {
+  static Rule* default_rule = nullptr;
+  if (default_rule == nullptr) {
     default_rule = new Rule;
     default_rule->ParseSerializedRule(
         RegionDataConstants::GetDefaultRegionData());
@@ -205,8 +205,8 @@ void Rule::CopyFrom(const Rule& rule) {
   sub_keys_ = rule.sub_keys_;
   languages_ = rule.languages_;
   postal_code_matcher_.reset(
-      rule.postal_code_matcher_ == NULL
-          ? NULL
+      rule.postal_code_matcher_ == nullptr
+          ? nullptr
           : new RE2ptr(new RE2(rule.postal_code_matcher_->ptr->pattern(),
                                rule.postal_code_matcher_->ptr->options())));
   sole_postal_code_ = rule.sole_postal_code_;
@@ -279,7 +279,7 @@ void Rule::ParseJsonRule(const Json& json) {
     if (matcher->ok()) {
       postal_code_matcher_.reset(new RE2ptr(matcher));
     } else {
-      postal_code_matcher_.reset(NULL);
+      postal_code_matcher_.reset(nullptr);
       delete matcher;
     }
     // If the "zip" field is not a regular expression, then it is the sole

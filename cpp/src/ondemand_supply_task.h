@@ -17,9 +17,9 @@
 
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 
@@ -59,7 +59,7 @@ class OndemandSupplyTask {
   const LookupKey& lookup_key_;
   std::map<std::string, const Rule*>* const rule_cache_;
   const Supplier::Callback& supplied_;
-  const scoped_ptr<const Retriever::Callback> retrieved_;
+  const std::unique_ptr<const Retriever::Callback> retrieved_;
   bool success_;
 
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTask);

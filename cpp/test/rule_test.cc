@@ -85,8 +85,8 @@ TEST(RuleTest, CopyOverwritesRule) {
   EXPECT_NE(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
   EXPECT_NE(rule.GetPostServiceUrl(), copy.GetPostServiceUrl());
 
-  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
-  EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() == nullptr);
 
   copy.CopyFrom(rule);
   EXPECT_EQ(rule.GetFormat(), copy.GetFormat());
@@ -108,7 +108,7 @@ TEST(RuleTest, CopyOverwritesRule) {
   EXPECT_EQ(rule.GetPostalCodeExample(), copy.GetPostalCodeExample());
   EXPECT_EQ(rule.GetPostServiceUrl(), copy.GetPostServiceUrl());
 
-  EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() != nullptr);
 }
 
 TEST(RuleTest, ParseOverwritesRule) {
@@ -222,13 +222,13 @@ TEST(RuleTest, ParsesPostServiceUrlCorrectly) {
 TEST(RuleTest, PostalCodeMatcher) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"\\\\d{3}\"}"));
-  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
 }
 
 TEST(RuleTest, PostalCodeMatcherInvalidRegExp) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"(\"}"));
-  EXPECT_TRUE(rule.GetPostalCodeMatcher() == NULL);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() == nullptr);
 }
 
 TEST(RuleTest, ParsesJsonRuleCorrectly) {
@@ -236,7 +236,7 @@ TEST(RuleTest, ParsesJsonRuleCorrectly) {
   ASSERT_TRUE(json.ParseObject("{\"zip\":\"\\\\d{3}\"}"));
   Rule rule;
   rule.ParseJsonRule(json);
-  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
 }
 
 TEST(RuleTest, EmptyStringIsNotValid) {
@@ -454,15 +454,15 @@ TEST_P(RuleParseTest, SublocalityNameTypeHasUiString) {
 TEST_P(RuleParseTest, SolePostalCode) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"1234\"}"));
-  EXPECT_TRUE(rule.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
   EXPECT_TRUE(rule.GetSolePostalCode() == "1234");
 
   Rule copy;
-  EXPECT_TRUE(copy.GetPostalCodeMatcher() == NULL);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() == nullptr);
   EXPECT_TRUE(copy.GetSolePostalCode().empty());
 
   copy.CopyFrom(rule);
-  EXPECT_TRUE(copy.GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(copy.GetPostalCodeMatcher() != nullptr);
   EXPECT_EQ(rule.GetSolePostalCode(), copy.GetSolePostalCode());
 }
 
