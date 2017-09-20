@@ -19,8 +19,8 @@
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/region_data.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -34,7 +34,6 @@ using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::RegionData;
 using i18n::addressinput::RegionDataBuilder;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::TestdataSource;
 
 class RegionDataBuilderTest : public testing::Test {
@@ -48,7 +47,7 @@ class RegionDataBuilderTest : public testing::Test {
 
   PreloadSupplier supplier_;
   RegionDataBuilder builder_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_callback_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_callback_;
   std::string best_language_;
 
  private:

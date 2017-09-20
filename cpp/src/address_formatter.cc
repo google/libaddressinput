@@ -127,7 +127,7 @@ void CombineLinesForLanguage(const std::vector<std::string>& lines,
 
 void GetFormattedNationalAddress(
     const AddressData& address_data, std::vector<std::string>* lines) {
-  assert(lines != NULL);
+  assert(lines != nullptr);
   lines->clear();
 
   Rule rule;

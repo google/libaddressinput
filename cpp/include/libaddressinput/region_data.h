@@ -43,15 +43,15 @@ class RegionData {
 
   const std::string& name() const { return name_; }
 
-  bool has_parent() const { return parent_ != NULL; }
+  bool has_parent() const { return parent_ != nullptr; }
 
   // Should be called only if has_parent() returns true.
   const RegionData& parent() const {
-    assert(parent_ != NULL);
+    assert(parent_ != nullptr);
     return *parent_;
   }
 
-  // The caller does not own the results. The results are not NULL and have a
+  // The caller does not own the results. The results are not nullptr and have a
   // parent.
   const std::vector<const RegionData*>& sub_regions() const {
     return sub_regions_;

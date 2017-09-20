@@ -18,9 +18,9 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -38,7 +38,6 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::Retriever;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Storage;
 using i18n::addressinput::TestdataSource;
 
@@ -69,7 +68,7 @@ class RetrieverTest : public testing::Test {
   bool success_;
   std::string key_;
   std::string data_;
-  const scoped_ptr<const Retriever::Callback> data_ready_;
+  const std::unique_ptr<const Retriever::Callback> data_ready_;
 
  private:
   void OnDataReady(bool success,
@@ -135,7 +134,7 @@ class StaleStorage : public Storage {
   }
 
   virtual void Put(const std::string& key, std::string* value) {
-    ASSERT_TRUE(value != NULL);
+    ASSERT_TRUE(value != nullptr);
     data_updated_ = true;
     delete value;
   }

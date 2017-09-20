@@ -22,8 +22,8 @@
 #include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -40,7 +40,6 @@ using i18n::addressinput::FieldProblemMap;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::TestdataSource;
 
 using i18n::addressinput::COUNTRY;
@@ -128,7 +127,7 @@ class PreloadValidatorWrapper : public ValidatorWrapper {
 
   PreloadSupplier supplier_;
   const AddressValidator validator_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
   DISALLOW_COPY_AND_ASSIGN(PreloadValidatorWrapper);
 };
 
@@ -174,8 +173,8 @@ class AddressValidatorTest
     called_ = true;
   }
 
-  const scoped_ptr<ValidatorWrapper> validator_wrapper_;
-  const scoped_ptr<const AddressValidator::Callback> validated_;
+  const std::unique_ptr<ValidatorWrapper> validator_wrapper_;
+  const std::unique_ptr<const AddressValidator::Callback> validated_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressValidatorTest);
 };

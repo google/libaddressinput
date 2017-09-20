@@ -33,13 +33,13 @@ namespace addressinput {
 AddressNormalizer::AddressNormalizer(const PreloadSupplier* supplier)
     : supplier_(supplier),
       compare_(new StringCompare) {
-  assert(supplier_ != NULL);
+  assert(supplier_ != nullptr);
 }
 
 AddressNormalizer::~AddressNormalizer() {}
 
 void AddressNormalizer::Normalize(AddressData* address) const {
-  assert(address != NULL);
+  assert(address != nullptr);
   assert(supplier_->IsLoaded(address->region_code));
 
   AddressData region_address;
@@ -47,7 +47,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
   LookupKey parent_key;
   parent_key.FromAddress(region_address);
   const Rule* parent_rule = supplier_->GetRule(parent_key);
-  assert(parent_rule != NULL);
+  assert(parent_rule != nullptr);
 
   std::vector<std::string> languages(parent_rule->GetLanguages());
 
@@ -77,7 +77,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
         lookup_key.set_language(language);
         lookup_key.FromLookupKey(parent_key, sub_key);
         const Rule* rule = supplier_->GetRule(lookup_key);
-        assert(rule != NULL);
+        assert(rule != nullptr);
 
         bool matches_latin_name =
             compare_->NaturalEquals(field_value, rule->GetLatinName());
@@ -90,7 +90,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
           no_match_found_yet = false;
           parent_key.FromLookupKey(parent_key, sub_key);
           parent_rule = supplier_->GetRule(parent_key);
-          assert(parent_rule != NULL);
+          assert(parent_rule != nullptr);
           break;
         }
       }

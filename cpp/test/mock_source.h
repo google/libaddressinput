@@ -50,7 +50,7 @@ namespace addressinput {
 //      }
 //
 //      MockSource source_;
-//      const scoped_ptr<const Source::Callback> data_ready_;
+//      const std::unique_ptr<const Source::Callback> data_ready_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };

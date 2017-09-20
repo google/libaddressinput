@@ -82,7 +82,6 @@
       'test/testdata_source_test.cc',
       'test/util/json_test.cc',
       'test/util/md5_unittest.cc',
-      'test/util/scoped_ptr_unittest.cc',
       'test/util/string_compare_test.cc',
       'test/util/string_split_unittest.cc',
       'test/util/string_util_test.cc',

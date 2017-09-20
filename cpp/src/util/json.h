@@ -16,8 +16,8 @@
 #define I18N_ADDRESSINPUT_UTIL_JSON_H_
 
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -47,7 +47,7 @@ class Json {
   // Returns true if the parsed JSON contains a string value for |key|. Sets
   // |value| to the string value of the |key|. The JSON object must be parsed
   // successfully in ParseObject() before invoking this method. The |value|
-  // parameter should not be NULL.
+  // parameter should not be nullptr.
   bool GetStringValueForKey(const std::string& key, std::string* value) const;
 
  private:
@@ -57,7 +57,7 @@ class Json {
   // Constructor to be called by JsonImpl.
   explicit Json(JsonImpl* impl);
 
-  scoped_ptr<JsonImpl> impl_;
+  std::unique_ptr<JsonImpl> impl_;
 
   DISALLOW_COPY_AND_ASSIGN(Json);
 };

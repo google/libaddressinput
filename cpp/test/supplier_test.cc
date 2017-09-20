@@ -20,10 +20,10 @@
 #include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
 #include <cstring>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -60,7 +60,6 @@ using i18n::addressinput::NullStorage;
 using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::Rule;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Supplier;
 using i18n::addressinput::TestdataSource;
 
@@ -109,7 +108,7 @@ class PreloadSupplierWrapper : public SupplierWrapper {
   void Loaded(bool success, const std::string&, int) { ASSERT_TRUE(success); }
 
   PreloadSupplier preload_supplier_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
   DISALLOW_COPY_AND_ASSIGN(PreloadSupplierWrapper);
 };
 
@@ -143,8 +142,8 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
   }
 
   LookupKey lookup_key_;
-  const scoped_ptr<SupplierWrapper> supplier_wrapper_;
-  const scoped_ptr<const Supplier::Callback> supplied_;
+  const std::unique_ptr<SupplierWrapper> supplier_wrapper_;
+  const std::unique_ptr<const Supplier::Callback> supplied_;
 
   DISALLOW_COPY_AND_ASSIGN(SupplierTest);
 };
@@ -162,10 +161,10 @@ TEST_P(SupplierTest, Invalid) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] == NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] == nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, Valid) {
@@ -173,14 +172,14 @@ TEST_P(SupplierTest, Valid) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
   EXPECT_EQ("data/SE", rule_[0]->GetId());
   EXPECT_FALSE(rule_[0]->GetRequired().empty());
   EXPECT_FALSE(rule_[0]->GetFormat().empty());
-  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() != NULL);
+  EXPECT_TRUE(rule_[0]->GetPostalCodeMatcher() != nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
@@ -189,10 +188,10 @@ TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
@@ -202,10 +201,10 @@ TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepthSmallerThanMaxDepth) {
@@ -213,10 +212,10 @@ TEST_P(SupplierTest, KeyDepthSmallerThanMaxDepth) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepth0) {
@@ -224,10 +223,10 @@ TEST_P(SupplierTest, KeyDepth0) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] == NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] == nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepth1) {
@@ -236,10 +235,10 @@ TEST_P(SupplierTest, KeyDepth1) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepth2) {
@@ -249,10 +248,10 @@ TEST_P(SupplierTest, KeyDepth2) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] != NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] != nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 }
 
 TEST_P(SupplierTest, KeyDepth3) {
@@ -263,10 +262,10 @@ TEST_P(SupplierTest, KeyDepth3) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] != NULL);
-  EXPECT_TRUE(rule_[3] != NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] != nullptr);
+  EXPECT_TRUE(rule_[3] != nullptr);
 }
 
 TEST_P(SupplierTest, RuleCache) {
@@ -275,10 +274,10 @@ TEST_P(SupplierTest, RuleCache) {
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
-  EXPECT_TRUE(rule_[0] != NULL);
-  EXPECT_TRUE(rule_[1] != NULL);
-  EXPECT_TRUE(rule_[2] == NULL);
-  EXPECT_TRUE(rule_[3] == NULL);
+  EXPECT_TRUE(rule_[0] != nullptr);
+  EXPECT_TRUE(rule_[1] != nullptr);
+  EXPECT_TRUE(rule_[2] == nullptr);
+  EXPECT_TRUE(rule_[3] == nullptr);
 
   // Make a copy of the currently returned pointers to the Rule objects (stored
   // in the OndemandSupplier cache) and verify that calling Supply() again with

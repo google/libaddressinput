@@ -19,8 +19,8 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -34,7 +34,6 @@ using i18n::addressinput::AddressNormalizer;
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::TestdataSource;
 
 class AddressNormalizerTest : public testing::Test {
@@ -45,7 +44,7 @@ class AddressNormalizerTest : public testing::Test {
         normalizer_(&supplier_) {}
 
   PreloadSupplier supplier_;
-  const scoped_ptr<const PreloadSupplier::Callback> loaded_;
+  const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
   const AddressNormalizer normalizer_;
 
  private:

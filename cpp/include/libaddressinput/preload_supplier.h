@@ -18,9 +18,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -63,8 +63,8 @@ class PreloadSupplier : public Supplier {
                       const Supplier::Callback& supplied);
 
   // Should be called only when IsLoaded() returns true for the region code of
-  // the |lookup_key|. Can return NULL if the |lookup_key| does not correspond
-  // to any rule data. The caller does not own the result.
+  // the |lookup_key|. Can return nullptr if the |lookup_key| does not
+  // correspond to any rule data. The caller does not own the result.
   const Rule* GetRule(const LookupKey& lookup_key) const;
 
   // Loads all address metadata available for |region_code|. (A typical data
@@ -88,9 +88,9 @@ class PreloadSupplier : public Supplier {
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
 
-  const scoped_ptr<const Retriever> retriever_;
+  const std::unique_ptr<const Retriever> retriever_;
   std::set<std::string> pending_;
-  const scoped_ptr<IndexMap> rule_index_;
+  const std::unique_ptr<IndexMap> rule_index_;
   std::vector<const Rule*> rule_storage_;
   std::map<std::string, std::map<std::string, const Rule*> > region_rules_;
 

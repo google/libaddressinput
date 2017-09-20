@@ -32,7 +32,7 @@
 namespace {
 
 void PushBackUrl(const std::string& url, std::vector<std::string>* parameters) {
-  assert(parameters != NULL);
+  assert(parameters != nullptr);
   // TODO: HTML-escape the "url".
   parameters->push_back("<a href=\"" + url + "\">");
   parameters->push_back("</a>");
@@ -49,7 +49,7 @@ namespace {
 
 std::string GetEnglishString(int message_id) {
   const char* str = GetString(message_id);
-  return str != NULL ? std::string(str) : std::string();
+  return str != nullptr ? std::string(str) : std::string();
 }
 
 }  // namespace
@@ -120,7 +120,7 @@ std::string Localization::GetErrorMessage(const AddressData& address,
 }
 
 void Localization::SetGetter(std::string (*getter)(int)) {
-  assert(getter != NULL);
+  assert(getter != nullptr);
   get_string_ = getter;
 }
 

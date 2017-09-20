@@ -28,7 +28,7 @@ class RegionData;
 
 class RegionDataBuilder {
  public:
-  // Does not take ownership of |supplier|, which should not be NULL.
+  // Does not take ownership of |supplier|, which should not be nullptr.
   explicit RegionDataBuilder(PreloadSupplier* supplier);
   ~RegionDataBuilder();
 
@@ -59,7 +59,7 @@ class RegionDataBuilder {
   // The |best_region_tree_language_tag| value may be an empty string.
   //
   // Should be called only if supplier->IsLoaded(region_code) returns true. The
-  // |best_region_tree_language_tag| parameter should not be NULL.
+  // |best_region_tree_language_tag| parameter should not be nullptr.
   const RegionData& Build(const std::string& region_code,
                           const std::string& ui_language_tag,
                           std::string* best_region_tree_language_tag);

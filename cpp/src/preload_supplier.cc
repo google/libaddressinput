@@ -19,13 +19,13 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <functional>
 #include <map>
+#include <memory>
 #include <set>
 #include <stack>
 #include <string>
@@ -81,11 +81,11 @@ class Helper {
         rule_storage_(rule_storage),
         region_rules_(region_rules),
         retrieved_(BuildCallback(this, &Helper::OnRetrieved)) {
-    assert(pending_ != NULL);
-    assert(rule_index_ != NULL);
-    assert(rule_storage_ != NULL);
-    assert(region_rules_ != NULL);
-    assert(retrieved_ != NULL);
+    assert(pending_ != nullptr);
+    assert(rule_index_ != nullptr);
+    assert(rule_storage_ != nullptr);
+    assert(region_rules_ != nullptr);
+    assert(retrieved_ != nullptr);
     pending_->insert(key);
     retriever.Retrieve(key, *retrieved_);
   }
@@ -128,7 +128,7 @@ class Helper {
          it != json.GetSubDictionaries().end();
          ++it) {
       const Json* value = *it;
-      assert(value != NULL);
+      assert(value != nullptr);
       if (!value->GetStringValueForKey("id", &id)) {
         success = false;
         goto callback;
@@ -256,7 +256,7 @@ class Helper {
   IndexMap* const rule_index_;
   std::vector<const Rule*>* const rule_storage_;
   std::map<std::string, const Rule*>* const region_rules_;
-  const scoped_ptr<const Retriever::Callback> retrieved_;
+  const std::unique_ptr<const Retriever::Callback> retrieved_;
 
   DISALLOW_COPY_AND_ASSIGN(Helper);
 };
@@ -296,7 +296,7 @@ const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) const {
   assert(IsLoaded(lookup_key.GetRegionCode()));
   Supplier::RuleHierarchy hierarchy;
   if (!GetRuleHierarchy(lookup_key, &hierarchy)) {
-    return NULL;
+    return nullptr;
   }
   return hierarchy.rule[lookup_key.GetDepth()];
 }
@@ -341,7 +341,7 @@ bool PreloadSupplier::IsPending(const std::string& region_code) const {
 
 bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
                                        RuleHierarchy* hierarchy) const {
-  assert(hierarchy != NULL);
+  assert(hierarchy != nullptr);
 
   if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
     size_t max_depth = std::min(

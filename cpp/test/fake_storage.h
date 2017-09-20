@@ -52,7 +52,7 @@ namespace addressinput {
 //      }
 //
 //      FakeStorage storage_;
-//      const scoped_ptr<const Storage::Callback> data_ready_;
+//      const std::unique_ptr<const Storage::Callback> data_ready_;
 //
 //      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };

@@ -34,7 +34,7 @@ const std::vector<std::string>& GetRegionCodes();
 // Sets the |best_address_language_tag| to the BCP 47 language tag that should
 // be saved with this address. This language will be used to get drop-downs to
 // help users fill in their address, and to format the address that the user
-// entered. The parameter should not be NULL.
+// entered. The parameter should not be nullptr.
 //
 // Returns an empty vector on error.
 std::vector<AddressUiComponent> BuildComponents(

@@ -16,7 +16,7 @@ namespace i18n {
 namespace addressinput {
 
 void SplitString(const std::string& str, char s, std::vector<std::string>* r) {
-  assert(r != NULL);
+  assert(r != nullptr);
   r->clear();
   size_t last = 0;
   size_t c = str.size();

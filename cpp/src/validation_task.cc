@@ -54,16 +54,16 @@ ValidationTask::ValidationTask(const AddressData& address,
       validated_(validated),
       supplied_(BuildCallback(this, &ValidationTask::Validate)),
       lookup_key_(new LookupKey) {
-  assert(problems_ != NULL);
-  assert(supplied_ != NULL);
-  assert(lookup_key_ != NULL);
+  assert(problems_ != nullptr);
+  assert(supplied_ != nullptr);
+  assert(lookup_key_ != nullptr);
 }
 
 ValidationTask::~ValidationTask() {
 }
 
 void ValidationTask::Run(Supplier* supplier) const {
-  assert(supplier != NULL);
+  assert(supplier != nullptr);
   problems_->clear();
   lookup_key_->FromAddress(address_);
   supplier->Supply(*lookup_key_, *supplied_);
@@ -77,7 +77,7 @@ void ValidationTask::Validate(bool success,
   if (success) {
     if (address_.IsFieldEmpty(COUNTRY)) {
       ReportProblemMaybe(COUNTRY, MISSING_REQUIRED_FIELD);
-    } else if (hierarchy.rule[0] == NULL) {
+    } else if (hierarchy.rule[0] == nullptr) {
       ReportProblemMaybe(COUNTRY, UNKNOWN_VALUE);
     } else {
       // Checks which use statically linked metadata.
@@ -152,15 +152,15 @@ void ValidationTask::CheckMissingRequiredField(
 
 // A field is UNKNOWN_VALUE if the metadata contains a list of possible values
 // for the field and the address data server could not match the current value
-// of that field to one of those possible values, therefore returning NULL.
+// of that field to one of those possible values, therefore returning nullptr.
 void ValidationTask::CheckUnknownValue(
     const Supplier::RuleHierarchy& hierarchy) const {
   for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
     AddressField field = LookupKey::kHierarchy[depth];
     if (!(address_.IsFieldEmpty(field) ||
-          hierarchy.rule[depth - 1] == NULL ||
+          hierarchy.rule[depth - 1] == nullptr ||
           hierarchy.rule[depth - 1]->GetSubKeys().empty() ||
-          hierarchy.rule[depth] != NULL)) {
+          hierarchy.rule[depth] != nullptr)) {
       ReportProblemMaybe(field, UNKNOWN_VALUE);
     }
   }
@@ -169,7 +169,7 @@ void ValidationTask::CheckUnknownValue(
 // Note that it is assumed that CheckUnexpectedField has already been called.
 void ValidationTask::CheckPostalCodeFormatAndValue(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule[0] != NULL);
+  assert(hierarchy.rule[0] != nullptr);
   const Rule& country_rule = *hierarchy.rule[0];
 
   if (!(ShouldReport(POSTAL_CODE, INVALID_FORMAT) ||
@@ -189,7 +189,7 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
   // Validate general postal code format. A country-level rule specifies the
   // regular expression for the whole postal code.
   const RE2ptr* format_ptr = country_rule.GetPostalCodeMatcher();
-  if (format_ptr != NULL &&
+  if (format_ptr != nullptr &&
       !RE2::FullMatch(address_.postal_code, *format_ptr->ptr) &&
       ShouldReport(POSTAL_CODE, INVALID_FORMAT)) {
     ReportProblem(POSTAL_CODE, INVALID_FORMAT);
@@ -202,11 +202,11 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 
   for (size_t depth = arraysize(LookupKey::kHierarchy) - 1;
        depth > 0; --depth) {
-    if (hierarchy.rule[depth] != NULL) {
+    if (hierarchy.rule[depth] != nullptr) {
       // Validate sub-region specific postal code format. A sub-region specifies
       // the regular expression for a prefix of the postal code.
       const RE2ptr* prefix_ptr = hierarchy.rule[depth]->GetPostalCodeMatcher();
-      if (prefix_ptr != NULL) {
+      if (prefix_ptr != nullptr) {
         if (!RE2::PartialMatch(address_.postal_code, *prefix_ptr->ptr)) {
           ReportProblem(POSTAL_CODE, MISMATCHING_VALUE);
         }
@@ -218,7 +218,7 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
 
 void ValidationTask::CheckUsesPoBox(
     const Supplier::RuleHierarchy& hierarchy) const {
-  assert(hierarchy.rule[0] != NULL);
+  assert(hierarchy.rule[0] != nullptr);
   const Rule& country_rule = *hierarchy.rule[0];
 
   if (allow_postal_ ||
@@ -257,7 +257,7 @@ void ValidationTask::ReportProblemMaybe(AddressField field,
 
 bool ValidationTask::ShouldReport(AddressField field,
                                   AddressProblem problem) const {
-  return filter_ == NULL || filter_->empty() ||
+  return filter_ == nullptr || filter_->empty() ||
          std::find(filter_->begin(),
                    filter_->end(),
                    FieldProblemMap::value_type(field, problem)) !=
