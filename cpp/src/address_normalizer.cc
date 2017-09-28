@@ -47,6 +47,8 @@ void AddressNormalizer::Normalize(AddressData* address) const {
   LookupKey parent_key;
   parent_key.FromAddress(region_address);
   const Rule* parent_rule = supplier_->GetRule(parent_key);
+  // Since we only set the |region_code| in the |region_address|, and the rule
+  // for the |region_code| is already loaded, |parent_rule| should not be null.
   assert(parent_rule != nullptr);
 
   std::vector<std::string> languages(parent_rule->GetLanguages());
@@ -77,7 +79,11 @@ void AddressNormalizer::Normalize(AddressData* address) const {
         lookup_key.set_language(language);
         lookup_key.FromLookupKey(parent_key, sub_key);
         const Rule* rule = supplier_->GetRule(lookup_key);
-        assert(rule != nullptr);
+
+        // A rule with key = |subkey| and specified |language| was expected to
+        // be found in a certain format (e.g. data/CA/QC--fr), but it was not.
+        // This is due to a possible inconsistency in the data format.
+        if (rule == nullptr) continue;
 
         bool matches_latin_name =
             compare_->NaturalEquals(field_value, rule->GetLatinName());

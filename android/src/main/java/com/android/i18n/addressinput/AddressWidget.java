@@ -442,8 +442,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     for (RegionData regionData : formController.getRegionData(new LookupKey.Builder(
         KeyType.DATA).build())) {
       String regionKey = regionData.getKey();
+      Log.i(this.toString(), "Looking at regionKey: " + regionKey);
       // ZZ represents an unknown region code.
-      if (!regionKey.equals("ZZ")) {
+      if (!regionKey.equals("ZZ") && !formOptions.isBlacklistedRegion(regionKey)) {
+        Log.i(this.toString(), "Adding " + regionKey);
         String localCountryName = getLocalCountryName(regionKey);
         RegionData country = new RegionData.Builder().setKey(regionKey).setName(
             localCountryName).build();

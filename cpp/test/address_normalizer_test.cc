@@ -123,6 +123,17 @@ TEST_F(AddressNormalizerTest, CaliforniaShortNameCa) {
   EXPECT_EQ("CA", address.administrative_area);
 }
 
+TEST_F(AddressNormalizerTest, CountryWithNonStandardData) {
+  // This test is to make sure that Normalize would not crash for the case where
+  // the data is not standard and key--language does not exist.
+  supplier_.LoadRules("HK", *loaded_);
+  i18n::addressinput::AddressData address;
+  address.region_code = "HK";
+  address.administrative_area = "香港島";
+  normalizer_.Normalize(&address);
+  EXPECT_EQ("香港島", address.administrative_area);
+}
+
 TEST_F(AddressNormalizerTest, GangwonLatinNameStaysUnchanged) {
   supplier_.LoadRules("KR", *loaded_);
   AddressData address;
