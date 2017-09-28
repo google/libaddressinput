@@ -40,7 +40,7 @@ TEST(RegionDataTest, SubRegionGetsParent) {
   RegionData region(kEmpty);
   region.AddSubRegion(kEmpty, kEmpty);
   ASSERT_EQ(1U, region.sub_regions().size());
-  ASSERT_TRUE(region.sub_regions()[0] != NULL);
+  ASSERT_TRUE(region.sub_regions()[0] != nullptr);
   EXPECT_EQ(&region, &region.sub_regions()[0]->parent());
 }
 

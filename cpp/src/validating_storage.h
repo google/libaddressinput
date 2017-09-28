@@ -21,18 +21,18 @@
 
 #include <libaddressinput/storage.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 namespace i18n {
 namespace addressinput {
 
 // Wraps Storage to add checksum and timestamp to stored data. Sample usage:
-//    scoped_ptr<Storage> file_storage = ...;
+//    std::unique_ptr<Storage> file_storage = ...;
 //    ValidatingStorage storage(file_storage));
 //    storage.Put("key", new std::string("data"));
-//    const scoped_ptr<const ValidatingStorage::Callback> data_ready(
+//    const std::unique_ptr<const ValidatingStorage::Callback> data_ready(
 //        BuildCallback(this, &MyClass::OnDataReady));
 //    storage.Get("key", *data_ready);
 class ValidatingStorage : public Storage {
@@ -53,7 +53,7 @@ class ValidatingStorage : public Storage {
 
  private:
   // The storage being wrapped.
-  scoped_ptr<Storage> wrapped_storage_;
+  std::unique_ptr<Storage> wrapped_storage_;
 
   DISALLOW_COPY_AND_ASSIGN(ValidatingStorage);
 };

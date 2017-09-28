@@ -19,8 +19,8 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 namespace i18n {
@@ -32,7 +32,7 @@ class Rule;
 // Retrieves validation rules. Sample usage:
 //    const Retriever* retriever = ...
 //    RuleRetriever rules(retriever);
-//    const scoped_ptr<const RuleRetriever::Callback> rule_ready(
+//    const std::unique_ptr<const RuleRetriever::Callback> rule_ready(
 //        BuildCallback(this, &MyClass::OnRuleReady));
 //    rules.RetrieveRule("data/CA/AB--fr", *rule_ready);
 class RuleRetriever {
@@ -48,7 +48,7 @@ class RuleRetriever {
   void RetrieveRule(const std::string& key, const Callback& rule_ready) const;
 
  private:
-  scoped_ptr<const Retriever> data_retriever_;
+  std::unique_ptr<const Retriever> data_retriever_;
 
   DISALLOW_COPY_AND_ASSIGN(RuleRetriever);
 };

@@ -15,10 +15,10 @@
 #include "json.h"
 
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cassert>
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -65,7 +65,7 @@ class Json::JsonImpl {
   }
 
   bool GetStringValueForKey(const std::string& key, std::string* value) const {
-    assert(value != NULL);
+    assert(value != nullptr);
 
     Value::ConstMemberIterator member = value_->FindMember(key.c_str());
     if (member == value_->MemberEnd() || !member->value.IsString()) {
@@ -84,14 +84,15 @@ class Json::JsonImpl {
         value_(value),
         dictionaries_(),
         valid_(true) {
-    assert(value_ != NULL);
+    assert(value_ != nullptr);
     assert(value_->IsObject());
   }
 
-  // An owned JSON document. Can be NULL if the JSON document is not owned.
-  const scoped_ptr<Document> document_;
+  // An owned JSON document. Can be nullptr if the JSON document is not owned.
+  const std::unique_ptr<Document> document_;
 
-  // A JSON document that is not owned. Cannot be NULL. Can point to document_.
+  // A JSON document that is not owned. Cannot be nullptr. Can point to
+  // document_.
   const Value* const value_;
 
   // Owned JSON objects of sub-dictionaries.
@@ -108,22 +109,22 @@ Json::Json() : impl_() {}
 Json::~Json() {}
 
 bool Json::ParseObject(const std::string& json) {
-  assert(impl_ == NULL);
+  assert(impl_ == nullptr);
   impl_.reset(new JsonImpl(json));
   if (!impl_->valid()) {
     impl_.reset();
   }
-  return impl_ != NULL;
+  return impl_ != nullptr;
 }
 
 const std::vector<const Json*>& Json::GetSubDictionaries() const {
-  assert(impl_ != NULL);
+  assert(impl_ != nullptr);
   return impl_->GetSubDictionaries();
 }
 
 bool Json::GetStringValueForKey(const std::string& key,
                                 std::string* value) const {
-  assert(impl_ != NULL);
+  assert(impl_ != nullptr);
   return impl_->GetStringValueForKey(key, value);
 }
 

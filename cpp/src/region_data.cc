@@ -24,7 +24,7 @@ namespace addressinput {
 RegionData::RegionData(const std::string& region_code)
     : key_(region_code),
       name_(region_code),
-      parent_(NULL),
+      parent_(nullptr),
       sub_regions_() {}
 
 RegionData::~RegionData() {

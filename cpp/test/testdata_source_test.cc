@@ -17,9 +17,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/source.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -30,7 +30,6 @@ namespace {
 
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::RegionDataConstants;
-using i18n::addressinput::scoped_ptr;
 using i18n::addressinput::Source;
 using i18n::addressinput::TestdataSource;
 
@@ -54,14 +53,14 @@ class TestdataSourceTest : public testing::TestWithParam<std::string> {
   bool success_;
   std::string key_;
   std::string data_;
-  const scoped_ptr<const Source::Callback> data_ready_;
+  const std::unique_ptr<const Source::Callback> data_ready_;
 
  private:
   void OnDataReady(bool success, const std::string& key, std::string* data) {
-    ASSERT_FALSE(success && data == NULL);
+    ASSERT_FALSE(success && data == nullptr);
     success_ = success;
     key_ = key;
-    if (data != NULL) {
+    if (data != nullptr) {
       data_ = *data;
       delete data;
     }

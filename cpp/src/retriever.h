@@ -19,8 +19,8 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 namespace i18n {
@@ -34,7 +34,7 @@ class ValidatingStorage;
 //    Source* source = ...;
 //    Storage* storage = ...;
 //    Retriever retriever(source, storage);
-//    const scoped_ptr<const Retriever::Callback> retrieved(
+//    const std::unique_ptr<const Retriever::Callback> retrieved(
 //        BuildCallback(this, &MyClass::OnDataRetrieved));
 //    retriever.Retrieve("data/CA/AB--fr", *retrieved);
 class Retriever {
@@ -56,8 +56,8 @@ class Retriever {
   void Retrieve(const std::string& key, const Callback& retrieved) const;
 
  private:
-  scoped_ptr<const Source> source_;
-  scoped_ptr<ValidatingStorage> storage_;
+  std::unique_ptr<const Source> source_;
+  std::unique_ptr<ValidatingStorage> storage_;
 
   DISALLOW_COPY_AND_ASSIGN(Retriever);
 };

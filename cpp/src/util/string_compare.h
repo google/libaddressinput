@@ -16,8 +16,8 @@
 #define I18N_ADDRESSINPUT_UTIL_STRING_COMPARE_H_
 
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
+#include <memory>
 #include <string>
 
 namespace i18n {
@@ -41,7 +41,7 @@ class StringCompare {
 
  private:
   class Impl;
-  scoped_ptr<Impl> impl_;
+  std::unique_ptr<Impl> impl_;
 
   DISALLOW_COPY_AND_ASSIGN(StringCompare);
 };

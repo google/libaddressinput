@@ -18,7 +18,7 @@ values.
 
 ## C++
 
-The C++ library (in very portable C++03) of _libaddressinput_ is used in address-related
+The C++ library (in very portable C++11) of _libaddressinput_ is used in address-related
 projects in [Chromium](http://www.chromium.org/Home).
 
 https://chromium.googlesource.com/chromium/src/+/master/third_party/libaddressinput/

@@ -88,7 +88,7 @@ std::vector<AddressUiComponent> BuildComponents(
     const Localization& localization,
     const std::string& ui_language_tag,
     std::string* best_address_language_tag) {
-  assert(best_address_language_tag != NULL);
+  assert(best_address_language_tag != nullptr);
   std::vector<AddressUiComponent> result;
 
   Rule rule;

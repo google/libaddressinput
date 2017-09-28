@@ -18,9 +18,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <map>
+#include <memory>
 #include <string>
 
 namespace i18n {
@@ -54,7 +54,7 @@ class OndemandSupplier : public Supplier {
   virtual void Supply(const LookupKey& lookup_key, const Callback& supplied);
 
  private:
-  const scoped_ptr<const Retriever> retriever_;
+  const std::unique_ptr<const Retriever> retriever_;
   std::map<std::string, const Rule*> rule_cache_;
 
   DISALLOW_COPY_AND_ASSIGN(OndemandSupplier);

@@ -21,9 +21,9 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
 
 #include <cstddef>
+#include <memory>
 #include <utility>
 
 #include <gtest/gtest.h>
@@ -97,7 +97,7 @@ class ValidationTaskTest : public testing::Test {
 
     Supplier::RuleHierarchy hierarchy;
 
-    for (size_t i = 0; i < arraysize(json_) && json_[i] != NULL; ++i) {
+    for (size_t i = 0; i < arraysize(json_) && json_[i] != nullptr; ++i) {
       ASSERT_TRUE(rule[i].ParseSerializedRule(json_[i]));
       hierarchy.rule[i] = &rule[i];
     }
@@ -125,7 +125,7 @@ class ValidationTaskTest : public testing::Test {
     called_ = true;
   }
 
-  const scoped_ptr<const AddressValidator::Callback> validated_;
+  const std::unique_ptr<const AddressValidator::Callback> validated_;
 
   DISALLOW_COPY_AND_ASSIGN(ValidationTaskTest);
 };

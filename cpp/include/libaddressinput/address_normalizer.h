@@ -16,7 +16,8 @@
 #define I18N_ADDRESSINPUT_ADDRESS_NORMALIZER_H_
 
 #include <libaddressinput/util/basictypes.h>
-#include <libaddressinput/util/scoped_ptr.h>
+
+#include <memory>
 
 namespace i18n {
 namespace addressinput {
@@ -38,7 +39,7 @@ class AddressNormalizer {
 
  private:
   const PreloadSupplier* const supplier_;  // Not owned.
-  const scoped_ptr<const StringCompare> compare_;
+  const std::unique_ptr<const StringCompare> compare_;
 
   DISALLOW_COPY_AND_ASSIGN(AddressNormalizer);
 };

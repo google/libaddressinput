@@ -34,7 +34,7 @@ namespace {
 // and sets |*field| to the corresponding AddressField value. Return false
 // on failure.
 bool ParseFieldToken(char c, AddressField* field) {
-  assert(field != NULL);
+  assert(field != nullptr);
 
   // Simple mapping from field token characters to AddressField values.
   static const struct Entry { char ch; AddressField field; } kTokenMap[] = {
@@ -63,7 +63,7 @@ bool ParseFieldToken(char c, AddressField* field) {
 
 void ParseFormatRule(const std::string& format,
                      std::vector<FormatElement>* elements) {
-  assert(elements != NULL);
+  assert(elements != nullptr);
   elements->clear();
 
   std::string::const_iterator prev = format.begin();
@@ -99,7 +99,7 @@ void ParseFormatRule(const std::string& format,
 
 void ParseAddressFieldsRequired(const std::string& required,
                                 std::vector<AddressField>* fields) {
-  assert(fields != NULL);
+  assert(fields != nullptr);
   fields->clear();
   for (std::string::const_iterator it = required.begin();
        it != required.end(); ++it) {

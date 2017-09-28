@@ -62,9 +62,9 @@ typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
 //      AddressData address_;
 //      FieldProblemMap filter_;
 //      FieldProblemMap problems_;
-//      const scoped_ptr<Supplier> supplier_;
-//      const scoped_ptr<AddressValidator> validator_;
-//      const scoped_ptr<const AddressValidator::Callback> validated_;
+//      const std::unique_ptr<Supplier> supplier_;
+//      const std::unique_ptr<AddressValidator> validator_;
+//      const std::unique_ptr<const AddressValidator::Callback> validated_;
 //    };
 class AddressValidator {
  public:
@@ -84,9 +84,9 @@ class AddressValidator {
   //
   // Set |require_name| if recipient should be considered a required field.
   //
-  // If the |filter| is NULL or empty, then all discovered validation problems
-  // are returned. If the |filter| contains problem elements, then only those
-  // field-problem pairs present in the |filter| will be returned.
+  // If the |filter| is nullptr or empty, then all discovered validation
+  // problems are returned. If the |filter| contains problem elements, then only
+  // those field-problem pairs present in the |filter| will be returned.
   //
   // Calls the |validated| callback when validation is done. All objects passed
   // as parameters must be kept available until the callback has been called.

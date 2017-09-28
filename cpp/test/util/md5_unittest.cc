@@ -7,9 +7,8 @@
 
 #include "util/md5.h"
 
-#include <libaddressinput/util/scoped_ptr.h>
-
 #include <cstring>
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -21,7 +20,6 @@ using i18n::addressinput::MD5Digest;
 using i18n::addressinput::MD5Init;
 using i18n::addressinput::MD5String;
 using i18n::addressinput::MD5Update;
-using i18n::addressinput::scoped_ptr;
 
 TEST(MD5, DigestToBase16) {
   MD5Digest digest;
@@ -78,7 +76,7 @@ TEST(MD5, MD5SumOneByteData) {
 
 TEST(MD5, MD5SumLongData) {
   const int length = 10 * 1024 * 1024 + 1;
-  scoped_ptr<char[]> data(new char[length]);
+  std::unique_ptr<char[]> data(new char[length]);
 
   for (int i = 0; i < length; ++i)
     data[i] = i & 0xFF;
@@ -120,7 +118,7 @@ TEST(MD5, ContextWithLongData) {
   MD5Init(&ctx);
 
   const int length = 10 * 1024 * 1024 + 1;
-  scoped_ptr<char[]> data(new char[length]);
+  std::unique_ptr<char[]> data(new char[length]);
 
   for (int i = 0; i < length; ++i)
     data[i] = i & 0xFF;
