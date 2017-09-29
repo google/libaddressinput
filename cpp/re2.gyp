@@ -13,7 +13,7 @@
 # limitations under the License.
 {
   'variables': {
-    're2_dir%': '/usr/include',
+    're2_root%': '/usr',
     're2_lib%': '-lre2',
   },
   'targets': [
@@ -22,10 +22,24 @@
       'type': 'none',
       'all_dependent_settings': {
         'include_dirs': [
-          '<(re2_dir)',
+          '<(re2_root)/include',
+        ],
+        'library_dirs': [
+          '<(re2_root)/lib',
         ],
         'libraries': [
           '<(re2_lib)',
+        ],
+        'conditions': [
+          [ 'OS == "mac"', {
+            'link_settings': {
+              'xcode_settings': {
+                'OTHER_LDFLAGS': [
+                  '<(re2_lib)',
+                ],
+              },
+            }
+          }],
         ],
       },
     },

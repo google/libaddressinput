@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * (https://developers.google.com/places/web-service/details). Unfortunately, the Google Place
  * Details API for Android does not include a structured representation of the address.
  */
-class PlaceDetailsClient implements PlaceDetailsApi {
+public class PlaceDetailsClient implements PlaceDetailsApi {
 
   private AsyncRequestApi asyncRequestApi;
   private String apiKey;
@@ -32,7 +32,7 @@ class PlaceDetailsClient implements PlaceDetailsApi {
 
   private static final String TAG = "PlaceDetailsClient";
 
-  PlaceDetailsClient(String apiKey, AsyncRequestApi asyncRequestApi) {
+  public PlaceDetailsClient(String apiKey, AsyncRequestApi asyncRequestApi) {
     this.asyncRequestApi = asyncRequestApi;
     this.apiKey = apiKey;
   }

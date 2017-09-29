@@ -179,7 +179,7 @@ public final class FormOptions {
       return customFieldOrder.get(regionCode);
     }
 
-    boolean isBlacklistedRegion(String regionCode) {
+    public boolean isBlacklistedRegion(String regionCode) {
       return blacklistedRegions.contains(Util.toUpperCaseLocaleIndependent(regionCode));
     }
   }
