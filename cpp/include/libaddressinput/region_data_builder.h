@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_REGION_DATA_BUILDER_H_
 #define I18N_ADDRESSINPUT_REGION_DATA_BUILDER_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <map>
 #include <string>
 
@@ -28,6 +26,9 @@ class RegionData;
 
 class RegionDataBuilder {
  public:
+  RegionDataBuilder(const RegionDataBuilder&) = delete;
+  RegionDataBuilder& operator=(const RegionDataBuilder&) = delete;
+
   // Does not take ownership of |supplier|, which should not be nullptr.
   explicit RegionDataBuilder(PreloadSupplier* supplier);
   ~RegionDataBuilder();
@@ -70,8 +71,6 @@ class RegionDataBuilder {
 
   PreloadSupplier* const supplier_;  // Not owned.
   RegionCodeDataMap cache_;
-
-  DISALLOW_COPY_AND_ASSIGN(RegionDataBuilder);
 };
 
 }  // namespace addressinput

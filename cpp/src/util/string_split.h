@@ -26,7 +26,7 @@ namespace addressinput {
 // the trailing byte of a multi-byte character can be in the ASCII range.
 // UTF-8, and other single/multi-byte ASCII-compatible encodings are OK.
 // Note: |c| must be in the ASCII range.
-void SplitString(const std::string& str, char c, std::vector<std::string>* r);
+void SplitString(const std::string& str, char s, std::vector<std::string>* r);
 
 }  // namespace addressinput
 }  // namespace i18n

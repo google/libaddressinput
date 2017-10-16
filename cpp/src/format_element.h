@@ -65,6 +65,6 @@ class FormatElement {
 
 // Produces human-readable output in logging, for example in unit tests.
 std::ostream& operator<<(std::ostream& o,
-                         const i18n::addressinput::FormatElement& field);
+                         const i18n::addressinput::FormatElement& element);
 
 #endif  // I18N_ADDRESSINPUT_FORMAT_ELEMENT_H_

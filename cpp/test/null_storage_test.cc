@@ -16,7 +16,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -31,6 +30,10 @@ using i18n::addressinput::NullStorage;
 using i18n::addressinput::Storage;
 
 class NullStorageTest : public testing::Test {
+ public:
+  NullStorageTest(const NullStorageTest&) = delete;
+  NullStorageTest& operator=(const NullStorageTest&) = delete;
+
  protected:
   NullStorageTest()
       : data_ready_(BuildCallback(this, &NullStorageTest::OnDataReady)) {}
@@ -53,8 +56,6 @@ class NullStorageTest : public testing::Test {
       delete data;
     }
   }
-
-  DISALLOW_COPY_AND_ASSIGN(NullStorageTest);
 };
 
 const char NullStorageTest::kKey[] = "foo";

@@ -30,7 +30,7 @@ class FormatElement;
 // "%S%C%n%D%X" into {ADMIN_AREA, LOCALITY, NEWLINE, DEPENDENT_LOCALITY,
 // SORTING_CODE}.
 void ParseFormatRule(const std::string& format,
-                     std::vector<FormatElement>* fields);
+                     std::vector<FormatElement>* elements);
 
 // Clears |fields|, parses |required|, and adds the required fields to |fields|.
 // For example, parses "SCDX" into {ADMIN_AREA, LOCALITY, DEPENDENT_LOCALITY,

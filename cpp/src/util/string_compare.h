@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_STRING_COMPARE_H_
 #define I18N_ADDRESSINPUT_UTIL_STRING_COMPARE_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <memory>
 #include <string>
 
@@ -25,6 +23,9 @@ namespace addressinput {
 
 class StringCompare {
  public:
+  StringCompare(const StringCompare&) = delete;
+  StringCompare& operator=(const StringCompare&) = delete;
+
   StringCompare();
   ~StringCompare();
 
@@ -42,8 +43,6 @@ class StringCompare {
  private:
   class Impl;
   std::unique_ptr<Impl> impl_;
-
-  DISALLOW_COPY_AND_ASSIGN(StringCompare);
 };
 
 }  // namespace addressinput

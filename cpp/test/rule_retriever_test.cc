@@ -16,7 +16,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -38,6 +37,10 @@ using i18n::addressinput::TestdataSource;
 
 // Tests for RuleRetriever object.
 class RuleRetrieverTest : public testing::Test {
+ public:
+  RuleRetrieverTest(const RuleRetrieverTest&) = delete;
+  RuleRetrieverTest& operator=(const RuleRetrieverTest&) = delete;
+
  protected:
   RuleRetrieverTest()
       : rule_retriever_(
@@ -61,8 +64,6 @@ class RuleRetrieverTest : public testing::Test {
     key_ = key;
     rule_.CopyFrom(rule);
   }
-
-  DISALLOW_COPY_AND_ASSIGN(RuleRetrieverTest);
 };
 
 TEST_F(RuleRetrieverTest, ExistingRule) {

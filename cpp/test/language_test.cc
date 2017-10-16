@@ -14,8 +14,6 @@
 
 #include "language.h"
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <string>
 
 #include <gtest/gtest.h>
@@ -43,11 +41,12 @@ struct LanguageTestCase {
 };
 
 class LanguageTest : public testing::TestWithParam<LanguageTestCase> {
+ public:
+  LanguageTest(const LanguageTest&) = delete;
+  LanguageTest& operator=(const LanguageTest&) = delete;
+
  protected:
   LanguageTest() {}
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(LanguageTest);
 };
 
 TEST_P(LanguageTest, ExtractedDataIsCorrect) {

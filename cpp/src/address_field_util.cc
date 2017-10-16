@@ -15,7 +15,6 @@
 #include "address_field_util.h"
 
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -24,6 +23,7 @@
 #include <vector>
 
 #include "format_element.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -48,7 +48,7 @@ bool ParseFieldToken(char c, AddressField* field) {
     { 'O', ORGANIZATION },
     { 'N', RECIPIENT },
   };
-  const size_t kTokenMapSize = arraysize(kTokenMap);
+  const size_t kTokenMapSize = size(kTokenMap);
 
   for (size_t n = 0; n < kTokenMapSize; ++n) {
       if (c == kTokenMap[n].ch) {

@@ -18,7 +18,6 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/region_data.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -37,6 +36,10 @@ using i18n::addressinput::RegionDataBuilder;
 using i18n::addressinput::TestdataSource;
 
 class RegionDataBuilderTest : public testing::Test {
+ public:
+  RegionDataBuilderTest(const RegionDataBuilderTest&) = delete;
+  RegionDataBuilderTest& operator=(const RegionDataBuilderTest&) = delete;
+
  protected:
   RegionDataBuilderTest()
       : supplier_(new TestdataSource(true),
@@ -57,8 +60,6 @@ class RegionDataBuilderTest : public testing::Test {
     ASSERT_LT(0, num_rules);
     ASSERT_TRUE(supplier_.IsLoaded(region_code));
   }
-
-  DISALLOW_COPY_AND_ASSIGN(RegionDataBuilderTest);
 };
 
 TEST_F(RegionDataBuilderTest, BuildUsRegionTree) {

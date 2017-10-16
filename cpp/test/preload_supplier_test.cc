@@ -17,7 +17,6 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -40,6 +39,10 @@ using i18n::addressinput::Rule;
 using i18n::addressinput::TestdataSource;
 
 class PreloadSupplierTest : public testing::Test {
+ public:
+  PreloadSupplierTest(const PreloadSupplierTest&) = delete;
+  PreloadSupplierTest& operator=(const PreloadSupplierTest&) = delete;
+
  protected:
   PreloadSupplierTest()
       : supplier_(new TestdataSource(true), new NullStorage),
@@ -55,8 +58,6 @@ class PreloadSupplierTest : public testing::Test {
     ASSERT_LT(0, num_rules);
     ASSERT_TRUE(supplier_.IsLoaded(region_code));
   }
-
-  DISALLOW_COPY_AND_ASSIGN(PreloadSupplierTest);
 };
 
 TEST_F(PreloadSupplierTest, GetUsRule) {

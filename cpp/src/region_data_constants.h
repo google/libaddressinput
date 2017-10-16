@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_REGION_DATA_CONSTANTS_H_
 #define I18N_ADDRESSINPUT_REGION_DATA_CONSTANTS_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -32,8 +30,8 @@ class RegionDataConstants {
   static const std::string& GetDefaultRegionData();
   static size_t GetMaxLookupKeyDepth(const std::string& region_code);
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(RegionDataConstants);
+  RegionDataConstants(const RegionDataConstants&) = delete;
+  RegionDataConstants& operator=(const RegionDataConstants&) = delete;
 };
 
 }  // namespace addressinput

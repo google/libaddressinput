@@ -15,7 +15,6 @@
 #include <libaddressinput/address_data.h>
 
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -26,6 +25,8 @@
 #include <vector>
 
 #include <re2/re2.h>
+
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -58,7 +59,7 @@ const std::vector<std::string> AddressData::*kVectorStringField[] = {
   nullptr
 };
 
-static_assert(arraysize(kStringField) == arraysize(kVectorStringField),
+static_assert(size(kStringField) == size(kVectorStringField),
               "field_mapping_array_size_mismatch");
 
 // A string is considered to be "empty" not only if it actually is empty, but
@@ -72,7 +73,7 @@ bool IsStringEmpty(const std::string& str) {
 
 bool AddressData::IsFieldEmpty(AddressField field) const {
   assert(field >= 0);
-  assert(static_cast<size_t>(field) < arraysize(kStringField));
+  assert(static_cast<size_t>(field) < size(kStringField));
   if (kStringField[field] != nullptr) {
     const std::string& value = GetFieldValue(field);
     return IsStringEmpty(value);
@@ -87,14 +88,14 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
 const std::string& AddressData::GetFieldValue(
     AddressField field) const {
   assert(field >= 0);
-  assert(static_cast<size_t>(field) < arraysize(kStringField));
+  assert(static_cast<size_t>(field) < size(kStringField));
   assert(kStringField[field] != nullptr);
   return this->*kStringField[field];
 }
 
 void AddressData::SetFieldValue(AddressField field, const std::string& value) {
   assert(field >= 0);
-  assert(static_cast<size_t>(field) < arraysize(kStringField));
+  assert(static_cast<size_t>(field) < size(kStringField));
   assert(kStringField[field] != nullptr);
   (this->*kStringField[field]).assign(value);
 }
@@ -121,7 +122,7 @@ bool AddressData::operator==(const AddressData& other) const {
 // static
 bool AddressData::IsRepeatedFieldValue(AddressField field) {
   assert(field >= 0);
-  assert(static_cast<size_t>(field) < arraysize(kVectorStringField));
+  assert(static_cast<size_t>(field) < size(kVectorStringField));
   return kVectorStringField[field] != nullptr;
 }
 

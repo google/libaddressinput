@@ -14,8 +14,6 @@
 
 #include "json.h"
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cassert>
 #include <cstddef>
 #include <memory>
@@ -34,6 +32,9 @@ using rapidjson::Value;
 
 class Json::JsonImpl {
  public:
+  JsonImpl(const JsonImpl&) = delete;
+  JsonImpl& operator=(const JsonImpl&) = delete;
+
   explicit JsonImpl(const std::string& json)
       : document_(new Document),
         value_(document_.get()),
@@ -100,8 +101,6 @@ class Json::JsonImpl {
 
   // True if the JSON object was parsed successfully.
   bool valid_;
-
-  DISALLOW_COPY_AND_ASSIGN(JsonImpl);
 };
 
 Json::Json() : impl_() {}

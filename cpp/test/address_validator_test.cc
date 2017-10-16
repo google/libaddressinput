@@ -21,7 +21,6 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -67,6 +66,9 @@ class ValidatorWrapper {
 
 class OndemandValidatorWrapper : public ValidatorWrapper {
  public:
+  OndemandValidatorWrapper(const OndemandValidatorWrapper&) = delete;
+  OndemandValidatorWrapper& operator=(const OndemandValidatorWrapper&) = delete;
+
   static ValidatorWrapper* Build() { return new OndemandValidatorWrapper; }
 
   virtual void Validate(const AddressData& address,
@@ -91,11 +93,13 @@ class OndemandValidatorWrapper : public ValidatorWrapper {
 
   OndemandSupplier supplier_;
   const AddressValidator validator_;
-  DISALLOW_COPY_AND_ASSIGN(OndemandValidatorWrapper);
 };
 
 class PreloadValidatorWrapper : public ValidatorWrapper {
  public:
+  PreloadValidatorWrapper(const PreloadValidatorWrapper&) = delete;
+  PreloadValidatorWrapper& operator=(const PreloadValidatorWrapper&) = delete;
+
   static ValidatorWrapper* Build() { return new PreloadValidatorWrapper; }
 
   virtual void Validate(const AddressData& address,
@@ -128,11 +132,14 @@ class PreloadValidatorWrapper : public ValidatorWrapper {
   PreloadSupplier supplier_;
   const AddressValidator validator_;
   const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
-  DISALLOW_COPY_AND_ASSIGN(PreloadValidatorWrapper);
 };
 
 class AddressValidatorTest
     : public testing::TestWithParam<ValidatorWrapper* (*)()> {
+ public:
+  AddressValidatorTest(const AddressValidatorTest&) = delete;
+  AddressValidatorTest& operator=(const AddressValidatorTest&) = delete;
+
  protected:
   AddressValidatorTest()
       : address_(),
@@ -175,8 +182,6 @@ class AddressValidatorTest
 
   const std::unique_ptr<ValidatorWrapper> validator_wrapper_;
   const std::unique_ptr<const AddressValidator::Callback> validated_;
-
-  DISALLOW_COPY_AND_ASSIGN(AddressValidatorTest);
 };
 
 INSTANTIATE_TEST_CASE_P(OndemandSupplier,

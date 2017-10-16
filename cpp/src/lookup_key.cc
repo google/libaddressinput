@@ -16,7 +16,6 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -31,6 +30,7 @@
 #include "region_data_constants.h"
 #include "rule.h"
 #include "util/cctype_tolower_equal.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -88,7 +88,7 @@ void LookupKey::FromAddress(const AddressData& address) {
   if (address.region_code.empty()) {
     nodes_.insert(std::make_pair(COUNTRY, kUnknown));
   } else {
-    for (size_t i = 0; i < arraysize(kHierarchy); ++i) {
+    for (size_t i = 0; i < size(kHierarchy); ++i) {
       AddressField field = kHierarchy[i];
       if (address.IsFieldEmpty(field)) {
         // It would be impossible to find any data for an empty field value.
@@ -115,7 +115,7 @@ void LookupKey::FromAddress(const AddressData& address) {
 
 void LookupKey::FromLookupKey(const LookupKey& parent,
                               const std::string& child_node) {
-  assert(parent.nodes_.size() < arraysize(kHierarchy));
+  assert(parent.nodes_.size() < size(kHierarchy));
   assert(!child_node.empty());
 
   // Copy its nodes if this isn't the parent object.
@@ -125,7 +125,7 @@ void LookupKey::FromLookupKey(const LookupKey& parent,
 }
 
 std::string LookupKey::ToKeyString(size_t max_depth) const {
-  assert(max_depth < arraysize(kHierarchy));
+  assert(max_depth < size(kHierarchy));
   std::string key_string(kData);
 
   for (size_t i = 0; i <= max_depth; ++i) {
@@ -152,7 +152,7 @@ const std::string& LookupKey::GetRegionCode() const {
 
 size_t LookupKey::GetDepth() const {
   size_t depth = nodes_.size() - 1;
-  assert(depth < arraysize(kHierarchy));
+  assert(depth < size(kHierarchy));
   return depth;
 }
 

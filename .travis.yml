@@ -31,7 +31,7 @@ install:
   - env DESTDIR="$HOME" make -C re2 install
 script:
   - cd cpp
-  - env CXXFLAGS="-std=c++11 -I$HOME/usr/local/include" LDFLAGS="-L$HOME/usr/local/lib" GYP_GENERATORS="ninja" gyp --depth .
+  - env CXXFLAGS="-I$HOME/usr/local/include" LDFLAGS="-L$HOME/usr/local/lib" GYP_GENERATORS="ninja" gyp --depth .
   - ninja -C out/Default
 after_script:
   - env LD_LIBRARY_PATH="$HOME/usr/local/lib" out/Default/unit_tests

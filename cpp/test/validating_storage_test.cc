@@ -16,7 +16,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -46,6 +45,10 @@ const char kEmptyData[] = "";
 
 // Tests for ValidatingStorage object.
 class ValidatingStorageTest : public testing::Test {
+ public:
+  ValidatingStorageTest(const ValidatingStorageTest&) = delete;
+  ValidatingStorageTest& operator=(const ValidatingStorageTest&) = delete;
+
  protected:
   ValidatingStorageTest()
       : wrapped_storage_(new FakeStorage),
@@ -72,8 +75,6 @@ class ValidatingStorageTest : public testing::Test {
       delete data;
     }
   }
-
-  DISALLOW_COPY_AND_ASSIGN(ValidatingStorageTest);
 };
 
 TEST_F(ValidatingStorageTest, GoodData) {

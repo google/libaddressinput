@@ -21,7 +21,6 @@
 #include <libaddressinput/address_validator.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -36,6 +35,7 @@
 #include "post_box_matchers.h"
 #include "rule.h"
 #include "util/re2ptr.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -114,7 +114,7 @@ void ValidationTask::CheckUnexpectedField(
     RECIPIENT
   };
 
-  for (size_t i = 0; i < arraysize(kFields); ++i) {
+  for (size_t i = 0; i < size(kFields); ++i) {
     AddressField field = kFields[i];
     if (!address_.IsFieldEmpty(field) && !IsFieldUsed(field, region_code)) {
       ReportProblemMaybe(field, UNEXPECTED_FIELD);
@@ -138,7 +138,7 @@ void ValidationTask::CheckMissingRequiredField(
     // RECIPIENT is handled separately.
   };
 
-  for (size_t i = 0; i < arraysize(kFields); ++i) {
+  for (size_t i = 0; i < size(kFields); ++i) {
     AddressField field = kFields[i];
     if (address_.IsFieldEmpty(field) && IsFieldRequired(field, region_code)) {
       ReportProblemMaybe(field, MISSING_REQUIRED_FIELD);
@@ -155,7 +155,7 @@ void ValidationTask::CheckMissingRequiredField(
 // of that field to one of those possible values, therefore returning nullptr.
 void ValidationTask::CheckUnknownValue(
     const Supplier::RuleHierarchy& hierarchy) const {
-  for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
+  for (size_t depth = 1; depth < size(LookupKey::kHierarchy); ++depth) {
     AddressField field = LookupKey::kHierarchy[depth];
     if (!(address_.IsFieldEmpty(field) ||
           hierarchy.rule[depth - 1] == nullptr ||
@@ -200,7 +200,7 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
     return;
   }
 
-  for (size_t depth = arraysize(LookupKey::kHierarchy) - 1;
+  for (size_t depth = size(LookupKey::kHierarchy) - 1;
        depth > 0; --depth) {
     if (hierarchy.rule[depth] != nullptr) {
       // Validate sub-region specific postal code format. A sub-region specifies

@@ -22,7 +22,6 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
 #include <libaddressinput/callback.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 
@@ -71,9 +70,11 @@ class AddressValidator {
   typedef i18n::addressinput::Callback<const AddressData&,
                                        const FieldProblemMap&> Callback;
 
+  AddressValidator(const AddressValidator&) = delete;
+  AddressValidator& operator=(const AddressValidator&) = delete;
+
   // Does not take ownership of |supplier|.
   AddressValidator(Supplier* supplier);
-
   ~AddressValidator();
 
   // Validates the |address| and populates |problems| with the validation
@@ -103,8 +104,6 @@ class AddressValidator {
 
  private:
   Supplier* const supplier_;
-
-  DISALLOW_COPY_AND_ASSIGN(AddressValidator);
 };
 
 }  // namespace addressinput

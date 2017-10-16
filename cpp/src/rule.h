@@ -21,7 +21,6 @@
 #define I18N_ADDRESSINPUT_RULE_H_
 
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -42,6 +41,9 @@ struct RE2ptr;
 //    }
 class Rule {
  public:
+  Rule(const Rule&) = delete;
+  Rule& operator=(const Rule&) = delete;
+
   Rule();
   ~Rule();
 
@@ -155,8 +157,6 @@ class Rule {
   std::string latin_name_;
   std::string postal_code_example_;
   std::string post_service_url_;
-
-  DISALLOW_COPY_AND_ASSIGN(Rule);
 };
 
 }  // namespace addressinput

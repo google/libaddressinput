@@ -18,7 +18,6 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -34,13 +33,16 @@ namespace {
 using i18n::addressinput::AddressData;
 using i18n::addressinput::AddressInputHelper;
 using i18n::addressinput::BuildCallback;
-using i18n::addressinput::Callback;
 using i18n::addressinput::MockSource;
 using i18n::addressinput::NullStorage;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::TestdataSource;
 
 class AddressInputHelperTest : public testing::Test {
+ public:
+  AddressInputHelperTest(const AddressInputHelperTest&) = delete;
+  AddressInputHelperTest& operator=(const AddressInputHelperTest&) = delete;
+
  protected:
   AddressInputHelperTest()
       // Our PreloadSupplier loads all data for a country at a time.
@@ -65,7 +67,6 @@ class AddressInputHelperTest : public testing::Test {
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;
   const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
-  DISALLOW_COPY_AND_ASSIGN(AddressInputHelperTest);
 };
 
 TEST_F(AddressInputHelperTest, AddressWithMissingPostalCode) {
@@ -251,6 +252,12 @@ TEST_F(AddressInputHelperTest, RegionWithUnusedAdminAreaNames) {
 }
 
 class AddressInputHelperMockDataTest : public testing::Test {
+ public:
+  AddressInputHelperMockDataTest(
+      const AddressInputHelperMockDataTest&) = delete;
+  AddressInputHelperMockDataTest& operator=(
+      const AddressInputHelperMockDataTest&) = delete;
+
  protected:
   AddressInputHelperMockDataTest()
       : source_(new MockSource),
@@ -278,7 +285,6 @@ class AddressInputHelperMockDataTest : public testing::Test {
   PreloadSupplier supplier_;
   const AddressInputHelper address_input_helper_;
   const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
-  DISALLOW_COPY_AND_ASSIGN(AddressInputHelperMockDataTest);
 };
 
 TEST_F(AddressInputHelperMockDataTest,

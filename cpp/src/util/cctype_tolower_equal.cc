@@ -40,5 +40,5 @@ EqualToTolowerString::result_type EqualToTolowerString::operator()(
          std::equal(a.begin(), a.end(), b.begin(), EqualToTolowerChar());
 }
 
-}  // addressinput
-}  // i18n
+}  // namespace addressinput
+}  // namespace i18n

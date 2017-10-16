@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_ADDRESS_NORMALIZER_H_
 #define I18N_ADDRESSINPUT_ADDRESS_NORMALIZER_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <memory>
 
 namespace i18n {
@@ -28,6 +26,9 @@ struct AddressData;
 
 class AddressNormalizer {
  public:
+  AddressNormalizer(const AddressNormalizer&) = delete;
+  AddressNormalizer& operator=(const AddressNormalizer&) = delete;
+
   // Does not take ownership of |supplier|.
   explicit AddressNormalizer(const PreloadSupplier* supplier);
   ~AddressNormalizer();
@@ -40,8 +41,6 @@ class AddressNormalizer {
  private:
   const PreloadSupplier* const supplier_;  // Not owned.
   const std::unique_ptr<const StringCompare> compare_;
-
-  DISALLOW_COPY_AND_ASSIGN(AddressNormalizer);
 };
 
 }  // namespace addressinput

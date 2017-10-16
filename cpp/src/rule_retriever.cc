@@ -15,7 +15,6 @@
 #include "rule_retriever.h"
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cassert>
 #include <cstddef>
@@ -32,6 +31,9 @@ namespace {
 
 class Helper {
  public:
+  Helper(const Helper&) = delete;
+  Helper& operator=(const Helper&) = delete;
+
   Helper(const std::string& key,
          const RuleRetriever::Callback& rule_ready,
          const Retriever& data_retriever)
@@ -58,8 +60,6 @@ class Helper {
 
   const RuleRetriever::Callback& rule_ready_;
   const std::unique_ptr<const Retriever::Callback> data_retrieved_;
-
-  DISALLOW_COPY_AND_ASSIGN(Helper);
 };
 
 }  // namespace

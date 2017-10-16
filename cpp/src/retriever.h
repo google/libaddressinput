@@ -18,7 +18,6 @@
 #define I18N_ADDRESSINPUT_RETRIEVER_H_
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -42,6 +41,9 @@ class Retriever {
   typedef i18n::addressinput::Callback<const std::string&,
                                        const std::string&> Callback;
 
+  Retriever(const Retriever&) = delete;
+  Retriever& operator=(const Retriever&) = delete;
+
   // Takes ownership of |source| and |storage|.
   Retriever(const Source* source, Storage* storage);
   ~Retriever();
@@ -58,8 +60,6 @@ class Retriever {
  private:
   std::unique_ptr<const Source> source_;
   std::unique_ptr<ValidatingStorage> storage_;
-
-  DISALLOW_COPY_AND_ASSIGN(Retriever);
 };
 
 }  // namespace addressinput

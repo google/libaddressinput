@@ -16,7 +16,6 @@
 
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -30,6 +29,7 @@
 #include "region_data_constants.h"
 #include "rule.h"
 #include "util/cctype_tolower_equal.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -79,25 +79,25 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
   // Now guess something appropriate based on the base language.
   const std::string& base_language = address_language.base;
   if (std::find_if(kLanguagesThatUseSpace,
-                   kLanguagesThatUseSpace + arraysize(kLanguagesThatUseSpace),
+                   kLanguagesThatUseSpace + size(kLanguagesThatUseSpace),
                    std::bind2nd(EqualToTolowerString(), base_language)) !=
-      kLanguagesThatUseSpace + arraysize(kLanguagesThatUseSpace)) {
+      kLanguagesThatUseSpace + size(kLanguagesThatUseSpace)) {
     return kSpaceSeparator;
   } else if (std::find_if(
                  kLanguagesThatHaveNoSeparator,
                  kLanguagesThatHaveNoSeparator +
-                     arraysize(kLanguagesThatHaveNoSeparator),
+                     size(kLanguagesThatHaveNoSeparator),
                  std::bind2nd(EqualToTolowerString(), base_language)) !=
              kLanguagesThatHaveNoSeparator +
-                 arraysize(kLanguagesThatHaveNoSeparator)) {
+                 size(kLanguagesThatHaveNoSeparator)) {
     return "";
   } else if (std::find_if(
                  kLanguagesThatUseAnArabicComma,
                  kLanguagesThatUseAnArabicComma +
-                     arraysize(kLanguagesThatUseAnArabicComma),
+                     size(kLanguagesThatUseAnArabicComma),
                  std::bind2nd(EqualToTolowerString(), base_language)) !=
              kLanguagesThatUseAnArabicComma +
-                 arraysize(kLanguagesThatUseAnArabicComma)) {
+                 size(kLanguagesThatUseAnArabicComma)) {
     return kArabicCommaSeparator;
   }
   // Either the language is a Latin-script language, or no language was

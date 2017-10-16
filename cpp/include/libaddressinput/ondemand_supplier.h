@@ -17,7 +17,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <memory>
@@ -46,6 +45,9 @@ class Storage;
 // in total less than 2 MB of JSON data.)
 class OndemandSupplier : public Supplier {
  public:
+  OndemandSupplier(const OndemandSupplier&) = delete;
+  OndemandSupplier& operator=(const OndemandSupplier&) = delete;
+
   // Takes ownership of |source| and |storage|.
   OndemandSupplier(const Source* source, Storage* storage);
   virtual ~OndemandSupplier();
@@ -56,8 +58,6 @@ class OndemandSupplier : public Supplier {
  private:
   const std::unique_ptr<const Retriever> retriever_;
   std::map<std::string, const Rule*> rule_cache_;
-
-  DISALLOW_COPY_AND_ASSIGN(OndemandSupplier);
 };
 
 }  // namespace addressinput

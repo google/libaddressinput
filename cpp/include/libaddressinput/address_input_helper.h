@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_ADDRESS_INPUT_HELPER_H_
 #define I18N_ADDRESSINPUT_ADDRESS_INPUT_HELPER_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <vector>
 
 namespace i18n {
@@ -29,12 +27,14 @@ struct Node;
 
 class AddressInputHelper {
  public:
+  AddressInputHelper(const AddressInputHelper&) = delete;
+  AddressInputHelper& operator=(const AddressInputHelper&) = delete;
+
   // Creates an input helper that uses the supplier provided to get metadata to
   // help a user complete or fix an address. Doesn't take ownership of
   // |supplier|. Since latency is important for these kinds of tasks, we expect
   // the supplier to have the data already.
   AddressInputHelper(PreloadSupplier* supplier);
-
   ~AddressInputHelper();
 
   // Fill in missing components of an address as best as we can based on
@@ -57,8 +57,6 @@ class AddressInputHelper {
 
   // We don't own the supplier_.
   PreloadSupplier* const supplier_;
-
-  DISALLOW_COPY_AND_ASSIGN(AddressInputHelper);
 };
 
 }  // namespace addressinput

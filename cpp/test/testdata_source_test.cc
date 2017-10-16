@@ -16,7 +16,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/source.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -35,6 +34,10 @@ using i18n::addressinput::TestdataSource;
 
 // Tests for TestdataSource object.
 class TestdataSourceTest : public testing::TestWithParam<std::string> {
+ public:
+  TestdataSourceTest(const TestdataSourceTest&) = delete;
+  TestdataSourceTest& operator=(const TestdataSourceTest&) = delete;
+
  protected:
   TestdataSourceTest()
       : source_(false),
@@ -65,8 +68,6 @@ class TestdataSourceTest : public testing::TestWithParam<std::string> {
       delete data;
     }
   }
-
-  DISALLOW_COPY_AND_ASSIGN(TestdataSourceTest);
 };
 
 // Returns testing::AssertionSuccess if |data| is valid callback data for
