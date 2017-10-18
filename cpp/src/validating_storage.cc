@@ -19,7 +19,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cassert>
 #include <cstddef>
@@ -36,6 +35,9 @@ namespace {
 
 class Helper {
  public:
+  Helper(const Helper&) = delete;
+  Helper& operator=(const Helper&) = delete;
+
   Helper(const std::string& key,
          const ValidatingStorage::Callback& data_ready,
          const Storage& wrapped_storage)
@@ -70,8 +72,6 @@ class Helper {
 
   const Storage::Callback& data_ready_;
   const std::unique_ptr<const Storage::Callback> wrapped_data_ready_;
-
-  DISALLOW_COPY_AND_ASSIGN(Helper);
 };
 
 }  // namespace

@@ -17,7 +17,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <memory>
@@ -51,6 +50,9 @@ class Storage;
 class PreloadSupplier : public Supplier {
  public:
   typedef i18n::addressinput::Callback<const std::string&, int> Callback;
+
+  PreloadSupplier(const PreloadSupplier&) = delete;
+  PreloadSupplier& operator=(const PreloadSupplier&) = delete;
 
   // Takes ownership of |source| and |storage|.
   PreloadSupplier(const Source* source, Storage* storage);
@@ -93,8 +95,6 @@ class PreloadSupplier : public Supplier {
   const std::unique_ptr<IndexMap> rule_index_;
   std::vector<const Rule*> rule_storage_;
   std::map<std::string, std::map<std::string, const Rule*> > region_rules_;
-
-  DISALLOW_COPY_AND_ASSIGN(PreloadSupplier);
 };
 
 }  // namespace addressinput

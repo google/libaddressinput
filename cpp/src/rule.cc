@@ -29,6 +29,7 @@
 #include "region_data_constants.h"
 #include "util/json.h"
 #include "util/re2ptr.h"
+#include "util/size.h"
 #include "util/string_split.h"
 
 namespace i18n {
@@ -95,7 +96,7 @@ const NameIdInfo kAdminAreaInfoArray[] = {
 
 const NameIdMap kAdminAreaMessageIds = {
   kAdminAreaInfoArray,
-  arraysize(kAdminAreaInfoArray)
+  size(kAdminAreaInfoArray)
 };
 
 const NameIdInfo kPostalCodeInfoArray[] = {
@@ -107,7 +108,7 @@ const NameIdInfo kPostalCodeInfoArray[] = {
 
 const NameIdMap kPostalCodeMessageIds = {
   kPostalCodeInfoArray,
-  arraysize(kPostalCodeInfoArray),
+  size(kPostalCodeInfoArray),
 };
 
 const NameIdInfo kLocalityInfoArray[] = {
@@ -119,7 +120,7 @@ const NameIdInfo kLocalityInfoArray[] = {
 
 const NameIdMap kLocalityMessageIds = {
   kLocalityInfoArray,
-  arraysize(kLocalityInfoArray),
+  size(kLocalityInfoArray),
 };
 
 const NameIdInfo kSublocalityInfoArray[] = {
@@ -132,7 +133,7 @@ const NameIdInfo kSublocalityInfoArray[] = {
 
 const NameIdMap kSublocalityMessageIds = {
   kSublocalityInfoArray,
-  arraysize(kSublocalityInfoArray),
+  size(kSublocalityInfoArray),
 };
 
 #ifndef _NDEBUG

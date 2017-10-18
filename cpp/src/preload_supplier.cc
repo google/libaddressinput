@@ -18,7 +18,6 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cassert>
@@ -37,6 +36,7 @@
 #include "retriever.h"
 #include "rule.h"
 #include "util/json.h"
+#include "util/size.h"
 #include "util/string_compare.h"
 
 namespace i18n {
@@ -65,6 +65,9 @@ namespace {
 
 class Helper {
  public:
+  Helper(const Helper&) = delete;
+  Helper& operator=(const Helper&) = delete;
+
   // Does not take ownership of its parameters.
   Helper(const std::string& region_code,
          const std::string& key,
@@ -111,8 +114,8 @@ class Helper {
     std::map<std::string, const Rule*>::iterator last_region_it =
         region_rules_->end();
 
-    IndexMap::const_iterator hints[arraysize(LookupKey::kHierarchy) - 1];
-    std::fill(hints, hints + arraysize(hints), rule_index_->end());
+    IndexMap::const_iterator hints[size(LookupKey::kHierarchy) - 1];
+    std::fill(hints, hints + size(hints), rule_index_->end());
 
     if (!success) {
       goto callback;
@@ -136,7 +139,7 @@ class Helper {
       assert(!id.empty());
 
       size_t depth = std::count(id.begin(), id.end(), '/') - 1;
-      assert(depth < arraysize(LookupKey::kHierarchy));
+      assert(depth < size(LookupKey::kHierarchy));
       AddressField field = LookupKey::kHierarchy[depth];
 
       Rule* rule = new Rule;
@@ -257,8 +260,6 @@ class Helper {
   std::vector<const Rule*>* const rule_storage_;
   std::map<std::string, const Rule*>* const region_rules_;
   const std::unique_ptr<const Retriever::Callback> retrieved_;
-
-  DISALLOW_COPY_AND_ASSIGN(Helper);
 };
 
 std::string KeyFromRegionCode(const std::string& region_code) {

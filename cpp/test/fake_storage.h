@@ -19,7 +19,6 @@
 #define I18N_ADDRESSINPUT_FAKE_STORAGE_H_
 
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <string>
@@ -30,6 +29,9 @@ namespace addressinput {
 // Stores data in memory. Sample usage:
 //    class MyClass {
 //     public:
+//      MyClass(const MyClass&) = delete;
+//      MyClass& operator=(const MyClass&) = delete;
+//
 //      MyClass() : storage_(),
 //                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {}
 //
@@ -53,11 +55,12 @@ namespace addressinput {
 //
 //      FakeStorage storage_;
 //      const std::unique_ptr<const Storage::Callback> data_ready_;
-//
-//      DISALLOW_COPY_AND_ASSIGN(MyClass);
 //    };
 class FakeStorage : public Storage {
  public:
+  FakeStorage(const FakeStorage&) = delete;
+  FakeStorage& operator=(const FakeStorage&) = delete;
+
   FakeStorage();
   virtual ~FakeStorage();
 
@@ -67,7 +70,6 @@ class FakeStorage : public Storage {
 
  private:
   std::map<std::string, std::string*> data_;
-  DISALLOW_COPY_AND_ASSIGN(FakeStorage);
 };
 
 }  // namespace addressinput

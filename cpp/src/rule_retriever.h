@@ -18,7 +18,6 @@
 #define I18N_ADDRESSINPUT_RULE_RETRIEVER_H_
 
 #include <libaddressinput/callback.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -40,6 +39,9 @@ class RuleRetriever {
   typedef i18n::addressinput::Callback<const std::string&,
                                        const Rule&> Callback;
 
+  RuleRetriever(const RuleRetriever&) = delete;
+  RuleRetriever& operator=(const RuleRetriever&) = delete;
+
   // Takes ownership of |retriever|.
   explicit RuleRetriever(const Retriever* retriever);
   ~RuleRetriever();
@@ -49,8 +51,6 @@ class RuleRetriever {
 
  private:
   std::unique_ptr<const Retriever> data_retriever_;
-
-  DISALLOW_COPY_AND_ASSIGN(RuleRetriever);
 };
 
 }  // namespace addressinput

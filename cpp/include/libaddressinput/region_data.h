@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_REGION_DATA_H_
 #define I18N_ADDRESSINPUT_REGION_DATA_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cassert>
 #include <cstddef>
 #include <string>
@@ -29,10 +27,12 @@ namespace addressinput {
 // dropdown UI element.
 class RegionData {
  public:
+  RegionData(const RegionData&) = delete;
+  RegionData& operator=(const RegionData&) = delete;
+
   // Creates a top-level RegionData object. Use AddSubRegion() to add data below
   // it. Does not make a copy of data in |region_code|.
   explicit RegionData(const std::string& region_code);
-
   ~RegionData();
 
   // Creates a sub-level RegionData object, with this object as its parent and
@@ -67,8 +67,6 @@ class RegionData {
   const std::string& name_;
   const RegionData* const parent_;  // Not owned.
   std::vector<const RegionData*> sub_regions_;  // Owned.
-
-  DISALLOW_COPY_AND_ASSIGN(RegionData);
 };
 
 }  // namespace addressinput

@@ -16,7 +16,6 @@
 #define I18N_ADDRESSINPUT_ONDEMAND_SUPPLY_TASK_H_
 
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <map>
 #include <memory>
@@ -38,6 +37,9 @@ class Rule;
 // object itself.
 class OndemandSupplyTask {
  public:
+  OndemandSupplyTask(const OndemandSupplyTask&) = delete;
+  OndemandSupplyTask& operator=(const OndemandSupplyTask&) = delete;
+
   OndemandSupplyTask(const LookupKey& lookup_key,
                      std::map<std::string, const Rule*>* rules,
                      const Supplier::Callback& supplied);
@@ -61,8 +63,6 @@ class OndemandSupplyTask {
   const Supplier::Callback& supplied_;
   const std::unique_ptr<const Retriever::Callback> retrieved_;
   bool success_;
-
-  DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTask);
 };
 
 }  // namespace addressinput

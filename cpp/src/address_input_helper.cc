@@ -18,7 +18,6 @@
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_metadata.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cassert>
 #include <cstddef>
@@ -32,6 +31,7 @@
 #include "region_data_constants.h"
 #include "rule.h"
 #include "util/re2ptr.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -46,7 +46,7 @@ namespace {
 
 const char kLookupKeySeparator = '/';
 
-const size_t kHierarchyDepth = arraysize(LookupKey::kHierarchy);
+const size_t kHierarchyDepth = size(LookupKey::kHierarchy);
 
 // Gets the best name for the entity represented by the current rule, using the
 // language provided. The language is currently used to distinguish whether a
@@ -96,7 +96,7 @@ void FillAddressFromMatchedRules(
   }
 }
 
-}  // namespace;
+}  // namespace
 
 AddressInputHelper::AddressInputHelper(PreloadSupplier* supplier)
     : supplier_(supplier) {

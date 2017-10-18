@@ -18,7 +18,6 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <memory>
 #include <string>
@@ -37,6 +36,10 @@ using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::TestdataSource;
 
 class AddressNormalizerTest : public testing::Test {
+ public:
+  AddressNormalizerTest(const AddressNormalizerTest&) = delete;
+  AddressNormalizerTest& operator=(const AddressNormalizerTest&) = delete;
+
  protected:
   AddressNormalizerTest()
       : supplier_(new TestdataSource(true), new NullStorage),
@@ -53,8 +56,6 @@ class AddressNormalizerTest : public testing::Test {
     ASSERT_FALSE(region_code.empty());
     ASSERT_LT(0, num_rules);
   }
-
-  DISALLOW_COPY_AND_ASSIGN(AddressNormalizerTest);
 };
 
 TEST_F(AddressNormalizerTest, CountryWithNoLanguageNoAdminArea) {

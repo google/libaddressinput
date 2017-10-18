@@ -14,14 +14,15 @@
 
 #include <libaddressinput/address_problem.h>
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cstddef>
 #include <ostream>
+
+#include "util/size.h"
 
 using i18n::addressinput::AddressProblem;
 using i18n::addressinput::UNEXPECTED_FIELD;
 using i18n::addressinput::USES_P_O_BOX;
+using i18n::addressinput::size;
 
 std::ostream& operator<<(std::ostream& o, AddressProblem problem) {
   static const char* const kProblemNames[] = {
@@ -33,9 +34,9 @@ std::ostream& operator<<(std::ostream& o, AddressProblem problem) {
     "USES_P_O_BOX"
   };
   static_assert(UNEXPECTED_FIELD == 0, "bad_base");
-  static_assert(USES_P_O_BOX == arraysize(kProblemNames) - 1, "bad_length");
+  static_assert(USES_P_O_BOX == size(kProblemNames) - 1, "bad_length");
 
-  if (problem < 0 || static_cast<size_t>(problem) >= arraysize(kProblemNames)) {
+  if (problem < 0 || static_cast<size_t>(problem) >= size(kProblemNames)) {
     o << "[INVALID ENUM VALUE " << static_cast<int>(problem) << "]";
   } else {
     o << kProblemNames[problem];

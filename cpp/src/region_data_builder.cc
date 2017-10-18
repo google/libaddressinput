@@ -17,7 +17,6 @@
 #include <libaddressinput/address_data.h>
 #include <libaddressinput/preload_supplier.h>
 #include <libaddressinput/region_data.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cassert>
 #include <cstddef>
@@ -29,6 +28,7 @@
 #include "lookup_key.h"
 #include "region_data_constants.h"
 #include "rule.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -36,7 +36,7 @@ namespace addressinput {
 namespace {
 
 // The maximum depth of lookup keys.
-static const size_t kLookupKeysMaxDepth = arraysize(LookupKey::kHierarchy) - 1;
+static const size_t kLookupKeysMaxDepth = size(LookupKey::kHierarchy) - 1;
 
 // Does not take ownership of |parent_region|, which is not allowed to be
 // nullptr.

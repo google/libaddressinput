@@ -17,7 +17,6 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/address_problem.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <string>
 
@@ -39,6 +38,9 @@ struct AddressData;
 //    Process(BuildComponents("CA", localization, "fr-CA", &best_language_tag));
 class Localization {
  public:
+  Localization(const Localization&) = delete;
+  Localization& operator=(const Localization&) = delete;
+
   // Initializes with English messages by default.
   Localization();
   ~Localization();
@@ -84,8 +86,6 @@ class Localization {
 
   // The string getter.
   std::string (*get_string_)(int);
-
-  DISALLOW_COPY_AND_ASSIGN(Localization);
 };
 
 }  // namespace addressinput

@@ -14,8 +14,6 @@
 
 #include "util/string_compare.h"
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <string>
 
 #include <gtest/gtest.h>
@@ -43,12 +41,13 @@ struct TestCase {
 };
 
 class StringCompareTest : public testing::TestWithParam<TestCase> {
+ public:
+  StringCompareTest(const StringCompareTest&) = delete;
+  StringCompareTest& operator=(const StringCompareTest&) = delete;
+
  protected:
   StringCompareTest() {}
   StringCompare compare_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(StringCompareTest);
 };
 
 TEST_P(StringCompareTest, CorrectComparison) {

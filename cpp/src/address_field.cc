@@ -14,14 +14,15 @@
 
 #include <libaddressinput/address_field.h>
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cstddef>
 #include <ostream>
+
+#include "util/size.h"
 
 using i18n::addressinput::AddressField;
 using i18n::addressinput::COUNTRY;
 using i18n::addressinput::RECIPIENT;
+using i18n::addressinput::size;
 
 std::ostream& operator<<(std::ostream& o, AddressField field) {
   static const char* const kFieldNames[] = {
@@ -36,9 +37,9 @@ std::ostream& operator<<(std::ostream& o, AddressField field) {
     "RECIPIENT"
   };
   static_assert(COUNTRY == 0, "bad_base");
-  static_assert(RECIPIENT == arraysize(kFieldNames) - 1, "bad_length");
+  static_assert(RECIPIENT == size(kFieldNames) - 1, "bad_length");
 
-  if (field < 0 || static_cast<size_t>(field) >= arraysize(kFieldNames)) {
+  if (field < 0 || static_cast<size_t>(field) >= size(kFieldNames)) {
     o << "[INVALID ENUM VALUE " << static_cast<int>(field) << "]";
   } else {
     o << kFieldNames[field];

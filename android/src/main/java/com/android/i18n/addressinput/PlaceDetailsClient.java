@@ -62,15 +62,26 @@ public class PlaceDetailsClient implements PlaceDetailsApi {
             // #get, which has been broken by JsoMap to only return String values
             // *grinds teeth in frustration*.
             try {
-              Object result = response.getObject("result");
-              if (result instanceof JSONObject) {
-                addressData.set(getAddressData((JSONObject) result));
+              if (response.has("result")) {
+                Object result = response.getObject("result");
+                if (result instanceof JSONObject) {
+                  addressData.set(getAddressData((JSONObject) result));
+                  Log.i(TAG, "Successfully set AddressData from Place Details API response.");
+                } else {
+                  Log.e(
+                      TAG,
+                      "Error parsing JSON response from Place Details API: "
+                          + "expected 'result' field to be a JSONObject.");
+                  onFailure();
+                }
+              } else if (response.has("error_message")) {
+                String error_message = response.getString("error_message");
+                Log.e(TAG, "Place Details API request failed: " + error_message);
               } else {
                 Log.e(
                     TAG,
-                    "Error parsing JSON response from Place Details API: "
-                        + "expected 'result' field.");
-                onFailure();
+                    "Expected either result or error_message in response "
+                        + "from Place Details API");
               }
             } catch (JSONException e) {
               Log.e(TAG, "Error parsing JSON response from Place Details API", e);

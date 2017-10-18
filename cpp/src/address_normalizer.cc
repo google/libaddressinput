@@ -25,6 +25,7 @@
 
 #include "lookup_key.h"
 #include "rule.h"
+#include "util/size.h"
 #include "util/string_compare.h"
 
 namespace i18n {
@@ -61,7 +62,7 @@ void AddressNormalizer::Normalize(AddressData* address) const {
 
 
   LookupKey lookup_key;
-  for (size_t depth = 1; depth < arraysize(LookupKey::kHierarchy); ++depth) {
+  for (size_t depth = 1; depth < size(LookupKey::kHierarchy); ++depth) {
     AddressField field = LookupKey::kHierarchy[depth];
     if (address->IsFieldEmpty(field)) {
       return;

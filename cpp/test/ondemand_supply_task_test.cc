@@ -17,7 +17,6 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <cstring>
@@ -32,6 +31,7 @@
 #include "mock_source.h"
 #include "retriever.h"
 #include "rule.h"
+#include "util/size.h"
 
 namespace {
 
@@ -45,6 +45,10 @@ using i18n::addressinput::Rule;
 using i18n::addressinput::Supplier;
 
 class OndemandSupplyTaskTest : public testing::Test {
+ public:
+  OndemandSupplyTaskTest(const OndemandSupplyTaskTest&) = delete;
+  OndemandSupplyTaskTest& operator=(const OndemandSupplyTaskTest&) = delete;
+
  protected:
   OndemandSupplyTaskTest()
       : success_(true),
@@ -70,7 +74,7 @@ class OndemandSupplyTaskTest : public testing::Test {
 
   bool success_;  // Expected status from MockSource.
   LookupKey lookup_key_;  // Stub.
-  const Rule* rule_[arraysize(LookupKey::kHierarchy)];
+  const Rule* rule_[size(LookupKey::kHierarchy)];
   bool called_;
   MockSource* const source_;
 
@@ -89,8 +93,6 @@ class OndemandSupplyTaskTest : public testing::Test {
   const std::unique_ptr<Retriever> retriever_;
   const std::unique_ptr<const Supplier::Callback> supplied_;
   OndemandSupplyTask* const task_;
-
-  DISALLOW_COPY_AND_ASSIGN(OndemandSupplyTaskTest);
 };
 
 TEST_F(OndemandSupplyTaskTest, Empty) {

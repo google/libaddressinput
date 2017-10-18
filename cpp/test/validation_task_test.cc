@@ -20,7 +20,6 @@
 #include <libaddressinput/address_validator.h>
 #include <libaddressinput/callback.h>
 #include <libaddressinput/supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -30,11 +29,16 @@
 
 #include "lookup_key.h"
 #include "rule.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
 
 class ValidationTaskTest : public testing::Test {
+ public:
+  ValidationTaskTest(const ValidationTaskTest&) = delete;
+  ValidationTaskTest& operator=(const ValidationTaskTest&) = delete;
+
  protected:
   ValidationTaskTest()
       : json_(),
@@ -70,9 +74,9 @@ class ValidationTaskTest : public testing::Test {
       USES_P_O_BOX
     };
 
-    for (size_t i = 0; i < arraysize(kFields); ++i) {
+    for (size_t i = 0; i < size(kFields); ++i) {
       AddressField field = kFields[i];
-      for (size_t j = 0; j < arraysize(kProblems); ++j) {
+      for (size_t j = 0; j < size(kProblems); ++j) {
         AddressProblem problem = kProblems[j];
         filter_.insert(std::make_pair(field, problem));
       }
@@ -85,7 +89,7 @@ class ValidationTaskTest : public testing::Test {
   }
 
   void Validate() {
-    Rule rule[arraysize(json_)];
+    Rule rule[size(LookupKey::kHierarchy)];
 
     ValidationTask* task = new ValidationTask(
         address_,
@@ -97,7 +101,8 @@ class ValidationTaskTest : public testing::Test {
 
     Supplier::RuleHierarchy hierarchy;
 
-    for (size_t i = 0; i < arraysize(json_) && json_[i] != nullptr; ++i) {
+    for (size_t i = 0;
+         i < size(LookupKey::kHierarchy) && json_[i] != nullptr; ++i) {
       ASSERT_TRUE(rule[i].ParseSerializedRule(json_[i]));
       hierarchy.rule[i] = &rule[i];
     }
@@ -105,7 +110,7 @@ class ValidationTaskTest : public testing::Test {
     (*task->supplied_)(success_, *task->lookup_key_, hierarchy);
   }
 
-  const char* json_[arraysize(LookupKey::kHierarchy)];
+  const char* json_[size(LookupKey::kHierarchy)];
   bool success_;
   AddressData address_;
   bool allow_postal_;
@@ -126,8 +131,6 @@ class ValidationTaskTest : public testing::Test {
   }
 
   const std::unique_ptr<const AddressValidator::Callback> validated_;
-
-  DISALLOW_COPY_AND_ASSIGN(ValidationTaskTest);
 };
 
 namespace {

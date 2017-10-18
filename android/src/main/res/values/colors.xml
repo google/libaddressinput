@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-  <item name="ripple_material_light" type="color">#1f000000</item>
-
-  <integer-array name="androidcolors">
-      <item>@color/ripple_material_light</item>
-  </integer-array>
-</resources>

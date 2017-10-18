@@ -15,8 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_JSON_H_
 #define I18N_ADDRESSINPUT_UTIL_JSON_H_
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -32,6 +30,9 @@ namespace addressinput {
 //    }
 class Json {
  public:
+  Json(const Json&) = delete;
+  Json& operator=(const Json&) = delete;
+
   Json();
   ~Json();
 
@@ -58,8 +59,6 @@ class Json {
   explicit Json(JsonImpl* impl);
 
   std::unique_ptr<JsonImpl> impl_;
-
-  DISALLOW_COPY_AND_ASSIGN(Json);
 };
 
 }  // namespace addressinput

@@ -17,7 +17,6 @@
 #include "region_data_constants.h"
 
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -30,6 +29,7 @@
 #include "address_field_util.h"
 #include "format_element.h"
 #include "lookup_key.h"
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -1467,7 +1467,7 @@ const std::map<std::string, size_t> InitMaxLookupKeyDepth() {
     // formatting code.
     ParseFormatRule(it->second, &fields);
     size_t depth = 1;
-    for (; depth < arraysize(LookupKey::kHierarchy); ++depth) {
+    for (; depth < size(LookupKey::kHierarchy); ++depth) {
       AddressField field = LookupKey::kHierarchy[depth];
       // Check to see if a particular field in the hierarchy is used by
       // addresses in this country. If not, the maximum depth has been reached.

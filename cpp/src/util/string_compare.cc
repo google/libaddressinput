@@ -14,8 +14,6 @@
 
 #include "string_compare.h"
 
-#include <libaddressinput/util/basictypes.h>
-
 #include <cassert>
 #include <string>
 
@@ -59,6 +57,9 @@ class StringCompare::Impl {
   enum { MAX_CACHE_SIZE = 1 << 15 };
 
  public:
+  Impl(const Impl&) = delete;
+  Impl& operator=(const Impl&) = delete;
+
   Impl() : min_possible_match_(&re2::ComputeMinPossibleMatch, MAX_CACHE_SIZE) {
     options_.set_literal(true);
     options_.set_case_sensitive(false);
@@ -80,8 +81,6 @@ class StringCompare::Impl {
  private:
   RE2::Options options_;
   mutable lru_cache_using_std<std::string, std::string> min_possible_match_;
-
-  DISALLOW_COPY_AND_ASSIGN(Impl);
 };
 
 StringCompare::StringCompare() : impl_(new Impl) {}

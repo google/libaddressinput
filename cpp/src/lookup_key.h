@@ -16,11 +16,12 @@
 #define I18N_ADDRESSINPUT_LOOKUP_KEY_H_
 
 #include <libaddressinput/address_field.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <map>
 #include <string>
+
+#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -32,8 +33,11 @@ struct AddressData;
 class LookupKey {
  public:
   // The array length is explicitly specified here, to make it possible to get
-  // the length through arraysize(LookupKey::kHierarchy).
+  // the length through size(LookupKey::kHierarchy).
   static const AddressField kHierarchy[4];
+
+  LookupKey(const LookupKey&) = delete;
+  LookupKey& operator=(const LookupKey&) = delete;
 
   LookupKey();
   ~LookupKey();
@@ -67,8 +71,6 @@ class LookupKey {
   // The language of the key, obtained from the address (empty for default
   // language).
   std::string language_;
-
-  DISALLOW_COPY_AND_ASSIGN(LookupKey);
 };
 
 }  // namespace addressinput

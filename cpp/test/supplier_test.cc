@@ -19,7 +19,6 @@
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/ondemand_supplier.h>
 #include <libaddressinput/preload_supplier.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <cstring>
@@ -31,6 +30,7 @@
 #include "lookup_key.h"
 #include "rule.h"
 #include "testdata_source.h"
+#include "util/size.h"
 
 namespace {
 
@@ -72,6 +72,9 @@ class SupplierWrapper {
 
 class OndemandSupplierWrapper : public SupplierWrapper {
  public:
+  OndemandSupplierWrapper(const OndemandSupplierWrapper&) = delete;
+  OndemandSupplierWrapper& operator=(const OndemandSupplierWrapper&) = delete;
+
   static SupplierWrapper* Build() { return new OndemandSupplierWrapper; }
 
   virtual void Supply(const LookupKey& lookup_key,
@@ -84,11 +87,13 @@ class OndemandSupplierWrapper : public SupplierWrapper {
       : ondemand_supplier_(new TestdataSource(false), new NullStorage) {}
 
   OndemandSupplier ondemand_supplier_;
-  DISALLOW_COPY_AND_ASSIGN(OndemandSupplierWrapper);
 };
 
 class PreloadSupplierWrapper : public SupplierWrapper {
  public:
+  PreloadSupplierWrapper(const PreloadSupplierWrapper&) = delete;
+  PreloadSupplierWrapper& operator=(const PreloadSupplierWrapper&) = delete;
+
   static SupplierWrapper* Build() { return new PreloadSupplierWrapper; }
 
   virtual void Supply(const LookupKey& lookup_key,
@@ -109,10 +114,13 @@ class PreloadSupplierWrapper : public SupplierWrapper {
 
   PreloadSupplier preload_supplier_;
   const std::unique_ptr<const PreloadSupplier::Callback> loaded_;
-  DISALLOW_COPY_AND_ASSIGN(PreloadSupplierWrapper);
 };
 
 class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
+ public:
+  SupplierTest(const SupplierTest&) = delete;
+  SupplierTest& operator=(const SupplierTest&) = delete;
+
  protected:
   SupplierTest()
       : address_(),
@@ -128,7 +136,7 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
   }
 
   AddressData address_;
-  const Rule* rule_[arraysize(LookupKey::kHierarchy)];
+  const Rule* rule_[size(LookupKey::kHierarchy)];
   bool called_;
 
  private:
@@ -144,8 +152,6 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
   LookupKey lookup_key_;
   const std::unique_ptr<SupplierWrapper> supplier_wrapper_;
   const std::unique_ptr<const Supplier::Callback> supplied_;
-
-  DISALLOW_COPY_AND_ASSIGN(SupplierTest);
 };
 
 INSTANTIATE_TEST_CASE_P(OndemandSupplier,
@@ -284,7 +290,7 @@ TEST_P(SupplierTest, RuleCache) {
   // the same LookupKey returns the same pointers again (and doesn't create any
   // new Rule objects instead).
 
-  const Rule* rule[arraysize(LookupKey::kHierarchy)];
+  const Rule* rule[size(LookupKey::kHierarchy)];
   std::memcpy(rule, rule_, sizeof rule);
 
   called_ = false;

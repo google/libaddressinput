@@ -16,7 +16,6 @@
 
 #include <libaddressinput/callback.h>
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -32,6 +31,10 @@ using i18n::addressinput::Storage;
 
 // Tests for FakeStorage object.
 class FakeStorageTest : public testing::Test {
+ public:
+  FakeStorageTest(const FakeStorageTest&) = delete;
+  FakeStorageTest& operator=(const FakeStorageTest&) = delete;
+
  protected:
   FakeStorageTest()
       : storage_(),
@@ -56,8 +59,6 @@ class FakeStorageTest : public testing::Test {
       delete data;
     }
   }
-
-  DISALLOW_COPY_AND_ASSIGN(FakeStorageTest);
 };
 
 TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {

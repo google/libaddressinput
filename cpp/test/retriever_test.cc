@@ -17,7 +17,6 @@
 #include <libaddressinput/callback.h>
 #include <libaddressinput/null_storage.h>
 #include <libaddressinput/storage.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <memory>
@@ -56,6 +55,10 @@ const char kStaleWrappedData[] = "timestamp=" OLD_TIMESTAMP "\n"
 
 // Tests for Retriever object.
 class RetrieverTest : public testing::Test {
+ public:
+  RetrieverTest(const RetrieverTest&) = delete;
+  RetrieverTest& operator=(const RetrieverTest&) = delete;
+
  protected:
   RetrieverTest()
       : retriever_(new TestdataSource(false), new NullStorage),
@@ -78,8 +81,6 @@ class RetrieverTest : public testing::Test {
     key_ = key;
     data_ = data;
   }
-
-  DISALLOW_COPY_AND_ASSIGN(RetrieverTest);
 };
 
 TEST_F(RetrieverTest, RetrieveData) {
@@ -125,6 +126,9 @@ TEST_F(RetrieverTest, FaultySource) {
 // The storage that always returns stale data.
 class StaleStorage : public Storage {
  public:
+  StaleStorage(const StaleStorage&) = delete;
+  StaleStorage& operator=(const StaleStorage&) = delete;
+
   StaleStorage() : data_updated_(false) {}
   virtual ~StaleStorage() {}
 
@@ -140,9 +144,6 @@ class StaleStorage : public Storage {
   }
 
   bool data_updated_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(StaleStorage);
 };
 
 TEST_F(RetrieverTest, UseStaleDataWhenSourceFails) {

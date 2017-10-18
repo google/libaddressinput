@@ -16,7 +16,6 @@
 
 #include <libaddressinput/address_field.h>
 #include <libaddressinput/localization.h>
-#include <libaddressinput/util/basictypes.h>
 
 #include <cstddef>
 #include <string>
@@ -252,12 +251,13 @@ TEST(RuleTest, EmptyDictionaryIsValid) {
 // Tests for parsing the postal code name.
 class PostalCodeNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
+ public:
+  PostalCodeNameParseTest(const PostalCodeNameParseTest&) = delete;
+  PostalCodeNameParseTest& operator=(const PostalCodeNameParseTest&) = delete;
+
  protected:
   PostalCodeNameParseTest() {}
   Rule rule_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(PostalCodeNameParseTest);
 };
 
 // Verifies that a postal code name is parsed correctly.
@@ -280,12 +280,13 @@ INSTANTIATE_TEST_CASE_P(
 // Tests for parsing the locality name.
 class LocalityNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
+ public:
+  LocalityNameParseTest(const LocalityNameParseTest&) = delete;
+  LocalityNameParseTest& operator=(const LocalityNameParseTest&) = delete;
+
  protected:
   LocalityNameParseTest() {}
   Rule rule_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(LocalityNameParseTest);
 };
 
 // Verifies that a locality name is parsed correctly.
@@ -308,12 +309,13 @@ INSTANTIATE_TEST_CASE_P(
 // Tests for parsing the locality name.
 class SublocalityNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
+ public:
+  SublocalityNameParseTest(const SublocalityNameParseTest&) = delete;
+  SublocalityNameParseTest& operator=(const SublocalityNameParseTest&) = delete;
+
  protected:
   SublocalityNameParseTest() {}
   Rule rule_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(SublocalityNameParseTest);
 };
 
 // Verifies that a sublocality name is parsed correctly.
@@ -338,12 +340,13 @@ INSTANTIATE_TEST_CASE_P(
 // Tests for parsing the administrative area name.
 class AdminAreaNameParseTest
     : public testing::TestWithParam<std::pair<std::string, int> > {
+ public:
+  AdminAreaNameParseTest(const AdminAreaNameParseTest&) = delete;
+  AdminAreaNameParseTest& operator=(const AdminAreaNameParseTest&) = delete;
+
  protected:
   AdminAreaNameParseTest() {}
   Rule rule_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(AdminAreaNameParseTest);
 };
 
 // Verifies that an administrative area name is parsed correctly.
@@ -381,6 +384,10 @@ INSTANTIATE_TEST_CASE_P(
 
 // Tests for rule parsing.
 class RuleParseTest : public testing::TestWithParam<std::string> {
+ public:
+  RuleParseTest(const RuleParseTest&) = delete;
+  RuleParseTest& operator=(const RuleParseTest&) = delete;
+
  protected:
   RuleParseTest() {}
 
@@ -394,9 +401,6 @@ class RuleParseTest : public testing::TestWithParam<std::string> {
 
   Rule rule_;
   Localization localization_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(RuleParseTest);
 };
 
 // Verifies that a region data can be parsed successfully.
