@@ -128,8 +128,8 @@ std::string Localization::GetErrorMessageForPostalCode(
     const AddressData& address,
     AddressProblem problem,
     bool uses_postal_code_as_label,
-    std::string postal_code_example,
-    std::string post_service_url) const {
+    const std::string& postal_code_example,
+    const std::string& post_service_url) const {
   int message_id;
   std::vector<std::string> parameters;
   if (problem == MISSING_REQUIRED_FIELD) {

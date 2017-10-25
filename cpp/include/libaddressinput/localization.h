@@ -78,11 +78,12 @@ class Localization {
   // |post_service_url| is empty, then the error message will not contain a post
   // service URL. The problem should only be one of MISSING_REQUIRED_FIELD,
   // INVALID_FORMAT, or MISMATCHING_VALUE.
-  std::string GetErrorMessageForPostalCode(const AddressData& address,
-                                           AddressProblem problem,
-                                           bool uses_postal_code_as_label,
-                                           std::string postal_code_example,
-                                           std::string post_service_url) const;
+  std::string GetErrorMessageForPostalCode(
+      const AddressData& address,
+      AddressProblem problem,
+      bool uses_postal_code_as_label,
+      const std::string& postal_code_example,
+      const std::string& post_service_url) const;
 
   // The string getter.
   std::string (*get_string_)(int);
