@@ -25,20 +25,20 @@
 namespace i18n {
 namespace addressinput {
 
+// The name of the test data file.
+extern const char kDataFileName[];
+
 // Gets address metadata from a text file. Sample usage:
 //    class MyClass {
 //     public:
 //      MyClass(const MyClass&) = delete;
 //      MyClass& operator=(const MyClass&) = delete;
 //
-//      MyClass() : data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {
-//        base::FilePath src_path;
-//        CHECK(PathService::Get(base::DIR_SOURCE_ROOT, &src_path));
-//        source_ = new TestdataSource(/*aggregate=*/true,
-//                                     src_path.value() + '/');
-//      }
+//      MyClass() : data_ready_(BuildCallback(this, &MyClass::OnDataReady)),
+//                  source_(/*aggregate=*/true,
+//                          "path/to/test/data/file") {}
 //
-//      ~MyClass() { delete source_; }
+//      ~MyClass() {}
 //
 //      void GetData(const std::string& key) {
 //        source_->Get(key, *data_ready_);
@@ -53,7 +53,7 @@ namespace addressinput {
 //      }
 //
 //      const std::unique_ptr<const Source::Callback> data_ready_;
-//      const TestdataSource* source_;
+//      const TestdataSource source_;
 //    };
 class TestdataSource : public Source {
  public:
@@ -61,8 +61,10 @@ class TestdataSource : public Source {
   TestdataSource& operator=(const TestdataSource&) = delete;
 
   // Will return aggregate data if |aggregate| is set to true.
+  // This constructor uses a relative path to the test file.
   explicit TestdataSource(bool aggregate);
-  // |src_path| is the root of the source tree.
+
+  // |src_path| is a path to the test data file.
   TestdataSource(bool aggregate, const std::string& src_path);
 
   virtual ~TestdataSource();

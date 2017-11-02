@@ -31,6 +31,7 @@ using i18n::addressinput::BuildCallback;
 using i18n::addressinput::RegionDataConstants;
 using i18n::addressinput::Source;
 using i18n::addressinput::TestdataSource;
+using i18n::addressinput::kDataFileName;
 
 // Tests for TestdataSource object.
 class TestdataSourceTest : public testing::TestWithParam<std::string> {
@@ -41,9 +42,9 @@ class TestdataSourceTest : public testing::TestWithParam<std::string> {
  protected:
   TestdataSourceTest()
       : source_(false),
-        source_with_path_(false, ""),
+        source_with_path_(false, kDataFileName),
         aggregate_source_(true),
-        aggregate_source_with_path_(true, ""),
+        aggregate_source_with_path_(true, kDataFileName),
         success_(false),
         key_(),
         data_(),

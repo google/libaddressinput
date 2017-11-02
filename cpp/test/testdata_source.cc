@@ -26,6 +26,8 @@
 namespace i18n {
 namespace addressinput {
 
+const char kDataFileName[] = TEST_DATA_DIR "/countryinfo.txt";
+
 namespace {
 
 // For historical reasons, normal and aggregated data is here stored in the
@@ -33,9 +35,6 @@ namespace {
 // seem like a good idea to refactor this.
 const char kNormalPrefix = '-';
 const char kAggregatePrefix = '+';
-
-// The name of the test data file.
-const char kDataFileName[] = TEST_DATA_DIR "/countryinfo.txt";
 
 // Each data key begins with this string. Example of a data key:
 //     data/CH/AG
@@ -53,10 +52,9 @@ const size_t kAggregateDataKeyLength =
 
 std::map<std::string, std::string> InitData(const std::string& src_path) {
   std::map<std::string, std::string> data;
-  std::string data_file_name = src_path + kDataFileName;
-  std::ifstream file(data_file_name);
+  std::ifstream file(src_path);
   if (!file.is_open()) {
-    std::cerr << "Error opening \"" << data_file_name << "\"." << std::endl;
+    std::cerr << "Error opening \"" << src_path << "\"." << std::endl;
     std::exit(EXIT_FAILURE);
   }
 
@@ -150,7 +148,7 @@ TestdataSource::TestdataSource(bool aggregate, const std::string& src_path)
     : aggregate_(aggregate), src_path_(src_path) {}
 
 TestdataSource::TestdataSource(bool aggregate)
-    : aggregate_(aggregate) {}
+    : aggregate_(aggregate), src_path_(kDataFileName) {}
 
 TestdataSource::~TestdataSource() {}
 
