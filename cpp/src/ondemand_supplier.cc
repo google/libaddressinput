@@ -39,6 +39,11 @@ OndemandSupplier::~OndemandSupplier() {
   }
 }
 
+void OndemandSupplier::SupplyGlobally(const LookupKey& lookup_key,
+                                      const Callback& supplied) {
+  Supply(lookup_key, supplied);
+}
+
 void OndemandSupplier::Supply(const LookupKey& lookup_key,
                               const Callback& supplied) {
   OndemandSupplyTask* task =

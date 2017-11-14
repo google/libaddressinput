@@ -32,13 +32,13 @@ class NullStorage : public Storage {
   NullStorage& operator=(const NullStorage&) = delete;
 
   NullStorage();
-  virtual ~NullStorage();
+  ~NullStorage() override;
 
   // No-op.
-  virtual void Put(const std::string& key, std::string* data);
+  void Put(const std::string& key, std::string* data) override;
 
   // Always calls the |data_ready| callback function signalling failure.
-  virtual void Get(const std::string& key, const Callback& data_ready) const;
+  void Get(const std::string& key, const Callback& data_ready) const override;
 };
 
 }  // namespace addressinput

@@ -79,7 +79,7 @@ testing::AssertionResult DataIsValid(const std::string& data,
     return testing::AssertionFailure() << "empty data";
   }
 
-  std::string expected_data_begin = "{\"id\":\"" + key + "\"";
+  std::string expected_data_begin = R"({"id":")" + key + R"(")";
   if (data.compare(0, expected_data_begin.length(), expected_data_begin) != 0) {
     return testing::AssertionFailure() << data << " does not begin with "
                                        << expected_data_begin;
