@@ -38,7 +38,7 @@ using i18n::addressinput::RECIPIENT;
 
 TEST(AddressFieldUtilTest, FormatParseNewline) {
   std::vector<FormatElement> actual;
-  ParseFormatRule("%O%n%N%n%A%nAX-%Z %C%n\xC3\x85LAND", &actual);  /* "ÅLAND" */
+  ParseFormatRule(u8"%O%n%N%n%A%nAX-%Z %C%nÅLAND", &actual);
 
   std::vector<FormatElement> expected;
   expected.push_back(FormatElement(ORGANIZATION));
@@ -52,7 +52,7 @@ TEST(AddressFieldUtilTest, FormatParseNewline) {
   expected.push_back(FormatElement(" "));
   expected.push_back(FormatElement(LOCALITY));
   expected.push_back(FormatElement());
-  expected.push_back(FormatElement("\xC3\x85LAND"));  /* "ÅLAND" */
+  expected.push_back(FormatElement(u8"ÅLAND"));
 
   EXPECT_EQ(expected, actual);
 }

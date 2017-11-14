@@ -66,7 +66,7 @@ void ValidationTask::Run(Supplier* supplier) const {
   assert(supplier != nullptr);
   problems_->clear();
   lookup_key_->FromAddress(address_);
-  supplier->Supply(*lookup_key_, *supplied_);
+  supplier->SupplyGlobally(*lookup_key_, *supplied_);
 }
 
 void ValidationTask::Validate(bool success,

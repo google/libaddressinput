@@ -160,7 +160,7 @@ struct StaticMapChecker {
 // in regular expressions - (, [, \, {, ?. These special characters are all the
 // ones that appear in the postal code regular expressions.
 bool ContainsRegExSpecialCharacters(const std::string& input) {
-  return input.find_first_of("([\\{?") != std::string::npos;
+  return input.find_first_of(R"(([\{?)") != std::string::npos;
 }
 
 }  // namespace

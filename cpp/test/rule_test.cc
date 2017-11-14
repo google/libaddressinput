@@ -46,23 +46,23 @@ using i18n::addressinput::STREET_ADDRESS;
 TEST(RuleTest, CopyOverwritesRule) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule(
-      "{"
-      "\"fmt\":\"%S%Z\","
-      "\"lfmt\":\"%Z%S\","
-      "\"id\":\"data/XA\","
-      "\"name\":\"Le Test\","
-      "\"lname\":\"Testistan\","
-      "\"require\":\"AC\","
-      "\"sub_keys\":\"aa~bb~cc\","
-      "\"languages\":\"en~fr\","
-      "\"zip\":\"\\\\d{3}\","
-      "\"state_name_type\":\"area\","
-      "\"locality_name_type\":\"post_town\","
-      "\"sublocality_name_type\":\"neighborhood\","
-      "\"zip_name_type\":\"postal\","
-      "\"zipex\":\"1234\","
-      "\"posturl\":\"http://www.testpost.com\""
-      "}"));
+      R"({)"
+      R"("fmt":"%S%Z",)"
+      R"("lfmt":"%Z%S",)"
+      R"("id":"data/XA",)"
+      R"("name":"Le Test",)"
+      R"("lname":"Testistan",)"
+      R"("require":"AC",)"
+      R"("sub_keys":"aa~bb~cc",)"
+      R"("languages":"en~fr",)"
+      R"("zip":"\\d{3}",)"
+      R"("state_name_type":"area",)"
+      R"("locality_name_type":"post_town",)"
+      R"("sublocality_name_type":"neighborhood",)"
+      R"("zip_name_type":"postal",)"
+      R"("zipex":"1234",)"
+      R"("posturl":"http://www.testpost.com")"
+      R"(})"));
 
   Rule copy;
   EXPECT_NE(rule.GetFormat(), copy.GetFormat());
@@ -220,19 +220,19 @@ TEST(RuleTest, ParsesPostServiceUrlCorrectly) {
 
 TEST(RuleTest, PostalCodeMatcher) {
   Rule rule;
-  ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"\\\\d{3}\"}"));
+  ASSERT_TRUE(rule.ParseSerializedRule(R"({"zip":"\\d{3}"})"));
   EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
 }
 
 TEST(RuleTest, PostalCodeMatcherInvalidRegExp) {
   Rule rule;
-  ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"(\"}"));
+  ASSERT_TRUE(rule.ParseSerializedRule(R"({"zip":"("})"));
   EXPECT_TRUE(rule.GetPostalCodeMatcher() == nullptr);
 }
 
 TEST(RuleTest, ParsesJsonRuleCorrectly) {
   Json json;
-  ASSERT_TRUE(json.ParseObject("{\"zip\":\"\\\\d{3}\"}"));
+  ASSERT_TRUE(json.ParseObject(R"({"zip":"\\d{3}"})"));
   Rule rule;
   rule.ParseJsonRule(json);
   EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
@@ -459,7 +459,7 @@ TEST_P(RuleParseTest, SolePostalCode) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"1234\"}"));
   EXPECT_TRUE(rule.GetPostalCodeMatcher() != nullptr);
-  EXPECT_TRUE(rule.GetSolePostalCode() == "1234");
+  EXPECT_EQ(rule.GetSolePostalCode(), "1234");
 
   Rule copy;
   EXPECT_TRUE(copy.GetPostalCodeMatcher() == nullptr);

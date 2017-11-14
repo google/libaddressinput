@@ -72,35 +72,12 @@ INSTANTIATE_TEST_CASE_P(
         TestCase("foo", "foo", true, false),
         TestCase("foo", "FOO", true, false),
         TestCase("bar", "foo", false, true),
-        TestCase(
-            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",  /* "강원도" */
-            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",  /* "강원도" */
-            true, false),
-        TestCase(
-            /* "강원도" */
-            "\xEA\xB0\x95\xEC\x9B\x90\xEB\x8F\x84",
-            /* "대구광역시" */
-            "\xEB\x8C\x80\xEA\xB5\xAC\xEA\xB4\x91\xEC\x97\xAD\xEC\x8B\x9C",
-            false, true),
-        TestCase(
-            "Z\xC3\x9CRICH",  /* "ZÜRICH" */
-            "z\xC3\xBCrich",  /* "zürich" */
-            true, false),
-        TestCase(
-            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
-            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
-            false, true),
-        TestCase(
-            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
-            "\xD0\x93\xD0\x94\xD0\x95",  /* "ГДЕ" */
-            false, true),
-        TestCase(
-            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
-            "\xD0\xB0\xD0\xB1\xD0\xB2",  /* "абв" */
-            false, false),
-        TestCase(
-            "\xD0\xB3\xD0\xB4\xD0\xB5",  /* "где" */
-            "\xD0\x90\xD0\x91\xD0\x92",  /* "АБВ" */
-            false, false)));
+        TestCase(u8"강원도", u8"강원도", true, false),
+        TestCase(u8"강원도", u8"대구광역시", false, true),
+        TestCase(u8"ZÜRICH", u8"zürich", true, false),
+        TestCase(u8"абв", u8"где", false, true),
+        TestCase(u8"абв", u8"ГДЕ", false, true),
+        TestCase(u8"где", u8"абв", false, false),
+        TestCase(u8"где", u8"АБВ", false, false)));
 
 }  // namespace

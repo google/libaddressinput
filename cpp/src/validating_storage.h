@@ -41,17 +41,17 @@ class ValidatingStorage : public Storage {
 
   // Takes ownership of |storage|.
   explicit ValidatingStorage(Storage* storage);
-  virtual ~ValidatingStorage();
+  ~ValidatingStorage() override;
 
   // Storage implementation.
-  virtual void Put(const std::string& key, std::string* data);
+  void Put(const std::string& key, std::string* data) override;
 
   // Storage implementation.
   // If the data is invalid, then |data_ready| will be called with (false, key,
   // empty-string). If the data is valid, but stale, then |data_ready| will be
   // called with (false, key, stale-data). If the data is valid and fresh, then
   // |data_ready| will be called with (true, key, fresh-data).
-  virtual void Get(const std::string& key, const Callback& data_ready) const;
+  void Get(const std::string& key, const Callback& data_ready) const override;
 
  private:
   // The storage being wrapped.
