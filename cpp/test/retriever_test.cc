@@ -130,14 +130,14 @@ class StaleStorage : public Storage {
   StaleStorage& operator=(const StaleStorage&) = delete;
 
   StaleStorage() : data_updated_(false) {}
-  virtual ~StaleStorage() {}
+  ~StaleStorage() override {}
 
   // Storage implementation.
-  virtual void Get(const std::string& key, const Callback& data_ready) const {
+  void Get(const std::string& key, const Callback& data_ready) const override {
     data_ready(true, key, new std::string(kStaleWrappedData));
   }
 
-  virtual void Put(const std::string& key, std::string* value) {
+  void Put(const std::string& key, std::string* value) override {
     ASSERT_TRUE(value != nullptr);
     data_updated_ = true;
     delete value;

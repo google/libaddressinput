@@ -62,11 +62,11 @@ class FakeStorage : public Storage {
   FakeStorage& operator=(const FakeStorage&) = delete;
 
   FakeStorage();
-  virtual ~FakeStorage();
+  ~FakeStorage() override;
 
   // Storage implementation.
-  virtual void Put(const std::string& key, std::string* data);
-  virtual void Get(const std::string& key, const Callback& data_ready) const;
+  void Put(const std::string& key, std::string* data) override;
+  void Get(const std::string& key, const Callback& data_ready) const override;
 
  private:
   std::map<std::string, std::string*> data_;

@@ -60,10 +60,10 @@ class MockSource : public Source {
   MockSource& operator=(const MockSource&) = delete;
 
   MockSource();
-  virtual ~MockSource();
+  ~MockSource() override;
 
   // Source implementation.
-  virtual void Get(const std::string& key, const Callback& data_ready) const;
+  void Get(const std::string& key, const Callback& data_ready) const override;
 
   std::map<std::string, std::string> data_;
 };

@@ -34,25 +34,6 @@
 
 namespace {
 
-// For compatibility with legacy compilers, that can't handle UTF-8 string
-// literals in source code (please let them disappear from common use soon),
-// Chinese strings required in the test code are here provided as string
-// constants in hex escaped UTF-8 encoding.
-
-/* "九龍" */
-const char kKowloon[] = "\xE4\xB9\x9D\xE9\xBE\x8D";
-
-/* "新疆维吾尔自治区" */
-const char kXinJiang[] =
-    "\xE6\x96\xB0\xE7\x96\x86\xE7\xBB\xB4\xE5\x90\xBE\xE5\xB0\x94"
-    "\xE8\x87\xAA\xE6\xB2\xBB\xE5\x8C\xBA";
-
-/* "喀什地区" */
-const char kKashiDiqu[] = "\xE5\x96\x80\xE4\xBB\x80\xE5\x9C\xB0\xE5\x8C\xBA";
-
-/* "喀什市" */
-const char kKashiShi[] = "\xE5\x96\x80\xE4\xBB\x80\xE5\xB8\x82";
-
 using i18n::addressinput::AddressData;
 using i18n::addressinput::BuildCallback;
 using i18n::addressinput::LookupKey;
@@ -77,8 +58,8 @@ class OndemandSupplierWrapper : public SupplierWrapper {
 
   static SupplierWrapper* Build() { return new OndemandSupplierWrapper; }
 
-  virtual void Supply(const LookupKey& lookup_key,
-                      const Supplier::Callback& supplied) {
+  void Supply(const LookupKey& lookup_key,
+              const Supplier::Callback& supplied) override {
     ondemand_supplier_.Supply(lookup_key, supplied);
   }
 
@@ -96,8 +77,8 @@ class PreloadSupplierWrapper : public SupplierWrapper {
 
   static SupplierWrapper* Build() { return new PreloadSupplierWrapper; }
 
-  virtual void Supply(const LookupKey& lookup_key,
-                      const Supplier::Callback& supplied) {
+  void Supply(const LookupKey& lookup_key,
+              const Supplier::Callback& supplied) override {
     const std::string& region_code = lookup_key.GetRegionCode();
     if (!region_code.empty() && !preload_supplier_.IsLoaded(region_code)) {
       preload_supplier_.LoadRules(region_code, *loaded_);
@@ -190,7 +171,7 @@ TEST_P(SupplierTest, Valid) {
 
 TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
   address_.region_code = "HK";
-  address_.administrative_area = kKowloon;
+  address_.administrative_area = u8"九龍";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -202,7 +183,7 @@ TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
 
 TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
   address_.region_code = "HK";
-  address_.administrative_area = kKowloon;
+  address_.administrative_area = u8"九龍";
   address_.locality = "bbb";  // Ignored!
 
   ASSERT_NO_FATAL_FAILURE(Supply());
@@ -237,7 +218,7 @@ TEST_P(SupplierTest, KeyDepth0) {
 
 TEST_P(SupplierTest, KeyDepth1) {
   address_.region_code = "CN";
-  address_.administrative_area = kXinJiang;
+  address_.administrative_area = u8"新疆维吾尔自治区";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -249,8 +230,8 @@ TEST_P(SupplierTest, KeyDepth1) {
 
 TEST_P(SupplierTest, KeyDepth2) {
   address_.region_code = "CN";
-  address_.administrative_area = kXinJiang;
-  address_.locality = kKashiDiqu;
+  address_.administrative_area = u8"新疆维吾尔自治区";
+  address_.locality = u8"喀什地区";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -262,9 +243,9 @@ TEST_P(SupplierTest, KeyDepth2) {
 
 TEST_P(SupplierTest, KeyDepth3) {
   address_.region_code = "CN";
-  address_.administrative_area = kXinJiang;
-  address_.locality = kKashiDiqu;
-  address_.dependent_locality = kKashiShi;
+  address_.administrative_area = u8"新疆维吾尔自治区";
+  address_.locality = u8"喀什地区";
+  address_.dependent_locality = u8"喀什市";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);

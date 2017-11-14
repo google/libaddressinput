@@ -79,7 +79,6 @@ class Localization {
   // service URL. The problem should only be one of MISSING_REQUIRED_FIELD,
   // INVALID_FORMAT, or MISMATCHING_VALUE.
   std::string GetErrorMessageForPostalCode(
-      const AddressData& address,
       AddressProblem problem,
       bool uses_postal_code_as_label,
       const std::string& postal_code_example,

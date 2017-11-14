@@ -80,7 +80,7 @@ TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_2Lines) {
 
   address.language_code = "ar";
   GetStreetAddressLinesAsSingleLine(address, &result);
-  EXPECT_EQ("Line 1\xD8\x8C" " Line 2", result);  // Arabic comma.
+  EXPECT_EQ(u8"Line 1، Line 2", result);
 }
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_5Lines) {
@@ -129,13 +129,9 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLocalLanguage) {
 }
 
 TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
-  /* 大安區 */
-  static const char kTaiwanCity[] = "\xE5\xA4\xA7\xE5\xAE\x89\xE5\x8D\x80";
-  /* 台北市 */
-  static const char kTaiwanAdmin[] = "\xE5\x8F\xB0\xE5\x8C\x97\xE5\xB8\x82";
-  /* 台灣信義路三段33號 */
-  static const char kTaiwanStreetLine[]= "\xE5\x8F\xB0\xE7\x81\xA3\xE4\xBF\xA1"
-    "\xE7\xBE\xA9\xE8\xB7\xAF\xE4\xB8\x89\xE6\xAE\xB5" "33" "\xE8\x99\x9F";
+  static const char kTaiwanCity[] = u8"大安區";
+  static const char kTaiwanAdmin[] = u8"台北市";
+  static const char kTaiwanStreetLine[] = u8"台灣信義路三段33號";
   static const char kPostalCode[] = "106";
 
   AddressData address;
@@ -286,7 +282,7 @@ TEST(AddressFormatterTest,
   AddressData address;
   address.region_code = "AX";
   std::vector<std::string> expected;
-  expected.push_back("\xC3\x85LAND");  /* ÅLAND */
+  expected.push_back(u8"ÅLAND");
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
   EXPECT_EQ(expected, lines);
@@ -313,7 +309,7 @@ TEST(AddressFormatterTest,
   EXPECT_EQ(expected, lines);
 
   address.postal_code = "123";
-  expected.push_back("\xE3\x80\x92" "123");  /* 〒123 */
+  expected.push_back(u8"〒123");
   GetFormattedNationalAddress(address, &lines);
   EXPECT_EQ(expected, lines);
 

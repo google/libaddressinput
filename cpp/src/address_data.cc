@@ -65,7 +65,7 @@ static_assert(size(kStringField) == size(kVectorStringField),
 // A string is considered to be "empty" not only if it actually is empty, but
 // also if it contains nothing but whitespace.
 bool IsStringEmpty(const std::string& str) {
-  static const RE2 kMatcher("\\S");
+  static const RE2 kMatcher(R"(\S)");
   return str.empty() || !RE2::PartialMatch(str, kMatcher);
 }
 
