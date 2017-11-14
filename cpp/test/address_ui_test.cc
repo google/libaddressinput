@@ -150,7 +150,8 @@ class BestAddressLanguageTagTest
     : public testing::TestWithParam<LanguageTestCase> {
  public:
   BestAddressLanguageTagTest(const BestAddressLanguageTagTest&) = delete;
-  BestAddressLanguageTagTest& operator=(const BestAddressLanguageTagTest&) = delete;
+  BestAddressLanguageTagTest& operator=(const BestAddressLanguageTagTest&) =
+      delete;
 
  protected:
   BestAddressLanguageTagTest() {}

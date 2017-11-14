@@ -260,7 +260,7 @@ TEST_F(ValidationTaskTest, MissingRequiredFieldRequireName) {
 }
 
 TEST_F(ValidationTaskTest, UnknownValueRuleNull) {
-  json_[0] = "{\"fmt\":\"%R%S\",\"require\":\"RS\",\"sub_keys\":\"aa~bb\"}";
+  json_[0] = R"({"fmt":"%R%S","require":"RS","sub_keys":"aa~bb"})";
 
   address_.region_code = "rrr";
   address_.administrative_area = "sss";
@@ -273,7 +273,7 @@ TEST_F(ValidationTaskTest, UnknownValueRuleNull) {
 }
 
 TEST_F(ValidationTaskTest, NoUnknownValueRuleNotNull) {
-  json_[0] = "{\"fmt\":\"%R%S\",\"require\":\"RS\",\"sub_keys\":\"aa~bb\"}";
+  json_[0] = R"({"fmt":"%R%S","require":"RS","sub_keys":"aa~bb"})";
   json_[1] = "{}";
 
   address_.region_code = "rrr";
@@ -285,7 +285,7 @@ TEST_F(ValidationTaskTest, NoUnknownValueRuleNotNull) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooShort) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "12";
@@ -298,7 +298,7 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooShort) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooLong) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "1234";
@@ -311,7 +311,7 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooLong) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeRecognizedFormat) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "123";
@@ -322,8 +322,8 @@ TEST_F(ValidationTaskTest, PostalCodeRecognizedFormat) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeMismatchingValue1) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
-  json_[1] = "{\"zip\":\"1\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
+  json_[1] = R"({"zip":"1"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "000";
@@ -336,9 +336,9 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue1) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeMismatchingValue2) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
-  json_[1] = "{\"zip\":\"1\"}";
-  json_[2] = "{\"zip\":\"12\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
+  json_[1] = R"({"zip":"1"})";
+  json_[2] = R"({"zip":"12"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "100";
@@ -351,10 +351,10 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue2) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeMismatchingValue3) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
-  json_[1] = "{\"zip\":\"1\"}";
-  json_[2] = "{\"zip\":\"12\"}";
-  json_[3] = "{\"zip\":\"123\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
+  json_[1] = R"({"zip":"1"})";
+  json_[2] = R"({"zip":"12"})";
+  json_[3] = R"({"zip":"123"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "120";
@@ -367,10 +367,10 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue3) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeMatchingValue) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{3}\"}";
-  json_[1] = "{\"zip\":\"1\"}";
-  json_[2] = "{\"zip\":\"12\"}";
-  json_[3] = "{\"zip\":\"123\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
+  json_[1] = R"({"zip":"1"})";
+  json_[2] = R"({"zip":"12"})";
+  json_[3] = R"({"zip":"123"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "123";
@@ -381,8 +381,8 @@ TEST_F(ValidationTaskTest, PostalCodeMatchingValue) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodePrefixMismatchingValue) {
-  json_[0] = "{\"fmt\":\"%Z\",\"zip\":\"\\\\d{5}\"}";
-  json_[1] = "{\"zip\":\"9[0-5]|96[01]\"}";
+  json_[0] = R"({"fmt":"%Z","zip":"\\d{5}"})";
+  json_[1] = R"({"zip":"9[0-5]|96[01]"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "10960";
@@ -395,8 +395,8 @@ TEST_F(ValidationTaskTest, PostalCodePrefixMismatchingValue) {
 }
 
 TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
-  json_[0] = "{\"zip\":\"\\\\d{3}\"}";
-  json_[1] = "{\"zip\":\"1\"}";
+  json_[0] = R"({"zip":"\\d{3}"})";
+  json_[1] = R"({"zip":"1"})";
 
   address_.region_code = "rrr";
   address_.postal_code = "000";
@@ -412,7 +412,7 @@ TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
 }
 
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageUnd) {
-  json_[0] = "{\"fmt\":\"%A\"}";
+  json_[0] = R"({"fmt":"%A"})";
 
   address_.region_code = "rrr";
   address_.address_line.push_back("aaa");
@@ -427,7 +427,7 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageUnd) {
 }
 
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageDa) {
-  json_[0] = "{\"fmt\":\"%A\",\"languages\":\"da\"}";
+  json_[0] = R"({"fmt":"%A","languages":"da"})";
 
   address_.region_code = "rrr";
   address_.address_line.push_back("aaa");
@@ -442,7 +442,7 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDa) {
 }
 
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageDaNotMatchDe) {
-  json_[0] = "{\"fmt\":\"%A\",\"languages\":\"da\"}";
+  json_[0] = R"({"fmt":"%A","languages":"da"})";
 
   address_.region_code = "rrr";
   address_.address_line.push_back("aaa");
@@ -455,7 +455,7 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDaNotMatchDe) {
 }
 
 TEST_F(ValidationTaskTest, UsesPoBoxAllowPostal) {
-  json_[0] = "{\"fmt\":\"%A\"}";
+  json_[0] = R"({"fmt":"%A"})";
 
   address_.region_code = "rrr";
   address_.address_line.push_back("aaa");

@@ -56,13 +56,19 @@ class PreloadSupplier : public Supplier {
 
   // Takes ownership of |source| and |storage|.
   PreloadSupplier(const Source* source, Storage* storage);
-  virtual ~PreloadSupplier();
+  ~PreloadSupplier() override;
 
   // Collects the metadata needed for |lookup_key| from the cache, then calls
   // |supplied|. If the metadata needed isn't found in the cache, it will call
   // the callback with status false.
-  virtual void Supply(const LookupKey& lookup_key,
-                      const Supplier::Callback& supplied);
+  void Supply(const LookupKey& lookup_key,
+              const Supplier::Callback& supplied) override;
+
+  // Collects the metadata needed for |lookup_key| from the cache, by looking at
+  // all available languages, then calls |supplied|. If the metadata needed
+  // isn't found in the cache, it will call the callback with status false.
+  void SupplyGlobally(const LookupKey& lookup_key,
+                      const Supplier::Callback& supplied) override;
 
   // Should be called only when IsLoaded() returns true for the region code of
   // the |lookup_key|. Can return nullptr if the |lookup_key| does not
@@ -85,14 +91,15 @@ class PreloadSupplier : public Supplier {
   bool IsPending(const std::string& region_code) const;
 
  private:
-  bool GetRuleHierarchy(const LookupKey& lookup_key,
-                        RuleHierarchy* hierarchy) const;
+  bool GetRuleHierarchy(const LookupKey& lookup_key, RuleHierarchy* hierarchy,
+                        const bool search_globally) const;
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
 
   const std::unique_ptr<const Retriever> retriever_;
   std::set<std::string> pending_;
   const std::unique_ptr<IndexMap> rule_index_;
+  const std::unique_ptr<IndexMap> language_rule_index_;
   std::vector<const Rule*> rule_storage_;
   std::map<std::string, std::map<std::string, const Rule*> > region_rules_;
 };

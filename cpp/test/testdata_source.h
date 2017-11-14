@@ -67,10 +67,10 @@ class TestdataSource : public Source {
   // |src_path| is a path to the test data file.
   TestdataSource(bool aggregate, const std::string& src_path);
 
-  virtual ~TestdataSource();
+  ~TestdataSource() override;
 
   // Source implementation.
-  virtual void Get(const std::string& key, const Callback& data_ready) const;
+  void Get(const std::string& key, const Callback& data_ready) const override;
 
  private:
   const bool aggregate_;

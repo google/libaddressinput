@@ -50,10 +50,13 @@ class OndemandSupplier : public Supplier {
 
   // Takes ownership of |source| and |storage|.
   OndemandSupplier(const Source* source, Storage* storage);
-  virtual ~OndemandSupplier();
+  ~OndemandSupplier() override;
 
   // Loads the metadata needed for |lookup_key|, then calls |supplied|.
-  virtual void Supply(const LookupKey& lookup_key, const Callback& supplied);
+  void Supply(const LookupKey& lookup_key, const Callback& supplied) override;
+  // For now, this is identical to Supply.
+  void SupplyGlobally(const LookupKey& lookup_key,
+                      const Callback& supplied) override;
 
  private:
   const std::unique_ptr<const Retriever> retriever_;

@@ -91,8 +91,7 @@ std::string Localization::GetErrorMessage(const AddressData& address,
     bool uses_postal_code_as_label =
         rule.GetPostalCodeNameMessageId() ==
         IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL;
-    return GetErrorMessageForPostalCode(address, problem,
-                                        uses_postal_code_as_label,
+    return GetErrorMessageForPostalCode(problem, uses_postal_code_as_label,
                                         postal_code_example, post_service_url);
   } else {
     if (problem == MISSING_REQUIRED_FIELD) {
@@ -125,7 +124,6 @@ void Localization::SetGetter(std::string (*getter)(int)) {
 }
 
 std::string Localization::GetErrorMessageForPostalCode(
-    const AddressData& address,
     AddressProblem problem,
     bool uses_postal_code_as_label,
     const std::string& postal_code_example,
@@ -142,7 +140,7 @@ std::string Localization::GetErrorMessageForPostalCode(
     } else if (!postal_code_example.empty()) {
       message_id = uses_postal_code_as_label ?
           IDS_LIBADDRESSINPUT_MISSING_REQUIRED_POSTAL_CODE_EXAMPLE :
-          IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE ;
+          IDS_LIBADDRESSINPUT_MISSING_REQUIRED_ZIP_CODE_EXAMPLE;
       parameters.push_back(postal_code_example);
     } else {
       message_id = IDS_LIBADDRESSINPUT_MISSING_REQUIRED_FIELD;
