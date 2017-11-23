@@ -67,9 +67,9 @@ class CallbackImpl : public Callback<Key, Data> {
     assert(observe_event_ != nullptr);
   }
 
-  virtual ~CallbackImpl() {}
+  ~CallbackImpl() override {}
 
-  virtual void operator()(bool success, Key key, Data data) const {
+  void operator()(bool success, Key key, Data data) const override {
     (observer_->*observe_event_)(success, key, data);
   }
 

@@ -25,7 +25,7 @@ namespace addressinput {
 // https://code.google.com/p/grit-i18n/source/browse/trunk/grit/format/rc_header.py?r=94#169
 // http://msdn.microsoft.com/en-us/library/t2zechd4(VS.71).aspx
 //
-// The enum must be named to enable using it in gtest templates, e.g.
+// The enum must be named to enable using it in GTest templates, e.g.
 // EXPECT_EQ(INVALID_MESSAGE_ID, my_id) will not compile on some platforms when
 // the enum is unnamed.
 enum MessageIdentifier { INVALID_MESSAGE_ID = 0 };

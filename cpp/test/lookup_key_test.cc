@@ -155,7 +155,7 @@ TEST(LookupKeyTest, WithLanguageCodeInvalidLanguage) {
 TEST(LookupKeyTest, WithLanguageCodeAlternateLanguageNoState) {
   AddressData address;
   // Use real data here as the choice of adding a language requires metadata.
-  // Afgahnistan has multiple languages (including Pashto as an alternative)
+  // Afghanistan has multiple languages (including Pashto as an alternative)
   // but no subregions.
   address.region_code = "AF";
   address.language_code = "ps";

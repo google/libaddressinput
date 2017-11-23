@@ -26,7 +26,7 @@ namespace addressinput {
 // one of the two implementations a call should be resolved to.
 //
 // Although libaddressinput.gyp explicitly sets -std=c++11 it's possible that
-// this is overriden at build time to use a newer version of the standard.
+// this is overridden at build time to use a newer version of the standard.
 //
 // It's also possible that C++17 std::size is defined even when building for an
 // older version of the standard, which is done in the Microsoft implementation

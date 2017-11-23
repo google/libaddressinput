@@ -167,7 +167,7 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
   AddressData address_ko_latn;
   address_ko_latn.region_code = "KR";
   address_ko_latn.postal_code = "425-111";
-  address_ko_latn.language_code = "ko-latn";
+  address_ko_latn.language_code = "ko-Latn";
 
   expected = address_ko_latn;
   // The province is Gyeonggi - 경기도.
