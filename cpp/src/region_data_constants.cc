@@ -663,7 +663,7 @@ std::map<std::string, std::string> InitRegionData() {
       u8R"("require":"ACSZ",)"
       u8R"("state_name_type":"prefecture",)"
       u8R"("zipex":"154-0023,350-1106,951-8073,112-0001,208-0032,231-0012",)"
-      u8R"("posturl":"http://search.post.japanpost.jp/zipcode/",)"
+      u8R"("posturl":"http://www.post.japanpost.jp/zipcode/",)"
       u8R"("languages":"ja")"
       "}"));
   region_data.insert(std::make_pair("KE", "{"

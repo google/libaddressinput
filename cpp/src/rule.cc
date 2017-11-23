@@ -56,7 +56,7 @@ struct NameIdMap {
   const NameIdInfo* infos;
   size_t size;
 
-  // Return the message id corresponding to |name|, ir INVALID_MESSAGE_ID
+  // Return the message id corresponding to |name|, or INVALID_MESSAGE_ID
   // if it is not found in the map.
   int GetIdFromName(const std::string& name) const {
     NameIdInfo key = { name.c_str() };
@@ -269,7 +269,7 @@ void Rule::ParseJsonRule(const Json& json) {
     // the country. At other levels, the regular expression indicates the postal
     // code prefix expected for addresses in that region.
     //
-    // In order to make the RE2 object created from the "zip" field useable for
+    // In order to make the RE2 object created from the "zip" field usable for
     // both these purposes, the pattern string is here prefixed with "^" to
     // anchor it at the beginning of the string so that it can be used with
     // RE2::PartialMatch() to perform prefix matching or else with

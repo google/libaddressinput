@@ -46,7 +46,7 @@ namespace {
 
 // STL predicate less<> that uses StringCompare to match strings that a human
 // reader would consider to be "the same". The default implementation just does
-// case insensitive string comparison, but StringCompare can be overriden with
+// case insensitive string comparison, but StringCompare can be overridden with
 // more sophisticated implementations.
 class IndexLess : public std::binary_function<std::string, std::string, bool> {
  public:
@@ -367,15 +367,21 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
 
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
+      const Rule* rule = nullptr;
       IndexMap::const_iterator it = rule_index_->find(key);
-      if (it == rule_index_->end() && search_globally && depth > 0 &&
-          !hierarchy->rule[0]->GetLanguages().empty()) {
+      if (it != rule_index_->end()) {
+        rule = it->second;
+      } else if (search_globally && depth > 0 &&
+                 !hierarchy->rule[0]->GetLanguages().empty()) {
         it = language_rule_index_->find(key);
+        if (it != language_rule_index_->end()) {
+          rule = it->second;
+        }
       }
-      if (it == rule_index_->end() || it == language_rule_index_->end()) {
+      if (rule == nullptr) {
         return depth > 0;  // No data on COUNTRY level is failure.
       }
-      hierarchy->rule[depth] = it->second;
+      hierarchy->rule[depth] = rule;
     }
   }
 

@@ -162,14 +162,17 @@ void AddressInputHelper::CheckChildrenForPostCodeMatches(
   const RE2ptr* postal_code_prefix = rule->GetPostalCodeMatcher();
   if (postal_code_prefix == nullptr ||
       RE2::PartialMatch(address.postal_code, *postal_code_prefix->ptr)) {
+    size_t depth = lookup_key.GetDepth();
+    assert(depth < size(LookupKey::kHierarchy));
+
     // This was a match, so store it and its parent in the hierarchy.
-    hierarchy[lookup_key.GetDepth()].push_back(Node());
-    Node* node = &hierarchy[lookup_key.GetDepth()].back();
+    hierarchy[depth].push_back(Node());
+    Node* node = &hierarchy[depth].back();
     node->parent = parent;
     node->rule = rule;
 
-    if (IsFieldUsed(LookupKey::kHierarchy[lookup_key.GetDepth() + 1],
-                    address.region_code)) {
+    if (depth < size(LookupKey::kHierarchy) - 1 &&
+        IsFieldUsed(LookupKey::kHierarchy[depth + 1], address.region_code)) {
       // If children are used and present, check them too.
       for (std::vector<std::string>::const_iterator child_it =
                rule->GetSubKeys().begin();

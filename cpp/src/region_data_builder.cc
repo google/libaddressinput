@@ -107,7 +107,7 @@ RegionData* BuildRegion(const std::map<std::string, const Rule*>& rules,
 
   RegionData* region = new RegionData(region_code);
 
-  // If there're sub-keys for field X, but field X is not used in this region
+  // If there are sub-keys for field X, but field X is not used in this region
   // code, then these sub-keys are skipped over. For example, CH has sub-keys
   // for field ADMIN_AREA, but CH does not use ADMIN_AREA field.
   size_t region_max_depth =

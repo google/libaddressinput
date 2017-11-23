@@ -158,7 +158,7 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
             .append(kTaiwanStreetLine),
             one_line);
 
-  // Changing to the latin variant will change the output.
+  // Changing to the Latin variant will change the output.
   AddressData latin_address;
   latin_address.region_code = "TW";
   latin_address.address_line.push_back("No. 33, Section 3 Xinyi Rd");

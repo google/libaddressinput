@@ -454,7 +454,7 @@ TEST_P(RuleParseTest, SublocalityNameTypeHasUiString) {
   }
 }
 
-// Verifies that the sole postal code is correctly recognised and copied.
+// Verifies that the sole postal code is correctly recognized and copied.
 TEST_P(RuleParseTest, SolePostalCode) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"zip\":\"1234\"}"));
