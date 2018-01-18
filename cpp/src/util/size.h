@@ -35,7 +35,8 @@ namespace addressinput {
 // https://docs.microsoft.com/en-us/cpp/visual-cpp-language-conformance
 
 #if __cpp_lib_nonmember_container_access >= 201411 || \
-    (_LIBCPP_VERSION >= 1101 && _LIBCPP_STD_VER > 14) || _MSC_VER >= 1900
+    (_LIBCPP_VERSION >= 1101 && _LIBCPP_STD_VER > 14) || \
+    (!defined(_LIBCPP_STD_VER) && _MSC_VER >= 1900)
 
 using std::size;
 
