@@ -22,9 +22,7 @@
 #include <cassert>
 #include <cstddef>
 #include <map>
-#include <set>
 #include <string>
-#include <utility>
 
 #include "lookup_key.h"
 #include "retriever.h"
@@ -49,8 +47,7 @@ OndemandSupplyTask::OndemandSupplyTask(
   assert(retrieved_ != nullptr);
 }
 
-OndemandSupplyTask::~OndemandSupplyTask() {
-}
+OndemandSupplyTask::~OndemandSupplyTask() = default;
 
 void OndemandSupplyTask::Queue(const std::string& key) {
   assert(pending_.find(key) == pending_.end());
@@ -70,7 +67,7 @@ void OndemandSupplyTask::Retrieve(const Retriever& retriever) {
     // otherwise obvious it != pending_.end() but instead test a local variable
     // that isn't affected by the object being deleted.
     bool done = false;
-    for (std::set<std::string>::const_iterator it = pending_.begin(); !done; ) {
+    for (auto it = pending_.begin(); !done;) {
       const std::string& key = *it++;
       done = it == pending_.end();
       retriever.Retrieve(key, *retrieved_);
@@ -93,7 +90,7 @@ void OndemandSupplyTask::Load(bool success,
     // The address metadata server will return the empty JSON "{}" when it
     // successfully performed a lookup, but didn't find any data for that key.
     if (data != "{}") {
-      Rule* rule = new Rule;
+      auto* rule = new Rule;
       if (LookupKey::kHierarchy[depth] == COUNTRY) {
         // All rules on the COUNTRY level inherit from the default rule.
         rule->CopyFrom(Rule::GetDefault());
@@ -109,8 +106,7 @@ void OndemandSupplyTask::Load(bool success,
         // certain alias is requested repeatedly, but such a cache would then
         // have to be kept to some limited size to not grow indefinitely with
         // every possible permutation of a name recognized by the data server.)
-        std::pair<std::map<std::string, const Rule*>::iterator, bool> result =
-            rule_cache_->insert(std::make_pair(rule->GetId(), rule));
+        auto result = rule_cache_->emplace(rule->GetId(), rule);
         if (!result.second) {  // There was already an entry with this ID.
           delete rule;
         }

@@ -103,8 +103,7 @@ AddressInputHelper::AddressInputHelper(PreloadSupplier* supplier)
   assert(supplier_ != nullptr);
 }
 
-AddressInputHelper::~AddressInputHelper() {
-}
+AddressInputHelper::~AddressInputHelper() = default;
 
 void AddressInputHelper::FillAddress(AddressData* address) const {
   assert(address != nullptr);
@@ -136,7 +135,6 @@ void AddressInputHelper::FillAddress(AddressData* address) const {
     // have been added in the previous check.
     if (!address->postal_code.empty() &&
         RE2::FullMatch(address->postal_code, *postal_code_reg_exp->ptr)) {
-
       // This hierarchy is used to store rules that represent possible matches
       // at each level of the hierarchy.
       std::vector<Node> hierarchy[kHierarchyDepth];
@@ -166,7 +164,7 @@ void AddressInputHelper::CheckChildrenForPostCodeMatches(
     assert(depth < size(LookupKey::kHierarchy));
 
     // This was a match, so store it and its parent in the hierarchy.
-    hierarchy[depth].push_back(Node());
+    hierarchy[depth].emplace_back();
     Node* node = &hierarchy[depth].back();
     node->parent = parent;
     node->rule = rule;
@@ -174,11 +172,9 @@ void AddressInputHelper::CheckChildrenForPostCodeMatches(
     if (depth < size(LookupKey::kHierarchy) - 1 &&
         IsFieldUsed(LookupKey::kHierarchy[depth + 1], address.region_code)) {
       // If children are used and present, check them too.
-      for (std::vector<std::string>::const_iterator child_it =
-               rule->GetSubKeys().begin();
-           child_it != rule->GetSubKeys().end(); ++child_it) {
+      for (const auto& sub_key : rule->GetSubKeys()) {
         LookupKey child_key;
-        child_key.FromLookupKey(lookup_key, *child_it);
+        child_key.FromLookupKey(lookup_key, sub_key);
         CheckChildrenForPostCodeMatches(address, child_key, node, hierarchy);
       }
     }

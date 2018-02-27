@@ -346,9 +346,8 @@ public class FieldVerifierTest {
     AddressProblems problems = new AddressProblems();
     AddressData address = AddressData.builder()
         .setRecipient("\u5BAE\u672C \u8302")  // SHIGERU_MIYAMOTO
-        .setAddress("\u4E0A\u9CE5\u7FBD\u927E\u7ACB\u753A11\u756A\u5730")
+        .setAddress("\u4EAC\u90FD\u5E02\u4E0A\u9CE5\u7FBD\u927E\u7ACB\u753A11\u756A\u5730")
         .setAdminArea("\u4eac\u90fd\u5e9c")  // Kyoto prefecture
-        .setLocality("\u4EAC\u90FD\u5E02")  // Kyoto city
         .setCountry("JP")
         .setPostalCode("601-8501")
         .build();
@@ -360,9 +359,8 @@ public class FieldVerifierTest {
     AddressProblems problems = new AddressProblems();
     AddressData address = AddressData.builder()
         .setRecipient("Shigeru Miyamoto")
-        .setAddress("11-1 Kamitoba-hokotate-cho")
+        .setAddress("11-1 Kamitoba-hokotate-cho Kyoto")
         .setAdminArea("KYOTO")
-        .setLocality("Kyoto")
         .setLanguageCode("ja_Latn")
         .setCountry("JP")
         .setPostalCode("601-8501")
@@ -375,7 +373,7 @@ public class FieldVerifierTest {
     AddressProblems problems = new AddressProblems();
     AddressData address = AddressData.builder()
         .setRecipient("Shigeru Miyamoto")  // SHIGERU_MIYAMOTO_ENGLISH
-        .setAddress("11-1 Kamitoba-hokotate-cho")
+        .setAddress("11-1 Kamitoba-hokotate-cho Kyoto")
         .setAdminArea("Fake Admin")
         .setLocality("Kyoto")
         .setLanguageCode("ja_Latn")

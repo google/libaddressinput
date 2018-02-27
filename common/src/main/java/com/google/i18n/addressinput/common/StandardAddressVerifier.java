@@ -69,13 +69,7 @@ public final class StandardAddressVerifier {
    * Verifies the address, reporting problems to problems.
    */
   public void verify(AddressData address, AddressProblems problems) {
-    NotifyingListener listener = new NotifyingListener();
-    verifyAsync(address, problems, listener);
-    try {
-      listener.waitLoadingEnd();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    new Verifier(address, problems, new NotifyingListener()).run();
   }
 
   public void verifyAsync(

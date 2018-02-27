@@ -23,13 +23,13 @@ namespace i18n {
 namespace addressinput {
 
 class Rule;
-struct RE2ptr;
+struct RE2PlainPtr;
 
 class PostBoxMatchers {
  public:
   // Returns pointers to RE2 regular expression objects to test address lines
   // for those languages that are relevant for |country_rule|.
-  static std::vector<const RE2ptr*> GetMatchers(const Rule& country_rule);
+  static std::vector<const RE2PlainPtr*> GetMatchers(const Rule& country_rule);
 
   PostBoxMatchers(const PostBoxMatchers&) = delete;
   PostBoxMatchers& operator=(const PostBoxMatchers&) = delete;

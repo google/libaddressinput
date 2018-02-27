@@ -26,8 +26,7 @@ AddressValidator::AddressValidator(Supplier* supplier) : supplier_(supplier) {
   assert(supplier_ != nullptr);
 }
 
-AddressValidator::~AddressValidator() {
-}
+AddressValidator::~AddressValidator() = default;
 
 void AddressValidator::Validate(const AddressData& address,
                                 bool allow_postal,

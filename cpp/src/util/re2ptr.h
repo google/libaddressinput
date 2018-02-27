@@ -27,13 +27,20 @@
 // class RE2.
 //
 // The work-around in this file works by wrapping pointers to RE2 object in the
-// simple struct RE2ptr, which is trivial to forward declare.
+// simple structs RE2PlainPtr and RE2ptr, which are trivial to forward declare.
 
 #include <re2/re2.h>
 
 namespace i18n {
 namespace addressinput {
 
+// A non-owner pointer to an RE2 instance. Since this is POD, it can be
+// initialized statically to NULL without a C++ static constructor.
+struct RE2PlainPtr {
+    RE2* ptr;
+};
+
+// This is an owning pointer to an RE2 instance.
 struct RE2ptr {
   RE2ptr(RE2* init_ptr) : ptr(init_ptr) {}
   ~RE2ptr() { delete ptr; }
