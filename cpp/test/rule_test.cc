@@ -148,8 +148,8 @@ TEST(RuleTest, ParseOverwritesRule) {
 
 TEST(RuleTest, ParsesFormatCorrectly) {
   std::vector<FormatElement> expected;
-  expected.push_back(FormatElement(ADMIN_AREA));
-  expected.push_back(FormatElement(LOCALITY));
+  expected.emplace_back(ADMIN_AREA);
+  expected.emplace_back(LOCALITY);
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
   EXPECT_EQ(expected, rule.GetFormat());
@@ -169,8 +169,8 @@ TEST(RuleTest, ParsesLatinNameCorrectly) {
 
 TEST(RuleTest, ParsesLatinFormatCorrectly) {
   std::vector<FormatElement> expected;
-  expected.push_back(FormatElement(LOCALITY));
-  expected.push_back(FormatElement(ADMIN_AREA));
+  expected.emplace_back(LOCALITY);
+  expected.emplace_back(ADMIN_AREA);
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"lfmt\":\"%C%S\"}"));
   EXPECT_EQ(expected, rule.GetLatinFormat());
@@ -187,9 +187,9 @@ TEST(RuleTest, ParsesRequiredCorrectly) {
 
 TEST(RuleTest, ParsesSubKeysCorrectly) {
   std::vector<std::string> expected;
-  expected.push_back("aa");
-  expected.push_back("bb");
-  expected.push_back("cc");
+  expected.emplace_back("aa");
+  expected.emplace_back("bb");
+  expected.emplace_back("cc");
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"sub_keys\":\"aa~bb~cc\"}"));
   EXPECT_EQ(expected, rule.GetSubKeys());
@@ -197,9 +197,9 @@ TEST(RuleTest, ParsesSubKeysCorrectly) {
 
 TEST(RuleTest, ParsesLanguagesCorrectly) {
   std::vector<std::string> expected;
-  expected.push_back("de");
-  expected.push_back("fr");
-  expected.push_back("it");
+  expected.emplace_back("de");
+  expected.emplace_back("fr");
+  expected.emplace_back("it");
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"de~fr~it\"}"));
   EXPECT_EQ(expected, rule.GetLanguages());
@@ -256,7 +256,7 @@ class PostalCodeNameParseTest
   PostalCodeNameParseTest& operator=(const PostalCodeNameParseTest&) = delete;
 
  protected:
-  PostalCodeNameParseTest() {}
+  PostalCodeNameParseTest() = default;
   Rule rule_;
 };
 
@@ -285,7 +285,7 @@ class LocalityNameParseTest
   LocalityNameParseTest& operator=(const LocalityNameParseTest&) = delete;
 
  protected:
-  LocalityNameParseTest() {}
+  LocalityNameParseTest() = default;
   Rule rule_;
 };
 
@@ -314,7 +314,7 @@ class SublocalityNameParseTest
   SublocalityNameParseTest& operator=(const SublocalityNameParseTest&) = delete;
 
  protected:
-  SublocalityNameParseTest() {}
+  SublocalityNameParseTest() = default;
   Rule rule_;
 };
 
@@ -345,7 +345,7 @@ class AdminAreaNameParseTest
   AdminAreaNameParseTest& operator=(const AdminAreaNameParseTest&) = delete;
 
  protected:
-  AdminAreaNameParseTest() {}
+  AdminAreaNameParseTest() = default;
   Rule rule_;
 };
 
@@ -389,11 +389,11 @@ class RuleParseTest : public testing::TestWithParam<std::string> {
   RuleParseTest& operator=(const RuleParseTest&) = delete;
 
  protected:
-  RuleParseTest() {}
+  RuleParseTest() = default;
 
   const std::string& GetRegionData() const {
     // GetParam() is either a region code or the region data itself.
-    // RegionDataContants::GetRegionData() returns an empty string for anything
+    // RegionDataConstants::GetRegionData() returns an empty string for anything
     // that's not a region code.
     const std::string& data = RegionDataConstants::GetRegionData(GetParam());
     return !data.empty() ? data : GetParam();

@@ -21,11 +21,8 @@
 namespace i18n {
 namespace addressinput {
 
-NullStorage::NullStorage() {
-}
-
-NullStorage::~NullStorage() {
-}
+NullStorage::NullStorage() = default;
+NullStorage::~NullStorage() = default;
 
 void NullStorage::Put(const std::string& key, std::string* data) {
   assert(data != nullptr);  // Sanity check.

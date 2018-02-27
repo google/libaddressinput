@@ -40,10 +40,10 @@ namespace addressinput {
 //    };
 class Source {
  public:
-  typedef i18n::addressinput::Callback<const std::string&,
-                                       std::string*> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const std::string&, std::string*>;
 
-  virtual ~Source() {}
+  virtual ~Source() = default;
 
   // Gets metadata for |key| and invokes the |data_ready| callback.
   virtual void Get(const std::string& key,

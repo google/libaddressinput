@@ -33,8 +33,7 @@ namespace addressinput {
 //
 //      MyClass() : source_(),
 //                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {
-//        source_.data_.insert(
-//            std::make_pair("data/XA", "{\"id\":\"data/XA\"}"));
+//        source_.data_.emplace("data/XA", R"({"id":"data/XA"})");
 //      }
 //
 //      ~MyClass() {}

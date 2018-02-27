@@ -53,7 +53,7 @@ Language::Language(const std::string& language_tag) : tag(language_tag),
       (subtags.size() > 2 && subtags[2] == kLowercaseLatinScript);
 }
 
-Language::~Language() {}
+Language::~Language() = default;
 
 Language ChooseBestAddressLanguage(const Rule& address_region_rule,
                                    const Language& ui_language) {
@@ -62,11 +62,8 @@ Language ChooseBestAddressLanguage(const Rule& address_region_rule,
   }
 
   std::vector<Language> available_languages;
-  for (std::vector<std::string>::const_iterator
-       language_tag_it = address_region_rule.GetLanguages().begin();
-       language_tag_it != address_region_rule.GetLanguages().end();
-       ++language_tag_it) {
-    available_languages.push_back(Language(*language_tag_it));
+  for (const auto& language_tag : address_region_rule.GetLanguages()) {
+    available_languages.emplace_back(language_tag);
   }
 
   if (ui_language.tag.empty()) {
@@ -84,14 +81,12 @@ Language ChooseBestAddressLanguage(const Rule& address_region_rule,
     return latin_script_language;
   }
 
-  for (std::vector<Language>::const_iterator
-       available_lang_it = available_languages.begin();
-       available_lang_it != available_languages.end(); ++available_lang_it) {
+  for (const auto& language : available_languages) {
     // Base language comparison works because no region supports the same base
     // language with different scripts, for now. For example, no region supports
     // "zh-Hant" and "zh-Hans" at the same time.
-    if (ui_language.base == available_lang_it->base) {
-      return *available_lang_it;
+    if (ui_language.base == language.base) {
+      return language;
     }
   }
 

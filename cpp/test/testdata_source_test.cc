@@ -28,10 +28,10 @@
 namespace {
 
 using i18n::addressinput::BuildCallback;
+using i18n::addressinput::kDataFileName;
 using i18n::addressinput::RegionDataConstants;
 using i18n::addressinput::Source;
 using i18n::addressinput::TestdataSource;
-using i18n::addressinput::kDataFileName;
 
 // Tests for TestdataSource object.
 class TestdataSourceTest : public testing::TestWithParam<std::string> {
@@ -81,8 +81,8 @@ testing::AssertionResult DataIsValid(const std::string& data,
 
   std::string expected_data_begin = R"({"id":")" + key + R"(")";
   if (data.compare(0, expected_data_begin.length(), expected_data_begin) != 0) {
-    return testing::AssertionFailure() << data << " does not begin with "
-                                       << expected_data_begin;
+    return testing::AssertionFailure()
+           << data << " does not begin with " << expected_data_begin;
   }
 
   // Verify that the data ends on "}.
@@ -92,8 +92,8 @@ testing::AssertionResult DataIsValid(const std::string& data,
                    kDataEndLength,
                    kDataEnd,
                    kDataEndLength) != 0) {
-    return testing::AssertionFailure() << data << " does not end with "
-                                       << kDataEnd;
+    return testing::AssertionFailure()
+           << data << " does not end with " << kDataEnd;
   }
 
   return testing::AssertionSuccess();
@@ -129,8 +129,8 @@ testing::AssertionResult AggregateDataIsValid(const std::string& data,
 
   std::string expected_data_begin = "{\"" + key;
   if (data.compare(0, expected_data_begin.length(), expected_data_begin) != 0) {
-    return testing::AssertionFailure() << data << " does not begin with "
-                                       << expected_data_begin;
+    return testing::AssertionFailure()
+           << data << " does not begin with " << expected_data_begin;
   }
 
   // Verify that the data ends on "}}.
@@ -140,8 +140,8 @@ testing::AssertionResult AggregateDataIsValid(const std::string& data,
                    kDataEndLength,
                    kDataEnd,
                    kDataEndLength) != 0) {
-    return testing::AssertionFailure() << data << " does not end with "
-                                       << kDataEnd;
+    return testing::AssertionFailure()
+           << data << " does not end with " << kDataEnd;
   }
 
   return testing::AssertionSuccess();
@@ -159,8 +159,7 @@ TEST_P(TestdataSourceTest, TestdataSourceHasValidAggregatedDataForRegion) {
 
 // Verifies that TestdataSource gets valid aggregated data for a region code.
 TEST_P(TestdataSourceTest,
-    TestdataSourceWithPathHasValidAggregatedDataForRegion) {
-
+       TestdataSourceWithPathHasValidAggregatedDataForRegion) {
   std::string key = "data/" + GetParam();
   aggregate_source_with_path_.Get(key, *data_ready_);
 

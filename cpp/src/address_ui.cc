@@ -113,7 +113,7 @@ std::vector<AddressUiComponent> BuildComponents(
 
   bool preceded_by_newline = true;
   bool followed_by_newline = true;
-  for (std::vector<FormatElement>::const_iterator format_it = format.begin();
+  for (auto format_it = format.begin();
        format_it != format.end(); ++format_it) {
     if (format_it->IsNewline()) {
       preceded_by_newline = true;
@@ -123,7 +123,7 @@ std::vector<AddressUiComponent> BuildComponents(
       continue;
     }
     AddressUiComponent component;
-    std::vector<FormatElement>::const_iterator next_format_it = format_it + 1;
+    auto next_format_it = format_it + 1;
     followed_by_newline =
         next_format_it == format.end() || next_format_it->IsNewline();
     component.length_hint = preceded_by_newline && followed_by_newline

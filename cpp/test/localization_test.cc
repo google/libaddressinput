@@ -56,12 +56,12 @@ class LocalizationTest : public testing::TestWithParam<int> {
   LocalizationTest& operator=(const LocalizationTest&) = delete;
 
  protected:
-  LocalizationTest() {}
+  LocalizationTest() = default;
   Localization localization_;
 };
 
 // Verifies that a custom message getter can be used.
-static const char kValidMessage[] = "Data";
+const char kValidMessage[] = "Data";
 std::string GetValidMessage(int message_id) { return kValidMessage; }
 TEST_P(LocalizationTest, ValidStringGetterCanBeUsed) {
   localization_.SetGetter(&GetValidMessage);
@@ -186,20 +186,19 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredOtherFields) {
   other_fields.push_back(STREET_ADDRESS);
   other_fields.push_back(ORGANIZATION);
   other_fields.push_back(RECIPIENT);
-  for (std::vector<AddressField>::iterator it = other_fields.begin();
-       it != other_fields.end(); it++) {
+  for (AddressField field : other_fields) {
     EXPECT_EQ("You can't leave this empty.",
               localization.GetErrorMessage(
-                  address, *it, MISSING_REQUIRED_FIELD, true, true));
+                  address, field, MISSING_REQUIRED_FIELD, true, true));
     EXPECT_EQ("You can't leave this empty.",
               localization.GetErrorMessage(
-                  address, *it, MISSING_REQUIRED_FIELD, true, false));
+                  address, field, MISSING_REQUIRED_FIELD, true, false));
     EXPECT_EQ("You can't leave this empty.",
               localization.GetErrorMessage(
-                  address, *it, MISSING_REQUIRED_FIELD, false, false));
+                  address, field, MISSING_REQUIRED_FIELD, false, false));
     EXPECT_EQ("You can't leave this empty.",
               localization.GetErrorMessage(
-                  address, *it, MISSING_REQUIRED_FIELD, false, true));
+                  address, field, MISSING_REQUIRED_FIELD, false, true));
   }
 }
 
@@ -212,8 +211,8 @@ TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
   address.dependent_locality = "bad dependent locality";
   address.sorting_code = "bad sorting code";
   std::vector<std::string> address_line;
-  address_line.push_back("bad address line 1");
-  address_line.push_back("bad address line 2");
+  address_line.emplace_back("bad address line 1");
+  address_line.emplace_back("bad address line 2");
   address.address_line = address_line;
   address.organization = "bad organization";
   address.recipient = "bad recipient";
@@ -462,28 +461,27 @@ TEST(LocalizationGetErrorMessageTest, UsesPOBoxOtherFields) {
   other_fields.push_back(STREET_ADDRESS);
   other_fields.push_back(ORGANIZATION);
   other_fields.push_back(RECIPIENT);
-  for (std::vector<AddressField>::iterator it = other_fields.begin();
-       it != other_fields.end(); it++) {
+  for (AddressField field : other_fields) {
     EXPECT_EQ("This address line appears to contain a post "
               "office box. Please use a street"
               " or building address.",
               localization.GetErrorMessage(
-                  address, *it, USES_P_O_BOX, true, true));
+                  address, field, USES_P_O_BOX, true, true));
     EXPECT_EQ("This address line appears to contain a post "
               "office box. Please use a street"
               " or building address.",
               localization.GetErrorMessage(
-                  address, *it, USES_P_O_BOX, true, false));
+                  address, field, USES_P_O_BOX, true, false));
     EXPECT_EQ("This address line appears to contain a post "
               "office box. Please use a street"
               " or building address.",
               localization.GetErrorMessage(
-                  address, *it, USES_P_O_BOX, false, false));
+                  address, field, USES_P_O_BOX, false, false));
     EXPECT_EQ("This address line appears to contain a post "
               "office box. Please use a street"
               " or building address.",
               localization.GetErrorMessage(
-                  address, *it, USES_P_O_BOX, false, true));
+                  address, field, USES_P_O_BOX, false, true));
   }
 }
 
