@@ -45,9 +45,8 @@ class Json::JsonImpl {
   }
 
   ~JsonImpl() {
-    for (std::vector<const Json*>::const_iterator it = dictionaries_.begin();
-         it != dictionaries_.end(); ++it) {
-      delete *it;
+    for (auto ptr : dictionaries_) {
+      delete ptr;
     }
   }
 
@@ -73,8 +72,7 @@ class Json::JsonImpl {
       return false;
     }
 
-    value->assign(member->value.GetString(),
-                  member->value.GetStringLength());
+    value->assign(member->value.GetString(), member->value.GetStringLength());
     return true;
   }
 
@@ -105,7 +103,7 @@ class Json::JsonImpl {
 
 Json::Json() : impl_() {}
 
-Json::~Json() {}
+Json::~Json() = default;
 
 bool Json::ParseObject(const std::string& json) {
   assert(impl_ == nullptr);

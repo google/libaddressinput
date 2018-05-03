@@ -47,7 +47,7 @@ class Helper {
   }
 
  private:
-  ~Helper() {}
+  ~Helper() = default;
 
   void OnWrappedDataReady(bool success,
                           const std::string& key,
@@ -81,7 +81,7 @@ ValidatingStorage::ValidatingStorage(Storage* storage)
   assert(wrapped_storage_ != nullptr);
 }
 
-ValidatingStorage::~ValidatingStorage() {}
+ValidatingStorage::~ValidatingStorage() = default;
 
 void ValidatingStorage::Put(const std::string& key, std::string* data) {
   assert(data != nullptr);

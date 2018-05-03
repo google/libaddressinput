@@ -28,15 +28,14 @@ RegionData::RegionData(const std::string& region_code)
       sub_regions_() {}
 
 RegionData::~RegionData() {
-  for (std::vector<const RegionData*>::const_iterator it = sub_regions_.begin();
-       it != sub_regions_.end(); ++it) {
-    delete *it;
+  for (auto ptr : sub_regions_) {
+    delete ptr;
   }
 }
 
 RegionData* RegionData::AddSubRegion(const std::string& key,
                                      const std::string& name) {
-  RegionData* sub_region = new RegionData(key, name, this);
+  auto* sub_region = new RegionData(key, name, this);
   sub_regions_.push_back(sub_region);
   return sub_region;
 }

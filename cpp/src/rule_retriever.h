@@ -36,8 +36,8 @@ class Rule;
 //    rules.RetrieveRule("data/CA/AB--fr", *rule_ready);
 class RuleRetriever {
  public:
-  typedef i18n::addressinput::Callback<const std::string&,
-                                       const Rule&> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const std::string&, const Rule&>;
 
   RuleRetriever(const RuleRetriever&) = delete;
   RuleRetriever& operator=(const RuleRetriever&) = delete;

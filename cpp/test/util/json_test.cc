@@ -15,7 +15,6 @@
 #include "util/json.h"
 
 #include <string>
-#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -126,7 +125,7 @@ TEST(JsonTest, NoDictionaryFound) {
 TEST(JsonTest, DictionaryFound) {
   Json json;
   ASSERT_TRUE(json.ParseObject(R"({"key":{"inner_key":"value"}})"));
-  const std::vector<const Json*>& sub_dicts = json.GetSubDictionaries();
+  const auto& sub_dicts = json.GetSubDictionaries();
   ASSERT_EQ(1U, sub_dicts.size());
 
   std::string value;
@@ -138,11 +137,10 @@ TEST(JsonTest, DictionariesHaveSubDictionaries) {
   Json json;
   ASSERT_TRUE(json.ParseObject(
       R"({"key":{"inner_key":{"inner_inner_key":"value"}}})"));
-  const std::vector<const Json*>& sub_dicts = json.GetSubDictionaries();
+  const auto& sub_dicts = json.GetSubDictionaries();
   ASSERT_EQ(1U, sub_dicts.size());
 
-  const std::vector<const Json*>& sub_sub_dicts =
-      sub_dicts.front()->GetSubDictionaries();
+  const auto& sub_sub_dicts = sub_dicts.front()->GetSubDictionaries();
   ASSERT_EQ(1U, sub_sub_dicts.size());
 
   std::string value;

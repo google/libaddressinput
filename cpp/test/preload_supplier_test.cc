@@ -143,8 +143,7 @@ TEST_F(PreloadSupplierTest, GetTooPreciseRule) {
 
 TEST_F(PreloadSupplierTest, GetRulesForRegion) {
   supplier_.LoadRules("CN", *loaded_callback_);
-  const std::map<std::string, const Rule*>& rules =
-      supplier_.GetRulesForRegion("CN");
+  const auto& rules = supplier_.GetRulesForRegion("CN");
   EXPECT_TRUE(rules.find("data/CN") != rules.end());
   EXPECT_LT(1U, rules.size());
 }

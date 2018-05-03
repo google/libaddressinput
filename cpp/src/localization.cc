@@ -56,7 +56,7 @@ std::string GetEnglishString(int message_id) {
 
 Localization::Localization() : get_string_(&GetEnglishString) {}
 
-Localization::~Localization() {}
+Localization::~Localization() = default;
 
 std::string Localization::GetString(int message_id) const {
   return get_string_(message_id);
@@ -99,7 +99,7 @@ std::string Localization::GetErrorMessage(const AddressData& address,
     } else if (problem == UNKNOWN_VALUE) {
       std::vector<std::string> parameters;
       if (AddressData::IsRepeatedFieldValue(field)) {
-        std::vector<std::string> values = address.GetRepeatedFieldValue(field);
+        const auto& values = address.GetRepeatedFieldValue(field);
         assert(!values.empty());
         parameters.push_back(values.front());
       } else {

@@ -66,8 +66,8 @@ TEST(AddressDataTest, GetFieldValue) {
 
 TEST(AddressDataTest, GetRepeatedFieldValue) {
   AddressData address;
-  address.address_line.push_back("aaa");
-  address.address_line.push_back("222");
+  address.address_line.emplace_back("aaa");
+  address.address_line.emplace_back("222");
   EXPECT_EQ(address.address_line,
             address.GetRepeatedFieldValue(STREET_ADDRESS));
 }
@@ -91,7 +91,7 @@ TEST(AddressDataTest, IsFieldEmpty) {
   address.dependent_locality = "ddd";
   address.sorting_code = "xxx";
   address.postal_code = "zzz";
-  address.address_line.push_back("aaa");
+  address.address_line.emplace_back("aaa");
   address.organization = "ooo";
   address.recipient = "nnn";
 
@@ -119,35 +119,35 @@ TEST(AddressDataTest, IsFieldEmptyWhitespace) {
 TEST(AddressDataTest, IsFieldEmptyVector) {
   AddressData address;
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
-  address.address_line.push_back("");
+  address.address_line.emplace_back("");
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
-  address.address_line.push_back("aaa");
+  address.address_line.emplace_back("aaa");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
-  address.address_line.push_back("");
+  address.address_line.emplace_back("");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
 }
 
 TEST(AddressDataTest, IsFieldEmptyVectorWhitespace) {
   AddressData address;
-  address.address_line.push_back("   ");
-  address.address_line.push_back("   ");
-  address.address_line.push_back("   ");
+  address.address_line.emplace_back("   ");
+  address.address_line.emplace_back("   ");
+  address.address_line.emplace_back("   ");
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
   address.address_line.clear();
-  address.address_line.push_back("abc");
+  address.address_line.emplace_back("abc");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
   address.address_line.clear();
-  address.address_line.push_back("   ");
-  address.address_line.push_back(" b ");
-  address.address_line.push_back("   ");
+  address.address_line.emplace_back("   ");
+  address.address_line.emplace_back(" b ");
+  address.address_line.emplace_back("   ");
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
 }
 
 TEST(AddressDataTest, StreamFunction) {
   std::ostringstream oss;
   AddressData address;
-  address.address_line.push_back("Line 1");
-  address.address_line.push_back("Line 2");
+  address.address_line.emplace_back("Line 1");
+  address.address_line.emplace_back("Line 2");
   address.recipient = "N";
   address.region_code = "R";
   address.postal_code = "Z";
@@ -173,8 +173,8 @@ TEST(AddressDataTest, StreamFunction) {
 
 TEST(AddressDataTest, TestEquals) {
   AddressData address;
-  address.address_line.push_back("Line 1");
-  address.address_line.push_back("Line 2");
+  address.address_line.emplace_back("Line 1");
+  address.address_line.emplace_back("Line 2");
   address.recipient = "N";
   address.region_code = "R";
   address.postal_code = "Z";
@@ -207,7 +207,7 @@ TEST(AddressDataTest, GetVectorFieldValueInvalid) {
 }
 
 TEST(AddressDataTest, IsFieldEmptyInvalid) {
-  static const AddressField invalid_field = static_cast<AddressField>(-1);
+  static const auto invalid_field = static_cast<AddressField>(-1);
   AddressData address;
   ASSERT_DEATH_IF_SUPPORTED(address.IsFieldEmpty(invalid_field),
                             "ssertion.*failed");

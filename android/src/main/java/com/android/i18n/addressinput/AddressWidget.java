@@ -228,6 +228,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     // Returns the region key for the region value.
     public String getRegionDataKeyForValue(String value) {
       for (RegionData data : currentRegions) {
+        if (data.getDisplayName().equals(value)) {
+          return data.getKey();
+        }
+      }
+      for (RegionData data : currentRegions) {
         if (data.getDisplayName().endsWith(value)) {
           return data.getKey();
         }

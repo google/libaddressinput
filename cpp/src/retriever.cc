@@ -52,7 +52,7 @@ class Helper {
   }
 
  private:
-  ~Helper() {}
+  ~Helper() = default;
 
   void OnValidatedDataReady(bool success,
                             const std::string& key,
@@ -107,7 +107,7 @@ Retriever::Retriever(const Source* source, Storage* storage)
   assert(storage_ != nullptr);
 }
 
-Retriever::~Retriever() {}
+Retriever::~Retriever() = default;
 
 void Retriever::Retrieve(const std::string& key,
                          const Callback& retrieved) const {

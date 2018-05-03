@@ -32,7 +32,7 @@ struct LanguageTestCase {
         expected_base_language(expected_base_language),
         expected_has_latin_script(expected_has_latin_script) {}
 
-  ~LanguageTestCase() {}
+  ~LanguageTestCase() = default;
 
   const std::string input_language_tag;
   const std::string expected_language_tag;
@@ -46,7 +46,7 @@ class LanguageTest : public testing::TestWithParam<LanguageTestCase> {
   LanguageTest& operator=(const LanguageTest&) = delete;
 
  protected:
-  LanguageTest() {}
+  LanguageTest() = default;
 };
 
 TEST_P(LanguageTest, ExtractedDataIsCorrect) {

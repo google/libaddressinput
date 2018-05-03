@@ -46,7 +46,7 @@ using i18n::addressinput::TestdataSource;
 
 class SupplierWrapper {
  public:
-  virtual ~SupplierWrapper() {}
+  virtual ~SupplierWrapper() = default;
   virtual void Supply(const LookupKey& lookup_key,
                       const Supplier::Callback& supplied) = 0;
 };
