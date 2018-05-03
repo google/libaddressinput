@@ -21,7 +21,6 @@
 
 #include <memory>
 #include <string>
-#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -86,7 +85,7 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingAdmin) {
   address.region_code = "US";
   address.postal_code = "58098";
   // Other data should be left alone.
-  address.address_line.push_back("10 High St");
+  address.address_line.emplace_back("10 High St");
 
   // North Dakota has post codes starting with 58.
   AddressData expected = address;
@@ -290,7 +289,7 @@ TEST_F(AddressInputHelperMockDataTest,
        PostalCodeSharedAcrossDifferentHierarchies) {
   // Note that this data is in the format of data that would be returned from
   // the aggregate server.
-  source_->data_.insert(std::make_pair(
+  source_->data_.emplace(
       // We use KR since we need a country where we format all fields down to
       // dependent locality, or the hierarchy won't be loaded.
       "data/KR",
@@ -305,7 +304,7 @@ TEST_F(AddressInputHelperMockDataTest,
       R"("data/KR/B": )"
       R"({"id":"data/KR/B", "sub_keys":"B1"}, )"
       R"("data/KR/B/B1": )"
-      R"({"id":"data/KR/B/B1", "zip":"12"}})"));
+      R"({"id":"data/KR/B/B1", "zip":"12"}})");
 
   AddressData address;
   address.region_code = "KR";
@@ -324,7 +323,7 @@ TEST_F(AddressInputHelperMockDataTest,
   // Create data where one state matches the ZIP code, but the other doesn't:
   // within the state which does, multiple cities and sub-cities match. The only
   // thing we can be certain of is therefore the state.
-  source_->data_.insert(std::make_pair(
+  source_->data_.emplace(
       // We use KR since we need a country where we format all fields down to
       // dependent locality, or the hierarchy won't be loaded.
       "data/KR",
@@ -346,7 +345,7 @@ TEST_F(AddressInputHelperMockDataTest,
       R"({"id":"data/KR/A/A2/A2a", "zip":"123"}, )"
       // This key, in state B, does not match the ZIP code.
       R"("data/KR/B": )"
-      R"({"id":"data/KR/B", "zip":"2"}})"));
+      R"({"id":"data/KR/B", "zip":"2"}})");
 
   AddressData address;
   address.region_code = "KR";

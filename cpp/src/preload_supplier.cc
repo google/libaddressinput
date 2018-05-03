@@ -28,7 +28,6 @@
 #include <set>
 #include <stack>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "lookup_key.h"
@@ -96,7 +95,7 @@ class Helper {
   }
 
  private:
-  ~Helper() {}
+  ~Helper() = default;
 
   void OnRetrieved(bool success,
                    const std::string& key,
@@ -111,11 +110,10 @@ class Helper {
     std::string id;
     std::vector<const Rule*> sub_rules;
 
-    IndexMap::iterator last_index_it = rule_index_->end();
-    IndexMap::iterator last_latin_it = rule_index_->end();
-    IndexMap::iterator language_index_it = language_rule_index_->end();
-    std::map<std::string, const Rule*>::iterator last_region_it =
-        region_rules_->end();
+    auto last_index_it = rule_index_->end();
+    auto last_latin_it = rule_index_->end();
+    auto language_index_it = language_rule_index_->end();
+    auto last_region_it = region_rules_->end();
 
     IndexMap::const_iterator hints[size(LookupKey::kHierarchy) - 1];
     std::fill(hints, hints + size(hints), rule_index_->end());
@@ -129,13 +127,9 @@ class Helper {
       goto callback;
     }
 
-    for (std::vector<const Json*>::const_iterator
-         it = json.GetSubDictionaries().begin();
-         it != json.GetSubDictionaries().end();
-         ++it) {
-      const Json* value = *it;
-      assert(value != nullptr);
-      if (!value->GetStringValueForKey("id", &id)) {
+    for (auto ptr : json.GetSubDictionaries()) {
+      assert(ptr != nullptr);
+      if (!ptr->GetStringValueForKey("id", &id)) {
         success = false;
         goto callback;
       }
@@ -145,12 +139,12 @@ class Helper {
       assert(depth < size(LookupKey::kHierarchy));
       AddressField field = LookupKey::kHierarchy[depth];
 
-      Rule* rule = new Rule;
+      auto* rule = new Rule;
       if (field == COUNTRY) {
         // All rules on the COUNTRY level inherit from the default rule.
         rule->CopyFrom(Rule::GetDefault());
       }
-      rule->ParseJsonRule(*value);
+      rule->ParseJsonRule(*ptr);
       assert(id == rule->GetId());  // Sanity check.
 
       rule_storage_->push_back(rule);
@@ -160,13 +154,11 @@ class Helper {
 
       // Add the ID of this Rule object to the rule index with natural string
       // comparison for keys.
-      last_index_it =
-          rule_index_->insert(last_index_it, std::make_pair(id, rule));
+      last_index_it = rule_index_->emplace_hint(last_index_it, id, rule);
 
       // Add the ID of this Rule object to the region-specific rule index with
       // exact string comparison for keys.
-      last_region_it =
-          region_rules_->insert(last_region_it, std::make_pair(id, rule));
+      last_region_it = region_rules_->emplace_hint(last_region_it, id, rule);
 
       ++rule_count;
     }
@@ -184,13 +176,13 @@ class Helper {
     // each of them construct ID strings using human readable names (eg. "São
     // Paulo") and using Latin script names (eg. "Tokushima").
     //
-    for (std::vector<const Rule*>::const_iterator
-         it = sub_rules.begin(); it != sub_rules.end(); ++it) {
+    for (auto ptr : sub_rules) {
+      assert(ptr != nullptr);
       std::stack<const Rule*> hierarchy;
-      hierarchy.push(*it);
+      hierarchy.push(ptr);
 
       // Push pointers to all parent Rule objects onto the hierarchy stack.
-      for (std::string parent_id((*it)->GetId());;) {
+      for (std::string parent_id(ptr->GetId());;) {
         // Strip the last part of parent_id. Break if COUNTRY level is reached.
         std::string::size_type pos = parent_id.rfind('/');
         if (pos == sizeof "data/ZZ" - 1) {
@@ -206,7 +198,7 @@ class Helper {
         hierarchy.push((*hint)->second);
       }
 
-      std::string human_id((*it)->GetId().substr(0, sizeof "data/ZZ" - 1));
+      std::string human_id(ptr->GetId().substr(0, sizeof "data/ZZ" - 1));
       std::string latin_id(human_id);
 
       // Append the names from all Rule objects on the hierarchy stack.
@@ -232,24 +224,22 @@ class Helper {
 
       // If the ID has a language tag, copy it.
       {
-        const std::string& id = (*it)->GetId();
+        const std::string& id = ptr->GetId();
         std::string::size_type pos = id.rfind("--");
         if (pos != std::string::npos) {
-          language_index_it = language_rule_index_->insert(
-              language_index_it, std::make_pair(human_id, *it));
+          language_index_it = language_rule_index_->emplace_hint(
+              language_index_it, human_id, ptr);
           human_id.append(id, pos, id.size() - pos);
         }
       }
 
-      last_index_it =
-          rule_index_->insert(last_index_it, std::make_pair(human_id, *it));
+      last_index_it = rule_index_->emplace_hint(last_index_it, human_id, ptr);
 
       // Add the Latin script ID, if a Latin script name could be found for
       // every part of the ID.
       if (std::count(human_id.begin(), human_id.end(), '/') ==
           std::count(latin_id.begin(), latin_id.end(), '/')) {
-        last_latin_it =
-            rule_index_->insert(last_latin_it, std::make_pair(latin_id, *it));
+        last_latin_it = rule_index_->emplace_hint(last_latin_it, latin_id, ptr);
       }
     }
 
@@ -287,9 +277,8 @@ PreloadSupplier::PreloadSupplier(const Source* source, Storage* storage)
       region_rules_() {}
 
 PreloadSupplier::~PreloadSupplier() {
-  for (std::vector<const Rule*>::const_iterator
-       it = rule_storage_.begin(); it != rule_storage_.end(); ++it) {
-    delete *it;
+  for (auto ptr : rule_storage_) {
+    delete ptr;
   }
 }
 

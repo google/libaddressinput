@@ -32,7 +32,7 @@ struct TestCase {
         should_be_equal(should_be_equal),
         should_be_less(should_be_less) {}
 
-  ~TestCase() {}
+  ~TestCase() = default;
 
   std::string left;
   std::string right;
@@ -46,7 +46,7 @@ class StringCompareTest : public testing::TestWithParam<TestCase> {
   StringCompareTest& operator=(const StringCompareTest&) = delete;
 
  protected:
-  StringCompareTest() {}
+  StringCompareTest() = default;
   StringCompare compare_;
 };
 

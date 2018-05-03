@@ -14,28 +14,18 @@
 
 #include "post_box_matchers.h"
 
-#include <cstddef>
-#include <vector>
-
 #include <gtest/gtest.h>
 
 #include "rule.h"
 
-namespace i18n {
-namespace addressinput {
-struct RE2ptr;
-}  // namespace addressinput
-}  // namespace i18n
-
 namespace {
 
 using i18n::addressinput::PostBoxMatchers;
-using i18n::addressinput::RE2ptr;
 using i18n::addressinput::Rule;
 
 TEST(PostBoxMatchersTest, AlwaysGetMatcherForLanguageUnd) {
   Rule rule;
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(1, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
 }
@@ -43,7 +33,7 @@ TEST(PostBoxMatchersTest, AlwaysGetMatcherForLanguageUnd) {
 TEST(PostBoxMatchersTest, NoMatcherForInvalidLanguage) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"xx\"}"));
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(1, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
 }
@@ -51,7 +41,7 @@ TEST(PostBoxMatchersTest, NoMatcherForInvalidLanguage) {
 TEST(PostBoxMatchersTest, HasMatcherForValidLanguage) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"sv\"}"));
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(2, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
   EXPECT_TRUE(matchers[1] != nullptr);
@@ -60,7 +50,7 @@ TEST(PostBoxMatchersTest, HasMatcherForValidLanguage) {
 TEST(PostBoxMatchersTest, MixValidAndInvalidLanguage) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"xx~sv\"}"));
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(2, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
   EXPECT_TRUE(matchers[1] != nullptr);
@@ -69,7 +59,7 @@ TEST(PostBoxMatchersTest, MixValidAndInvalidLanguage) {
 TEST(PostBoxMatchersTest, UseBaseLanguageForMatching) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"sv-SE\"}"));
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(2, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
   EXPECT_TRUE(matchers[1] != nullptr);
@@ -78,7 +68,7 @@ TEST(PostBoxMatchersTest, UseBaseLanguageForMatching) {
 TEST(PostBoxMatchersTest, LenientLanguageTagParsing) {
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"SV_SE\"}"));
-  std::vector<const RE2ptr*> matchers = PostBoxMatchers::GetMatchers(rule);
+  const auto& matchers = PostBoxMatchers::GetMatchers(rule);
   EXPECT_EQ(2, matchers.size());
   EXPECT_TRUE(matchers[0] != nullptr);
   EXPECT_TRUE(matchers[1] != nullptr);

@@ -34,7 +34,6 @@ dependencies {
     compile project(':common')
     compile 'com.google.android.gms:play-services-location:10.0.0'
     compile 'com.google.android.gms:play-services-places:9.2.0'
-    compile 'com.android.support:design:26.1.0'
 }
 
 android {

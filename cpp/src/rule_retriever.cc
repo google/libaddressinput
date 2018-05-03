@@ -43,7 +43,7 @@ class Helper {
   }
 
  private:
-  ~Helper() {}
+  ~Helper() = default;
 
   void OnDataRetrieved(bool success,
                        const std::string& key,
@@ -69,7 +69,7 @@ RuleRetriever::RuleRetriever(const Retriever* retriever)
   assert(data_retriever_ != nullptr);
 }
 
-RuleRetriever::~RuleRetriever() {}
+RuleRetriever::~RuleRetriever() = default;
 
 void RuleRetriever::RetrieveRule(const std::string& key,
                                  const Callback& rule_ready) const {

@@ -21,7 +21,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <utility>
 
 namespace i18n {
 namespace addressinput {
@@ -64,8 +63,8 @@ std::map<std::string, std::string> InitData(const std::string& src_path) {
   std::string key;
   std::string value;
 
-  std::map<std::string, std::string>::iterator last_data_it = data.end();
-  std::map<std::string, std::string>::iterator aggregate_data_it = data.end();
+  auto last_data_it = data.end();
+  auto aggregate_data_it = data.end();
 
   while (file.good()) {
     // Example line from countryinfo.txt:
@@ -80,9 +79,8 @@ std::map<std::string, std::string> InitData(const std::string& src_path) {
       std::getline(file, value, '\n');
 
       // For example, map '-data/CH/AG' to '{"name": "Aargau"}'.
-      last_data_it = data.insert(
-          last_data_it,
-          std::make_pair(normal_prefix + key, value));
+      last_data_it =
+          data.emplace_hint(last_data_it, normal_prefix + key, value);
 
       // Aggregate keys that begin with 'data/'. We don't aggregate keys that
       // begin with 'example/' because example data is not used anywhere.
@@ -125,9 +123,8 @@ std::map<std::string, std::string> InitData(const std::string& src_path) {
 
           // Begin a new aggregate string, for example:
           //     {"data/CH/AG": {"name": "Aargau"}
-          aggregate_data_it = data.insert(
-              aggregate_data_it,
-              std::make_pair(aggregate_key, "{\"" + key + "\": " + value));
+          aggregate_data_it = data.emplace_hint(
+              aggregate_data_it, aggregate_key, "{\"" + key + "\": " + value);
         }
       }
     }
@@ -150,14 +147,13 @@ TestdataSource::TestdataSource(bool aggregate, const std::string& src_path)
 TestdataSource::TestdataSource(bool aggregate)
     : aggregate_(aggregate), src_path_(kDataFileName) {}
 
-TestdataSource::~TestdataSource() {}
+TestdataSource::~TestdataSource() = default;
 
 void TestdataSource::Get(const std::string& key,
                          const Callback& data_ready) const {
   std::string prefixed_key(1, aggregate_ ? kAggregatePrefix : kNormalPrefix);
   prefixed_key += key;
-  std::map<std::string, std::string>::const_iterator data_it =
-      GetData(src_path_).find(prefixed_key);
+  auto data_it = GetData(src_path_).find(prefixed_key);
   bool success = data_it != GetData(src_path_).end();
   std::string* data = nullptr;
   if (success) {

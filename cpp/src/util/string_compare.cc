@@ -65,7 +65,7 @@ class StringCompare::Impl {
     options_.set_case_sensitive(false);
   }
 
-  ~Impl() {}
+  ~Impl() = default;
 
   bool NaturalEquals(const std::string& a, const std::string& b) const {
     RE2 matcher(b, options_);
@@ -85,7 +85,7 @@ class StringCompare::Impl {
 
 StringCompare::StringCompare() : impl_(new Impl) {}
 
-StringCompare::~StringCompare() {}
+StringCompare::~StringCompare() = default;
 
 bool StringCompare::NaturalEquals(const std::string& a,
                                   const std::string& b) const {

@@ -35,28 +35,28 @@ namespace {
 
 // Mapping from AddressField value to pointer to AddressData member.
 std::string AddressData::*kStringField[] = {
-  &AddressData::region_code,
-  &AddressData::administrative_area,
-  &AddressData::locality,
-  &AddressData::dependent_locality,
-  &AddressData::sorting_code,
-  &AddressData::postal_code,
-  nullptr,
-  &AddressData::organization,
-  &AddressData::recipient
+    &AddressData::region_code,
+    &AddressData::administrative_area,
+    &AddressData::locality,
+    &AddressData::dependent_locality,
+    &AddressData::sorting_code,
+    &AddressData::postal_code,
+    nullptr,
+    &AddressData::organization,
+    &AddressData::recipient,
 };
 
 // Mapping from AddressField value to pointer to AddressData member.
 const std::vector<std::string> AddressData::*kVectorStringField[] = {
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  &AddressData::address_line,
-  nullptr,
-  nullptr
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    &AddressData::address_line,
+    nullptr,
+    nullptr,
 };
 
 static_assert(size(kStringField) == size(kVectorStringField),
@@ -75,18 +75,17 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < size(kStringField));
   if (kStringField[field] != nullptr) {
-    const std::string& value = GetFieldValue(field);
+    const auto& value = GetFieldValue(field);
     return IsStringEmpty(value);
   } else {
-    const std::vector<std::string>& value = GetRepeatedFieldValue(field);
+    const auto& value = GetRepeatedFieldValue(field);
     return std::find_if(value.begin(),
                         value.end(),
                         std::not1(std::ptr_fun(&IsStringEmpty))) == value.end();
   }
 }
 
-const std::string& AddressData::GetFieldValue(
-    AddressField field) const {
+const std::string& AddressData::GetFieldValue(AddressField field) const {
   assert(field >= 0);
   assert(static_cast<size_t>(field) < size(kStringField));
   assert(kStringField[field] != nullptr);
@@ -140,10 +139,8 @@ std::ostream& operator<<(std::ostream& o,
 
   // TODO: Update the field order in the .h file to match the order they are
   // printed out here, for consistency.
-  for (std::vector<std::string>::const_iterator it =
-           address.address_line.begin();
-       it != address.address_line.end(); ++it) {
-    o << "address_line: \"" << *it << "\"\n";
+  for (const auto& line : address.address_line) {
+    o << "address_line: \"" << line << "\"\n";
   }
 
   o << "language_code: \"" << address.language_code << "\"\n"

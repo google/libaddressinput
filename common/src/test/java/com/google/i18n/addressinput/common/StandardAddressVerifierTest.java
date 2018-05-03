@@ -32,13 +32,12 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class StandardAddressVerifierTest {
@@ -138,6 +137,61 @@ public class StandardAddressVerifierTest {
         problems.getProblems());
   }
 
+  @Test
+  public void testHongKongAddress_withMultipleLanguageCombination() {
+    //
+    // With values in English...
+    //
+    AddressData address =
+        AddressData.builder()
+            .setCountry("HK")
+            .setAdminArea("Kowloon")
+            .setLocality("Tsim Sha Tsui")
+            .setAddress("Salisbury Road")
+            .build();
+
+    // Verify that with no language code set, no errors.
+    assertThat(verify(address).getProblems()).isEmpty();
+
+    // Verify that with an invalid language code, admin area is not found.
+    address = AddressData.builder().set(address).setLanguageCode("").build();
+    assertEquals(ImmutableMap.of(ADMIN_AREA, UNKNOWN_VALUE), verify(address).getProblems());
+
+    // Verify that with language set to English, no errors.
+    address = AddressData.builder().set(address).setLanguageCode("en").build();
+    assertThat(verify(address).getProblems()).isEmpty();
+
+    // Verify that with language set to Chinese, admin area is not found.
+    address = AddressData.builder().set(address).setLanguageCode("zh-Hant").build();
+    assertEquals(ImmutableMap.of(ADMIN_AREA, UNKNOWN_VALUE), verify(address).getProblems());
+
+    //
+    // With values in Chinese...
+    //
+    address =
+        AddressData.builder()
+            .setCountry("HK")
+            .setAdminArea("九龍")
+            .setLocality("尖沙咀")
+            .setAddress("Salisbury Road")
+            .build();
+
+    // Verify that with no language code set, no errors.
+    assertThat(verify(address).getProblems()).isEmpty();
+
+    // Verify that with an invalid language code, no errors (assume default language).
+    address = AddressData.builder().set(address).setLanguageCode("").build();
+    assertThat(verify(address).getProblems()).isEmpty();
+
+    // Verify that with language set to English, admin area is not found.
+    address = AddressData.builder().set(address).setLanguageCode("en").build();
+    assertEquals(ImmutableMap.of(ADMIN_AREA, UNKNOWN_VALUE), verify(address).getProblems());
+
+    // Verify that with language set to Chinese, no errors.
+    address = AddressData.builder().set(address).setLanguageCode("zh-Hant").build();
+    assertThat(verify(address).getProblems()).isEmpty();
+  }
+
   @Test public void testChinaAddress() {
     AddressData address = AddressData.builder()
         .setCountry("CN")
@@ -210,9 +264,9 @@ public class StandardAddressVerifierTest {
   @Test public void testJapanAddress() {
     AddressData address = AddressData.builder()
         .setRecipient("\u5BAE\u672C \u8302")  // SHIGERU_MIYAMOTO
-        .setAddress("\u4E0A\u9CE5\u7FBD\u927E\u7ACB\u753A11\u756A\u5730")
+        // Kyoto city Kamitoba-hokotate-cho 11
+        .setAddress("\u4EAC\u90FD\u5E02 \u4E0A\u9CE5\u7FBD\u927E\u7ACB\u753A11\u756A\u5730")
         .setAdminArea("\u4eac\u90fd\u5e9c")  // Kyoto prefecture
-        .setLocality("\u4EAC\u90FD\u5E02")  // Kyoto city
         .setCountry("JP")
         .setPostalCode("601-8501")
         .build();
@@ -222,9 +276,8 @@ public class StandardAddressVerifierTest {
   @Test public void testJapanAddress_Latin() {
     AddressData address = AddressData.builder()
         .setRecipient("Shigeru Miyamoto")
-        .setAddress("11-1 Kamitoba-hokotate-cho")
+        .setAddress("11-1 Kamitoba-hokotate-cho\nKyoto")
         .setAdminArea("KYOTO")  // Kyoto prefecture
-        .setLocality("Kyoto")  // Kyoto city
         .setLanguageCode("ja_Latn")
         .setCountry("JP")
         .setPostalCode("601-8501")
