@@ -66,8 +66,8 @@ class RegionDataBuilder {
                           std::string* best_region_tree_language_tag);
 
  private:
-  typedef std::map<std::string, const RegionData*> LanguageRegionMap;
-  typedef std::map<std::string, LanguageRegionMap*> RegionCodeDataMap;
+  using LanguageRegionMap = std::map<std::string, const RegionData*>;
+  using RegionCodeDataMap = std::map<std::string, LanguageRegionMap*>;
 
   PreloadSupplier* const supplier_;  // Not owned.
   RegionCodeDataMap cache_;

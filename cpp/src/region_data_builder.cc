@@ -21,7 +21,6 @@
 #include <cassert>
 #include <cstddef>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "language.h"
@@ -36,7 +35,7 @@ namespace addressinput {
 namespace {
 
 // The maximum depth of lookup keys.
-static const size_t kLookupKeysMaxDepth = size(LookupKey::kHierarchy) - 1;
+const size_t kLookupKeysMaxDepth = size(LookupKey::kHierarchy) - 1;
 
 // Does not take ownership of |parent_region|, which is not allowed to be
 // nullptr.
@@ -51,9 +50,8 @@ void BuildRegionTreeRecursively(
   assert(parent_region != nullptr);
 
   LookupKey lookup_key;
-  for (std::vector<std::string>::const_iterator key_it = keys.begin();
-       key_it != keys.end(); ++key_it) {
-    lookup_key.FromLookupKey(parent_key, *key_it);
+  for (const auto& key : keys) {
+    lookup_key.FromLookupKey(parent_key, key);
     const std::string& lookup_key_string =
         lookup_key.ToKeyString(kLookupKeysMaxDepth);
 
@@ -69,11 +67,11 @@ void BuildRegionTreeRecursively(
     assert(rule != nullptr);
 
     const std::string& local_name = rule->GetName().empty()
-        ? *key_it : rule->GetName();
+        ? key : rule->GetName();
     const std::string& name =
         prefer_latin_name && !rule->GetLatinName().empty()
             ? rule->GetLatinName() : local_name;
-    RegionData* region = parent_region->AddSubRegion(*key_it, name);
+    RegionData* region = parent_region->AddSubRegion(key, name);
 
     if (!rule->GetSubKeys().empty() &&
         region_max_depth > parent_key.GetDepth()) {
@@ -98,14 +96,13 @@ RegionData* BuildRegion(const std::map<std::string, const Rule*>& rules,
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
 
-  std::map<std::string, const Rule*>::const_iterator hint =
-      rules.find(lookup_key.ToKeyString(kLookupKeysMaxDepth));
+  auto hint = rules.find(lookup_key.ToKeyString(kLookupKeysMaxDepth));
   assert(hint != rules.end());
 
   const Rule* rule = hint->second;
   assert(rule != nullptr);
 
-  RegionData* region = new RegionData(region_code);
+  auto* region = new RegionData(region_code);
 
   // If there are sub-keys for field X, but field X is not used in this region
   // code, then these sub-keys are skipped over. For example, CH has sub-keys
@@ -134,14 +131,12 @@ RegionDataBuilder::RegionDataBuilder(PreloadSupplier* supplier)
 }
 
 RegionDataBuilder::~RegionDataBuilder() {
-  for (RegionCodeDataMap::const_iterator region_it = cache_.begin();
-       region_it != cache_.end(); ++region_it) {
-    for (LanguageRegionMap::const_iterator
-         language_it = region_it->second->begin();
-         language_it != region_it->second->end(); ++language_it) {
-      delete language_it->second;
+  for (const auto& outer : cache_) {
+    assert(outer.second != nullptr);
+    for (const auto& inner : *outer.second) {
+      delete inner.second;
     }
-    delete region_it->second;
+    delete outer.second;
   }
 }
 
@@ -155,8 +150,7 @@ const RegionData& RegionDataBuilder::Build(
   // Look up the region tree in cache first before building it.
   RegionCodeDataMap::const_iterator region_it = cache_.find(region_code);
   if (region_it == cache_.end()) {
-    region_it =
-        cache_.insert(std::make_pair(region_code, new LanguageRegionMap)).first;
+    region_it = cache_.emplace(region_code, new LanguageRegionMap).first;
   }
 
   // No need to copy from default rule first, because only languages and Latin
@@ -173,14 +167,11 @@ const RegionData& RegionDataBuilder::Build(
   LanguageRegionMap::const_iterator language_it =
       region_it->second->find(best_language.tag);
   if (language_it == region_it->second->end()) {
-    const std::map<std::string, const Rule*>& rules =
-        supplier_->GetRulesForRegion(region_code);
-    language_it =
-        region_it->second->insert(std::make_pair(best_language.tag,
-                                                 BuildRegion(rules,
-                                                             region_code,
-                                                             best_language)))
-            .first;
+    const auto& rules = supplier_->GetRulesForRegion(region_code);
+    language_it = region_it->second
+                      ->emplace(best_language.tag,
+                                BuildRegion(rules, region_code, best_language))
+                      .first;
   }
 
   return *language_it->second;

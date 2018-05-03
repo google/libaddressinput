@@ -39,7 +39,7 @@ using i18n::addressinput::STREET_ADDRESS;
 using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::RECIPIENT;
 
-static const char kUiLanguageTag[] = "en";
+const char kUiLanguageTag[] = "en";
 
 // Returns testing::AssertionSuccess if the |components| are valid. Uses
 // |region_code| in test failure messages.
@@ -49,20 +49,18 @@ testing::AssertionResult ComponentsAreValid(
     return testing::AssertionFailure() << "no components";
   }
 
-  for (std::vector<AddressUiComponent>::const_iterator
-       component_it = components.begin();
-       component_it != components.end(); ++component_it) {
+  for (const auto& component : components) {
     static const AddressField kMinAddressField = COUNTRY;
     static const AddressField kMaxAddressField = RECIPIENT;
-    if (component_it->field < kMinAddressField ||
-        component_it->field > kMaxAddressField) {
-      return testing::AssertionFailure() << "unexpected field "
-                                         << component_it->field;
+    if (component.field < kMinAddressField ||
+        component.field > kMaxAddressField) {
+      return testing::AssertionFailure()
+             << "unexpected field " << component.field;
     }
 
-    if (component_it->name.empty()) {
-      return testing::AssertionFailure() << "empty field name for field "
-                                         << component_it->field;
+    if (component.name.empty()) {
+      return testing::AssertionFailure()
+             << "empty field name for field " << component.field;
     }
   }
 
@@ -76,7 +74,7 @@ class AddressUiTest : public testing::TestWithParam<std::string> {
   AddressUiTest& operator=(const AddressUiTest&) = delete;
 
  protected:
-  AddressUiTest() {}
+  AddressUiTest() = default;
   Localization localization_;
   std::string best_address_language_tag_;
 };
@@ -99,9 +97,8 @@ TEST_P(AddressUiTest, UniqueFieldTypes) {
   const std::vector<AddressUiComponent>& components =
       BuildComponents(GetParam(), localization_, kUiLanguageTag,
                       &best_address_language_tag_);
-  for (std::vector<AddressUiComponent>::const_iterator it = components.begin();
-       it != components.end(); ++it) {
-    EXPECT_TRUE(fields.insert(it->field).second);
+  for (const auto& component : components) {
+    EXPECT_TRUE(fields.insert(component.field).second);
   }
 }
 
@@ -130,7 +127,7 @@ struct LanguageTestCase {
         expected_best_address_language_tag(expected_best_address_language_tag),
         expected_first_field(expected_first_field) {}
 
-  ~LanguageTestCase() {}
+  ~LanguageTestCase() = default;
 
   // The CLDR region code to test.
   const std::string region_code;
@@ -154,7 +151,7 @@ class BestAddressLanguageTagTest
       delete;
 
  protected:
-  BestAddressLanguageTagTest() {}
+  BestAddressLanguageTagTest() = default;
   Localization localization_;
   std::string best_address_language_tag_;
 };

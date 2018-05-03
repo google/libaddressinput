@@ -23,7 +23,6 @@
 
 #include <cstddef>
 #include <memory>
-#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -54,44 +53,42 @@ class ValidationTaskTest : public testing::Test {
     // Add all problems to the filter except those affected by the metadata
     // in region_data_constants.cc.
     static const AddressField kFields[] = {
-      COUNTRY,
-      ADMIN_AREA,
-      LOCALITY,
-      DEPENDENT_LOCALITY,
-      SORTING_CODE,
-      POSTAL_CODE,
-      STREET_ADDRESS,
-      ORGANIZATION,
-      RECIPIENT
+        COUNTRY,
+        ADMIN_AREA,
+        LOCALITY,
+        DEPENDENT_LOCALITY,
+        SORTING_CODE,
+        POSTAL_CODE,
+        STREET_ADDRESS,
+        ORGANIZATION,
+        RECIPIENT,
     };
 
     static const AddressProblem kProblems[] = {
-      // UNEXPECTED_FIELD is validated using IsFieldUsed().
-      // MISSING_REQUIRED_FIELD is validated using IsFieldRequired().
-      UNKNOWN_VALUE,
-      INVALID_FORMAT,
-      MISMATCHING_VALUE,
-      USES_P_O_BOX
+        // UNEXPECTED_FIELD is validated using IsFieldUsed().
+        // MISSING_REQUIRED_FIELD is validated using IsFieldRequired().
+        UNKNOWN_VALUE,
+        INVALID_FORMAT,
+        MISMATCHING_VALUE,
+        USES_P_O_BOX,
     };
 
-    for (size_t i = 0; i < size(kFields); ++i) {
-      AddressField field = kFields[i];
-      for (size_t j = 0; j < size(kProblems); ++j) {
-        AddressProblem problem = kProblems[j];
-        filter_.insert(std::make_pair(field, problem));
+    for (AddressField field : kFields) {
+      for (AddressProblem problem : kProblems) {
+        filter_.emplace(field, problem);
       }
     }
 
-    filter_.insert(std::make_pair(COUNTRY, UNEXPECTED_FIELD));
-    filter_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
-    filter_.insert(std::make_pair(RECIPIENT, UNEXPECTED_FIELD));
-    filter_.insert(std::make_pair(RECIPIENT, MISSING_REQUIRED_FIELD));
+    filter_.emplace(COUNTRY, UNEXPECTED_FIELD);
+    filter_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
+    filter_.emplace(RECIPIENT, UNEXPECTED_FIELD);
+    filter_.emplace(RECIPIENT, MISSING_REQUIRED_FIELD);
   }
 
   void Validate() {
     Rule rule[size(LookupKey::kHierarchy)];
 
-    ValidationTask* task = new ValidationTask(
+    auto* task = new ValidationTask(
         address_,
         allow_postal_,
         require_name_,
@@ -153,7 +150,7 @@ TEST_F(ValidationTaskTest, FailureCountryRuleEmpty) {
 }
 
 TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameEmpty) {
-  expected_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
+  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -163,7 +160,7 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameEmpty) {
 TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameNotEmpty) {
   address_.region_code = "rrr";
 
-  expected_.insert(std::make_pair(COUNTRY, UNKNOWN_VALUE));
+  expected_.emplace(COUNTRY, UNKNOWN_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -173,7 +170,7 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameNotEmpty) {
 TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameEmpty) {
   json_[0] = "{}";
 
-  expected_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
+  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -195,14 +192,14 @@ TEST_F(ValidationTaskTest, MissingRequiredFieldsUS) {
 
   address_.region_code = "US";
 
-  filter_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
+  filter_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
+  filter_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  filter_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
+  filter_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  expected_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
+  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  expected_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
+  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -216,15 +213,15 @@ TEST_F(ValidationTaskTest, MissingNoRequiredFieldsUS) {
   address_.administrative_area = "sss";
   address_.locality = "ccc";
   address_.postal_code = "zzz";
-  address_.address_line.push_back("aaa");
+  address_.address_line.emplace_back("aaa");
   address_.organization = "ooo";
   address_.recipient = "nnn";
 
-  filter_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(POSTAL_CODE, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
-  filter_.insert(std::make_pair(ORGANIZATION, MISSING_REQUIRED_FIELD));
+  filter_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
+  filter_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  filter_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
+  filter_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  filter_.emplace(ORGANIZATION, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -237,8 +234,8 @@ TEST_F(ValidationTaskTest, UnexpectedFieldUS) {
   address_.region_code = "US";
   address_.dependent_locality = "ddd";
 
-  filter_.insert(std::make_pair(DEPENDENT_LOCALITY, UNEXPECTED_FIELD));
-  expected_.insert(std::make_pair(DEPENDENT_LOCALITY, UNEXPECTED_FIELD));
+  filter_.emplace(DEPENDENT_LOCALITY, UNEXPECTED_FIELD);
+  expected_.emplace(DEPENDENT_LOCALITY, UNEXPECTED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -252,7 +249,7 @@ TEST_F(ValidationTaskTest, MissingRequiredFieldRequireName) {
 
   require_name_ = true;
 
-  expected_.insert(std::make_pair(RECIPIENT, MISSING_REQUIRED_FIELD));
+  expected_.emplace(RECIPIENT, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -265,7 +262,7 @@ TEST_F(ValidationTaskTest, UnknownValueRuleNull) {
   address_.region_code = "rrr";
   address_.administrative_area = "sss";
 
-  expected_.insert(std::make_pair(ADMIN_AREA, UNKNOWN_VALUE));
+  expected_.emplace(ADMIN_AREA, UNKNOWN_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -290,7 +287,7 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooShort) {
   address_.region_code = "rrr";
   address_.postal_code = "12";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -303,7 +300,7 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooLong) {
   address_.region_code = "rrr";
   address_.postal_code = "1234";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -328,7 +325,7 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue1) {
   address_.region_code = "rrr";
   address_.postal_code = "000";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -343,7 +340,7 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue2) {
   address_.region_code = "rrr";
   address_.postal_code = "100";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -359,7 +356,7 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue3) {
   address_.region_code = "rrr";
   address_.postal_code = "120";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -387,7 +384,7 @@ TEST_F(ValidationTaskTest, PostalCodePrefixMismatchingValue) {
   address_.region_code = "rrr";
   address_.postal_code = "10960";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -402,7 +399,7 @@ TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
   address_.postal_code = "000";
 
   filter_.erase(POSTAL_CODE);
-  filter_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  filter_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   // (POSTAL_CODE, MISMATCHING_VALUE) should not be reported.
 
@@ -415,11 +412,11 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageUnd) {
   json_[0] = R"({"fmt":"%A"})";
 
   address_.region_code = "rrr";
-  address_.address_line.push_back("aaa");
-  address_.address_line.push_back("P.O. Box");
-  address_.address_line.push_back("aaa");
+  address_.address_line.emplace_back("aaa");
+  address_.address_line.emplace_back("P.O. Box");
+  address_.address_line.emplace_back("aaa");
 
-  expected_.insert(std::make_pair(STREET_ADDRESS, USES_P_O_BOX));
+  expected_.emplace(STREET_ADDRESS, USES_P_O_BOX);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -430,11 +427,11 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDa) {
   json_[0] = R"({"fmt":"%A","languages":"da"})";
 
   address_.region_code = "rrr";
-  address_.address_line.push_back("aaa");
-  address_.address_line.push_back("Postboks");
-  address_.address_line.push_back("aaa");
+  address_.address_line.emplace_back("aaa");
+  address_.address_line.emplace_back("Postboks");
+  address_.address_line.emplace_back("aaa");
 
-  expected_.insert(std::make_pair(STREET_ADDRESS, USES_P_O_BOX));
+  expected_.emplace(STREET_ADDRESS, USES_P_O_BOX);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -445,9 +442,9 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDaNotMatchDe) {
   json_[0] = R"({"fmt":"%A","languages":"da"})";
 
   address_.region_code = "rrr";
-  address_.address_line.push_back("aaa");
-  address_.address_line.push_back("Postfach");
-  address_.address_line.push_back("aaa");
+  address_.address_line.emplace_back("aaa");
+  address_.address_line.emplace_back("Postfach");
+  address_.address_line.emplace_back("aaa");
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -458,9 +455,9 @@ TEST_F(ValidationTaskTest, UsesPoBoxAllowPostal) {
   json_[0] = R"({"fmt":"%A"})";
 
   address_.region_code = "rrr";
-  address_.address_line.push_back("aaa");
-  address_.address_line.push_back("P.O. Box");
-  address_.address_line.push_back("aaa");
+  address_.address_line.emplace_back("aaa");
+  address_.address_line.emplace_back("P.O. Box");
+  address_.address_line.emplace_back("aaa");
 
   allow_postal_ = true;
 

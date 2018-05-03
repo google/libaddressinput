@@ -59,13 +59,12 @@ struct NameIdMap {
   // Return the message id corresponding to |name|, or INVALID_MESSAGE_ID
   // if it is not found in the map.
   int GetIdFromName(const std::string& name) const {
-    NameIdInfo key = { name.c_str() };
+    NameIdInfo key{name.c_str()};
     const NameIdInfo* begin = infos;
     const NameIdInfo* end = begin + size;
     const NameIdInfo* probe =
         std::lower_bound(begin, end, key, NameIdInfo::less);
-    return (probe != end && name == probe->name)
-        ? probe->id : INVALID_MESSAGE_ID;
+    return probe != end && name == probe->name ? probe->id : INVALID_MESSAGE_ID;
   }
 
   // Return true iff the map is properly sorted.
@@ -80,60 +79,60 @@ struct NameIdMap {
 };
 
 const NameIdInfo kAdminAreaInfoArray[] = {
-  {"area", IDS_LIBADDRESSINPUT_AREA},
-  {"county", IDS_LIBADDRESSINPUT_COUNTY},
-  {"department", IDS_LIBADDRESSINPUT_DEPARTMENT},
-  {"district", IDS_LIBADDRESSINPUT_DISTRICT},
-  {"do_si", IDS_LIBADDRESSINPUT_DO_SI},
-  {"emirate", IDS_LIBADDRESSINPUT_EMIRATE},
-  {"island", IDS_LIBADDRESSINPUT_ISLAND},
-  {"oblast", IDS_LIBADDRESSINPUT_OBLAST},
-  {"parish", IDS_LIBADDRESSINPUT_PARISH},
-  {"prefecture", IDS_LIBADDRESSINPUT_PREFECTURE},
-  {"province", IDS_LIBADDRESSINPUT_PROVINCE},
-  {"state", IDS_LIBADDRESSINPUT_STATE},
+    {"area", IDS_LIBADDRESSINPUT_AREA},
+    {"county", IDS_LIBADDRESSINPUT_COUNTY},
+    {"department", IDS_LIBADDRESSINPUT_DEPARTMENT},
+    {"district", IDS_LIBADDRESSINPUT_DISTRICT},
+    {"do_si", IDS_LIBADDRESSINPUT_DO_SI},
+    {"emirate", IDS_LIBADDRESSINPUT_EMIRATE},
+    {"island", IDS_LIBADDRESSINPUT_ISLAND},
+    {"oblast", IDS_LIBADDRESSINPUT_OBLAST},
+    {"parish", IDS_LIBADDRESSINPUT_PARISH},
+    {"prefecture", IDS_LIBADDRESSINPUT_PREFECTURE},
+    {"province", IDS_LIBADDRESSINPUT_PROVINCE},
+    {"state", IDS_LIBADDRESSINPUT_STATE},
 };
 
-const NameIdMap kAdminAreaMessageIds = {
-  kAdminAreaInfoArray,
-  size(kAdminAreaInfoArray)
+const NameIdMap kAdminAreaMessageIds{
+    kAdminAreaInfoArray,
+    size(kAdminAreaInfoArray)
 };
 
 const NameIdInfo kPostalCodeInfoArray[] = {
-  {"eircode", IDS_LIBADDRESSINPUT_EIR_CODE_LABEL},
-  {"pin", IDS_LIBADDRESSINPUT_PIN_CODE_LABEL},
-  {"postal", IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL},
-  {"zip", IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL},
+    {"eircode", IDS_LIBADDRESSINPUT_EIR_CODE_LABEL},
+    {"pin", IDS_LIBADDRESSINPUT_PIN_CODE_LABEL},
+    {"postal", IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL},
+    {"zip", IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL},
 };
 
-const NameIdMap kPostalCodeMessageIds = {
-  kPostalCodeInfoArray,
-  size(kPostalCodeInfoArray),
+const NameIdMap kPostalCodeMessageIds{
+    kPostalCodeInfoArray,
+    size(kPostalCodeInfoArray)
 };
 
 const NameIdInfo kLocalityInfoArray[] = {
-  {"city", IDS_LIBADDRESSINPUT_LOCALITY_LABEL},
-  {"district", IDS_LIBADDRESSINPUT_DISTRICT},
-  {"post_town", IDS_LIBADDRESSINPUT_POST_TOWN},
-  {"suburb", IDS_LIBADDRESSINPUT_SUBURB},
+    {"city", IDS_LIBADDRESSINPUT_LOCALITY_LABEL},
+    {"district", IDS_LIBADDRESSINPUT_DISTRICT},
+    {"post_town", IDS_LIBADDRESSINPUT_POST_TOWN},
+    {"suburb", IDS_LIBADDRESSINPUT_SUBURB},
 };
 
-const NameIdMap kLocalityMessageIds = {
-  kLocalityInfoArray,
-  size(kLocalityInfoArray),
+const NameIdMap kLocalityMessageIds{
+    kLocalityInfoArray,
+    size(kLocalityInfoArray)
 };
 
 const NameIdInfo kSublocalityInfoArray[] = {
-  {"district", IDS_LIBADDRESSINPUT_DISTRICT},
-  {"neighborhood", IDS_LIBADDRESSINPUT_NEIGHBORHOOD},
-  {"suburb", IDS_LIBADDRESSINPUT_SUBURB},
-  {"townland", IDS_LIBADDRESSINPUT_TOWNLAND},
-  {"village_township", IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP},
+    {"district", IDS_LIBADDRESSINPUT_DISTRICT},
+    {"neighborhood", IDS_LIBADDRESSINPUT_NEIGHBORHOOD},
+    {"suburb", IDS_LIBADDRESSINPUT_SUBURB},
+    {"townland", IDS_LIBADDRESSINPUT_TOWNLAND},
+    {"village_township", IDS_LIBADDRESSINPUT_VILLAGE_TOWNSHIP},
 };
 
-const NameIdMap kSublocalityMessageIds = {
-  kSublocalityInfoArray,
-  size(kSublocalityInfoArray),
+const NameIdMap kSublocalityMessageIds{
+    kSublocalityInfoArray,
+    size(kSublocalityInfoArray)
 };
 
 #ifndef _NDEBUG
@@ -183,7 +182,7 @@ Rule::Rule()
       postal_code_example_(),
       post_service_url_() {}
 
-Rule::~Rule() {}
+Rule::~Rule() = default;
 
 // static
 const Rule& Rule::GetDefault() {
@@ -234,7 +233,7 @@ void Rule::ParseJsonRule(const Json& json) {
 #ifndef _NDEBUG
   // Don't remove, see StaticMapChecker comments above.
   static StaticMapChecker map_checker;
-  #endif  // !_NDEBUG
+#endif  // !_NDEBUG
 
   std::string value;
   if (json.GetStringValueForKey("id", &value)) {

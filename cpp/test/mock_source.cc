@@ -15,18 +15,16 @@
 #include "mock_source.h"
 
 #include <cstddef>
-#include <map>
 #include <string>
 
 namespace i18n {
 namespace addressinput {
 
-MockSource::MockSource() {}
-
-MockSource::~MockSource() {}
+MockSource::MockSource() = default;
+MockSource::~MockSource() = default;
 
 void MockSource::Get(const std::string& key, const Callback& data_ready) const {
-  std::map<std::string, std::string>::const_iterator it = data_.find(key);
+  auto it = data_.find(key);
   bool success = it != data_.end();
   data_ready(success, key, success ? new std::string(it->second) : nullptr);
 }

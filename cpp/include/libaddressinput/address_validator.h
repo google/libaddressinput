@@ -31,7 +31,7 @@ namespace addressinput {
 class Supplier;
 struct AddressData;
 
-typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
+using FieldProblemMap = std::multimap<AddressField, AddressProblem>;
 
 // Validates an AddressData struct. Sample usage:
 //    class MyClass {
@@ -67,8 +67,8 @@ typedef std::multimap<AddressField, AddressProblem> FieldProblemMap;
 //    };
 class AddressValidator {
  public:
-  typedef i18n::addressinput::Callback<const AddressData&,
-                                       const FieldProblemMap&> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const AddressData&, const FieldProblemMap&>;
 
   AddressValidator(const AddressValidator&) = delete;
   AddressValidator& operator=(const AddressValidator&) = delete;

@@ -29,7 +29,7 @@ class RegionCodeTest : public testing::TestWithParam<std::string> {
   RegionCodeTest& operator=(const RegionCodeTest&) = delete;
 
  protected:
-  RegionCodeTest() {}
+  RegionCodeTest() = default;
 };
 
 // Verifies that a region code consists of two characters, for example "ZA".
@@ -68,7 +68,7 @@ class RegionDataTest : public testing::TestWithParam<std::string> {
   RegionDataTest& operator=(const RegionDataTest&) = delete;
 
  protected:
-  RegionDataTest() {}
+  RegionDataTest() = default;
 
   const std::string& GetData() const {
     return RegionDataConstants::GetRegionData(GetParam());

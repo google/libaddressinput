@@ -16,11 +16,6 @@
 
 package com.android.i18n.addressinput;
 
-import com.google.i18n.addressinput.common.AddressData;
-import com.google.i18n.addressinput.common.AddressField;
-import com.google.i18n.addressinput.common.FormOptions;
-import com.google.i18n.addressinput.common.SimpleClientCacheManager;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
@@ -30,8 +25,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.android.i18n.addressinput.testing.TestActivity;
+import com.google.i18n.addressinput.common.AddressData;
+import com.google.i18n.addressinput.common.AddressField;
+import com.google.i18n.addressinput.common.FormOptions;
+import com.google.i18n.addressinput.common.SimpleClientCacheManager;
 
 /**
  * Test class for {@link AddressWidgetUiComponentProvider}.
@@ -112,7 +110,7 @@ public class AddressWidgetUiComponentProviderTest
     }
   }
 
-  private class CustomArrayAdapter<String> extends ArrayAdapter<String> {
+  private class CustomArrayAdapter extends ArrayAdapter<String> {
     CustomArrayAdapter(Context context, int id) {
       super(context, id);
     }
@@ -143,8 +141,8 @@ public class AddressWidgetUiComponentProviderTest
 
     @Override
     protected ArrayAdapter<String> createUiPickerAdapter(AddressField.WidthType widthType) {
-      ArrayAdapter<String> result = new CustomArrayAdapter<String>(
-          context, android.R.layout.simple_spinner_item);
+      ArrayAdapter<String> result =
+          new CustomArrayAdapter(context, android.R.layout.simple_spinner_item);
       result.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       return result;
     }

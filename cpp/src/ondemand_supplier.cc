@@ -16,7 +16,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <map>
 #include <string>
 
 #include "lookup_key.h"
@@ -33,9 +32,8 @@ OndemandSupplier::OndemandSupplier(const Source* source, Storage* storage)
 }
 
 OndemandSupplier::~OndemandSupplier() {
-  for (std::map<std::string, const Rule*>::const_iterator
-       it = rule_cache_.begin(); it != rule_cache_.end(); ++it) {
-    delete it->second;
+  for (const auto& pair : rule_cache_) {
+    delete pair.second;
   }
 }
 
@@ -46,8 +44,7 @@ void OndemandSupplier::SupplyGlobally(const LookupKey& lookup_key,
 
 void OndemandSupplier::Supply(const LookupKey& lookup_key,
                               const Callback& supplied) {
-  OndemandSupplyTask* task =
-      new OndemandSupplyTask(lookup_key, &rule_cache_, supplied);
+  auto* task = new OndemandSupplyTask(lookup_key, &rule_cache_, supplied);
 
   if (RegionDataConstants::IsSupported(lookup_key.GetRegionCode())) {
     size_t max_depth = std::min(
@@ -56,8 +53,7 @@ void OndemandSupplier::Supply(const LookupKey& lookup_key,
 
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
-      std::map<std::string, const Rule*>::const_iterator it =
-          rule_cache_.find(key);
+      auto it = rule_cache_.find(key);
       if (it != rule_cache_.end()) {
         task->hierarchy_.rule[depth] = it->second;
       } else {
