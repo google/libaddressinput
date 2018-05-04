@@ -38,7 +38,7 @@ enum AddressProblem {
   UNKNOWN_VALUE,
 
   // A format for the field is defined and the value does not match. This is
-  // used to match POSTAL_CODE against the the format pattern generally. Formats
+  // used to match POSTAL_CODE against the format pattern generally. Formats
   // indicate how many digits/letters should be present, and what punctuation is
   // allowed. For example, in the U.S. postal codes are five digits with an
   // optional hyphen followed by four digits.

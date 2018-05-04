@@ -26,8 +26,6 @@
 #include <cassert>
 #include <cstddef>
 #include <string>
-#include <utility>
-#include <vector>
 
 #include <re2/re2.h>
 
@@ -59,8 +57,7 @@ ValidationTask::ValidationTask(const AddressData& address,
   assert(lookup_key_ != nullptr);
 }
 
-ValidationTask::~ValidationTask() {
-}
+ValidationTask::~ValidationTask() = default;
 
 void ValidationTask::Run(Supplier* supplier) const {
   assert(supplier != nullptr);
@@ -103,19 +100,18 @@ void ValidationTask::Validate(bool success,
 void ValidationTask::CheckUnexpectedField(
     const std::string& region_code) const {
   static const AddressField kFields[] = {
-    // COUNTRY is never unexpected.
-    ADMIN_AREA,
-    LOCALITY,
-    DEPENDENT_LOCALITY,
-    SORTING_CODE,
-    POSTAL_CODE,
-    STREET_ADDRESS,
-    ORGANIZATION,
-    RECIPIENT
+      // COUNTRY is never unexpected.
+      ADMIN_AREA,
+      LOCALITY,
+      DEPENDENT_LOCALITY,
+      SORTING_CODE,
+      POSTAL_CODE,
+      STREET_ADDRESS,
+      ORGANIZATION,
+      RECIPIENT,
   };
 
-  for (size_t i = 0; i < size(kFields); ++i) {
-    AddressField field = kFields[i];
+  for (AddressField field : kFields) {
     if (!address_.IsFieldEmpty(field) && !IsFieldUsed(field, region_code)) {
       ReportProblemMaybe(field, UNEXPECTED_FIELD);
     }
@@ -127,19 +123,18 @@ void ValidationTask::CheckUnexpectedField(
 void ValidationTask::CheckMissingRequiredField(
     const std::string& region_code) const {
   static const AddressField kFields[] = {
-    // COUNTRY is assumed to have already been checked.
-    ADMIN_AREA,
-    LOCALITY,
-    DEPENDENT_LOCALITY,
-    SORTING_CODE,
-    POSTAL_CODE,
-    STREET_ADDRESS
-    // ORGANIZATION is never required.
-    // RECIPIENT is handled separately.
+      // COUNTRY is assumed to have already been checked.
+      ADMIN_AREA,
+      LOCALITY,
+      DEPENDENT_LOCALITY,
+      SORTING_CODE,
+      POSTAL_CODE,
+      STREET_ADDRESS,
+      // ORGANIZATION is never required.
+      // RECIPIENT is handled separately.
   };
 
-  for (size_t i = 0; i < size(kFields); ++i) {
-    AddressField field = kFields[i];
+  for (AddressField field : kFields) {
     if (address_.IsFieldEmpty(field) && IsFieldRequired(field, region_code)) {
       ReportProblemMaybe(field, MISSING_REQUIRED_FIELD);
     }
@@ -200,8 +195,7 @@ void ValidationTask::CheckPostalCodeFormatAndValue(
     return;
   }
 
-  for (size_t depth = size(LookupKey::kHierarchy) - 1;
-       depth > 0; --depth) {
+  for (size_t depth = size(LookupKey::kHierarchy) - 1; depth > 0; --depth) {
     if (hierarchy.rule[depth] != nullptr) {
       // Validate sub-region specific postal code format. A sub-region specifies
       // the regular expression for a prefix of the postal code.
@@ -227,15 +221,11 @@ void ValidationTask::CheckUsesPoBox(
     return;
   }
 
-  std::vector<const RE2ptr*> matchers =
-      PostBoxMatchers::GetMatchers(country_rule);
-  for (std::vector<std::string>::const_iterator
-       line = address_.address_line.begin();
-       line != address_.address_line.end(); ++line) {
-    for (std::vector<const RE2ptr*>::const_iterator
-         matcher = matchers.begin();
-         matcher != matchers.end(); ++matcher) {
-      if (RE2::PartialMatch(*line, *(*matcher)->ptr)) {
+  const auto& matchers = PostBoxMatchers::GetMatchers(country_rule);
+  for (const auto& line : address_.address_line) {
+    for (auto ptr : matchers) {
+      assert(ptr != nullptr);
+      if (RE2::PartialMatch(line, *ptr->ptr)) {
         ReportProblem(STREET_ADDRESS, USES_P_O_BOX);
         return;
       }
@@ -245,7 +235,7 @@ void ValidationTask::CheckUsesPoBox(
 
 void ValidationTask::ReportProblem(AddressField field,
                                    AddressProblem problem) const {
-  problems_->insert(std::make_pair(field, problem));
+  problems_->emplace(field, problem);
 }
 
 void ValidationTask::ReportProblemMaybe(AddressField field,

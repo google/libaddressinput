@@ -41,18 +41,18 @@ TEST(AddressFieldUtilTest, FormatParseNewline) {
   ParseFormatRule(u8"%O%n%N%n%A%nAX-%Z %C%nÅLAND", &actual);
 
   std::vector<FormatElement> expected;
-  expected.push_back(FormatElement(ORGANIZATION));
-  expected.push_back(FormatElement());
-  expected.push_back(FormatElement(RECIPIENT));
-  expected.push_back(FormatElement());
-  expected.push_back(FormatElement(STREET_ADDRESS));
-  expected.push_back(FormatElement());
-  expected.push_back(FormatElement("AX-"));
-  expected.push_back(FormatElement(POSTAL_CODE));
-  expected.push_back(FormatElement(" "));
-  expected.push_back(FormatElement(LOCALITY));
-  expected.push_back(FormatElement());
-  expected.push_back(FormatElement(u8"ÅLAND"));
+  expected.emplace_back(ORGANIZATION);
+  expected.emplace_back();
+  expected.emplace_back(RECIPIENT);
+  expected.emplace_back();
+  expected.emplace_back(STREET_ADDRESS);
+  expected.emplace_back();
+  expected.emplace_back("AX-");
+  expected.emplace_back(POSTAL_CODE);
+  expected.emplace_back(" ");
+  expected.emplace_back(LOCALITY);
+  expected.emplace_back();
+  expected.emplace_back(u8"ÅLAND");
 
   EXPECT_EQ(expected, actual);
 }
@@ -60,7 +60,7 @@ TEST(AddressFieldUtilTest, FormatParseNewline) {
 TEST(AddressFieldUtilTest, FormatUnknownTokenIsIgnored) {
   std::vector<FormatElement> actual;
   ParseFormatRule("%1%R", &actual);  // %1 is not supported.
-  std::vector<FormatElement> expected(1, FormatElement(COUNTRY));
+  std::vector<FormatElement> expected{FormatElement(COUNTRY)};
   EXPECT_EQ(expected, actual);
 }
 

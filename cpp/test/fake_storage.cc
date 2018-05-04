@@ -16,26 +16,22 @@
 
 #include <cassert>
 #include <cstddef>
-#include <map>
 #include <string>
-#include <utility>
 
 namespace i18n {
 namespace addressinput {
 
-FakeStorage::FakeStorage() {}
+FakeStorage::FakeStorage() = default;
 
 FakeStorage::~FakeStorage() {
-  for (std::map<std::string, std::string*>::const_iterator
-       it = data_.begin(); it != data_.end(); ++it) {
-    delete it->second;
+  for (const auto& pair : data_) {
+    delete pair.second;
   }
 }
 
 void FakeStorage::Put(const std::string& key, std::string* data) {
   assert(data != nullptr);
-  std::pair<std::map<std::string, std::string*>::iterator, bool> result =
-      data_.insert(std::make_pair(key, data));
+  auto result = data_.emplace(key, data);
   if (!result.second) {
     // Replace data in existing entry for this key.
     delete result.first->second;
@@ -45,7 +41,7 @@ void FakeStorage::Put(const std::string& key, std::string* data) {
 
 void FakeStorage::Get(const std::string& key,
                       const Callback& data_ready) const {
-  std::map<std::string, std::string*>::const_iterator data_it = data_.find(key);
+  auto data_it = data_.find(key);
   bool success = data_it != data_.end();
   data_ready(success, key,
              success ? new std::string(*data_it->second) : nullptr);

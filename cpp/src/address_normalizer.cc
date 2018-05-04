@@ -37,7 +37,7 @@ AddressNormalizer::AddressNormalizer(const PreloadSupplier* supplier)
   assert(supplier_ != nullptr);
 }
 
-AddressNormalizer::~AddressNormalizer() {}
+AddressNormalizer::~AddressNormalizer() = default;
 
 void AddressNormalizer::Normalize(AddressData* address) const {
   assert(address != nullptr);
@@ -55,11 +55,10 @@ void AddressNormalizer::Normalize(AddressData* address) const {
   std::vector<std::string> languages(parent_rule->GetLanguages());
 
   if (languages.empty()) {
-    languages.push_back("");
+    languages.emplace_back("");
   } else {
     languages[0] = "";  // The default language doesn't need a tag on the id.
   }
-
 
   LookupKey lookup_key;
   for (size_t depth = 1; depth < size(LookupKey::kHierarchy); ++depth) {
@@ -70,18 +69,16 @@ void AddressNormalizer::Normalize(AddressData* address) const {
     const std::string& field_value = address->GetFieldValue(field);
     bool no_match_found_yet = true;
 
-    const std::vector<std::string>& sub_keys = parent_rule->GetSubKeys();
-
-    for (size_t i = 0; i < sub_keys.size(); i++) {
-      const std::string& sub_key = sub_keys[i];
-      if (!no_match_found_yet)
+    for (const auto& sub_key : parent_rule->GetSubKeys()) {
+      if (!no_match_found_yet) {
         break;
-      for (const std::string& language : languages) {
-        lookup_key.set_language(language);
+      }
+      for (const std::string& language_tag : languages) {
+        lookup_key.set_language(language_tag);
         lookup_key.FromLookupKey(parent_key, sub_key);
         const Rule* rule = supplier_->GetRule(lookup_key);
 
-        // A rule with key = |subkey| and specified |language| was expected to
+        // A rule with key = sub_key and specified language_tag was expected to
         // be found in a certain format (e.g. data/CA/QC--fr), but it was not.
         // This is due to a possible inconsistency in the data format.
         if (rule == nullptr) continue;
