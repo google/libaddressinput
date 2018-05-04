@@ -78,26 +78,25 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
 
   // Now guess something appropriate based on the base language.
   const std::string& base_language = address_language.base;
+  auto pred = [&base_language](const std::string& lang) {
+    return EqualToTolowerString(lang, base_language);
+  };
   if (std::find_if(kLanguagesThatUseSpace,
                    kLanguagesThatUseSpace + size(kLanguagesThatUseSpace),
-                   std::bind2nd(EqualToTolowerString(), base_language)) !=
+                   pred) !=
       kLanguagesThatUseSpace + size(kLanguagesThatUseSpace)) {
     return kSpaceSeparator;
-  } else if (std::find_if(
-                 kLanguagesThatHaveNoSeparator,
-                 kLanguagesThatHaveNoSeparator +
-                     size(kLanguagesThatHaveNoSeparator),
-                 std::bind2nd(EqualToTolowerString(), base_language)) !=
-             kLanguagesThatHaveNoSeparator +
-                 size(kLanguagesThatHaveNoSeparator)) {
+  } else if (std::find_if(kLanguagesThatHaveNoSeparator,
+                          kLanguagesThatHaveNoSeparator +
+                              size(kLanguagesThatHaveNoSeparator),
+                          pred) != kLanguagesThatHaveNoSeparator +
+                                       size(kLanguagesThatHaveNoSeparator)) {
     return "";
-  } else if (std::find_if(
-                 kLanguagesThatUseAnArabicComma,
-                 kLanguagesThatUseAnArabicComma +
-                     size(kLanguagesThatUseAnArabicComma),
-                 std::bind2nd(EqualToTolowerString(), base_language)) !=
-             kLanguagesThatUseAnArabicComma +
-                 size(kLanguagesThatUseAnArabicComma)) {
+  } else if (std::find_if(kLanguagesThatUseAnArabicComma,
+                          kLanguagesThatUseAnArabicComma +
+                              size(kLanguagesThatUseAnArabicComma),
+                          pred) != kLanguagesThatUseAnArabicComma +
+                                       size(kLanguagesThatUseAnArabicComma)) {
     return kArabicCommaSeparator;
   }
   // Either the language is a Latin-script language, or no language was

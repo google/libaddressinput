@@ -61,8 +61,9 @@ bool ShouldSetLanguageForKey(const std::string& language_tag,
   }
   // Finally, only return true if the language is one of the remaining ones.
   return std::find_if(languages.begin() + 1, languages.end(),
-                      std::bind2nd(EqualToTolowerString(), language_tag)) !=
-         languages.end();
+                      [&language_tag](const std::string& lang) {
+                        return EqualToTolowerString(lang, language_tag);
+                      }) != languages.end();
 }
 
 }  // namespace

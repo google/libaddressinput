@@ -79,9 +79,9 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
     return IsStringEmpty(value);
   } else {
     const auto& value = GetRepeatedFieldValue(field);
-    return std::find_if(value.begin(),
-                        value.end(),
-                        std::not1(std::ptr_fun(&IsStringEmpty))) == value.end();
+    return std::find_if(value.begin(), value.end(), [](const std::string& str) {
+             return !IsStringEmpty(str);
+           }) == value.end();
   }
 }
 
