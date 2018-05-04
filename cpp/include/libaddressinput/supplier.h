@@ -28,10 +28,10 @@ class Rule;
 class Supplier {
  public:
   struct RuleHierarchy;
-  typedef i18n::addressinput::Callback<const LookupKey&,
-                                       const RuleHierarchy&> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const LookupKey&, const RuleHierarchy&>;
 
-  virtual ~Supplier() {}
+  virtual ~Supplier() = default;
 
   // Aggregates the metadata needed for |lookup_key| into a RuleHierarchy
   // object, then calls |supplied|. Implementations of this interface may

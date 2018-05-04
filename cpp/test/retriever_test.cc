@@ -130,7 +130,7 @@ class StaleStorage : public Storage {
   StaleStorage& operator=(const StaleStorage&) = delete;
 
   StaleStorage() : data_updated_(false) {}
-  ~StaleStorage() override {}
+  ~StaleStorage() override = default;
 
   // Storage implementation.
   void Get(const std::string& key, const Callback& data_ready) const override {
@@ -148,7 +148,7 @@ class StaleStorage : public Storage {
 
 TEST_F(RetrieverTest, UseStaleDataWhenSourceFails) {
   // Owned by |resilient_retriever|.
-  StaleStorage* stale_storage = new StaleStorage;
+  auto* stale_storage = new StaleStorage;
   // An empty MockSource will fail for any request.
   Retriever resilient_retriever(new MockSource, stale_storage);
 
@@ -162,7 +162,7 @@ TEST_F(RetrieverTest, UseStaleDataWhenSourceFails) {
 
 TEST_F(RetrieverTest, DoNotUseStaleDataWhenSourceSucceeds) {
   // Owned by |resilient_retriever|.
-  StaleStorage* stale_storage = new StaleStorage;
+  auto* stale_storage = new StaleStorage;
   Retriever resilient_retriever(new TestdataSource(false), stale_storage);
 
   resilient_retriever.Retrieve(kKey, *data_ready_);

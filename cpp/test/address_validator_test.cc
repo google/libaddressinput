@@ -24,7 +24,6 @@
 
 #include <memory>
 #include <string>
-#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -55,7 +54,7 @@ using i18n::addressinput::MISMATCHING_VALUE;
 
 class ValidatorWrapper {
  public:
-  virtual ~ValidatorWrapper() {}
+  virtual ~ValidatorWrapper() = default;
   virtual void Validate(const AddressData& address,
                         bool allow_postal,
                         bool require_name,
@@ -189,7 +188,7 @@ INSTANTIATE_TEST_CASE_P(PreloadSupplier,
                         testing::Values(&PreloadValidatorWrapper::Build));
 
 TEST_P(AddressValidatorTest, EmptyAddress) {
-  expected_.insert(std::make_pair(COUNTRY, MISSING_REQUIRED_FIELD));
+  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -199,7 +198,7 @@ TEST_P(AddressValidatorTest, EmptyAddress) {
 TEST_P(AddressValidatorTest, InvalidCountry) {
   address_.region_code = "QZ";
 
-  expected_.insert(std::make_pair(COUNTRY, UNKNOWN_VALUE));
+  expected_.emplace(COUNTRY, UNKNOWN_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -211,7 +210,7 @@ TEST_P(AddressValidatorTest, ValidAddressUS) {
   address_.administrative_area = "CA";  // California
   address_.locality = "Mountain View";
   address_.postal_code = "94043";
-  address_.address_line.push_back("1600 Amphitheatre Parkway");
+  address_.address_line.emplace_back("1600 Amphitheatre Parkway");
   address_.language_code = "en";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -223,10 +222,10 @@ TEST_P(AddressValidatorTest, InvalidAddressUS) {
   address_.region_code = "US";
   address_.postal_code = "123";
 
-  expected_.insert(std::make_pair(ADMIN_AREA, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  expected_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
+  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -237,7 +236,7 @@ TEST_P(AddressValidatorTest, ValidAddressCH) {
   address_.region_code = "CH";
   address_.locality = "ZH";  // Zürich
   address_.postal_code = "8002";
-  address_.address_line.push_back("Brandschenkestrasse 110");
+  address_.address_line.emplace_back("Brandschenkestrasse 110");
   address_.language_code = "de";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -249,9 +248,9 @@ TEST_P(AddressValidatorTest, InvalidAddressCH) {
   address_.region_code = "CH";
   address_.postal_code = "123";
 
-  expected_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
-  expected_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
+  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -263,7 +262,7 @@ TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
   address_.postal_code = "86070";
-  address_.address_line.push_back(u8"Av Gregorio Méndez Magaña 1400");
+  address_.address_line.emplace_back(u8"Av Gregorio Méndez Magaña 1400");
   address_.language_code = "es";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -276,10 +275,10 @@ TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
   address_.postal_code = "80000";
-  address_.address_line.push_back(u8"Av Gregorio Méndez Magaña 1400");
+  address_.address_line.emplace_back(u8"Av Gregorio Méndez Magaña 1400");
   address_.language_code = "es";
 
-  expected_.insert(std::make_pair(POSTAL_CODE, MISMATCHING_VALUE));
+  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -290,9 +289,9 @@ TEST_P(AddressValidatorTest, ValidateFilter) {
   address_.region_code = "CH";
   address_.postal_code = "123";
 
-  filter_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  filter_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -303,14 +302,14 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
   address_.region_code = "CH";
   address_.locality = "ZH";  // Zürich
   address_.postal_code = "123";
-  address_.address_line.push_back("Brandschenkestrasse 110");
+  address_.address_line.emplace_back("Brandschenkestrasse 110");
   address_.language_code = "de";
 
-  problems_.insert(std::make_pair(LOCALITY, UNEXPECTED_FIELD));
-  problems_.insert(std::make_pair(LOCALITY, MISSING_REQUIRED_FIELD));
-  problems_.insert(std::make_pair(STREET_ADDRESS, MISSING_REQUIRED_FIELD));
+  problems_.emplace(LOCALITY, UNEXPECTED_FIELD);
+  problems_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  problems_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
 
-  expected_.insert(std::make_pair(POSTAL_CODE, INVALID_FORMAT));
+  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -320,9 +319,8 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
 TEST_P(AddressValidatorTest, ValidKanjiAddressJP) {
   address_.region_code = "JP";
   address_.administrative_area = u8"徳島県";
-  address_.locality = u8"徳島市";
   address_.postal_code = "770-0847";
-  address_.address_line.push_back("...");
+  address_.address_line.emplace_back(u8"徳島市...");
   address_.language_code = "ja";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -337,9 +335,8 @@ TEST_P(AddressValidatorTest, ValidLatinAddressJP) {
 
   address_.region_code = "JP";
   address_.administrative_area = "Tokushima";
-  address_.locality = "Tokushima";
   address_.postal_code = "770-0847";
-  address_.address_line.push_back("...");
+  address_.address_line.emplace_back("...Tokushima");
   address_.language_code = "ja-Latn";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -356,7 +353,7 @@ TEST_P(AddressValidatorTest, ValidAddressBR) {
   address_.administrative_area = u8"São Paulo";
   address_.locality = "Presidente Prudente";
   address_.postal_code = "19063-008";
-  address_.address_line.push_back("Rodovia Raposo Tavares, 6388-6682");
+  address_.address_line.emplace_back("Rodovia Raposo Tavares, 6388-6682");
   address_.language_code = "pt";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -373,7 +370,7 @@ TEST_P(AddressValidatorTest, ValidAddressCA_en) {
   address_.administrative_area = "New Brunswick";
   address_.locality = "Saint John County";
   address_.postal_code = "E2L 4Z6";
-  address_.address_line.push_back("...");
+  address_.address_line.emplace_back("...");
   address_.language_code = "en";
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -390,7 +387,7 @@ TEST_P(AddressValidatorTest, ValidAddressCA_fr) {
   address_.administrative_area = "Nouveau-Brunswick";
   address_.locality = u8"Comté de Saint-Jean";
   address_.postal_code = "E2L 4Z6";
-  address_.address_line.push_back("...");
+  address_.address_line.emplace_back("...");
   address_.language_code = "fr";
 
   ASSERT_NO_FATAL_FAILURE(Validate());

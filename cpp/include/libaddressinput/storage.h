@@ -44,10 +44,10 @@ namespace addressinput {
 //    };
 class Storage {
  public:
-  typedef i18n::addressinput::Callback<const std::string&,
-                                       std::string*> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const std::string&, std::string*>;
 
-  virtual ~Storage() {}
+  virtual ~Storage() = default;
 
   // Stores |data| for |key|, where |data| is an object allocated on the heap,
   // which Storage takes ownership of.

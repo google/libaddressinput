@@ -49,7 +49,7 @@ class Storage;
 // in total less than 2 MB of JSON data.)
 class PreloadSupplier : public Supplier {
  public:
-  typedef i18n::addressinput::Callback<const std::string&, int> Callback;
+  using Callback = i18n::addressinput::Callback<const std::string&, int>;
 
   PreloadSupplier(const PreloadSupplier&) = delete;
   PreloadSupplier& operator=(const PreloadSupplier&) = delete;

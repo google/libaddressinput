@@ -38,8 +38,8 @@ class ValidatingStorage;
 //    retriever.Retrieve("data/CA/AB--fr", *retrieved);
 class Retriever {
  public:
-  typedef i18n::addressinput::Callback<const std::string&,
-                                       const std::string&> Callback;
+  using Callback =
+      i18n::addressinput::Callback<const std::string&, const std::string&>;
 
   Retriever(const Retriever&) = delete;
   Retriever& operator=(const Retriever&) = delete;

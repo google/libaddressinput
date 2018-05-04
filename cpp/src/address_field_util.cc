@@ -18,12 +18,10 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cstddef>
 #include <string>
 #include <vector>
 
 #include "format_element.h"
-#include "util/size.h"
 
 namespace i18n {
 namespace addressinput {
@@ -37,24 +35,23 @@ bool ParseFieldToken(char c, AddressField* field) {
   assert(field != nullptr);
 
   // Simple mapping from field token characters to AddressField values.
-  static const struct Entry { char ch; AddressField field; } kTokenMap[] = {
-    { 'R', COUNTRY },
-    { 'S', ADMIN_AREA },
-    { 'C', LOCALITY },
-    { 'D', DEPENDENT_LOCALITY },
-    { 'X', SORTING_CODE },
-    { 'Z', POSTAL_CODE },
-    { 'A', STREET_ADDRESS },
-    { 'O', ORGANIZATION },
-    { 'N', RECIPIENT },
+  static const struct { char c; AddressField field; } kTokenMap[] = {
+      { 'R', COUNTRY },
+      { 'S', ADMIN_AREA },
+      { 'C', LOCALITY },
+      { 'D', DEPENDENT_LOCALITY },
+      { 'X', SORTING_CODE },
+      { 'Z', POSTAL_CODE },
+      { 'A', STREET_ADDRESS },
+      { 'O', ORGANIZATION },
+      { 'N', RECIPIENT },
   };
-  const size_t kTokenMapSize = size(kTokenMap);
 
-  for (size_t n = 0; n < kTokenMapSize; ++n) {
-      if (c == kTokenMap[n].ch) {
-          *field = kTokenMap[n].field;
-          return true;
-      }
+  for (const auto& entry : kTokenMap) {
+    if (c == entry.c) {
+      *field = entry.field;
+      return true;
+    }
   }
   return false;
 }
@@ -101,10 +98,9 @@ void ParseAddressFieldsRequired(const std::string& required,
                                 std::vector<AddressField>* fields) {
   assert(fields != nullptr);
   fields->clear();
-  for (std::string::const_iterator it = required.begin();
-       it != required.end(); ++it) {
+  for (char c : required) {
     AddressField field;
-    if (ParseFieldToken(*it, &field)) {
+    if (ParseFieldToken(c, &field)) {
       fields->push_back(field);
     }
   }
