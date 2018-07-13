@@ -15,7 +15,6 @@
 #ifndef I18N_ADDRESSINPUT_UTIL_CCTYPE_TOLOWER_EQUAL_H_
 #define I18N_ADDRESSINPUT_UTIL_CCTYPE_TOLOWER_EQUAL_H_
 
-#include <functional>
 #include <string>
 
 namespace i18n {
@@ -23,11 +22,7 @@ namespace addressinput {
 
 // Performs case insensitive comparison of |a| and |b| by calling std::tolower()
 // from <cctype>.
-struct EqualToTolowerString
-    : public std::binary_function<std::string, std::string, bool> {
-  result_type operator()(const first_argument_type& a,
-                         const second_argument_type& b) const;
-};
+bool EqualToTolowerString(const std::string& a, const std::string& b);
 
 }  // namespace addressinput
 }  // namespace i18n

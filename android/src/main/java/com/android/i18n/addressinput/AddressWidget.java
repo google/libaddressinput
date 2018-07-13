@@ -162,12 +162,13 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   // Need handler for callbacks to the UI thread
   final Handler handler = new Handler();
 
-  final Runnable updateMultipleFields = new Runnable() {
-    @Override
-    public void run() {
-      updateFields();
-    }
-  };
+  final Runnable updateMultipleFields =
+      new Runnable() {
+        @Override
+        public void run() {
+          updateFields();
+        }
+      };
 
   private class UpdateRunnable implements Runnable {
     private AddressField myId;
@@ -250,11 +251,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     return field.getId().getWidthTypeForRegion(currentRegion);
   }
 
-  private void createView(ViewGroup rootView, AddressUiComponent field, String defaultKey,
-      boolean readOnly) {
-    @SuppressWarnings("deprecation")  // FILL_PARENT renamed MATCH_PARENT in API Level 8.
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-            LayoutParams.WRAP_CONTENT);
+  private void createView(
+      ViewGroup rootView, AddressUiComponent field, String defaultKey, boolean readOnly) {
+    @SuppressWarnings("deprecation") // FILL_PARENT renamed MATCH_PARENT in API Level 8.
+    LinearLayout.LayoutParams lp =
+        new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
     String fieldText = field.getFieldName();
     WidthType widthType = getFieldWidthType(field);
 
@@ -276,10 +277,11 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
                 // want to overwrite those fields. We copy the recipient and organization fields
                 // over to avoid this.
                 AddressData current = AddressWidget.this.getAddressData();
-                AddressWidget.this.renderFormWithSavedAddress(AddressData.builder(addressData)
-                    .setRecipient(current.getRecipient())
-                    .setOrganization(current.getOrganization())
-                    .build());
+                AddressWidget.this.renderFormWithSavedAddress(
+                    AddressData.builder(addressData)
+                        .setRecipient(current.getRecipient())
+                        .setOrganization(current.getOrganization())
+                        .build());
               }
             });
         field.setView(autocomplete);
@@ -324,9 +326,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
   }
 
-  /**
-   *  Associates each field with its corresponding AddressUiComponent.
-   */
+  /** Associates each field with its corresponding AddressUiComponent. */
   private void buildFieldWidgets() {
     AddressData data = new AddressData.Builder().setCountry(currentRegion).build();
     LookupKey key = new LookupKey.Builder(LookupKey.KeyType.DATA).setAddressData(data).build();
@@ -351,6 +351,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     AddressUiComponent addressLine1Ui = new AddressUiComponent(AddressField.ADDRESS_LINE_1);
     addressLine1Ui.setFieldName(context.getString(R.string.i18n_address_line1_label));
     inputWidgets.put(AddressField.ADDRESS_LINE_1, addressLine1Ui);
+    // Setup an alternate mapping for the first address line which is what validation expects
+    inputWidgets.put(AddressField.STREET_ADDRESS, addressLine1Ui);
 
     // Set up AddressField.ADDRESS_LINE_2
     AddressUiComponent addressLine2Ui = new AddressUiComponent(AddressField.ADDRESS_LINE_2);
@@ -444,16 +446,16 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     AddressUiComponent countryUi = new AddressUiComponent(AddressField.COUNTRY);
     countryUi.setFieldName(context.getString(R.string.i18n_country_or_region_label));
     ArrayList<RegionData> countries = new ArrayList<RegionData>();
-    for (RegionData regionData : formController.getRegionData(new LookupKey.Builder(
-        KeyType.DATA).build())) {
+    for (RegionData regionData :
+        formController.getRegionData(new LookupKey.Builder(KeyType.DATA).build())) {
       String regionKey = regionData.getKey();
       Log.i(this.toString(), "Looking at regionKey: " + regionKey);
       // ZZ represents an unknown region code.
       if (!regionKey.equals("ZZ") && !formOptions.isBlacklistedRegion(regionKey)) {
         Log.i(this.toString(), "Adding " + regionKey);
         String localCountryName = getLocalCountryName(regionKey);
-        RegionData country = new RegionData.Builder().setKey(regionKey).setName(
-            localCountryName).build();
+        RegionData country =
+            new RegionData.Builder().setKey(regionKey).setName(localCountryName).build();
         countries.add(country);
       }
     }
@@ -490,8 +492,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   private void layoutAddressFields() {
-    for (AddressField field : formatInterpreter.getAddressFieldOrder(script,
-          currentRegion)) {
+    for (AddressField field : formatInterpreter.getAddressFieldOrder(script, currentRegion)) {
       if (!formOptions.isHidden(field)) {
         createView(rootView, inputWidgets.get(field), "", formOptions.isReadonly(field));
       }
@@ -506,7 +507,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
     // Find all the child spinners, if any, that depend on this one.
     final AddressField myId = spinnerInfo.id;
-    if (myId != AddressField.COUNTRY && myId != AddressField.ADMIN_AREA
+    if (myId != AddressField.COUNTRY
+        && myId != AddressField.ADMIN_AREA
         && myId != AddressField.LOCALITY) {
       // Only a change in the three AddressFields above will trigger a change in other
       // AddressFields. Therefore, for all other AddressFields, we return immediately.
@@ -519,17 +521,18 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       return;
     }
 
-    formController.requestDataForAddress(getAddressData(), new DataLoadListener() {
-      @Override
-      public void dataLoadingBegin(){
-      }
+    formController.requestDataForAddress(
+        getAddressData(),
+        new DataLoadListener() {
+          @Override
+          public void dataLoadingBegin() {}
 
-      @Override
-      public void dataLoadingEnd() {
-        Runnable updateChild = new UpdateRunnable(myId);
-        handler.post(updateChild);
-      }
-    });
+          @Override
+          public void dataLoadingEnd() {
+            Runnable updateChild = new UpdateRunnable(myId);
+            handler.post(updateChild);
+          }
+        });
   }
 
   public void updateWidgetOnCountryChange(String regionCode) {
@@ -553,23 +556,26 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   public void renderForm() {
     createViewForCountry();
     setWidgetLocaleAndScript();
-    AddressData data = new AddressData.Builder().setCountry(currentRegion)
-        .setLanguageCode(widgetLocale).build();
-    formController.requestDataForAddress(data, new DataLoadListener() {
-      @Override
-      public void dataLoadingBegin() {
-        progressDialog = componentProvider.getUiActivityIndicatorView();
-        progressDialog.setMessage(context.getString(R.string.address_data_loading));
-        Log.d(this.toString(), "Progress dialog started.");
-      }
-      @Override
-      public void dataLoadingEnd() {
-        Log.d(this.toString(), "Data loading completed.");
-        progressDialog.dismiss();
-        Log.d(this.toString(), "Progress dialog stopped.");
-        handler.post(updateMultipleFields);
-      }
-    });
+    AddressData data =
+        new AddressData.Builder().setCountry(currentRegion).setLanguageCode(widgetLocale).build();
+    formController.requestDataForAddress(
+        data,
+        new DataLoadListener() {
+          @Override
+          public void dataLoadingBegin() {
+            progressDialog = componentProvider.getUiActivityIndicatorView();
+            progressDialog.setMessage(context.getString(R.string.address_data_loading));
+            Log.d(this.toString(), "Progress dialog started.");
+          }
+
+          @Override
+          public void dataLoadingEnd() {
+            Log.d(this.toString(), "Data loading completed.");
+            progressDialog.dismiss();
+            Log.d(this.toString(), "Progress dialog stopped.");
+            handler.post(updateMultipleFields);
+          }
+        });
   }
 
   private void setWidgetLocaleAndScript() {
@@ -588,13 +594,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
       address = AddressData.builder(address).setLanguageCode(null).build();
     }
 
-    LookupKey parentKey = formController.getDataKeyFor(address).getKeyForUpperLevelField(
-        parentField);
+    LookupKey parentKey =
+        formController.getDataKeyFor(address).getKeyForUpperLevelField(parentField);
     List<RegionData> candidates;
     // Can't build a key with parent field, quit.
     if (parentKey == null) {
-      Log.w(this.toString(), "Can't build key with parent field " + parentField + ". One of"
-          + " the ancestor fields might be empty");
+      Log.w(
+          this.toString(),
+          "Can't build key with parent field "
+              + parentField
+              + ". One of"
+              + " the ancestor fields might be empty");
 
       // Removes candidates that exist from previous settings. For example, data/US has a
       // list of candidates AB, BC, CA, etc, that list should be cleaned up when user updates
@@ -607,25 +617,37 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   /**
-   * Creates an AddressWidget to be attached to rootView for the specific context using the
-   * default UI component provider.
+   * Creates an AddressWidget to be attached to rootView for the specific context using the default
+   * UI component provider.
    */
-  public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
+  public AddressWidget(
+      Context context,
+      ViewGroup rootView,
+      FormOptions formOptions,
       ClientCacheManager cacheManager) {
-    this(context, rootView, formOptions, cacheManager,
+    this(
+        context,
+        rootView,
+        formOptions,
+        cacheManager,
         new AddressWidgetUiComponentProvider(context));
   }
 
   /**
-   * Creates an AddressWidget to be attached to rootView for the specific context using UI
-   * component provided by the provider.
+   * Creates an AddressWidget to be attached to rootView for the specific context using UI component
+   * provided by the provider.
    */
-  public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
-      ClientCacheManager cacheManager, AddressWidgetUiComponentProvider provider) {
+  public AddressWidget(
+      Context context,
+      ViewGroup rootView,
+      FormOptions formOptions,
+      ClientCacheManager cacheManager,
+      AddressWidgetUiComponentProvider provider) {
     componentProvider = provider;
     currentRegion =
         ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE))
-        .getSimCountryIso().toUpperCase(Locale.US);
+            .getSimCountryIso()
+            .toUpperCase(Locale.US);
     if (currentRegion.length() == 0) {
       currentRegion = "US";
     }
@@ -634,21 +656,34 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   /**
-   * Creates an AddressWidget to be attached to rootView for the specific context using the
-   * default UI component provider, and fill out the address form with savedAddress.
+   * Creates an AddressWidget to be attached to rootView for the specific context using the default
+   * UI component provider, and fill out the address form with savedAddress.
    */
-  public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
-      ClientCacheManager cacheManager, AddressData savedAddress) {
-    this(context, rootView, formOptions, cacheManager, savedAddress,
+  public AddressWidget(
+      Context context,
+      ViewGroup rootView,
+      FormOptions formOptions,
+      ClientCacheManager cacheManager,
+      AddressData savedAddress) {
+    this(
+        context,
+        rootView,
+        formOptions,
+        cacheManager,
+        savedAddress,
         new AddressWidgetUiComponentProvider(context));
   }
 
   /**
-   * Creates an AddressWidget to be attached to rootView for the specific context using UI
-   * component provided by the provider, and fill out the address form with savedAddress.
+   * Creates an AddressWidget to be attached to rootView for the specific context using UI component
+   * provided by the provider, and fill out the address form with savedAddress.
    */
-  public AddressWidget(Context context, ViewGroup rootView, FormOptions formOptions,
-      ClientCacheManager cacheManager, AddressData savedAddress,
+  public AddressWidget(
+      Context context,
+      ViewGroup rootView,
+      FormOptions formOptions,
+      ClientCacheManager cacheManager,
+      AddressData savedAddress,
       AddressWidgetUiComponentProvider provider) {
     componentProvider = provider;
     currentRegion = savedAddress.getPostalCountry();
@@ -720,7 +755,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
   }
 
-  private void init(Context context, ViewGroup rootView, FormOptions.Snapshot formOptions,
+  private void init(
+      Context context,
+      ViewGroup rootView,
+      FormOptions.Snapshot formOptions,
       ClientCacheManager cacheManager) {
     this.context = context;
     this.rootView = rootView;
@@ -747,8 +785,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   public AddressData getAddressData() {
     AddressData.Builder builder = new AddressData.Builder();
     builder.setCountry(currentRegion);
-    for (AddressField field : formatInterpreter.getAddressFieldOrder(script,
-          currentRegion)) {
+    for (AddressField field : formatInterpreter.getAddressFieldOrder(script, currentRegion)) {
       AddressUiComponent addressUiComponent = inputWidgets.get(field);
       if (addressUiComponent != null) {
         String value = addressUiComponent.getValue();
@@ -769,8 +806,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   /**
    * Gets the formatted address.
-   * <p>
-   * This method does not validate addresses. Also, it will "normalize" the result strings by
+   *
+   * <p>This method does not validate addresses. Also, it will "normalize" the result strings by
    * removing redundant spaces and empty lines.
    *
    * @return the formatted address
@@ -779,27 +816,17 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     return getEnvelopeAddress(getAddressData());
   }
 
-  /**
-   * Gets the formatted address based on the AddressData passed in.
-   */
+  /** Gets the formatted address based on the AddressData passed in. */
   public List<String> getEnvelopeAddress(AddressData address) {
     return getEnvelopeAddress(formatInterpreter, address);
-  }
-
-  /**
-   * Gets the formatted address based on the AddressData passed in with none of the relevant
-   * fields hidden.
-   */
-  public static List<String> getFullEnvelopeAddress(AddressData address) {
-    return getEnvelopeAddress(new FormatInterpreter(SHOW_ALL_FIELDS), address);
   }
 
   /**
    * Helper function for getting the formatted address based on the FormatInterpreter and
    * AddressData passed in.
    */
-  private static List<String> getEnvelopeAddress(FormatInterpreter interpreter,
-      AddressData address) {
+  private static List<String> getEnvelopeAddress(
+      FormatInterpreter interpreter, AddressData address) {
     String countryCode = address.getPostalCountry();
     if (countryCode.length() != 2) {
       return Collections.emptyList();
@@ -813,8 +840,14 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   /**
-   * Get problems found in the address data entered by the user.
+   * Gets the formatted address based on the AddressData passed in with none of the relevant fields
+   * hidden.
    */
+  public static List<String> getFullEnvelopeAddress(AddressData address) {
+    return getEnvelopeAddress(new FormatInterpreter(SHOW_ALL_FIELDS), address);
+  }
+
+  /** Get problems found in the address data entered by the user. */
   public AddressProblems getAddressProblems() {
     AddressProblems problems = new AddressProblems();
     AddressData addressData = getAddressData();
@@ -827,8 +860,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
    *
    * @return the View object representing the AddressField.
    */
-  public View displayErrorMessageForField(AddressData address,
-      AddressField field, AddressProblemType problem) {
+  public View displayErrorMessageForField(
+      AddressData address, AddressField field, AddressProblemType problem) {
     Log.d(this.toString(), "Display error message for the field: " + field.toString());
     AddressUiComponent addressUiComponent = inputWidgets.get(field);
     if (addressUiComponent != null && addressUiComponent.getUiType() == UiComponent.EDIT) {
@@ -839,8 +872,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     return null;
   }
 
-  public String getErrorMessageForInvalidEntry(AddressData address, AddressField field,
-      AddressProblemType problem) {
+  public String getErrorMessageForInvalidEntry(
+      AddressData address, AddressField field, AddressProblemType problem) {
     switch (problem) {
       case MISSING_REQUIRED_FIELD:
         return context.getString(R.string.i18n_missing_required_field);
@@ -871,12 +904,9 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     }
   }
 
-  /**
-   * Clears all error messages in the UI.
-   */
+  /** Clears all error messages in the UI. */
   public void clearErrorMessage() {
-    for (AddressField field : formatInterpreter.getAddressFieldOrder(script,
-          currentRegion)) {
+    for (AddressField field : formatInterpreter.getAddressFieldOrder(script, currentRegion)) {
       AddressUiComponent addressUiComponent = inputWidgets.get(field);
 
       if (addressUiComponent != null && addressUiComponent.getUiType() == UiComponent.EDIT) {
@@ -897,8 +927,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   @Override
-  public void onNothingSelected(AdapterView<?> arg0) {
-  }
+  public void onNothingSelected(AdapterView<?> arg0) {}
 
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

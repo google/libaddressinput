@@ -78,16 +78,17 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
 
   // Now guess something appropriate based on the base language.
   const std::string& base_language = address_language.base;
+  using std::placeholders::_1;
   if (std::find_if(kLanguagesThatUseSpace,
                    kLanguagesThatUseSpace + size(kLanguagesThatUseSpace),
-                   std::bind2nd(EqualToTolowerString(), base_language)) !=
+                   std::bind(&EqualToTolowerString, _1, base_language)) !=
       kLanguagesThatUseSpace + size(kLanguagesThatUseSpace)) {
     return kSpaceSeparator;
   } else if (std::find_if(
                  kLanguagesThatHaveNoSeparator,
                  kLanguagesThatHaveNoSeparator +
                      size(kLanguagesThatHaveNoSeparator),
-                 std::bind2nd(EqualToTolowerString(), base_language)) !=
+                 std::bind(&EqualToTolowerString, _1, base_language)) !=
              kLanguagesThatHaveNoSeparator +
                  size(kLanguagesThatHaveNoSeparator)) {
     return "";
@@ -95,7 +96,7 @@ std::string GetLineSeparatorForLanguage(const std::string& language_tag) {
                  kLanguagesThatUseAnArabicComma,
                  kLanguagesThatUseAnArabicComma +
                      size(kLanguagesThatUseAnArabicComma),
-                 std::bind2nd(EqualToTolowerString(), base_language)) !=
+                 std::bind(&EqualToTolowerString, _1, base_language)) !=
              kLanguagesThatUseAnArabicComma +
                  size(kLanguagesThatUseAnArabicComma)) {
     return kArabicCommaSeparator;

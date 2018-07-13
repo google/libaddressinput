@@ -19,7 +19,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <functional>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -79,9 +78,8 @@ bool AddressData::IsFieldEmpty(AddressField field) const {
     return IsStringEmpty(value);
   } else {
     const auto& value = GetRepeatedFieldValue(field);
-    return std::find_if(value.begin(),
-                        value.end(),
-                        std::not1(std::ptr_fun(&IsStringEmpty))) == value.end();
+    return std::find_if_not(value.begin(), value.end(), IsStringEmpty) ==
+           value.end();
   }
 }
 

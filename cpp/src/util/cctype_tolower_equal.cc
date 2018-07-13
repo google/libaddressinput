@@ -16,28 +16,17 @@
 
 #include <algorithm>
 #include <cctype>
-#include <functional>
 #include <string>
 
 namespace i18n {
 namespace addressinput {
 
-namespace {
-
-struct EqualToTolowerChar
-    : public std::binary_function<std::string::value_type,
-                                  std::string::value_type, bool> {
-  result_type operator()(first_argument_type a, second_argument_type b) const {
-    return std::tolower(a) == std::tolower(b);
-  }
-};
-
-}  // namespace
-
-EqualToTolowerString::result_type EqualToTolowerString::operator()(
-    const first_argument_type& a, const second_argument_type& b) const {
+bool EqualToTolowerString(const std::string& a, const std::string& b) {
   return a.size() == b.size() &&
-         std::equal(a.begin(), a.end(), b.begin(), EqualToTolowerChar());
+         std::equal(a.begin(), a.end(), b.begin(),
+                    [](std::string::value_type a, std::string::value_type b) {
+                      return std::tolower(a) == std::tolower(b);
+                    });
 }
 
 }  // namespace addressinput
