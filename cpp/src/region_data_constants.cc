@@ -217,7 +217,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.emplace("BT", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       u8R"("zipex":"11001,31101,35003",)"
-      u8R"("posturl":"http://www.bhutanpost.bt/searchpostcode.php",)"
+      u8R"("posturl":"http://www.bhutanpost.bt/postcodes/",)"
       u8R"("languages":"dz")"
       "}");
   region_data.emplace("BV", "{"
@@ -601,7 +601,7 @@ std::map<std::string, std::string> InitRegionData() {
       u8R"("fmt":"%N%n%O%n%A%n%C%n%Z",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"IM2 1AA,IM99 1PS",)"
-      u8R"("posturl":"http://www.gov.im/post/postal/fr_main.asp",)"
+      u8R"("posturl":"https://www.iompost.com/tools-forms/postcode-finder/",)"
       u8R"("languages":"en~gv")"
       "}");
   region_data.emplace("IN", "{"
@@ -975,7 +975,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.emplace("NP", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       u8R"("zipex":"44601",)"
-      u8R"("posturl":"http://www.gpo.gov.np/postalcode.aspx",)"
+      u8R"("posturl":"http://www.gpo.gov.np/Home/Postalcode",)"
       u8R"("languages":"ne")"
       "}");
   region_data.emplace("NR", "{"
@@ -1031,7 +1031,7 @@ std::map<std::string, std::string> InitRegionData() {
   region_data.emplace("PK", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C-%Z",)"
       u8R"("zipex":"44000",)"
-      u8R"("posturl":"http://www.pakpost.gov.pk/postcode/postcode.html",)"
+      u8R"("posturl":"http://www.pakpost.gov.pk/postcode.php",)"
       u8R"("languages":"ur~en")"
       "}");
   region_data.emplace("PL", "{"
@@ -1220,6 +1220,7 @@ std::map<std::string, std::string> InitRegionData() {
       u8R"("languages":"en~nl")"
       "}");
   region_data.emplace("SY", "{"
+      u8R"("locality_name_type":"district",)"
       u8R"("languages":"ar~fr")"
       "}");
   region_data.emplace("SZ", "{"
@@ -1422,7 +1423,7 @@ std::map<std::string, std::string> InitRegionData() {
       u8R"("fmt":"%N%n%O%n%A%n%D%n%C%n%Z",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"0083,1451,0001",)"
-      u8R"("posturl":"https://www.postoffice.co.za/contactus/postalcode.html",)"
+      u8R"("posturl":"https://www.postoffice.co.za/Questions/postalcode.html",)"
       u8R"("languages":"en~zu~xh~af~nso~tn~st~ts~ss~ve~nr")"
       "}");
   region_data.emplace("ZM", "{"
