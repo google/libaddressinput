@@ -26,7 +26,7 @@ class RegionDataConstants {
  public:
   static bool IsSupported(const std::string& region_code);
   static const std::vector<std::string>& GetRegionCodes();
-  static const std::string& GetRegionData(const std::string& region_code);
+  static std::string GetRegionData(const std::string& region_code);
   static const std::string& GetDefaultRegionData();
   static size_t GetMaxLookupKeyDepth(const std::string& region_code);
 
