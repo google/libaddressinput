@@ -76,7 +76,7 @@ public final class RegionDataConstants {
     map.put("CL", "{\"name\":\"CHILE\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\"}");
     map.put("CM", "{\"name\":\"CAMEROON\"}");
     map.put("CN", "{\"name\":\"CHINA\",\"lang\":\"zh\",\"languages\":\"zh\",\"lfmt\":\"%N%n%O%n%A%n%D%n%C%n%S, %Z\",\"fmt\":\"%Z%n%S%C%D%n%A%n%O%n%N\",\"require\":\"ACSZ\",\"upper\":\"S\",\"sublocality_name_type\":\"district\",\"width_overrides\":\"%S:S%C:S%D:S\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"市/自治州/地区/盟\",\"lang\":\"zh\"},{\"field\":\"S\",\"label\":\"省/自治区/直辖市\",\"lang\":\"zh\"},{\"field\":\"D\",\"label\":\"区/县/旗\",\"lang\":\"zh\"}]}");
-    map.put("CO", "{\"name\":\"COLOMBIA\",\"fmt\":\"%N%n%O%n%A%n%C, %S, %Z\",\"require\":\"AS\",\"state_name_type\":\"department\"}");
+    map.put("CO", "{\"name\":\"COLOMBIA\",\"fmt\":\"%N%n%O%n%A%n%C, %S, %Z\",\"require\":\"AS\",\"state_name_type\":\"department\",\"label_overrides\":[{\"field\":\"LL\",\"label\":\"Vereda\"},{\"field\":\"A3\",\"label\":\"Corregimiento\"},{\"field\":\"A2\",\"label\":\"Municipio\"}]}");
     map.put("CR", "{\"name\":\"COSTA RICA\",\"fmt\":\"%N%n%O%n%A%n%S, %C%n%Z\",\"require\":\"ACS\"}");
     map.put("CU", "{\"name\":\"CUBA\",\"fmt\":\"%N%n%O%n%A%n%S%C%n%Z\"}");
     map.put("CV", "{\"name\":\"CAPE VERDE\",\"lang\":\"pt\",\"languages\":\"pt\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\",\"state_name_type\":\"island\"}");
@@ -201,7 +201,7 @@ public final class RegionDataConstants {
     map.put("NZ", "{\"name\":\"NEW ZEALAND\",\"fmt\":\"%N%n%O%n%A%n%D%n%C %Z\",\"require\":\"ACZ\"}");
     map.put("OM", "{\"name\":\"OMAN\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\"}");
     map.put("PA", "{\"name\":\"PANAMA (REP.)\",\"fmt\":\"%N%n%O%n%A%n%C%n%S\",\"upper\":\"CS\"}");
-    map.put("PE", "{\"name\":\"PERU\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\"}");
+    map.put("PE", "{\"name\":\"PERU\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\"}");
     map.put("PF", "{\"name\":\"FRENCH POLYNESIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"state_name_type\":\"island\"}");
     map.put("PG", "{\"name\":\"PAPUA NEW GUINEA\",\"fmt\":\"%N%n%O%n%A%n%C %Z %S\",\"require\":\"ACS\"}");
     map.put("PH", "{\"name\":\"PHILIPPINES\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D, %C%n%Z %S\"}");

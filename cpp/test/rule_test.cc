@@ -391,11 +391,11 @@ class RuleParseTest : public testing::TestWithParam<std::string> {
  protected:
   RuleParseTest() = default;
 
-  const std::string& GetRegionData() const {
+  std::string GetRegionData() const {
     // GetParam() is either a region code or the region data itself.
     // RegionDataConstants::GetRegionData() returns an empty string for anything
     // that's not a region code.
-    const std::string& data = RegionDataConstants::GetRegionData(GetParam());
+    std::string data = RegionDataConstants::GetRegionData(GetParam());
     return !data.empty() ? data : GetParam();
   }
 

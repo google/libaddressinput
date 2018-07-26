@@ -14,6 +14,7 @@
 
 #include "region_data_constants.h"
 
+#include <algorithm>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -70,7 +71,7 @@ class RegionDataTest : public testing::TestWithParam<std::string> {
  protected:
   RegionDataTest() = default;
 
-  const std::string& GetData() const {
+  std::string GetData() const {
     return RegionDataConstants::GetRegionData(GetParam());
   }
 };
@@ -91,6 +92,13 @@ TEST(RegionDataConstantsTest, GetMaxLookupKeyDepth) {
   EXPECT_EQ(1, RegionDataConstants::GetMaxLookupKeyDepth("KY"));
   EXPECT_EQ(2, RegionDataConstants::GetMaxLookupKeyDepth("US"));
   EXPECT_EQ(3, RegionDataConstants::GetMaxLookupKeyDepth("CN"));
+}
+
+// Verifies that region codes are sorted alphabetically, which is required for
+// the binary search in GetRegionData() and IsSupported().
+TEST(RegionDataConstantsTest, RegionCodesSorted) {
+  EXPECT_TRUE(std::is_sorted(RegionDataConstants::GetRegionCodes().begin(),
+                             RegionDataConstants::GetRegionCodes().end()));
 }
 
 }  // namespace
