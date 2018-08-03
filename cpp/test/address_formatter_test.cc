@@ -327,6 +327,35 @@ TEST(AddressFormatterTest,
 }
 
 TEST(AddressFormatterTest,
+     GetFormattedNationalAddress_LiteralBeforeOneAddressLine) {
+  AddressData address;
+  address.region_code = "JP";
+  address.language_code = "ja_Latn";
+  address.administrative_area = "Tokyo";
+  address.address_line = {"Roppongi Hills"};
+  std::vector<std::string> expected;
+  expected.emplace_back("Roppongi Hills, Tokyo");
+  std::vector<std::string> lines;
+  GetFormattedNationalAddress(address, &lines);
+  EXPECT_EQ(expected, lines);
+}
+
+TEST(AddressFormatterTest,
+     GetFormattedNationalAddress_LiteralBeforeTwoAddressLines) {
+  AddressData address;
+  address.region_code = "JP";
+  address.language_code = "ja_Latn";
+  address.administrative_area = "Tokyo";
+  address.address_line = {"Roppongi Hills", "Mori Tower"};
+  std::vector<std::string> expected;
+  expected.emplace_back("Roppongi Hills");
+  expected.emplace_back("Mori Tower, Tokyo");
+  std::vector<std::string> lines;
+  GetFormattedNationalAddress(address, &lines);
+  EXPECT_EQ(expected, lines);
+}
+
+TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_DuplicateField) {
   AddressData address;
   address.region_code = "CI";

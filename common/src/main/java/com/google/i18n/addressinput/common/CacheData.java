@@ -79,7 +79,7 @@ public final class CacheData {
    * Creates an instance of CacheData with an empty cache, and uses no caching that is external
    * to the AddressWidget.
    */
-  // TODO(user): Remove this method (avoid needless dependency on SimpleClientCacheManager).
+  // TODO(dbeaumont): Remove this method (avoid needless dependency on SimpleClientCacheManager).
   public CacheData(AsyncRequestApi asyncRequestApi) {
     this(new SimpleClientCacheManager(), asyncRequestApi);
   }
@@ -115,7 +115,7 @@ public final class CacheData {
    *
    * @param jsonString cached data from last time the class was used
    */
-  // TODO(user): Remove this method (if callers need to build from json string, do it first).
+  // TODO(dbeaumont): Remove this method (if callers need to build from json string, do it first).
   public CacheData(String jsonString, AsyncRequestApi asyncRequestApi) {
     clientCacheManager = new SimpleClientCacheManager();
     setUrl(clientCacheManager.getAddressServerUrl());
