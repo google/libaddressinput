@@ -257,6 +257,11 @@ public final class FieldVerifier {
     // alternative for the region, for which we have data. If not, we drop it from the data key.
     String[] parts = sublevel.split(LOCALE_DELIMITER);
 
+    if (parts.length == 0){
+      // May only contains the LOCALE_DELIMITER.
+      return new FieldVerifier(this, null);
+    }
+
     // Makes the new key - the old key, plus the new data, minus the language code.
     String currentFullKey = id + KEY_NODE_DELIMITER + parts[0];
 

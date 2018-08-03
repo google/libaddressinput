@@ -553,6 +553,19 @@ public class FieldVerifierTest {
     assertTrue(problems.isEmpty());
   }
 
+  @Test public void testLocalityWithDelimiterOnly() {
+    AddressProblems problems = new AddressProblems();
+    AddressData address = AddressData.builder()
+        .setAddress("dummy")
+        .setLocality("--")
+        .setAdminArea("Haryana")
+        .setCountry("IN")
+        .setPostalCode("136118")
+        .build();
+    VERIFIER.verify(address, problems);
+    assertTrue(problems.isEmpty());
+  }
+
   @Test public void testFieldVerifierUsesRegionDataConstantsForFmtAndRequire() {
     Map<AddressDataKey, String> map = new EnumMap<AddressDataKey, String>(AddressDataKey.class);
     // Values for format and require are deliberately different from RegionDataConstants so that we

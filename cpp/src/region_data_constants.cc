@@ -307,7 +307,7 @@ const RegionData kRegionData[] = {
       u8R"("languages":"es")"
       "}"},
   {"CU", "{"
-      u8R"("fmt":"%N%n%O%n%A%n%S%C%n%Z",)"
+      u8R"("fmt":"%N%n%O%n%A%n%C %S%n%Z",)"
       u8R"("zipex":"10700",)"
       u8R"("languages":"es")"
       "}"},
@@ -1009,6 +1009,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"PE", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C %Z%n%S",)"
+      u8R"("locality_name_type":"district",)"
       u8R"("zipex":"LIMA 23,LIMA 42,CALLAO 2,02001",)"
       u8R"("posturl":"http://www.serpost.com.pe/cpostal/codigo",)"
       u8R"("languages":"es")"

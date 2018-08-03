@@ -191,9 +191,12 @@ void GetFormattedNationalAddress(
           if (address_data.address_line.size() > 1U) {
             lines->push_back(line);
             line.clear();
-            lines->insert(lines->end(),
-                          address_data.address_line.begin() + 1,
-                          address_data.address_line.end());
+            const auto last_element_iterator =
+                address_data.address_line.begin() +
+                address_data.address_line.size() - 1;
+            lines->insert(lines->end(), address_data.address_line.begin() + 1,
+                          last_element_iterator);
+            line.append(*last_element_iterator);
           }
         }
       } else {
