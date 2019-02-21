@@ -179,13 +179,11 @@ class AddressValidatorTest
   const std::unique_ptr<const AddressValidator::Callback> validated_;
 };
 
-INSTANTIATE_TEST_CASE_P(OndemandSupplier,
-                        AddressValidatorTest,
-                        testing::Values(&OndemandValidatorWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(OndemandSupplier, AddressValidatorTest,
+                         testing::Values(&OndemandValidatorWrapper::Build));
 
-INSTANTIATE_TEST_CASE_P(PreloadSupplier,
-                        AddressValidatorTest,
-                        testing::Values(&PreloadValidatorWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(PreloadSupplier, AddressValidatorTest,
+                         testing::Values(&PreloadValidatorWrapper::Build));
 
 TEST_P(AddressValidatorTest, EmptyAddress) {
   expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);

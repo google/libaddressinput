@@ -56,14 +56,14 @@ TEST_P(LanguageTest, ExtractedDataIsCorrect) {
   EXPECT_EQ(GetParam().expected_has_latin_script, language.has_latin_script);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     LanguageTestCases, LanguageTest,
-    testing::Values(
-        LanguageTestCase("", "", "", false),
-        LanguageTestCase("en", "en", "en", false),
-        LanguageTestCase("zh-Latn-CN", "zh-Latn-CN", "zh", true),
-        LanguageTestCase("zh-cmn-Latn-CN", "zh-cmn-Latn-CN", "zh", true),
-        LanguageTestCase("zh-Hans", "zh-Hans", "zh", false),
-        LanguageTestCase("en_GB", "en-GB", "en", false)));
+    testing::Values(LanguageTestCase("", "", "", false),
+                    LanguageTestCase("en", "en", "en", false),
+                    LanguageTestCase("zh-Latn-CN", "zh-Latn-CN", "zh", true),
+                    LanguageTestCase("zh-cmn-Latn-CN", "zh-cmn-Latn-CN", "zh",
+                                     true),
+                    LanguageTestCase("zh-Hans", "zh-Hans", "zh", false),
+                    LanguageTestCase("en_GB", "en-GB", "en", false)));
 
 }  // namespace

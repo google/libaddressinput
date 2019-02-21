@@ -126,7 +126,7 @@ const RegionData kRegionData[] = {
       u8R"("fmt":"%O%n%N%n%A%nAX-%Z %C%nÅLAND",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"22150,22550,22240,22710,22270,22730,22430",)"
-      u8R"("posturl":"http://www.posten.ax/department.con?iPage=123",)"
+      u8R"("posturl":"https://www.alandpost.ax/privat/skicka-brev/postnummer-pa-aland/postnummersokning",)"
       u8R"("languages":"sv")"
       "}"},
   {"AZ", "{"
@@ -410,7 +410,7 @@ const RegionData kRegionData[] = {
       u8R"("fmt":"%O%n%N%n%A%nFI-%Z %C",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"00550,00011",)"
-      u8R"("posturl":"http://www.verkkoposti.com/e3/postinumeroluettelo",)"
+      u8R"("posturl":"https://support.posti.fi/fi/tyokalut/postinumerohaku.html",)"
       u8R"("languages":"fi~sv")"
       "}"},
   {"FJ", "{"
@@ -438,7 +438,7 @@ const RegionData kRegionData[] = {
       u8R"("languages":"fo")"
       "}"},
   {"FR", "{"
-      u8R"("fmt":"%O%n%N%n%A%n%Z %C %X",)"
+      u8R"("fmt":"%O%n%N%n%A%n%Z %C",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"33380,34092,33506",)"
       u8R"("posturl":"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal",)"
@@ -910,7 +910,7 @@ const RegionData kRegionData[] = {
       u8R"("state_name_type":"state",)"
       u8R"("sublocality_name_type":"neighborhood",)"
       u8R"("zipex":"02860,77520,06082",)"
-      u8R"("posturl":"http://www.correosdemexico.gob.mx/ServiciosLinea/Paginas/ccpostales.aspx",)"
+      u8R"("posturl":"http://www.correosdemexico.gob.mx/lservicios/servicios/Descarga.aspx",)"
       u8R"("languages":"es")"
       "}"},
   {"MY", "{"
@@ -1118,7 +1118,7 @@ const RegionData kRegionData[] = {
       u8R"("require":"ACSZ",)"
       u8R"("state_name_type":"oblast",)"
       u8R"("zipex":"247112,103375,188300",)"
-      u8R"("posturl":"http://info.russianpost.ru/servlet/department",)"
+      u8R"("posturl":"https://www.pochta.ru/post-index",)"
       u8R"("languages":"ru")"
       "}"},
   {"RW", "{"
@@ -1148,7 +1148,7 @@ const RegionData kRegionData[] = {
       u8R"("require":"ACZ",)"
       u8R"("locality_name_type":"post_town",)"
       u8R"("zipex":"11455,12345,10500",)"
-      u8R"("posturl":"http://www.posten.se/sv/Kundservice/Sidor/Sok-postnummer-resultat.aspx",)"
+      u8R"("posturl":"https://www.postnord.se/online-verktyg/verktyg/sok/sok-postnummer-och-adress",)"
       u8R"("languages":"sv~fi")"
       "}"},
   {"SG", "{"

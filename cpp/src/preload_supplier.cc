@@ -357,7 +357,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
       const Rule* rule = nullptr;
-      IndexMap::const_iterator it = rule_index_->find(key);
+      auto it = rule_index_->find(key);
       if (it != rule_index_->end()) {
         rule = it->second;
       } else if (search_globally && depth > 0 &&

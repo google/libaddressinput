@@ -103,9 +103,8 @@ TEST_P(AddressUiTest, UniqueFieldTypes) {
 }
 
 // Test all regions codes.
-INSTANTIATE_TEST_CASE_P(
-    AllRegions, AddressUiTest,
-    testing::ValuesIn(GetRegionCodes()));
+INSTANTIATE_TEST_SUITE_P(AllRegions, AddressUiTest,
+                         testing::ValuesIn(GetRegionCodes()));
 
 // Verifies that BuildComponents() returns an empty vector for an invalid region
 // code.
@@ -169,7 +168,7 @@ TEST_P(BestAddressLanguageTagTest, CorrectBestAddressLanguageTag) {
   EXPECT_EQ(GetParam().expected_first_field, components.front().field);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     LanguageTestCases, BestAddressLanguageTagTest,
     testing::Values(
         // Armenia supports hy and has a Latin format.

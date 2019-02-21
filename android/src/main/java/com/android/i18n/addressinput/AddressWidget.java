@@ -97,6 +97,10 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private boolean autocompleteEnabled = false;
 
+  // Whether or not to use a layout wrapper in lieu of standard EditText/AutoCompleteTextView.
+  // Default is off.
+  private boolean useLayoutWrapperForTextFields = false;
+
   private AddressAutocompleteController autocompleteController;
 
   // The current language the widget uses in BCP47 format. It differs from the default locale of
@@ -104,6 +108,8 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private String widgetLocale;
 
   private ScriptType script;
+
+  private Runnable onUpdateMultipleFieldsCompleteRunnable;
 
   // Possible labels that could be applied to the admin area field of the current country.
   // Examples include "state", "province", "emirate", etc.
@@ -167,6 +173,9 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
         @Override
         public void run() {
           updateFields();
+          if (onUpdateMultipleFieldsCompleteRunnable != null) {
+            onUpdateMultipleFieldsCompleteRunnable.run();
+          }
         }
       };
 
@@ -260,13 +269,26 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     WidthType widthType = getFieldWidthType(field);
 
     if (fieldText.length() > 0) {
-      TextView textView = componentProvider.createUiLabel(fieldText, widthType);
-      rootView.addView(textView, lp);
+      TextView textView = componentProvider.createUiLabel(fieldText, widthType,
+          field.getUiType().equals(UiComponent.EDIT));
+      if (textView != null) {
+        rootView.addView(textView, lp);
+      }
     }
     if (field.getUiType().equals(UiComponent.EDIT)) {
       if (autocompleteEnabled && field.getId() == AddressField.ADDRESS_LINE_1) {
-        AutoCompleteTextView autocomplete =
-            componentProvider.createUiAutoCompleteTextField(widthType);
+        AutoCompleteTextView autocomplete;
+        if (useLayoutWrapperForTextFields) {
+          ViewGroup autoCompleteTextViewWrapper =
+              componentProvider.createUiAutoCompleteViewGroup(widthType, fieldText);
+          autocomplete = autoCompleteTextViewWrapper
+              .findViewById(R.id.address_autocomplete_text_view);
+          rootView.addView(autoCompleteTextViewWrapper, lp);
+        } else {
+          autocomplete =
+              componentProvider.createUiAutoCompleteTextField(widthType);
+          rootView.addView(autocomplete, lp);
+        }
         autocomplete.setEnabled(!readOnly);
         autocompleteController.setView(autocomplete);
         autocompleteController.setOnAddressSelectedListener(
@@ -285,12 +307,19 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
               }
             });
         field.setView(autocomplete);
-        rootView.addView(autocomplete, lp);
       } else {
-        EditText editText = componentProvider.createUiTextField(widthType);
+        EditText editText;
+        if (useLayoutWrapperForTextFields) {
+          ViewGroup editTextWrapper =
+              componentProvider.createUiAutoCompleteViewGroup(widthType, fieldText);
+          editText = editTextWrapper.findViewById(R.id.address_autocomplete_text_view);
+          rootView.addView(editTextWrapper, lp);
+        } else {
+          editText = componentProvider.createUiTextField(widthType);
+          rootView.addView(editText, lp);
+        }
         field.setView(editText);
         editText.setEnabled(!readOnly);
-        rootView.addView(editText, lp);
       }
     } else if (field.getUiType().equals(UiComponent.SPINNER)) {
       ArrayAdapter<String> adapter = componentProvider.createUiPickerAdapter(widthType);
@@ -926,11 +955,20 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
     return component.getView();
   }
 
+  public void setOnUpdateMultipleFieldsCompleteRunnable(
+      Runnable onUpdateMultipleFieldsCompleteRunnable) {
+    this.onUpdateMultipleFieldsCompleteRunnable = onUpdateMultipleFieldsCompleteRunnable;
+  }
+
   @Override
   public void onNothingSelected(AdapterView<?> arg0) {}
 
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     updateChildNodes(parent, position);
+  }
+
+  public void setUseLayoutWrapperForTextFields(boolean useLayoutWrapperForTextFields) {
+    this.useLayoutWrapperForTextFields = useLayoutWrapperForTextFields;
   }
 }

@@ -39,7 +39,7 @@ TEST_P(RegionCodeTest, RegionCodeHasTwoCharacters) {
 }
 
 // Test all region codes.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllRegionCodes, RegionCodeTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
 
@@ -83,7 +83,7 @@ TEST_P(RegionDataTest, RegionDataHasCurlyBraces) {
 }
 
 // Test all region data.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllRegionData, RegionDataTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
 
