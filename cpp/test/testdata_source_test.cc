@@ -169,7 +169,7 @@ TEST_P(TestdataSourceTest,
 };
 
 // Test all region codes.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllRegions, TestdataSourceTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
 

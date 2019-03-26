@@ -21,11 +21,6 @@
 
 #include "lru_cache_using_std.h"
 
-// RE2 uses type string, which is not necessarily the same as type std::string.
-// In order to create objects of the correct type, to be able to pass pointers
-// to these objects to RE2, the function that does that is defined inside an
-// unnamed namespace inside the re2 namespace. Oh, my ...
-namespace re2 {
 namespace {
 
 // In order to (mis-)use RE2 to implement UTF-8 capable less<>, this function
@@ -33,7 +28,7 @@ namespace {
 // be a case-insensitive match to the string. This is far too expensive to do
 // repeatedly, so the function is only ever called through an LRU cache.
 std::string ComputeMinPossibleMatch(const std::string& str) {
-  string min, max;  // N.B.: RE2 type string!
+  std::string min, max;
 
   RE2::Options options;
   options.set_literal(true);
@@ -48,7 +43,6 @@ std::string ComputeMinPossibleMatch(const std::string& str) {
 }
 
 }  // namespace
-}  // namespace re2
 
 namespace i18n {
 namespace addressinput {
@@ -60,7 +54,7 @@ class StringCompare::Impl {
   Impl(const Impl&) = delete;
   Impl& operator=(const Impl&) = delete;
 
-  Impl() : min_possible_match_(&re2::ComputeMinPossibleMatch, MAX_CACHE_SIZE) {
+  Impl() : min_possible_match_(&ComputeMinPossibleMatch, MAX_CACHE_SIZE) {
     options_.set_literal(true);
     options_.set_case_sensitive(false);
   }

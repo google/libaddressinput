@@ -57,6 +57,8 @@ class OndemandSupplier : public Supplier {
   // For now, this is identical to Supply.
   void SupplyGlobally(const LookupKey& lookup_key,
                       const Callback& supplied) override;
+  // OnDemandSupplier doesn't care about UNSUPPORTED fields.
+  size_t GetLoadedRuleDepth(const std::string& region_code) const override;
 
  private:
   const std::unique_ptr<const Retriever> retriever_;

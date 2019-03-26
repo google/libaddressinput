@@ -65,5 +65,10 @@ void OndemandSupplier::Supply(const LookupKey& lookup_key,
   task->Retrieve(*retriever_);
 }
 
+size_t OndemandSupplier::GetLoadedRuleDepth(
+    const std::string& region_code) const {
+  return size(LookupKey::kHierarchy);
+}
+
 }  // namespace addressinput
 }  // namespace i18n

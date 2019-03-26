@@ -16,16 +16,16 @@
 
 package com.android.i18n.addressinput;
 
-import com.google.i18n.addressinput.common.AddressField.WidthType;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.google.i18n.addressinput.common.AddressField.WidthType;
 
 /**
  * Base class for customizing widgets for address input.
@@ -57,6 +57,15 @@ public class AddressWidgetUiComponentProvider {
   }
 
   /**
+   * See {@link #createUiLabel(CharSequence, WidthType)}.
+   *
+   * @param isEditField whether the field is an edit field (as opposed to spinner)
+   */
+  protected TextView createUiLabel(CharSequence label, WidthType widthType, boolean isEditField) {
+    return createUiLabel(label, widthType);
+  }
+
+  /**
    * Creates a text input view for an address input field.
    *
    * @param widthType {@link WidthType} of the field
@@ -85,6 +94,23 @@ public class AddressWidgetUiComponentProvider {
   protected AutoCompleteTextView createUiAutoCompleteTextField(WidthType widthType) {
     return (AutoCompleteTextView)
         inflater.inflate(R.layout.address_autocomplete_textview, null, false);
+  }
+
+  /**
+   * Creates an {@link ViewGroup} for an input field that uses autocomplete. Subclass
+   * should provide an implementation if
+   * {@link AddressWidget#setUseLayoutWrapperForTextFields(boolean)} is called with true.
+   * If subclass does not override this method, a default LinearLayout wrapper will be used.
+   * The return ViewGroup must have a AutoCompleteTextView descendant with id
+   * address_autocomplete_text_view.
+   *
+   * @param widthType {@link WidthType} of the field
+   * @param fieldText the label for the text field
+   * @return a custom {@link ViewGroup} created for the field
+   */
+  protected ViewGroup createUiAutoCompleteViewGroup(WidthType widthType, String fieldText) {
+    return (ViewGroup)
+        inflater.inflate(R.layout.address_autocomplete_view_group, null, false);
   }
 
   /**

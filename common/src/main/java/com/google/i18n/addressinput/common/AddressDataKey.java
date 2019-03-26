@@ -38,6 +38,7 @@ public enum AddressDataKey {
    * The unique ID of the region, in the form of a path from parent IDs to the key.
    */
   ID,
+  ISOID,
   /**
    * The key of the region, unique to its parent. If there is an accepted abbreviation for this
    * region, then the key will be set to this and name will be set to the local name for this

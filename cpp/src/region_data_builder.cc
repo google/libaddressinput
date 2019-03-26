@@ -148,7 +148,7 @@ const RegionData& RegionDataBuilder::Build(
   assert(best_region_tree_language_tag != nullptr);
 
   // Look up the region tree in cache first before building it.
-  RegionCodeDataMap::const_iterator region_it = cache_.find(region_code);
+  auto region_it = cache_.find(region_code);
   if (region_it == cache_.end()) {
     region_it = cache_.emplace(region_code, new LanguageRegionMap).first;
   }
@@ -164,8 +164,7 @@ const RegionData& RegionDataBuilder::Build(
           : ChooseBestAddressLanguage(rule, Language(ui_language_tag));
   *best_region_tree_language_tag = best_language.tag;
 
-  LanguageRegionMap::const_iterator language_it =
-      region_it->second->find(best_language.tag);
+  auto language_it = region_it->second->find(best_language.tag);
   if (language_it == region_it->second->end()) {
     const auto& rules = supplier_->GetRulesForRegion(region_code);
     language_it = region_it->second

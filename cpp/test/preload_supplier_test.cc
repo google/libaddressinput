@@ -342,4 +342,20 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameAllLevels) {
   EXPECT_EQ(u8"data/CN/云南省/临沧市/临翔区", hierarchy_.rule[3]->GetId());
 }
 
+TEST_F(PreloadSupplierTest, GetLoadedRuleDepth) {
+  supplier_.LoadRules("CA", *loaded_callback_);
+  EXPECT_EQ(2,
+            supplier_.GetLoadedRuleDepth("data/CA"));  // country and admin area
+
+  EXPECT_EQ(0, supplier_.GetLoadedRuleDepth(
+                   "data/CN"));  // Rules not loaded for China.
+  supplier_.LoadRules("CN", *loaded_callback_);
+  EXPECT_EQ(4,
+            supplier_.GetLoadedRuleDepth(
+                "data/CN"));  // country, admin area, city, dependent locality.
+
+  EXPECT_EQ(
+      0, supplier_.GetLoadedRuleDepth("data/PP"));  // Not a valid region code.
+}
+
 }  // namespace

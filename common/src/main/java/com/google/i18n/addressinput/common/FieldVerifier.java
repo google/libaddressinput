@@ -289,8 +289,15 @@ public final class FieldVerifier {
     }
     for (int n = 0; n < latinNames.length; n++) {
       if (latinNames[n].equalsIgnoreCase(sublevel)) {
-        // We found a match - we should try looking up a key with the local name at the same
-        // index.
+        // We found a match - we should try looking up by key at the same index.
+        currentFullKey =
+            new LookupKey.Builder(id + KEY_NODE_DELIMITER + keys[n]).build().toString();
+        nodeData = dataSource.get(currentFullKey);
+        if (nodeData != null) {
+          return new FieldVerifier(this, nodeData);
+        }
+
+        // Then, try looking up by the local name at the same index.
         currentFullKey =
             new LookupKey.Builder(id + KEY_NODE_DELIMITER + localNames[n]).build().toString();
         nodeData = dataSource.get(currentFullKey);

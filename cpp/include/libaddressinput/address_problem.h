@@ -53,7 +53,11 @@ enum AddressProblem {
   // The value contains a P.O. box and the widget options have acceptPostal set
   // to false. For example, a street address line that contained "P.O. Box 3456"
   // would fire this error.
-  USES_P_O_BOX
+  USES_P_O_BOX,
+
+  // No list of values for the field is defined. The field type is not supported
+  // by the available rules.
+  UNSUPPORTED_FIELD
 };
 
 }  // namespace addressinput
