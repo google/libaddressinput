@@ -267,15 +267,14 @@ TEST_P(PostalCodeNameParseTest, ParsedCorrectly) {
 }
 
 // Test parsing all postal code names.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllPostalCodeNames, PostalCodeNameParseTest,
-    testing::Values(
-        std::make_pair("{\"zip_name_type\":\"pin\"}",
-                       IDS_LIBADDRESSINPUT_PIN_CODE_LABEL),
-        std::make_pair("{\"zip_name_type\":\"postal\"}",
-                       IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL),
-        std::make_pair("{\"zip_name_type\":\"zip\"}",
-                       IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL)));
+    testing::Values(std::make_pair("{\"zip_name_type\":\"pin\"}",
+                                   IDS_LIBADDRESSINPUT_PIN_CODE_LABEL),
+                    std::make_pair("{\"zip_name_type\":\"postal\"}",
+                                   IDS_LIBADDRESSINPUT_POSTAL_CODE_LABEL),
+                    std::make_pair("{\"zip_name_type\":\"zip\"}",
+                                   IDS_LIBADDRESSINPUT_ZIP_CODE_LABEL)));
 
 // Tests for parsing the locality name.
 class LocalityNameParseTest
@@ -296,15 +295,14 @@ TEST_P(LocalityNameParseTest, ParsedCorrectly) {
 }
 
 // Test parsing all locality names.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllLocalityNames, LocalityNameParseTest,
-    testing::Values(
-        std::make_pair("{\"locality_name_type\":\"post_town\"}",
-                       IDS_LIBADDRESSINPUT_POST_TOWN),
-        std::make_pair("{\"locality_name_type\":\"city\"}",
-                       IDS_LIBADDRESSINPUT_LOCALITY_LABEL),
-        std::make_pair("{\"locality_name_type\":\"district\"}",
-                       IDS_LIBADDRESSINPUT_DISTRICT)));
+    testing::Values(std::make_pair("{\"locality_name_type\":\"post_town\"}",
+                                   IDS_LIBADDRESSINPUT_POST_TOWN),
+                    std::make_pair("{\"locality_name_type\":\"city\"}",
+                                   IDS_LIBADDRESSINPUT_LOCALITY_LABEL),
+                    std::make_pair("{\"locality_name_type\":\"district\"}",
+                                   IDS_LIBADDRESSINPUT_DISTRICT)));
 
 // Tests for parsing the locality name.
 class SublocalityNameParseTest
@@ -325,7 +323,7 @@ TEST_P(SublocalityNameParseTest, ParsedCorrectly) {
 }
 
 // Test parsing all sublocality names.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllSublocalityNames, SublocalityNameParseTest,
     testing::Values(
         std::make_pair("{\"sublocality_name_type\":\"village_township\"}",
@@ -356,31 +354,30 @@ TEST_P(AdminAreaNameParseTest, ParsedCorrectly) {
 }
 
 // Test parsing all administrative area names.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllAdminAreaNames, AdminAreaNameParseTest,
-    testing::Values(
-        std::make_pair("{\"state_name_type\":\"area\"}",
-                       IDS_LIBADDRESSINPUT_AREA),
-        std::make_pair("{\"state_name_type\":\"county\"}",
-                       IDS_LIBADDRESSINPUT_COUNTY),
-        std::make_pair("{\"state_name_type\":\"department\"}",
-                       IDS_LIBADDRESSINPUT_DEPARTMENT),
-        std::make_pair("{\"state_name_type\":\"district\"}",
-                       IDS_LIBADDRESSINPUT_DISTRICT),
-        std::make_pair("{\"state_name_type\":\"do_si\"}",
-                       IDS_LIBADDRESSINPUT_DO_SI),
-        std::make_pair("{\"state_name_type\":\"emirate\"}",
-                       IDS_LIBADDRESSINPUT_EMIRATE),
-        std::make_pair("{\"state_name_type\":\"island\"}",
-                       IDS_LIBADDRESSINPUT_ISLAND),
-        std::make_pair("{\"state_name_type\":\"parish\"}",
-                       IDS_LIBADDRESSINPUT_PARISH),
-        std::make_pair("{\"state_name_type\":\"prefecture\"}",
-                       IDS_LIBADDRESSINPUT_PREFECTURE),
-        std::make_pair("{\"state_name_type\":\"province\"}",
-                       IDS_LIBADDRESSINPUT_PROVINCE),
-        std::make_pair("{\"state_name_type\":\"state\"}",
-                       IDS_LIBADDRESSINPUT_STATE)));
+    testing::Values(std::make_pair("{\"state_name_type\":\"area\"}",
+                                   IDS_LIBADDRESSINPUT_AREA),
+                    std::make_pair("{\"state_name_type\":\"county\"}",
+                                   IDS_LIBADDRESSINPUT_COUNTY),
+                    std::make_pair("{\"state_name_type\":\"department\"}",
+                                   IDS_LIBADDRESSINPUT_DEPARTMENT),
+                    std::make_pair("{\"state_name_type\":\"district\"}",
+                                   IDS_LIBADDRESSINPUT_DISTRICT),
+                    std::make_pair("{\"state_name_type\":\"do_si\"}",
+                                   IDS_LIBADDRESSINPUT_DO_SI),
+                    std::make_pair("{\"state_name_type\":\"emirate\"}",
+                                   IDS_LIBADDRESSINPUT_EMIRATE),
+                    std::make_pair("{\"state_name_type\":\"island\"}",
+                                   IDS_LIBADDRESSINPUT_ISLAND),
+                    std::make_pair("{\"state_name_type\":\"parish\"}",
+                                   IDS_LIBADDRESSINPUT_PARISH),
+                    std::make_pair("{\"state_name_type\":\"prefecture\"}",
+                                   IDS_LIBADDRESSINPUT_PREFECTURE),
+                    std::make_pair("{\"state_name_type\":\"province\"}",
+                                   IDS_LIBADDRESSINPUT_PROVINCE),
+                    std::make_pair("{\"state_name_type\":\"state\"}",
+                                   IDS_LIBADDRESSINPUT_STATE)));
 
 // Tests for rule parsing.
 class RuleParseTest : public testing::TestWithParam<std::string> {
@@ -471,12 +468,12 @@ TEST_P(RuleParseTest, SolePostalCode) {
 }
 
 // Test parsing all region data.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     AllRulesTest, RuleParseTest,
     testing::ValuesIn(RegionDataConstants::GetRegionCodes()));
 
 // Test parsing the default rule.
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     DefaultRuleTest, RuleParseTest,
     testing::Values(RegionDataConstants::GetDefaultRegionData()));
 

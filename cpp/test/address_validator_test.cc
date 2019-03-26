@@ -40,25 +40,25 @@ using i18n::addressinput::OndemandSupplier;
 using i18n::addressinput::PreloadSupplier;
 using i18n::addressinput::TestdataSource;
 
-using i18n::addressinput::COUNTRY;
 using i18n::addressinput::ADMIN_AREA;
+using i18n::addressinput::COUNTRY;
+using i18n::addressinput::DEPENDENT_LOCALITY;
 using i18n::addressinput::LOCALITY;
 using i18n::addressinput::POSTAL_CODE;
 using i18n::addressinput::STREET_ADDRESS;
 
-using i18n::addressinput::UNEXPECTED_FIELD;
-using i18n::addressinput::MISSING_REQUIRED_FIELD;
-using i18n::addressinput::UNKNOWN_VALUE;
 using i18n::addressinput::INVALID_FORMAT;
 using i18n::addressinput::MISMATCHING_VALUE;
+using i18n::addressinput::MISSING_REQUIRED_FIELD;
+using i18n::addressinput::UNEXPECTED_FIELD;
+using i18n::addressinput::UNKNOWN_VALUE;
+using i18n::addressinput::UNSUPPORTED_FIELD;
 
 class ValidatorWrapper {
  public:
   virtual ~ValidatorWrapper() = default;
-  virtual void Validate(const AddressData& address,
-                        bool allow_postal,
-                        bool require_name,
-                        const FieldProblemMap* filter,
+  virtual void Validate(const AddressData& address, bool allow_postal,
+                        bool require_name, const FieldProblemMap* filter,
                         FieldProblemMap* problems,
                         const AddressValidator::Callback& validated) = 0;
 };
@@ -74,13 +74,8 @@ class OndemandValidatorWrapper : public ValidatorWrapper {
                 bool require_name, const FieldProblemMap* filter,
                 FieldProblemMap* problems,
                 const AddressValidator::Callback& validated) override {
-    validator_.Validate(
-        address,
-        allow_postal,
-        require_name,
-        filter,
-        problems,
-        validated);
+    validator_.Validate(address, allow_postal, require_name, filter, problems,
+                        validated);
   }
 
  private:
@@ -107,13 +102,8 @@ class PreloadValidatorWrapper : public ValidatorWrapper {
     if (!region_code.empty() && !supplier_.IsLoaded(region_code)) {
       supplier_.LoadRules(region_code, *loaded_);
     }
-    validator_.Validate(
-        address,
-        allow_postal,
-        require_name,
-        filter,
-        problems,
-        validated);
+    validator_.Validate(address, allow_postal, require_name, filter, problems,
+                        validated);
   }
 
  private:
@@ -148,13 +138,8 @@ class AddressValidatorTest
         validated_(BuildCallback(this, &AddressValidatorTest::Validated)) {}
 
   void Validate() {
-    validator_wrapper_->Validate(
-        address_,
-        allow_postal_,
-        require_name_,
-        &filter_,
-        &problems_,
-        *validated_);
+    validator_wrapper_->Validate(address_, allow_postal_, require_name_,
+                                 &filter_, &problems_, *validated_);
   }
 
   AddressData address_;
@@ -166,8 +151,7 @@ class AddressValidatorTest
   bool called_;
 
  private:
-  void Validated(bool success,
-                 const AddressData& address,
+  void Validated(bool success, const AddressData& address,
                  const FieldProblemMap& problems) {
     ASSERT_TRUE(success);
     ASSERT_EQ(&address_, &address);
@@ -179,13 +163,11 @@ class AddressValidatorTest
   const std::unique_ptr<const AddressValidator::Callback> validated_;
 };
 
-INSTANTIATE_TEST_CASE_P(OndemandSupplier,
-                        AddressValidatorTest,
-                        testing::Values(&OndemandValidatorWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(OndemandSupplier, AddressValidatorTest,
+                         testing::Values(&OndemandValidatorWrapper::Build));
 
-INSTANTIATE_TEST_CASE_P(PreloadSupplier,
-                        AddressValidatorTest,
-                        testing::Values(&PreloadValidatorWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(PreloadSupplier, AddressValidatorTest,
+                         testing::Values(&PreloadValidatorWrapper::Build));
 
 TEST_P(AddressValidatorTest, EmptyAddress) {
   expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
@@ -213,6 +195,11 @@ TEST_P(AddressValidatorTest, ValidAddressUS) {
   address_.address_line.emplace_back("1600 Amphitheatre Parkway");
   address_.language_code = "en";
 
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  }
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -227,6 +214,11 @@ TEST_P(AddressValidatorTest, InvalidAddressUS) {
   expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
   expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  }
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -238,6 +230,11 @@ TEST_P(AddressValidatorTest, ValidAddressCH) {
   address_.postal_code = "8002";
   address_.address_line.emplace_back("Brandschenkestrasse 110");
   address_.language_code = "de";
+
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -252,6 +249,11 @@ TEST_P(AddressValidatorTest, InvalidAddressCH) {
   expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
   expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
 
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  }
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -264,6 +266,11 @@ TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
   address_.postal_code = "86070";
   address_.address_line.emplace_back(u8"Av Gregorio Méndez Magaña 1400");
   address_.language_code = "es";
+
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -279,6 +286,10 @@ TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
   address_.language_code = "es";
 
   expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -311,6 +322,11 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
 
   expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
 
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  }
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -322,6 +338,11 @@ TEST_P(AddressValidatorTest, ValidKanjiAddressJP) {
   address_.postal_code = "770-0847";
   address_.address_line.emplace_back(u8"徳島市...");
   address_.language_code = "ja";
+
+  if (GetParam() == &PreloadValidatorWrapper::Build) {
+    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -338,6 +359,9 @@ TEST_P(AddressValidatorTest, ValidLatinAddressJP) {
   address_.postal_code = "770-0847";
   address_.address_line.emplace_back("...Tokushima");
   address_.language_code = "ja-Latn";
+
+  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -356,6 +380,8 @@ TEST_P(AddressValidatorTest, ValidAddressBR) {
   address_.address_line.emplace_back("Rodovia Raposo Tavares, 6388-6682");
   address_.language_code = "pt";
 
+  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -373,6 +399,9 @@ TEST_P(AddressValidatorTest, ValidAddressCA_en) {
   address_.address_line.emplace_back("...");
   address_.language_code = "en";
 
+  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
   EXPECT_EQ(expected_, problems_);
@@ -389,6 +418,9 @@ TEST_P(AddressValidatorTest, ValidAddressCA_fr) {
   address_.postal_code = "E2L 4Z6";
   address_.address_line.emplace_back("...");
   address_.language_code = "fr";
+
+  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);

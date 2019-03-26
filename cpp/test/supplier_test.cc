@@ -135,13 +135,11 @@ class SupplierTest : public testing::TestWithParam<SupplierWrapper* (*)()> {
   const std::unique_ptr<const Supplier::Callback> supplied_;
 };
 
-INSTANTIATE_TEST_CASE_P(OndemandSupplier,
-                        SupplierTest,
-                        testing::Values(&OndemandSupplierWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(OndemandSupplier, SupplierTest,
+                         testing::Values(&OndemandSupplierWrapper::Build));
 
-INSTANTIATE_TEST_CASE_P(PreloadSupplier,
-                        SupplierTest,
-                        testing::Values(&PreloadSupplierWrapper::Build));
+INSTANTIATE_TEST_SUITE_P(PreloadSupplier, SupplierTest,
+                         testing::Values(&PreloadSupplierWrapper::Build));
 
 TEST_P(SupplierTest, Invalid) {
   address_.region_code = "QZ";

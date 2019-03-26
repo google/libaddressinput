@@ -102,7 +102,7 @@ public final class RegionDataConstants {
     map.put("FK", "{\"name\":\"FALKLAND ISLANDS (MALVINAS)\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("FM", "{\"name\":\"MICRONESIA (Federated State of)\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
     map.put("FO", "{\"name\":\"FAROE ISLANDS\",\"fmt\":\"%N%n%O%n%A%nFO%Z %C\",\"postprefix\":\"FO\"}");
-    map.put("FR", "{\"name\":\"FRANCE\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"CX\"}");
+    map.put("FR", "{\"name\":\"FRANCE\",\"fmt\":\"%O%n%N%n%A%n%Z %C\",\"require\":\"ACZ\",\"upper\":\"CX\"}");
     map.put("GA", "{\"name\":\"GABON\"}");
     map.put("GB", "{\"name\":\"UNITED KINGDOM\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\",\"locality_name_type\":\"post_town\",\"label_overrides\":[{\"field\":\"LL\",\"message\":\"MSG_DEPENDENT_LOCALITY_LABEL\"},{\"field\":\"Z\",\"label\":\"Postcode\",\"lang\":\"en\"}]}");
     map.put("GD", "{\"name\":\"GRENADA (WEST INDIES)\"}");
@@ -141,7 +141,7 @@ public final class RegionDataConstants {
     map.put("JE", "{\"name\":\"CHANNEL ISLANDS\",\"fmt\":\"%N%n%O%n%A%n%C%nJERSEY%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("JM", "{\"name\":\"JAMAICA\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%C%n%S %X\",\"require\":\"ACS\",\"state_name_type\":\"parish\"}");
     map.put("JO", "{\"name\":\"JORDAN\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
-    map.put("JP", "{\"name\":\"JAPAN\",\"lang\":\"ja\",\"languages\":\"ja\",\"lfmt\":\"%N%n%O%n%A, %S%n%Z\",\"fmt\":\"〒%Z%n%S%n%A%n%O%n%N\",\"require\":\"ASZ\",\"upper\":\"S\",\"state_name_type\":\"prefecture\",\"width_overrides\":\"%S:S\",\"label_overrides\":[{\"field\":\"JED\",\"label\":\"Edaban\"},{\"field\":\"JED\",\"label\":\"枝番\",\"lang\":\"ja\"},{\"field\":\"JCH\",\"label\":\"Banchi\"},{\"field\":\"JCH\",\"label\":\"番地\",\"lang\":\"ja\"},{\"field\":\"JGA\",\"label\":\"Gaiku\"},{\"field\":\"JGA\",\"label\":\"街区\",\"lang\":\"ja\"},{\"field\":\"JKO\",\"label\":\"Koaza\"},{\"field\":\"JKO\",\"label\":\"小字\",\"lang\":\"ja\"},{\"field\":\"JOO\",\"label\":\"Ōaza\"},{\"field\":\"JOO\",\"label\":\"大字\",\"lang\":\"ja\"},{\"field\":\"JSS\",\"label\":\"Ku\"},{\"field\":\"JSS\",\"label\":\"区\",\"lang\":\"ja\"},{\"field\":\"JSH\",\"label\":\"Shi\"},{\"field\":\"JSH\",\"label\":\"市\",\"lang\":\"ja\"},{\"field\":\"JGN\",\"label\":\"Gun\"},{\"field\":\"JGN\",\"label\":\"郡\",\"lang\":\"ja\"}]}");
+    map.put("JP", "{\"name\":\"JAPAN\",\"lang\":\"ja\",\"languages\":\"ja\",\"lfmt\":\"%N%n%O%n%A, %S%n%Z\",\"fmt\":\"〒%Z%n%S%n%A%n%O%n%N\",\"require\":\"ASZ\",\"upper\":\"S\",\"state_name_type\":\"prefecture\",\"width_overrides\":\"%S:S\"}");
     map.put("KE", "{\"name\":\"KENYA\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("KG", "{\"name\":\"KYRGYZSTAN\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("KH", "{\"name\":\"CAMBODIA\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");

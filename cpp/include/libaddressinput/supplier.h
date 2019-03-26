@@ -16,6 +16,7 @@
 #define I18N_ADDRESSINPUT_SUPPLIER_H_
 
 #include <libaddressinput/callback.h>
+#include <string>
 
 namespace i18n {
 namespace addressinput {
@@ -46,6 +47,14 @@ class Supplier {
   // demand, or fail if the necessary data hasn't already been loaded.
   virtual void SupplyGlobally(const LookupKey& lookup_key,
                               const Callback& supplied) = 0;
+
+  // Looking at the metadata, returns the depths of the available rules for the
+  // region code. For example, if for a certain |region_code|, |rule_index_| has
+  // the list of values for admin area and city, but not for the dependent
+  // locality the depth would be 3.
+  virtual size_t GetLoadedRuleDepth(const std::string& region_code) const {
+    return 0;
+  }
 
   // A RuleHierarchy object encapsulates the hierarchical list of Rule objects
   // that corresponds to a particular LookupKey.

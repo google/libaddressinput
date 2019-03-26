@@ -594,4 +594,18 @@ public class FieldVerifierTest {
     // Keys should be populated from the test node.
     assertEquals("[Test]", Arrays.toString(fieldVerifier.keys));
   }
+
+  @Test public void testSouthKoreaLatinAdminAndInvalidLocality() {
+    AddressProblems problems = new AddressProblems();
+    AddressData address = AddressData.builder()
+        .setAddress("dummy")
+        .setLocality("invalid value")
+        .setAdminArea("Busan")
+        .setCountry("KR")
+        .setPostalCode("46612")
+        .build();
+    VERIFIER.verify(address, problems);
+    assertFalse(problems.isEmpty());
+    assertEquals(AddressProblemType.UNKNOWN_VALUE, problems.getProblem(AddressField.LOCALITY));
+  }
 }

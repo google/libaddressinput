@@ -90,6 +90,12 @@ class PreloadSupplier : public Supplier {
   bool IsLoaded(const std::string& region_code) const;
   bool IsPending(const std::string& region_code) const;
 
+  // Looking at the metadata, returns the depths of the available rules for the
+  // region code. For example, if for a certain |region_code|, |rule_index_| has
+  // the list of values for admin area and city, but not for the dependent
+  // locality the depth would be 3.
+  size_t GetLoadedRuleDepth(const std::string& region_code) const override;
+
  private:
   bool GetRuleHierarchy(const LookupKey& lookup_key, RuleHierarchy* hierarchy,
                         const bool search_globally) const;

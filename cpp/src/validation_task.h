@@ -48,7 +48,7 @@ class ValidationTask {
   ~ValidationTask();
 
   // Calls supplier->Load(), with Validate() as callback.
-  void Run(Supplier* supplier) const;
+  void Run(Supplier* supplier);
 
  private:
   friend class ValidationTaskTest;
@@ -68,6 +68,9 @@ class ValidationTask {
 
   // Checks the hierarchical fields for UNKNOWN_VALUE problems.
   void CheckUnknownValue(const Supplier::RuleHierarchy& hierarchy) const;
+
+  // Checks if a field validation is supported or not.
+  void CheckUnsupportedField() const;
 
   // Checks the POSTAL_CODE field for problems.
   void CheckPostalCodeFormatAndValue(
@@ -93,6 +96,7 @@ class ValidationTask {
   const AddressValidator::Callback& validated_;
   const std::unique_ptr<const Supplier::Callback> supplied_;
   const std::unique_ptr<LookupKey> lookup_key_;
+  size_t max_depth_;
 };
 
 }  // namespace addressinput

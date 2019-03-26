@@ -357,7 +357,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
     for (size_t depth = 0; depth <= max_depth; ++depth) {
       const std::string& key = lookup_key.ToKeyString(depth);
       const Rule* rule = nullptr;
-      IndexMap::const_iterator it = rule_index_->find(key);
+      auto it = rule_index_->find(key);
       if (it != rule_index_->end()) {
         rule = it->second;
       } else if (search_globally && depth > 0 &&
@@ -375,6 +375,23 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
   }
 
   return true;
+}
+
+size_t PreloadSupplier::GetLoadedRuleDepth(
+    const std::string& region_code) const {
+  // The country codes are always two char long.
+  std::string full_code = region_code.substr(0, strlen("data/ZZ"));
+  size_t depth = 0;
+  auto it = rule_index_->find(full_code);
+  while (it != rule_index_->end()) {
+    const Rule* rule = it->second;
+    depth++;
+    if (rule->GetSubKeys().empty())
+      return depth;
+    full_code += "/" + rule->GetSubKeys()[0];
+    it = rule_index_->find(full_code);
+  }
+  return depth;
 }
 
 bool PreloadSupplier::IsLoadedKey(const std::string& key) const {

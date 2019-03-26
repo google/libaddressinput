@@ -38,10 +38,8 @@
 namespace i18n {
 namespace addressinput {
 
-ValidationTask::ValidationTask(const AddressData& address,
-                               bool allow_postal,
-                               bool require_name,
-                               const FieldProblemMap* filter,
+ValidationTask::ValidationTask(const AddressData& address, bool allow_postal,
+                               bool require_name, const FieldProblemMap* filter,
                                FieldProblemMap* problems,
                                const AddressValidator::Callback& validated)
     : address_(address),
@@ -51,7 +49,8 @@ ValidationTask::ValidationTask(const AddressData& address,
       problems_(problems),
       validated_(validated),
       supplied_(BuildCallback(this, &ValidationTask::Validate)),
-      lookup_key_(new LookupKey) {
+      lookup_key_(new LookupKey),
+      max_depth_(size(LookupKey::kHierarchy)) {
   assert(problems_ != nullptr);
   assert(supplied_ != nullptr);
   assert(lookup_key_ != nullptr);
@@ -59,10 +58,11 @@ ValidationTask::ValidationTask(const AddressData& address,
 
 ValidationTask::~ValidationTask() = default;
 
-void ValidationTask::Run(Supplier* supplier) const {
+void ValidationTask::Run(Supplier* supplier) {
   assert(supplier != nullptr);
   problems_->clear();
   lookup_key_->FromAddress(address_);
+  max_depth_ = supplier->GetLoadedRuleDepth(lookup_key_->ToKeyString(0));
   supplier->SupplyGlobally(*lookup_key_, *supplied_);
 }
 
@@ -88,6 +88,7 @@ void ValidationTask::Validate(bool success,
       CheckUnknownValue(hierarchy);
       CheckPostalCodeFormatAndValue(hierarchy);
       CheckUsesPoBox(hierarchy);
+      CheckUnsupportedField();
     }
   }
 
@@ -158,6 +159,13 @@ void ValidationTask::CheckUnknownValue(
           hierarchy.rule[depth] != nullptr)) {
       ReportProblemMaybe(field, UNKNOWN_VALUE);
     }
+  }
+}
+
+void ValidationTask::CheckUnsupportedField() const {
+  for (size_t depth = max_depth_; depth < size(LookupKey::kHierarchy);
+       ++depth) {
+    ReportProblemMaybe(LookupKey::kHierarchy[depth], UNSUPPORTED_FIELD);
   }
 }
 
