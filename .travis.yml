@@ -29,6 +29,9 @@ install:
   - git clone https://github.com/google/re2.git
   - make -C re2
   - env DESTDIR="$HOME" make -C re2 install
+  - git clone https://github.com/google/googletest.git
+  - make -C googletest
+  - env DESTDIR="$HOME" make -C googletest install
 script:
   - cd cpp
   - env CXXFLAGS="-I$HOME/usr/local/include" LDFLAGS="-L$HOME/usr/local/lib" GYP_GENERATORS="ninja" gyp --depth .
