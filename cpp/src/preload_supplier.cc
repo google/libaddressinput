@@ -68,14 +68,10 @@ class Helper {
   Helper& operator=(const Helper&) = delete;
 
   // Does not take ownership of its parameters.
-  Helper(const std::string& region_code,
-         const std::string& key,
-         const PreloadSupplier::Callback& loaded,
-         const Retriever& retriever,
-         std::set<std::string>* pending,
-         IndexMap* rule_index,
-         IndexMap* language_rule_index,
-         std::vector<const Rule*>* rule_storage,
+  Helper(const std::string& region_code, const std::string& key,
+         const PreloadSupplier::Callback& loaded, const Retriever& retriever,
+         std::set<std::string>* pending, IndexMap* rule_index,
+         IndexMap* language_rule_index, std::vector<const Rule*>* rule_storage,
          std::map<std::string, const Rule*>* region_rules)
       : region_code_(region_code),
         loaded_(loaded),
@@ -97,8 +93,7 @@ class Helper {
  private:
   ~Helper() = default;
 
-  void OnRetrieved(bool success,
-                   const std::string& key,
+  void OnRetrieved(bool success, const std::string& key,
                    const std::string& data) {
     int rule_count = 0;
 
@@ -318,16 +313,9 @@ void PreloadSupplier::LoadRules(const std::string& region_code,
     return;
   }
 
-  new Helper(
-      region_code,
-      key,
-      loaded,
-      *retriever_,
-      &pending_,
-      rule_index_.get(),
-      language_rule_index_.get(),
-      &rule_storage_,
-      &region_rules_[region_code]);
+  new Helper(region_code, key, loaded, *retriever_, &pending_,
+             rule_index_.get(), language_rule_index_.get(), &rule_storage_,
+             &region_rules_[region_code]);
 }
 
 const std::map<std::string, const Rule*>& PreloadSupplier::GetRulesForRegion(
@@ -379,15 +367,16 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
 
 size_t PreloadSupplier::GetLoadedRuleDepth(
     const std::string& region_code) const {
-  // The country codes are always two char long.
-  std::string full_code = region_code.substr(0, strlen("data/ZZ"));
+  // We care for the code which has the format of "data/ZZ". Ignore what comes
+  // after, such as language code.
+  const size_t code_size = 7;
+  std::string full_code = region_code.substr(0, code_size);
   size_t depth = 0;
   auto it = rule_index_->find(full_code);
   while (it != rule_index_->end()) {
     const Rule* rule = it->second;
     depth++;
-    if (rule->GetSubKeys().empty())
-      return depth;
+    if (rule->GetSubKeys().empty()) return depth;
     full_code += "/" + rule->GetSubKeys()[0];
     it = rule_index_->find(full_code);
   }
