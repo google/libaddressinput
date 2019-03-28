@@ -20,7 +20,7 @@ compiler: clang
 cache: ccache
 addons:
   apt:
-    packages: gyp libgtest-dev ninja-build python
+    packages: gyp ninja-build python
 install:
   # Download re2 from source because Ubuntu Trusty (the newest version of Ubuntu
   # in Travis-CI) does not include a package. Packages from newer releases of
