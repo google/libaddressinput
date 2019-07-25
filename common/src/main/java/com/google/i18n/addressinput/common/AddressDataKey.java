@@ -38,6 +38,10 @@ public enum AddressDataKey {
    * The unique ID of the region, in the form of a path from parent IDs to the key.
    */
   ID,
+  /**
+   * The CLDR (Common Locale Data Repository) country code (http://goto/iii) for this region, if
+   * there is one. This value must be present.
+   */
   ISOID,
   /**
    * The key of the region, unique to its parent. If there is an accepted abbreviation for this

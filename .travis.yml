@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 language: cpp
 os: linux
 dist: trusty
@@ -19,23 +20,7 @@ compiler: clang
 cache: ccache
 addons:
   apt:
-    packages: gyp ninja-build python
-matrix:
-    - os: linux
-      compiler: gcc
-      sudo : true
-      install: ./googletest/ci/install-linux.sh && ./googletest/ci/log-config.sh
-      script: ./googletest/ci/build-linux-bazel.sh
-    - os: linux
-      compiler: clang
-      sudo : true
-      install: ./googletest/ci/install-linux.sh && ./googletest/ci/log-config.sh
-      script: ./googletest/ci/build-linux-bazel.sh
-env:
-  global:
-    - TRAVIS_CI_PATH=$(pwd)   
-before_install:
-  - pip install --user cpp-coveralls      
+    packages: gyp libgtest-dev ninja-build python
 install:
   # Download re2 from source because Ubuntu Trusty (the newest version of Ubuntu
   # in Travis-CI) does not include a package. Packages from newer releases of
@@ -44,17 +29,9 @@ install:
   - git clone https://github.com/google/re2.git
   - make -C re2
   - env DESTDIR="$HOME" make -C re2 install
-  - git clone https://github.com/google/googletest.git
-before_script:
-  - git submodule update
-  - GTEST_DIR=${TRAVIS_CI_PATH}/googletest/googletest
-  - g++ -std=c++11 -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -pthread -c ${GTEST_DIR}/src/gtest-all.cc
-  - ar -rv libgtest.a gtest-all.o
-  - cd ${GTEST_DIR}/make
-  - make
 script:
-  - cd ${TRAVIS_CI_PATH}/cpp
-  - env CXXFLAGS="-I$HOME/usr/local/include -I${GTEST_DIR}/include -I${GTEST_DIR} -I${GTEST_DIR}/make" LDFLAGS="-L$HOME/usr/local/lib -L$(pwd) -L${GTEST_DIR}/include -L${GTEST_DIR} -L${GTEST_DIR}/make" CPPFLAGS="-I${GTEST_DIR}/include -I${GTEST_DIR} -I${GTEST_DIR}/make" GYP_GENERATORS="ninja"  gyp --depth .
+  - cd cpp
+  - env CXXFLAGS="-I$HOME/usr/local/include" LDFLAGS="-L$HOME/usr/local/lib" GYP_GENERATORS="ninja" gyp --depth .
   - ninja -C out/Default
 after_script:
   - env LD_LIBRARY_PATH="$HOME/usr/local/lib" out/Default/unit_tests

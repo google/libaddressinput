@@ -442,6 +442,7 @@ public class FieldVerifierTest {
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
         problems.getProblem(AddressField.POSTAL_CODE));
 
+
     AddressData addressMX = AddressData.builder().setCountry("MX").build();
 
     problems.clear();
@@ -450,7 +451,7 @@ public class FieldVerifierTest {
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
         problems.getProblem(AddressField.STREET_ADDRESS));
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
-        problems.getProblem(AddressField.LOCALITY));
+        problems.getProblem(AddressField.ADMIN_AREA));
     assertEquals(AddressProblemType.MISSING_REQUIRED_FIELD,
         problems.getProblem(AddressField.POSTAL_CODE));
 

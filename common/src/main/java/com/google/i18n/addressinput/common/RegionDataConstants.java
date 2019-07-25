@@ -18,6 +18,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Initial data in JSON format for regions. This has some formatting information for some countries,
+ * and a list of all the regions that the widget can support.
+ *
+ * <p>AUTOMATICALLY GENERATED FILE - DO NOT EDIT<br>
+ */
 public final class RegionDataConstants {
   private static final Map<String, String> addressDataMap = createMap();
 
@@ -91,7 +97,7 @@ public final class RegionDataConstants {
     map.put("DO", "{\"name\":\"DOMINICAN REP.\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("DZ", "{\"name\":\"ALGERIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("EC", "{\"name\":\"ECUADOR\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\",\"upper\":\"CZ\"}");
-    map.put("EE", "{\"name\":\"ESTONIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Linn/vald\",\"lang\":\"et\"},{\"field\":\"C\",\"label\":\"City/Parish\",\"lang\":\"en\"}]}");
+    map.put("EE", "{\"name\":\"ESTONIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Linn/vald\",\"lang\":\"et\"},{\"field\":\"C\",\"label\":\"City/Parish\",\"lang\":\"en\"}]}");
     map.put("EG", "{\"name\":\"EGYPT\",\"lang\":\"ar\",\"languages\":\"ar\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\"}");
     map.put("EH", "{\"name\":\"WESTERN SAHARA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("ER", "{\"name\":\"ERITREA\"}");
@@ -160,9 +166,9 @@ public final class RegionDataConstants {
     map.put("LK", "{\"name\":\"SRI LANKA\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("LR", "{\"name\":\"LIBERIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("LS", "{\"name\":\"LESOTHO\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
-    map.put("LT", "{\"name\":\"LITHUANIA\",\"fmt\":\"%O%n%N%n%A%nLT-%Z %C\",\"postprefix\":\"LT-\"}");
+    map.put("LT", "{\"name\":\"LITHUANIA\",\"fmt\":\"%O%n%N%n%A%nLT-%Z %C\",\"require\":\"ACZ\",\"postprefix\":\"LT-\"}");
     map.put("LU", "{\"name\":\"LUXEMBOURG\",\"fmt\":\"%O%n%N%n%A%nL-%Z %C\",\"require\":\"ACZ\",\"postprefix\":\"L-\"}");
-    map.put("LV", "{\"name\":\"LATVIA\",\"fmt\":\"%N%n%O%n%A%n%C, %Z\"}");
+    map.put("LV", "{\"name\":\"LATVIA\",\"fmt\":\"%N%n%O%n%A%n%C, %Z\",\"require\":\"ACZ\"}");
     map.put("LY", "{\"name\":\"LIBYA\"}");
     map.put("MA", "{\"name\":\"MOROCCO\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("MC", "{\"name\":\"MONACO\",\"fmt\":\"%N%n%O%n%A%nMC-%Z %C %X\",\"postprefix\":\"MC-\"}");
@@ -184,10 +190,10 @@ public final class RegionDataConstants {
     map.put("MU", "{\"name\":\"MAURITIUS\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\",\"upper\":\"CZ\"}");
     map.put("MV", "{\"name\":\"MALDIVES\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
     map.put("MW", "{\"name\":\"MALAWI\",\"fmt\":\"%N%n%O%n%A%n%C %X\"}");
-    map.put("MX", "{\"name\":\"MEXICO\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C, %S\",\"require\":\"ACZ\",\"upper\":\"CSZ\",\"sublocality_name_type\":\"neighborhood\",\"state_name_type\":\"state\",\"width_overrides\":\"%S:S\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Delegación\"},{\"field\":\"S2\",\"label\":\"Supermanzana\"},{\"field\":\"S3\",\"label\":\"Manzana\"},{\"field\":\"LP\",\"label\":\"Lote\"}]}");
+    map.put("MX", "{\"name\":\"MEXICO\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C, %S\",\"require\":\"ACSZ\",\"upper\":\"CSZ\",\"sublocality_name_type\":\"neighborhood\",\"state_name_type\":\"state\",\"width_overrides\":\"%S:S\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Delegación\"},{\"field\":\"S2\",\"label\":\"Supermanzana\"},{\"field\":\"S3\",\"label\":\"Manzana\"},{\"field\":\"LP\",\"label\":\"Lote\"}]}");
     map.put("MY", "{\"name\":\"MALAYSIA\",\"lang\":\"ms\",\"languages\":\"ms\",\"fmt\":\"%N%n%O%n%A%n%D%n%Z %C%n%S\",\"require\":\"ACZ\",\"upper\":\"CS\",\"sublocality_name_type\":\"village_township\",\"state_name_type\":\"state\"}");
     map.put("MZ", "{\"name\":\"MOZAMBIQUE\",\"lang\":\"pt\",\"languages\":\"pt\",\"fmt\":\"%N%n%O%n%A%n%Z %C%S\"}");
-    map.put("NA", "{\"name\":\"NAMIBIA\"}");
+    map.put("NA", "{\"name\":\"NAMIBIA\",\"fmt\":\"%N%n%O%n%A%n%Cn%Z\"}");
     map.put("NC", "{\"name\":\"NEW CALEDONIA\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("NE", "{\"name\":\"NIGER\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("NF", "{\"name\":\"NORFOLK ISLAND\",\"fmt\":\"%O%n%N%n%A%n%C %S %Z\",\"upper\":\"CS\"}");
@@ -216,7 +222,7 @@ public final class RegionDataConstants {
     map.put("PY", "{\"name\":\"PARAGUAY\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("QA", "{\"name\":\"QATAR\",\"upper\":\"AC\"}");
     map.put("RE", "{\"name\":\"REUNION\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
-    map.put("RO", "{\"name\":\"ROMANIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"upper\":\"AC\"}");
+    map.put("RO", "{\"name\":\"ROMANIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\",\"upper\":\"AC\"}");
     map.put("RS", "{\"name\":\"REPUBLIC OF SERBIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("RU", "{\"name\":\"RUSSIAN FEDERATION\",\"lang\":\"ru\",\"languages\":\"ru\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"require\":\"ACSZ\",\"upper\":\"AC\",\"state_name_type\":\"oblast\",\"label_overrides\":[{\"field\":\"CS\",\"message\":\"MSG_OFFICE_UNIT_NUMBER\"}]}");
     map.put("RW", "{\"name\":\"RWANDA\",\"upper\":\"AC\"}");
