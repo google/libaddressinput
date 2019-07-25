@@ -136,7 +136,7 @@ public final class FormOptions {
     if (regionCode == null) {
       throw new NullPointerException();
     }
-    // TODO(addresswidget-team): Add region code validation against RegionDataConstants.
+    // TODO(user): Add region code validation against RegionDataConstants.
     blacklistedRegions.add(Util.toUpperCaseLocaleIndependent(regionCode));
     return this;
   }

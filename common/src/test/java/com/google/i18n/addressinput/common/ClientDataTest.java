@@ -98,6 +98,7 @@ public class ClientDataTest {
     assertEquals("PASS", listener.toString());
   }
 
+
   @Test public void testGetBadDataKey() {
     // Start with an empty cache backed by an empty request api.
     CacheData cacheData = createTestCacheData(ImmutableMap.<String, String>of());

@@ -24,17 +24,16 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Preconditions;
 import com.google.i18n.addressinput.common.AsyncRequestApi.AsyncCallback;
 import com.google.i18n.addressinput.testing.AddressDataMapLoader;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(JUnit4.class)
 public class CacheDataTest {
@@ -284,6 +283,9 @@ public class CacheDataTest {
     cache.setUrl(url);
     cache.fetchDynamicData(key, null, null);
     Mockito.verify(mockRequestApi)
-        .requestObject(Mockito.startsWith(url), Mockito.<AsyncCallback>any(), Mockito.anyInt());
+        .requestObject(
+            Mockito.startsWith(url),
+            ArgumentMatchers.<AsyncCallback>any(),
+            ArgumentMatchers.anyInt());
   }
 }
