@@ -79,7 +79,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   private ClientData clientData;
 
   // A map for all address fields.
-  // TODO(dbeaumont): Fix this to avoid needing to map specific address lines.
+  // TODO(user): Fix this to avoid needing to map specific address lines.
   private final EnumMap<AddressField, AddressUiComponent> inputWidgets =
       new EnumMap<AddressField, AddressUiComponent>(AddressField.class);
 
