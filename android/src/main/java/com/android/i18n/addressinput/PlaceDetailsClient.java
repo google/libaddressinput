@@ -133,7 +133,7 @@ public class PlaceDetailsClient implements PlaceDetailsApi {
         switch (key) {
           case "street-address":
             addressData.setAddress(value);
-            // TODO(b/33790911): Include the 'extended-address' and 'post-office-box' adr_address
+            // TODO(user): Include the 'extended-address' and 'post-office-box' adr_address
             // fields in the AddressData address.
             break;
           case "locality":
