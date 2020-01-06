@@ -376,6 +376,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"EE", "{"
       u8R"("fmt":"%N%n%O%n%A%n%Z %C",)"
+      u8R"("require":"ACZ",)"
       u8R"("zipex":"69501,11212",)"
       u8R"("posturl":"https://www.omniva.ee/era/sihtnumbrite_otsing",)"
       u8R"("languages":"et")"
@@ -775,6 +776,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"LT", "{"
       u8R"("fmt":"%O%n%N%n%A%nLT-%Z %C",)"
+      u8R"("require":"ACZ",)"
       u8R"("zipex":"04340,03500",)"
       u8R"("posturl":"http://www.post.lt/lt/?id=316",)"
       u8R"("languages":"lt")"
@@ -788,6 +790,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"LV", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C, %Z",)"
+      u8R"("require":"ACZ",)"
       u8R"("zipex":"LV-1073,LV-1000",)"
       u8R"("posturl":"http://www.pasts.lv/lv/uzzinas/nodalas/",)"
       u8R"("languages":"lv")"
@@ -819,7 +822,7 @@ const RegionData kRegionData[] = {
       u8R"("fmt":"%O%n%N%n%A%n%Z %C %X",)"
       u8R"("require":"ACZ",)"
       u8R"("zipex":"97100",)"
-      u8R"("posturl":"http://www.laposte.fr/Particulier/Utiliser-nos-outils-pratiques/Outils-et-documents/Trouvez-un-code-postal",)"
+      u8R"("posturl":"https://www.laposte.fr/particulier/outils/trouver-un-code-postal",)"
       u8R"("languages":"fr")"
       "}"},
   {"MG", "{"
@@ -886,7 +889,7 @@ const RegionData kRegionData[] = {
   {"MT", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       u8R"("zipex":"NXR 01,ZTN 05,GPO 01,BZN 1130,SPB 6031,VCT 1753",)"
-      u8R"("posturl":"http://postcodes.maltapost.com/",)"
+      u8R"("posturl":"https://www.maltapost.com/PostCode/",)"
       u8R"("languages":"mt~en")"
       "}"},
   {"MU", "{"
@@ -906,11 +909,11 @@ const RegionData kRegionData[] = {
       "}"},
   {"MX", "{"
       u8R"("fmt":"%N%n%O%n%A%n%D%n%Z %C, %S",)"
-      u8R"("require":"ACZ",)"
+      u8R"("require":"ACSZ",)"
       u8R"("state_name_type":"state",)"
       u8R"("sublocality_name_type":"neighborhood",)"
       u8R"("zipex":"02860,77520,06082",)"
-      u8R"("posturl":"http://www.correosdemexico.gob.mx/lservicios/servicios/Descarga.aspx",)"
+      u8R"("posturl":"https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx",)"
       u8R"("languages":"es")"
       "}"},
   {"MY", "{"
@@ -928,6 +931,8 @@ const RegionData kRegionData[] = {
       u8R"("languages":"pt")"
       "}"},
   {"NA", "{"
+      u8R"("fmt":"%N%n%O%n%A%n%Cn%Z",)"
+      u8R"("zipex":"10001,10017",)"
       u8R"("languages":"en")"
       "}"},
   {"NC", "{"
@@ -1102,6 +1107,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"RO", "{"
       u8R"("fmt":"%N%n%O%n%A%n%Z %C",)"
+      u8R"("require":"ACZ",)"
       u8R"("zipex":"060274,061357,200716",)"
       u8R"("posturl":"http://www.posta-romana.ro/zip_codes",)"
       u8R"("languages":"ro")"
@@ -1373,7 +1379,7 @@ const RegionData kRegionData[] = {
       u8R"("require":"ACS",)"
       u8R"("state_name_type":"state",)"
       u8R"("zipex":"1010,3001,8011,1020",)"
-      u8R"("posturl":"http://www.ipostel.gob.ve/index.php/oficinas-postales",)"
+      u8R"("posturl":"http://postcode.vnpost.vn/services/search.aspx",)"
       u8R"("languages":"es")"
       "}"},
   {"VG", "{"

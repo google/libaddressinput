@@ -97,6 +97,7 @@ public final class ClientData implements DataSource {
     return hierarchyKey.split("/").length == 2;
   }
 
+
   /**
    * Returns the contents of the JSON-format string as a map.
    */

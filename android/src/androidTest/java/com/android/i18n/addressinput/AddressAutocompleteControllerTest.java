@@ -16,7 +16,7 @@
 
 package com.android.i18n.addressinput;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -165,7 +165,7 @@ public class AddressAutocompleteControllerTest
     textView.setText(TEST_QUERY);
 
     verify(autocompleteApi)
-        .getAutocompletePredictions(any(String.class), autocompleteCallback.capture());
+        .getAutocompletePredictions(nullable(String.class), autocompleteCallback.capture());
     autocompleteCallback.getValue().onSuccess(Lists.newArrayList(autocompletePrediction));
 
     return result;

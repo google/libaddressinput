@@ -1,6 +1,6 @@
 package com.android.i18n.addressinput;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,7 +46,8 @@ public class PlaceDetailsClientTest extends ActivityInstrumentationTestCase2<Tes
         placeDetailsClient.getAddressData(autocompletePrediction);
 
     verify(asyncRequestApi)
-        .requestObject(any(String.class), callbackCaptor.capture(), eq(PlaceDetailsClient.TIMEOUT));
+        .requestObject(
+            nullable(String.class), callbackCaptor.capture(), eq(PlaceDetailsClient.TIMEOUT));
     callbackCaptor.getValue().onSuccess(JsoMap.buildJsoMap(TEST_RESPONSE));
 
     assertEquals(
@@ -65,23 +66,20 @@ public class PlaceDetailsClientTest extends ActivityInstrumentationTestCase2<Tes
         placeDetailsClient.getAddressData(autocompletePrediction);
 
     verify(asyncRequestApi)
-        .requestObject(any(String.class), callbackCaptor.capture(), eq(PlaceDetailsClient.TIMEOUT));
+        .requestObject(
+            nullable(String.class), callbackCaptor.capture(), eq(PlaceDetailsClient.TIMEOUT));
     callbackCaptor.getValue().onFailure();
 
     assertTrue(addressData.isCancelled());
   }
 
   private static final String TEST_RESPONSE =
-      "{"
-          + "  'result' : {"
-          + "    'adr_address' : '\\u003cspan class=\\\"street-address\\\"\\u003e1600 Amphitheatre Parkway\\u003c/span\\u003e, \\u003cspan class=\\\"locality\\\"\\u003eMountain View\\u003c/span\\u003e, \\u003cspan class=\\\"region\\\"\\u003eCA\\u003c/span\\u003e \\u003cspan class=\\\"postal-code\\\"\\u003e94043\\u003c/span\\u003e, \\u003cspan class=\\\"country-name\\\"\\u003eUSA\\u003c/span\\u003e',"
-          + "    'address_components' : ["
-          + "      {"
-          + "        'long_name' : 'United States',"
-          + "        'short_name' : 'US',"
-          + "        'types' : [ 'country', 'political' ]"
-          + "      }"
-          + "    ]"
-          + "  }"
-          + "}";
+      "{  'result' : {    'adr_address' : '\\u003cspan class=\\\"street-address\\\"\\u003e1600"
+          + " Amphitheatre Parkway\\u003c/span\\u003e, \\u003cspan"
+          + " class=\\\"locality\\\"\\u003eMountain View\\u003c/span\\u003e, \\u003cspan"
+          + " class=\\\"region\\\"\\u003eCA\\u003c/span\\u003e \\u003cspan"
+          + " class=\\\"postal-code\\\"\\u003e94043\\u003c/span\\u003e, \\u003cspan"
+          + " class=\\\"country-name\\\"\\u003eUSA\\u003c/span\\u003e',    'address_components' :"
+          + " [      {        'long_name' : 'United States',        'short_name' : 'US',       "
+          + " 'types' : [ 'country', 'political' ]      }    ]  }}";
 }

@@ -40,12 +40,12 @@ const char kCommaSeparator[] = ", ";
 const char kSpaceSeparator[] = " ";
 const char kArabicCommaSeparator[] = u8"، ";
 
-const char* kLanguagesThatUseSpace[] = {
+const char kLanguagesThatUseSpace[][3] = {
     "th",
     "ko",
 };
 
-const char* kLanguagesThatHaveNoSeparator[] = {
+const char kLanguagesThatHaveNoSeparator[][3] = {
     "ja",
     "zh",  // All Chinese variants.
 };
@@ -54,7 +54,7 @@ const char* kLanguagesThatHaveNoSeparator[] = {
 // country, where Arabic is the most likely script tag.
 // TODO: Consider supporting variants such as tr-Arab by detecting the script
 // code.
-const char* kLanguagesThatUseAnArabicComma[] = {
+const char kLanguagesThatUseAnArabicComma[][3] = {
     "ar",
     "az",
     "fa",

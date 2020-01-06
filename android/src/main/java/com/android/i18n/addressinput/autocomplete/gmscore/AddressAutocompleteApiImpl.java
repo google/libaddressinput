@@ -33,7 +33,7 @@ import java.util.List;
  * </pre>
  *
  * Callers should check that the required permissions are actually present.
- * TODO(b/32559817): Handle permission check in libaddressinput so that callers don't need to.
+ * TODO(user): Handle permission check in libaddressinput so that callers don't need to.
  */
 public class AddressAutocompleteApiImpl implements AddressAutocompleteApi {
 
@@ -55,7 +55,7 @@ public class AddressAutocompleteApiImpl implements AddressAutocompleteApi {
     this.locationApi = locationApi;
   }
 
-  // TODO(b/32559817): Add a check to ensure that the required permissions have been granted.
+  // TODO(user): Add a check to ensure that the required permissions have been granted.
   @Override
   public boolean isConfiguredCorrectly() {
     if (!googleApiClient.isConnected()) {
