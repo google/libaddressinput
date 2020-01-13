@@ -1,10 +1,10 @@
-# ![](https://github.com/googlei18n/libaddressinput/wiki/libaddressinput-icon-70x55.png) libaddressinput
+# ![](https://github.com/google/libaddressinput/wiki/libaddressinput-icon-70x55.png) libaddressinput
 
 [![Build Status](https://travis-ci.org/googlei18n/libaddressinput.svg?branch=master)](https://travis-ci.org/googlei18n/libaddressinput)
 
 The _libaddressinput_ project consists of two different libraries (one
 implemented in C++, one implemented in Java for Android) that use
-[address metadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata)
+[address metadata](https://github.com/google/libaddressinput/wiki/AddressValidationMetadata)
 from
 [Google](https://developers.google.com/)'s
 [Address Data Service](https://chromium-i18n.appspot.com/ssl-address/data)

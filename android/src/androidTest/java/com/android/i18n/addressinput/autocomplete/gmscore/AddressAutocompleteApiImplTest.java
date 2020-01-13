@@ -16,7 +16,7 @@
 
 package com.android.i18n.addressinput.autocomplete.gmscore;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -115,8 +115,8 @@ public class AddressAutocompleteApiImplTest extends ActivityInstrumentationTestC
     when(geoDataApi.getAutocompletePredictions(
             eq(googleApiClient),
             eq(TEST_QUERY),
-            any(LatLngBounds.class),
-            any(AutocompleteFilter.class)))
+            nullable(LatLngBounds.class),
+            nullable(AutocompleteFilter.class)))
         .thenReturn(autocompletePendingResults);
     when(autocompletePrediction.getPlaceId()).thenReturn("TEST_PLACE_ID");
     when(autocompletePrediction.getFullText(null)).thenReturn("TEST_PREDICTION");
