@@ -57,14 +57,22 @@ https://code.google.com/p/googletest/
 http://python.org/
 https://code.google.com/p/re2/
 
+Make sure you clone the submodules as well so that you have the third party dependencies in externals folder
+
+```
+git clone --recurse-submodules -j8 https://github.com/google/libaddressinput
+```
+
 # Build
 
 Building the library involves generating an out/Default/build.ninja file and
 running ninja:
 
+```
 $ export GYP_GENERATORS='ninja'
 $ gyp --depth .
 $ ninja -C out/Default
+```
 
 Overriding paths defined in the *.gyp files can be done by setting the
 GYP_DEFINES environment variable before running gyp:
