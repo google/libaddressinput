@@ -17,15 +17,12 @@ Android SDK Tools: https://developer.android.com/sdk/index.html#Other
 Set the ANDROID_HOME environment variable to the root of the SDK.
 
 Install the following packages:
-* Tools/Android SDK Build-tools (Rev. 21.1.2)
-* Android 5.1 (API 22)
+* Tools/Android SDK Build-tools (Rev. 29.0.2)
+* Android 10 (API 29)
 * Extras/Android Support Library
 
-Gradle (latest version):
-  https://services.gradle.org/distributions/gradle-2.3-bin.zip
-
-Note: Additionally you must take care to avoid having multiple versions of
-Gradle on your path, as this can cause problems.
+Note: It is recommended to always use the included [Gradle Wrapper Scripts] to invoke Gradle to
+avoid issues which may be caused by having multiple versions of Gradle on your PATH.
 
 
 ## Building and Running
@@ -33,16 +30,16 @@ Gradle on your path, as this can cause problems.
 After installing all the prerequisites, check that everything is working by
 running:
 
-$ gradle build
+`$ gradlew build`
 
 With an Android emulator running or an Android device connected, the following
 command line then builds the library and runs the tests:
 
-$ gradle connectedAndroidTest
+`$ gradlew connectedAndroidTest`
 
 The test runner logs to the system log, which can be viewed using logcat:
 
-$ adb logcat
+`$ adb logcat`
 
 # Integrating with Android Apps
 
@@ -72,7 +69,7 @@ $ adb logcat
 
     i. In activity_main.xml add:
 
-    ```
+    ```xml
     <LinearLayout
         android:id="@+id/addresswidget"
         android:layout_width="match_parent"
@@ -82,7 +79,7 @@ $ adb logcat
 
     ii. In MainActivity.java add the following import statements:
 
-    ```
+    ```java
     import android.view.ViewGroup;
 
     import com.android.i18n.addressinput.AddressWidget;
@@ -93,19 +90,21 @@ $ adb logcat
 
     iii. Define the widget on the object scope
 
-        `private AddressWidget addressWidget;`
+    ```java
+    private AddressWidget addressWidget;
+   ```
 
     iv. Add the widget to the ViewGroup
-    ```
+    ```java
     ViewGroup viewGroup = (ViewGroup) findViewById(R.id.addresswidget);
     FormOptions defaultFormOptions = new FormOptions();
     ClientCacheManager cacheManager = new SimpleClientCacheManager();
     this.addressWidget = new AddressWidget(this, viewGroup, defaultFormOptions, cacheManager);
     ```
 
-Example:
+#### Example:
 
-```
+```java
 package com.example.google.widgetdemo;
 
 import android.support.v7.app.AppCompatActivity;
@@ -132,3 +131,5 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+
+[Gradle Wrapper Scripts]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper

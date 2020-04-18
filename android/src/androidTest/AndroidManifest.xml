@@ -4,10 +4,6 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
-
     <!-- Gradle generates an <instrumentation> block during the build process,
          but in order to work with other build systems, that don't do that,
          there must be such a block declared here. -->
