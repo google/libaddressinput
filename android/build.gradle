@@ -23,8 +23,8 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     api project(':common')
-    implementation 'com.google.android.gms:play-services-location:10.0.0'
-    implementation 'com.google.android.gms:play-services-places:9.2.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.guava:guava-gwt:18.0'
 
 }
