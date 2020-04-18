@@ -47,7 +47,7 @@ test {
 }
 
 dependencies {
-  implementation 'com.google.guava:guava-gwt:18.0'
+  implementation 'com.google.guava:guava:29.0-android'
   /* Note that gradle will warn about this not being the same version as *
    * the Android JSON library (but will not compile if it's removed).    */
   implementation 'org.json:json:20090211'
