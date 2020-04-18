@@ -52,7 +52,7 @@ dependencies {
    * the Android JSON library (but will not compile if it's removed).    */
   implementation 'org.json:json:20090211'
   testImplementation 'junit:junit:4.13'
-  testImplementation 'com.google.truth:truth:0.25'
+  testImplementation 'com.google.truth:truth:1.0.1'
   testImplementation 'org.mockito:mockito-core:1.9.5'
 }
 
