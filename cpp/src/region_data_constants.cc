@@ -61,7 +61,7 @@ const RegionData kRegionData[] = {
   {"AF", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C%n%Z",)"
       u8R"("zipex":"1001,2601,3801",)"
-      u8R"("languages":"fa~ps~uz-Arab~tk~bal")"
+      u8R"("languages":"fa~ps~uz-Arab~tk")"
       "}"},
   {"AG", "{"
       u8R"("require":"A",)"
@@ -148,7 +148,7 @@ const RegionData kRegionData[] = {
   {"BD", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C - %Z",)"
       u8R"("zipex":"1340,1000",)"
-      u8R"("posturl":"http://www.bangladeshpost.gov.bd/PostCode.asp",)"
+      u8R"("posturl":"https://bdpost.portal.gov.bd/site/page/f41a42bd-2540-4afa-8568-af56443c3df8/-",)"
       u8R"("languages":"bn")"
       "}"},
   {"BE", "{"
@@ -230,7 +230,7 @@ const RegionData kRegionData[] = {
       u8R"("languages":"en~tn")"
       "}"},
   {"BY", "{"
-      u8R"("fmt":"%S%n%Z %C%n%A%n%O%n%N",)"
+      u8R"("fmt":"%O%n%N%n%A%n%Z, %C%n%S",)"
       u8R"("zipex":"223016,225860,220050",)"
       u8R"("posturl":"http://ex.belpost.by/addressbook/",)"
       u8R"("languages":"be~ru")"
@@ -560,6 +560,7 @@ const RegionData kRegionData[] = {
   {"HN", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C, %S%n%Z",)"
       u8R"("require":"ACS",)"
+      u8R"("state_name_type":"department",)"
       u8R"("zipex":"31301",)"
       u8R"("languages":"es")"
       "}"},
@@ -588,7 +589,7 @@ const RegionData kRegionData[] = {
       u8R"("languages":"id")"
       "}"},
   {"IE", "{"
-      u8R"("fmt":"%N%n%O%n%A%n%D%n%C%n%S %Z",)"
+      u8R"("fmt":"%N%n%O%n%A%n%D%n%C%n%S%n%Z",)"
       u8R"("zip_name_type":"eircode",)"
       u8R"("state_name_type":"county",)"
       u8R"("sublocality_name_type":"townland",)"
@@ -688,7 +689,8 @@ const RegionData kRegionData[] = {
       "}"},
   {"KH", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C %Z",)"
-      u8R"("zipex":"12203,14206,12000",)"
+      u8R"("zipex":"120101,120108",)"
+      u8R"("posturl":"https://www.cambodiapost.post/page/postal-codes",)"
       u8R"("languages":"km")"
       "}"},
   {"KI", "{"
@@ -931,7 +933,7 @@ const RegionData kRegionData[] = {
       u8R"("languages":"pt")"
       "}"},
   {"NA", "{"
-      u8R"("fmt":"%N%n%O%n%A%n%Cn%Z",)"
+      u8R"("fmt":"%N%n%O%n%A%n%C%n%Z",)"
       u8R"("zipex":"10001,10017",)"
       u8R"("languages":"en")"
       "}"},
@@ -1324,7 +1326,7 @@ const RegionData kRegionData[] = {
   {"UA", "{"
       u8R"("fmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
       u8R"("lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
-      u8R"("require":"ACSZ",)"
+      u8R"("require":"ACZ",)"
       u8R"("state_name_type":"oblast",)"
       u8R"("zipex":"15432,01055,01001",)"
       u8R"("posturl":"http://services.ukrposhta.com/postindex_new/",)"

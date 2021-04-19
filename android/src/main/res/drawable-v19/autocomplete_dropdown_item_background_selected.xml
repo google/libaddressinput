@@ -22,7 +22,7 @@ of autocomplete dropdown items to darken when they are clicked.
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape>
-            <solid android:drawable="@color/ripple_material_light"/>
+            <solid android:drawable="@color/androidx_core_ripple_material_light"/>
         </shape>
     </item>
 

@@ -77,16 +77,9 @@ std::string GetLabelForField(const Localization& localization,
   return localization.GetString(message_id);
 }
 
-}  // namespace
-
-const std::vector<std::string>& GetRegionCodes() {
-  return RegionDataConstants::GetRegionCodes();
-}
-
 std::vector<AddressUiComponent> BuildComponents(
-    const std::string& region_code,
-    const Localization& localization,
-    const std::string& ui_language_tag,
+    const std::string& region_code, const Localization& localization,
+    const std::string& ui_language_tag, bool include_literals,
     std::string* best_address_language_tag) {
   assert(best_address_language_tag != nullptr);
   std::vector<AddressUiComponent> result;
@@ -98,7 +91,7 @@ std::vector<AddressUiComponent> BuildComponents(
     return result;
   }
 
-  const Language& best_address_language =
+  const Language best_address_language =
       ChooseBestAddressLanguage(rule, Language(ui_language_tag));
   *best_address_language_tag = best_address_language.tag;
 
@@ -115,11 +108,16 @@ std::vector<AddressUiComponent> BuildComponents(
   bool followed_by_newline = true;
   for (auto format_it = format.begin();
        format_it != format.end(); ++format_it) {
-    if (format_it->IsNewline()) {
-      preceded_by_newline = true;
+    if (!format_it->IsField()) {
+      // This is a literal
+      if (include_literals) {
+        AddressUiComponent component;
+        component.literal = format_it->GetLiteral();
+        result.push_back(component);
+      }
+      if (format_it->IsNewline()) preceded_by_newline = true;
       continue;
-    } else if (!format_it->IsField() ||
-               !fields.insert(format_it->GetField()).second) {
+    } else if (!fields.insert(format_it->GetField()).second) {
       continue;
     }
     AddressUiComponent component;
@@ -141,6 +139,28 @@ std::vector<AddressUiComponent> BuildComponents(
   }
 
   return result;
+}
+
+}  // namespace
+
+const std::vector<std::string>& GetRegionCodes() {
+  return RegionDataConstants::GetRegionCodes();
+}
+
+std::vector<AddressUiComponent> BuildComponents(
+    const std::string& region_code, const Localization& localization,
+    const std::string& ui_language_tag,
+    std::string* best_address_language_tag) {
+  return BuildComponents(region_code, localization, ui_language_tag,
+                         /*include_literals=*/false, best_address_language_tag);
+}
+
+std::vector<AddressUiComponent> BuildComponentsWithLiterals(
+    const std::string& region_code, const Localization& localization,
+    const std::string& ui_language_tag,
+    std::string* best_address_language_tag) {
+  return BuildComponents(region_code, localization, ui_language_tag,
+                         /*include_literals=*/true, best_address_language_tag);
 }
 
 }  // namespace addressinput

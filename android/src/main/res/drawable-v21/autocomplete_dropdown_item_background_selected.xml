@@ -17,7 +17,7 @@
  */
 -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ripple_material_light">
+    android:color="@color/androidx_core_ripple_material_light">
 
     <item android:drawable="@android:color/white" />
 </ripple>

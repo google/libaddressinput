@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.android.i18n.addressinput.AddressAutocompleteController.AddressAdapter;
 import com.android.i18n.addressinput.AddressAutocompleteController.AddressPrediction;
 import com.android.i18n.addressinput.testing.TestActivity;
@@ -76,9 +77,16 @@ public class AddressAutocompleteControllerTest
     context = getActivity();
 
     textView = new AutoCompleteTextView(context);
-    controller =
-        new AddressAutocompleteController(context, autocompleteApi, placeDetailsApi)
-            .setView(textView);
+    InstrumentationRegistry.getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                controller =
+                    new AddressAutocompleteController(context, autocompleteApi, placeDetailsApi)
+                        .setView(textView);
+              }
+            });
   }
 
   // Tests for the AddressAutocompleteController

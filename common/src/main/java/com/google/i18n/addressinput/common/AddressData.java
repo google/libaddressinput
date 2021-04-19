@@ -246,7 +246,7 @@ public final class AddressData {
             ? addressData.getRecipient() == null
             : recipient.equals(addressData.getRecipient()))
         && (languageCode == null
-            ? this.getLanguageCode() == null
+            ? addressData.getLanguageCode() == null
             : languageCode.equals(addressData.getLanguageCode()));
   }
 
