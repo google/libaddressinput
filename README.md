@@ -37,3 +37,7 @@ easily be adapted to run in any Java environment.
 Using and developing libaddressinput is discussed on this mailing list:
 
 https://groups.google.com/forum/#!forum/libaddressinput-discuss
+
+## License
+
+Source code licensed under the Apache 2.0. Data licensed under the CC-BY 4.0
