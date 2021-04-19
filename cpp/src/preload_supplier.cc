@@ -302,7 +302,7 @@ const Rule* PreloadSupplier::GetRule(const LookupKey& lookup_key) const {
 
 void PreloadSupplier::LoadRules(const std::string& region_code,
                                 const Callback& loaded) {
-  const std::string& key = KeyFromRegionCode(region_code);
+  const std::string key = KeyFromRegionCode(region_code);
 
   if (IsLoadedKey(key)) {
     loaded(true, region_code, 0);
@@ -343,7 +343,7 @@ bool PreloadSupplier::GetRuleHierarchy(const LookupKey& lookup_key,
         RegionDataConstants::GetMaxLookupKeyDepth(lookup_key.GetRegionCode()));
 
     for (size_t depth = 0; depth <= max_depth; ++depth) {
-      const std::string& key = lookup_key.ToKeyString(depth);
+      const std::string key = lookup_key.ToKeyString(depth);
       const Rule* rule = nullptr;
       auto it = rule_index_->find(key);
       if (it != rule_index_->end()) {

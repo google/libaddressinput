@@ -52,15 +52,22 @@ testing::AssertionResult ComponentsAreValid(
   for (const auto& component : components) {
     static const AddressField kMinAddressField = COUNTRY;
     static const AddressField kMaxAddressField = RECIPIENT;
-    if (component.field < kMinAddressField ||
-        component.field > kMaxAddressField) {
-      return testing::AssertionFailure()
-             << "unexpected field " << component.field;
-    }
+    if (component.literal.empty()) {
+      if (component.field < kMinAddressField ||
+          component.field > kMaxAddressField) {
+        return testing::AssertionFailure()
+               << "unexpected field " << component.field;
+      }
 
-    if (component.name.empty()) {
-      return testing::AssertionFailure()
-             << "empty field name for field " << component.field;
+      if (component.name.empty()) {
+        return testing::AssertionFailure()
+               << "empty field name for field " << component.field;
+      }
+    } else {
+      // This is a literal.
+      if (!component.name.empty()) {
+        return testing::AssertionFailure() << "literals don't have names";
+      }
     }
   }
 
@@ -91,6 +98,13 @@ TEST_P(AddressUiTest, ComponentsAreValid) {
       GetParam(), localization_, kUiLanguageTag, &best_address_language_tag_)));
 }
 
+// Verifies that BuildComponentsWithLiterals() returns valid UI components for a
+// region code.
+TEST_P(AddressUiTest, ComponentsWithLiteralsAreValid) {
+  EXPECT_TRUE(ComponentsAreValid(BuildComponentsWithLiterals(
+      GetParam(), localization_, kUiLanguageTag, &best_address_language_tag_)));
+}
+
 // Verifies that BuildComponents() returns at most one input field of each type.
 TEST_P(AddressUiTest, UniqueFieldTypes) {
   std::set<AddressField> fields;
@@ -99,6 +113,21 @@ TEST_P(AddressUiTest, UniqueFieldTypes) {
                       &best_address_language_tag_);
   for (const auto& component : components) {
     EXPECT_TRUE(fields.insert(component.field).second);
+  }
+}
+
+// Verifies that BuildComponentsWithLiterals() returns at most one input field
+// of each type.
+TEST_P(AddressUiTest, UniqueFieldTypesByBuildComponentsWithLiterals) {
+  std::set<AddressField> fields;
+  const std::vector<AddressUiComponent>& components =
+      BuildComponentsWithLiterals(GetParam(), localization_, kUiLanguageTag,
+                                  &best_address_language_tag_);
+  for (const auto& component : components) {
+    // Literal components don't have types.
+    if (component.literal.empty()) {
+      EXPECT_TRUE(fields.insert(component.field).second);
+    }
   }
 }
 
@@ -112,6 +141,29 @@ TEST_F(AddressUiTest, InvalidRegionCodeReturnsEmptyVector) {
   EXPECT_TRUE(BuildComponents(
       "INVALID-REGION-CODE", localization_, kUiLanguageTag,
       &best_address_language_tag_).empty());
+}
+
+// Verifies that BuildComponentsWithLiteras() does return literals. It uses "LV"
+// as an aribtrary short example that has exactly one literal and 3 new lines.
+TEST_F(AddressUiTest, ComponentsWithLiteralsReadsLiteralsForLV) {
+  const std::vector<AddressUiComponent>& components =
+      BuildComponentsWithLiterals("LV", localization_, kUiLanguageTag,
+                                  &best_address_language_tag_);
+  std::string literal;
+  int newlines_count = 0;
+  for (const auto& component : components) {
+    if (!component.literal.empty()) {
+      if (component.literal == "\n") {
+        newlines_count++;
+        continue;
+      }
+      // There should be exactly one non-newline literal.
+      EXPECT_TRUE(literal.empty());
+      literal = component.literal;
+    }
+  }
+  EXPECT_EQ(", ", literal);
+  EXPECT_EQ(3, newlines_count);
 }
 
 // Test data for determining the best language tag and whether the right format

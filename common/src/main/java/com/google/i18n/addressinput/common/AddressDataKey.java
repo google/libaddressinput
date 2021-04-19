@@ -109,10 +109,12 @@ public enum AddressDataKey {
    * level below country.
    */
   ZIP,
-  /**
-   * Indicates the type of the name used for the ZIP (postal code) field.
-   */
-  ZIP_NAME_TYPE;
+  /** Indicates the type of the name used for the ZIP (postal code) field. */
+  ZIP_NAME_TYPE,
+  /** Common prefix for postal code. */
+  POSTPREFIX,
+  /** Helper URL for postal code. */
+  POSTURL;
 
   /**
    * Returns a field based on its keyname (value in the JSON-format file), or null if no field
