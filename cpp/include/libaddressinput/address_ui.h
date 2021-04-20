@@ -43,8 +43,8 @@ std::vector<AddressUiComponent> BuildComponents(
     const std::string& ui_language_tag,
     std::string* best_address_language_tag);
 
-// Similar to BuildComponents() but in addition, it returns any non-newline
-// literals such as "-", " " and ",".
+// Similar to BuildComponents() but in addition, it returns literals such as
+// "-", "\n" and ",".
 std::vector<AddressUiComponent> BuildComponentsWithLiterals(
     const std::string& region_code, const Localization& localization,
     const std::string& ui_language_tag, std::string* best_address_language_tag);
