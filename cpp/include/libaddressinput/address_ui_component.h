@@ -44,9 +44,8 @@ struct AddressUiComponent {
   // form.
   LengthHint length_hint;
 
-  // The literal string for this element. New lines are *not* captured by this
-  // field but are reflected in the `length_hint` field. This field is dedicated
-  // for other literals such as "," "-" and " ".  If empty, then this
+  // The literal string for this element. This field is dedicated
+  // for literals such as "," "-", "\n" and " ".  If empty, then this
   // AddressUiComponent represents an address field type not a literal.
   std::string literal;
 };
