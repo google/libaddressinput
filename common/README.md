@@ -10,11 +10,16 @@ http://www.gradle.org/
 
 ## Prerequisite dependencies for using Gradle
 
-Gradle (latest version):
-  https://services.gradle.org/distributions/gradle-2.3-bin.zip
+The only prerequisite is a compatible Java Development Kit correctly installed,
+with java, javac, and related commands available in your PATH environment.
 
-Note: Additionally you must take care to avoid having multiple versions of
-Gradle on your path, as this can cause problems.
+This project makes use of the [Gradle Wrapper Scripts] to ensure repeatable builds and use of the
+same Gradle version across contributors. Depending on your operating system, Gradle can be invoked
+from the root project directory by using either the `gradlew` or `gradlew.bat` command from your
+preferred shell environment.
+
+Note: It is recommended to always use the included wrapper scripts to invoke Gradle to
+avoid issues which may be caused by having multiple versions of Gradle on your PATH.
 
 
 ## Building and Running
@@ -22,5 +27,12 @@ Gradle on your path, as this can cause problems.
 After installing all the prerequisites, check that everything is working by
 running:
 
-$ gradle build
-$ gradle test
+##### On Linux / Unix / Mac
+`$ gradlew build`
+`$ gradlew test`
+
+##### On Windows
+`$ gradlew.bat build`
+`$ gradlew.bat test`
+
+[Gradle Wrapper Scripts]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
