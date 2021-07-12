@@ -229,7 +229,7 @@ void ValidationTask::CheckUsesPoBox(
     return;
   }
 
-  const auto& matchers = PostBoxMatchers::GetMatchers(country_rule);
+  const auto matchers = PostBoxMatchers::GetMatchers(country_rule);
   for (const auto& line : address_.address_line) {
     for (auto ptr : matchers) {
       assert(ptr != nullptr);

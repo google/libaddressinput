@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.android.i18n.addressinput.testing.TestActivity;
 import com.google.i18n.addressinput.common.AddressData;
 import com.google.i18n.addressinput.common.AddressField;
@@ -65,14 +66,21 @@ public class AddressWidgetUiComponentProviderTest
     customTextViewCounter = 0;
     customProgressDialogCounter = 0;
     componentProvider = new TestComponentProvider(context);
-    widget =
-        new AddressWidget(
-            context,
-            container,
-            new FormOptions(),
-            new SimpleClientCacheManager(),
-            componentProvider);
-    widget.renderFormWithSavedAddress(address);
+    InstrumentationRegistry.getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                widget =
+                    new AddressWidget(
+                        context,
+                        container,
+                        new FormOptions(),
+                        new SimpleClientCacheManager(),
+                        componentProvider);
+                widget.renderFormWithSavedAddress(address);
+              }
+            });
 
     for (AddressField field : AddressField.values()) {
       if (field.equals(AddressField.COUNTRY)) {
@@ -102,14 +110,21 @@ public class AddressWidgetUiComponentProviderTest
     customTextViewCounter = 0;
     customProgressDialogCounter = 0;
     componentProvider = new TestComponentProvider(context);
-    widget =
-        new AddressWidget(
-            context,
-            container,
-            new FormOptions(),
-            new SimpleClientCacheManager(),
-            componentProvider);
-    widget.renderFormWithSavedAddress(address);
+    InstrumentationRegistry.getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              @Override
+              public void run() {
+                widget =
+                    new AddressWidget(
+                        context,
+                        container,
+                        new FormOptions(),
+                        new SimpleClientCacheManager(),
+                        componentProvider);
+                widget.renderFormWithSavedAddress(address);
+              }
+            });
 
     EditText streetAddressView = (EditText) widget.getViewForField(AddressField.STREET_ADDRESS);
     EditText addressLine1View = (EditText) widget.getViewForField(AddressField.ADDRESS_LINE_1);

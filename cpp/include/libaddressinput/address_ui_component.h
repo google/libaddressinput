@@ -22,8 +22,10 @@
 namespace i18n {
 namespace addressinput {
 
-// A description of an input field in an address form. The user of the library
-// will use a list of these elements to layout the address form input fields.
+// A description of an input field or a literal in an address form. The user of
+// the library will use a list of these elements to layout the address form
+// input fields. If `literal` is empty, this AddressUiComponent represents a
+// field, otherwise, it represent the literal stored in `literal`.
 struct AddressUiComponent {
   // The types of hints for how large the field should be in a multiline address
   // form.
@@ -41,6 +43,11 @@ struct AddressUiComponent {
   // The hint for how large the input field should be in a multiline address
   // form.
   LengthHint length_hint;
+
+  // The literal string for this element. This field is dedicated
+  // for literals such as "," "-", "\n" and " ".  If empty, then this
+  // AddressUiComponent represents an address field type not a literal.
+  std::string literal;
 };
 
 }  // namespace addressinput

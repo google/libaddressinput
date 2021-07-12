@@ -52,7 +52,7 @@ void BuildRegionTreeRecursively(
   LookupKey lookup_key;
   for (const auto& key : keys) {
     lookup_key.FromLookupKey(parent_key, key);
-    const std::string& lookup_key_string =
+    const std::string lookup_key_string =
         lookup_key.ToKeyString(kLookupKeysMaxDepth);
 
     ++hint;
@@ -158,7 +158,7 @@ const RegionData& RegionDataBuilder::Build(
   Rule rule;
   rule.ParseSerializedRule(RegionDataConstants::GetRegionData(region_code));
   static const Language kUndefinedLanguage("und");
-  const Language& best_language =
+  const Language best_language =
       rule.GetLanguages().empty()
           ? kUndefinedLanguage
           : ChooseBestAddressLanguage(rule, Language(ui_language_tag));

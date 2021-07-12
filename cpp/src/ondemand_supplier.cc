@@ -52,7 +52,7 @@ void OndemandSupplier::Supply(const LookupKey& lookup_key,
         RegionDataConstants::GetMaxLookupKeyDepth(lookup_key.GetRegionCode()));
 
     for (size_t depth = 0; depth <= max_depth; ++depth) {
-      const std::string& key = lookup_key.ToKeyString(depth);
+      const std::string key = lookup_key.ToKeyString(depth);
       auto it = rule_cache_.find(key);
       if (it != rule_cache_.end()) {
         task->hierarchy_.rule[depth] = it->second;
