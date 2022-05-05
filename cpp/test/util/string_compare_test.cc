@@ -71,12 +71,12 @@ INSTANTIATE_TEST_SUITE_P(
     testing::Values(TestCase("foo", "foo", true, false),
                     TestCase("foo", "FOO", true, false),
                     TestCase("bar", "foo", false, true),
-                    TestCase(u8"강원도", u8"강원도", true, false),
-                    TestCase(u8"강원도", u8"대구광역시", false, true),
-                    TestCase(u8"ZÜRICH", u8"zürich", true, false),
-                    TestCase(u8"абв", u8"где", false, true),
-                    TestCase(u8"абв", u8"ГДЕ", false, true),
-                    TestCase(u8"где", u8"абв", false, false),
-                    TestCase(u8"где", u8"АБВ", false, false)));
+                    TestCase("강원도", "강원도", true, false),
+                    TestCase("강원도", "대구광역시", false, true),
+                    TestCase("ZÜRICH", "zürich", true, false),
+                    TestCase("абв", "где", false, true),
+                    TestCase("абв", "ГДЕ", false, true),
+                    TestCase("где", "абв", false, false),
+                    TestCase("где", "АБВ", false, false)));
 
 }  // namespace

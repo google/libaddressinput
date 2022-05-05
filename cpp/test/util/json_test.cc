@@ -73,10 +73,10 @@ TEST(JsonTest, EmptyValueIsValid) {
 
 TEST(JsonTest, Utf8EncodingIsValid) {
   Json json;
-  ASSERT_TRUE(json.ParseObject(u8R"({"key": "Ü"})"));
+  ASSERT_TRUE(json.ParseObject(R"({"key": "Ü"})"));
   std::string value;
   EXPECT_TRUE(json.GetStringValueForKey("key", &value));
-  EXPECT_EQ(u8"Ü", value);
+  EXPECT_EQ("Ü", value);
 }
 
 TEST(JsonTest, InvalidUtf8IsNotValid) {

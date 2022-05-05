@@ -169,7 +169,7 @@ TEST_P(SupplierTest, Valid) {
 
 TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
   address_.region_code = "HK";
-  address_.administrative_area = u8"九龍";
+  address_.administrative_area = "九龍";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -181,7 +181,7 @@ TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
 
 TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
   address_.region_code = "HK";
-  address_.administrative_area = u8"九龍";
+  address_.administrative_area = "九龍";
   address_.locality = "bbb";  // Ignored!
 
   ASSERT_NO_FATAL_FAILURE(Supply());
@@ -216,7 +216,7 @@ TEST_P(SupplierTest, KeyDepth0) {
 
 TEST_P(SupplierTest, KeyDepth1) {
   address_.region_code = "CN";
-  address_.administrative_area = u8"新疆维吾尔自治区";
+  address_.administrative_area = "新疆维吾尔自治区";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -228,8 +228,8 @@ TEST_P(SupplierTest, KeyDepth1) {
 
 TEST_P(SupplierTest, KeyDepth2) {
   address_.region_code = "CN";
-  address_.administrative_area = u8"新疆维吾尔自治区";
-  address_.locality = u8"喀什地区";
+  address_.administrative_area = "新疆维吾尔自治区";
+  address_.locality = "喀什地区";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -241,9 +241,9 @@ TEST_P(SupplierTest, KeyDepth2) {
 
 TEST_P(SupplierTest, KeyDepth3) {
   address_.region_code = "CN";
-  address_.administrative_area = u8"新疆维吾尔自治区";
-  address_.locality = u8"喀什地区";
-  address_.dependent_locality = u8"喀什市";
+  address_.administrative_area = "新疆维吾尔自治区";
+  address_.locality = "喀什地区";
+  address_.dependent_locality = "喀什市";
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);

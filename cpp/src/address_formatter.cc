@@ -38,7 +38,7 @@ namespace {
 
 const char kCommaSeparator[] = ", ";
 const char kSpaceSeparator[] = " ";
-const char kArabicCommaSeparator[] = u8"، ";
+const char kArabicCommaSeparator[] = "، ";
 
 const char kLanguagesThatUseSpace[][3] = {
     "th",
