@@ -109,8 +109,8 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevel) {
   // This matches 二水鄉 - Ershuei Township.
   AddressData expected = address;
   // This locality is in 彰化縣 - Changhua County.
-  expected.administrative_area = u8"彰化縣";
-  expected.locality = u8"二水鄉";
+  expected.administrative_area = "彰化縣";
+  expected.locality = "二水鄉";
   FillAddress(&address);
   EXPECT_EQ(expected, address);
 
@@ -154,11 +154,11 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
 
   AddressData expected = address;
   // The province is Gyeonggi - 경기도.
-  expected.administrative_area = u8"경기도";
+  expected.administrative_area = "경기도";
   // The city is Ansan-si - 안산시.
-  expected.locality = u8"안산시";
+  expected.locality = "안산시";
   // The district is Danwon-gu - 단원구
-  expected.dependent_locality = u8"단원구";
+  expected.dependent_locality = "단원구";
 
   FillAddress(&address);
   EXPECT_EQ(expected, address);
@@ -189,7 +189,7 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingMultipleValues) {
   AddressData expected = address;
   // The province, Jeonnam - 전라남도 - is known, but we have several locality
   // matches so none of them are populated.
-  expected.administrative_area = u8"전라남도";
+  expected.administrative_area = "전라남도";
   FillAddress(&address);
   EXPECT_EQ(expected, address);
 }

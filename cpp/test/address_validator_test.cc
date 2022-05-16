@@ -264,7 +264,7 @@ TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
   address_.postal_code = "86070";
-  address_.address_line.emplace_back(u8"Av Gregorio Méndez Magaña 1400");
+  address_.address_line.emplace_back("Av Gregorio Méndez Magaña 1400");
   address_.language_code = "es";
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
@@ -282,7 +282,7 @@ TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
   address_.locality = "Villahermosa";
   address_.administrative_area = "TAB";  // Tabasco
   address_.postal_code = "80000";
-  address_.address_line.emplace_back(u8"Av Gregorio Méndez Magaña 1400");
+  address_.address_line.emplace_back("Av Gregorio Méndez Magaña 1400");
   address_.language_code = "es";
 
   expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
@@ -334,9 +334,9 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
 
 TEST_P(AddressValidatorTest, ValidKanjiAddressJP) {
   address_.region_code = "JP";
-  address_.administrative_area = u8"徳島県";
+  address_.administrative_area = "徳島県";
   address_.postal_code = "770-0847";
-  address_.address_line.emplace_back(u8"徳島市...");
+  address_.address_line.emplace_back("徳島市...");
   address_.language_code = "ja";
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
@@ -374,7 +374,7 @@ TEST_P(AddressValidatorTest, ValidAddressBR) {
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
   address_.region_code = "BR";
-  address_.administrative_area = u8"São Paulo";
+  address_.administrative_area = "São Paulo";
   address_.locality = "Presidente Prudente";
   address_.postal_code = "19063-008";
   address_.address_line.emplace_back("Rodovia Raposo Tavares, 6388-6682");
@@ -414,7 +414,7 @@ TEST_P(AddressValidatorTest, ValidAddressCA_fr) {
 
   address_.region_code = "CA";
   address_.administrative_area = "Nouveau-Brunswick";
-  address_.locality = u8"Comté de Saint-Jean";
+  address_.locality = "Comté de Saint-Jean";
   address_.postal_code = "E2L 4Z6";
   address_.address_line.emplace_back("...");
   address_.language_code = "fr";

@@ -150,9 +150,9 @@ TEST_F(AddressNormalizerTest, GangwonKoreanName) {
   AddressData address;
   address.language_code = "ko-KR";
   address.region_code = "KR";
-  address.administrative_area = u8"강원";
+  address.administrative_area = "강원";
   normalizer_.Normalize(&address);
-  EXPECT_EQ(u8"강원도", address.administrative_area);
+  EXPECT_EQ("강원도", address.administrative_area);
 }
 
 TEST_F(AddressNormalizerTest, DontSwitchLatinScriptForUnknownLanguage) {
@@ -168,9 +168,9 @@ TEST_F(AddressNormalizerTest, DontSwitchLocalScriptForUnknownLanguage) {
   supplier_.LoadRules("KR", *loaded_);
   AddressData address;
   address.region_code = "KR";
-  address.administrative_area = u8"강원";
+  address.administrative_area = "강원";
   normalizer_.Normalize(&address);
-  EXPECT_EQ(u8"강원도", address.administrative_area);
+  EXPECT_EQ("강원도", address.administrative_area);
 }
 
 }  // namespace

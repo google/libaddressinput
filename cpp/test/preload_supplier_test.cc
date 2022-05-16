@@ -283,8 +283,8 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameHK) {
   LookupKey key;
   AddressData address;
   address.region_code = "HK";
-  address.administrative_area = u8"新界";
-  address.locality = u8"大嶼山石壁";
+  address.administrative_area = "新界";
+  address.locality = "大嶼山石壁";
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -292,9 +292,9 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameHK) {
   ASSERT_TRUE(hierarchy_.rule[0] != nullptr);  // Country
   EXPECT_EQ(key.ToKeyString(0), hierarchy_.rule[0]->GetId());
   ASSERT_TRUE(hierarchy_.rule[1] != nullptr);  // Admin Area
-  EXPECT_EQ(u8"data/HK/新界", hierarchy_.rule[1]->GetId());
+  EXPECT_EQ("data/HK/新界", hierarchy_.rule[1]->GetId());
   ASSERT_TRUE(hierarchy_.rule[2] != nullptr);  // Locality
-  EXPECT_EQ(u8"data/HK/新界/大嶼山石壁", hierarchy_.rule[2]->GetId());
+  EXPECT_EQ("data/HK/新界/大嶼山石壁", hierarchy_.rule[2]->GetId());
   EXPECT_TRUE(hierarchy_.rule[3] == nullptr);  // No data on sub-locality
 }
 
@@ -303,8 +303,8 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameHKEnglish) {
   LookupKey key;
   AddressData address;
   address.region_code = "HK";
-  address.administrative_area = u8"New Territories";
-  address.locality = u8"Tsing Yi";
+  address.administrative_area = "New Territories";
+  address.locality = "Tsing Yi";
   key.FromAddress(address);
 
   supplier_.SupplyGlobally(key, *supplied_callback_);
@@ -313,9 +313,9 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameHKEnglish) {
   ASSERT_TRUE(hierarchy_.rule[0] != nullptr);  // Country
   EXPECT_EQ(key.ToKeyString(0), hierarchy_.rule[0]->GetId());
   ASSERT_TRUE(hierarchy_.rule[1] != nullptr);  // Admin Area
-  EXPECT_EQ(u8"data/HK/New Territories--en", hierarchy_.rule[1]->GetId());
+  EXPECT_EQ("data/HK/New Territories--en", hierarchy_.rule[1]->GetId());
   ASSERT_TRUE(hierarchy_.rule[2] != nullptr);  // Locality
-  EXPECT_EQ(u8"data/HK/New Territories/Tsing Yi--en",
+  EXPECT_EQ("data/HK/New Territories/Tsing Yi--en",
             hierarchy_.rule[2]->GetId());
   EXPECT_TRUE(hierarchy_.rule[3] == nullptr);  // No data on sub-locality
 }
@@ -325,9 +325,9 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameAllLevels) {
   LookupKey key;
   AddressData address;
   address.region_code = "CN";
-  address.administrative_area = u8"云南省";
-  address.locality = u8"临沧市";
-  address.dependent_locality = u8"临翔区";
+  address.administrative_area = "云南省";
+  address.locality = "临沧市";
+  address.dependent_locality = "临翔区";
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -335,11 +335,11 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameAllLevels) {
   ASSERT_TRUE(hierarchy_.rule[0] != nullptr);  // Country
   EXPECT_EQ(key.ToKeyString(0), hierarchy_.rule[0]->GetId());
   ASSERT_TRUE(hierarchy_.rule[1] != nullptr);  // Admin Area
-  EXPECT_EQ(u8"data/CN/云南省", hierarchy_.rule[1]->GetId());
+  EXPECT_EQ("data/CN/云南省", hierarchy_.rule[1]->GetId());
   ASSERT_TRUE(hierarchy_.rule[2] != nullptr);  // Locality
-  EXPECT_EQ(u8"data/CN/云南省/临沧市", hierarchy_.rule[2]->GetId());
+  EXPECT_EQ("data/CN/云南省/临沧市", hierarchy_.rule[2]->GetId());
   ASSERT_TRUE(hierarchy_.rule[3] != nullptr);  // Sub-locality
-  EXPECT_EQ(u8"data/CN/云南省/临沧市/临翔区", hierarchy_.rule[3]->GetId());
+  EXPECT_EQ("data/CN/云南省/临沧市/临翔区", hierarchy_.rule[3]->GetId());
 }
 
 TEST_F(PreloadSupplierTest, GetLoadedRuleDepth) {
