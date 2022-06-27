@@ -22,7 +22,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <functional>
 #include <map>
 #include <memory>
 #include <set>
@@ -47,10 +46,9 @@ namespace {
 // reader would consider to be "the same". The default implementation just does
 // case insensitive string comparison, but StringCompare can be overridden with
 // more sophisticated implementations.
-class IndexLess : public std::binary_function<std::string, std::string, bool> {
+class IndexLess {
  public:
-  result_type operator()(const first_argument_type& a,
-                         const second_argument_type& b) const {
+  bool operator()(const std::string& a, const std::string& b) const {
     static const StringCompare kStringCompare;
     return kStringCompare.NaturalLess(a, b);
   }
