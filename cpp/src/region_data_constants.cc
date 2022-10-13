@@ -276,7 +276,7 @@ const RegionData kRegionData[] = {
   {"CL", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C%n%S",)"
       R"("zipex":"8340457,8720019,1230000,8329100",)"
-      R"("posturl":"http://www.correos.cl/SitePages/home.aspx",)"
+      R"("posturl":"https://www.correos.cl/web/guest/codigo-postal",)"
       R"("languages":"es")"
       "}"},
   {"CM", "{"
@@ -292,7 +292,7 @@ const RegionData kRegionData[] = {
       R"("languages":"zh")"
       "}"},
   {"CO", "{"
-      R"("fmt":"%N%n%O%n%A%n%C, %S, %Z",)"
+      R"("fmt":"%N%n%O%n%A%n%D%n%C, %S, %Z",)"
       R"("require":"AS",)"
       R"("state_name_type":"department",)"
       R"("zipex":"111221,130001,760011",)"
@@ -303,7 +303,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%S, %C%n%Z",)"
       R"("require":"ACS",)"
       R"("zipex":"1000,2010,1001",)"
-      R"("posturl":"https://www.correos.go.cr/nosotros/codigopostal/busqueda.html",)"
+      R"("posturl":"https://correos.go.cr/codigo-postal/",)"
       R"("languages":"es")"
       "}"},
   {"CU", "{"
@@ -360,7 +360,7 @@ const RegionData kRegionData[] = {
   {"DO", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
       R"("zipex":"11903,10101",)"
-      R"("posturl":"http://inposdom.gob.do/codigo-postal/",)"
+      R"("posturl":"http://inposdom.gob.do/",)"
       R"("languages":"es")"
       "}"},
   {"DZ", "{"
@@ -375,7 +375,7 @@ const RegionData kRegionData[] = {
       R"("languages":"es~qu")"
       "}"},
   {"EE", "{"
-      R"("fmt":"%N%n%O%n%A%n%Z %C",)"
+      R"("fmt":"%N%n%O%n%A%n%Z %C %S",)"
       R"("require":"ACZ",)"
       R"("zipex":"69501,11212",)"
       R"("posturl":"https://www.omniva.ee/era/sihtnumbrite_otsing",)"
@@ -435,7 +435,7 @@ const RegionData kRegionData[] = {
   {"FO", "{"
       R"("fmt":"%N%n%O%n%A%nFO%Z %C",)"
       R"("zipex":"100",)"
-      R"("posturl":"http://www.postur.fo/",)"
+      R"("posturl":"https://www.posta.fo/fo/forsida/finn-postnr-stad/",)"
       R"("languages":"fo")"
       "}"},
   {"FR", "{"
@@ -454,7 +454,7 @@ const RegionData kRegionData[] = {
       R"("locality_name_type":"post_town",)"
       R"("zipex":"EC1Y 8SY,GIR 0AA,M2 5BQ,M34 4AB,CR0 2YR,DN16 9AA,W1A 4ZZ,EC1A 1HQ,OX14 4PG,BS18 8HF,NR25 7HG,RH6 0NP,BH23 6AA,B6 5BA,SO23 9AP,PO1 3AX,BFPO 61",)"
       R"("posturl":"http://www.royalmail.com/postcode-finder",)"
-      R"("languages":"en~cy~gd~ga")"
+      R"("languages":"en~cy~ga~gd")"
       "}"},
   {"GD", "{"
       R"("languages":"en")"
@@ -640,7 +640,7 @@ const RegionData kRegionData[] = {
   {"IS", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
       R"("zipex":"320,121,220,110",)"
-      R"("posturl":"http://www.postur.is/einstaklingar/posthus/postnumer/",)"
+      R"("posturl":"https://posturinn.is/",)"
       R"("languages":"is")"
       "}"},
   {"IT", "{"
@@ -777,7 +777,7 @@ const RegionData kRegionData[] = {
       R"("languages":"st~en")"
       "}"},
   {"LT", "{"
-      R"("fmt":"%O%n%N%n%A%nLT-%Z %C",)"
+      R"("fmt":"%O%n%N%n%A%nLT-%Z %C %S",)"
       R"("require":"ACZ",)"
       R"("zipex":"04340,03500",)"
       R"("posturl":"http://www.post.lt/lt/?id=316",)"
@@ -791,7 +791,7 @@ const RegionData kRegionData[] = {
       R"("languages":"fr~lb~de")"
       "}"},
   {"LV", "{"
-      R"("fmt":"%N%n%O%n%A%n%C, %Z",)"
+      R"("fmt":"%N%n%O%n%A%n%S%n%C, %Z",)"
       R"("require":"ACZ",)"
       R"("zipex":"LV-1073,LV-1000",)"
       R"("posturl":"http://www.pasts.lv/lv/uzzinas/nodalas/",)"
@@ -941,7 +941,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%O%n%N%n%A%n%Z %C %X",)"
       R"("require":"ACZ",)"
       R"("zipex":"98814,98800,98810",)"
-      R"("posturl":"http://poste.opt.nc/index.php?option=com_content&view=article&id=80&Itemid=131",)"
+      R"("posturl":"https://www.opt.nc/particuliers/courrier-et-colis/les-codes-postaux-de-nouvelle-caledonie",)"
       R"("languages":"fr")"
       "}"},
   {"NE", "{"
@@ -965,7 +965,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%Z%n%C, %S",)"
       R"("state_name_type":"department",)"
       R"("zipex":"52000",)"
-      R"("posturl":"http://www.correos.gob.ni/index.php/codigo-postal-2",)"
+      R"("posturl":"http://www.correos.gob.ni/codigo-postal/",)"
       R"("languages":"es")"
       "}"},
   {"NL", "{"
@@ -1018,7 +1018,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%C %Z%n%S",)"
       R"("locality_name_type":"district",)"
       R"("zipex":"LIMA 23,LIMA 42,CALLAO 2,02001",)"
-      R"("posturl":"http://www.serpost.com.pe/cpostal/codigo",)"
+      R"("posturl":"http://www.codigopostal.gob.pe/pages/invitado/consulta.jsf",)"
       R"("languages":"es")"
       "}"},
   {"PF", "{"
@@ -1041,7 +1041,7 @@ const RegionData kRegionData[] = {
       R"("languages":"en")"
       "}"},
   {"PK", "{"
-      R"("fmt":"%N%n%O%n%A%n%C-%Z",)"
+      R"("fmt":"%N%n%O%n%A%n%D%n%C-%Z",)"
       R"("zipex":"44000",)"
       R"("posturl":"http://www.pakpost.gov.pk/postcode.php",)"
       R"("languages":"ur~en")"
@@ -1108,7 +1108,7 @@ const RegionData kRegionData[] = {
       R"("languages":"fr")"
       "}"},
   {"RO", "{"
-      R"("fmt":"%N%n%O%n%A%n%Z %C",)"
+      R"("fmt":"%N%n%O%n%A%n%Z %S %C",)"
       R"("require":"ACZ",)"
       R"("zipex":"060274,061357,200716",)"
       R"("posturl":"http://www.posta-romana.ro/zip_codes",)"
@@ -1314,6 +1314,7 @@ const RegionData kRegionData[] = {
       R"("lfmt":"%N%n%O%n%A%n%C, %S %Z",)"
       R"("require":"ACSZ",)"
       R"("state_name_type":"county",)"
+      R"("locality_name_type":"district",)"
       R"("zipex":"104,106,10603,40867",)"
       R"("posturl":"http://www.post.gov.tw/post/internet/f_searchzone/index.jsp?ID=190102",)"
       R"("languages":"zh-Hant")"

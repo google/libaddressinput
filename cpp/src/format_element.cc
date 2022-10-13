@@ -18,6 +18,7 @@
 
 #include <cassert>
 #include <ostream>
+#include <string>
 
 namespace i18n {
 namespace addressinput {
