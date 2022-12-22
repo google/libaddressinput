@@ -27,7 +27,7 @@ RE2: Used for validating postal code format.
 Most of these packages are available on Debian-like distributions. You can
 install them with this command:
 
-$ sudo apt-get install gyp ninja-build libgtest-dev python libre2-dev
+$ sudo apt-get install gyp ninja-build libgtest-dev python3 libre2-dev
 
 Make sure that your version of GYP is at least 0.1~svn1395. Older versions of
 GYP do not generate the Ninja build files correctly. You can download a
@@ -62,14 +62,18 @@ https://code.google.com/p/re2/
 Building the library involves generating an out/Default/build.ninja file and
 running ninja:
 
-$ export GYP_GENERATORS='ninja'
-$ gyp --depth .
-$ ninja -C out/Default
+```
+export GYP_GENERATORS='ninja'
+gyp --depth .
+ninja -C out/Default
+```
 
 Overriding paths defined in the *.gyp files can be done by setting the
 GYP_DEFINES environment variable before running gyp:
 
-$ export GYP_DEFINES="gtest_dir='/xxx/include' gtest_src_dir='/xxx'"
+```
+export GYP_DEFINES="gtest_dir='/xxx/include' gtest_src_dir='/xxx'"
+```
 
 # Test
 

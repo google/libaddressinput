@@ -35,7 +35,7 @@
             '<(SHARED_INTERMEDIATE_DIR)/messages.h',
           ],
           'action': [
-            'python',
+            'python3',
             '<(grit_dir)/grit.py',
             '-i',
             'res/messages.grd',
