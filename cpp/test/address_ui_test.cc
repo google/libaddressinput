@@ -144,7 +144,7 @@ TEST_F(AddressUiTest, InvalidRegionCodeReturnsEmptyVector) {
 }
 
 // Verifies that BuildComponentsWithLiteras() does return literals. It uses "LV"
-// as an aribtrary short example that has exactly one literal and 3 new lines.
+// as an aribtrary short example that has exactly one literal and 4 new lines.
 TEST_F(AddressUiTest, ComponentsWithLiteralsReadsLiteralsForLV) {
   const std::vector<AddressUiComponent>& components =
       BuildComponentsWithLiterals("LV", localization_, kUiLanguageTag,
@@ -163,7 +163,7 @@ TEST_F(AddressUiTest, ComponentsWithLiteralsReadsLiteralsForLV) {
     }
   }
   EXPECT_EQ(", ", literal);
-  EXPECT_EQ(3, newlines_count);
+  EXPECT_EQ(4, newlines_count);
 }
 
 // Test data for determining the best language tag and whether the right format

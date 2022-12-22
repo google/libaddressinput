@@ -82,7 +82,7 @@ public final class RegionDataConstants {
     map.put("CL", "{\"name\":\"CHILE\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\"}");
     map.put("CM", "{\"name\":\"CAMEROON\"}");
     map.put("CN", "{\"name\":\"CHINA\",\"lang\":\"zh\",\"languages\":\"zh\",\"lfmt\":\"%N%n%O%n%A%n%D%n%C%n%S, %Z\",\"fmt\":\"%Z%n%S%C%D%n%A%n%O%n%N\",\"require\":\"ACSZ\",\"upper\":\"S\",\"sublocality_name_type\":\"district\",\"width_overrides\":\"%S:S%C:S%D:S\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"市/自治州/地区/盟\",\"lang\":\"zh\"},{\"field\":\"S\",\"label\":\"省/自治区/直辖市\",\"lang\":\"zh\"},{\"field\":\"D\",\"label\":\"区/县/旗\",\"lang\":\"zh\"}]}");
-    map.put("CO", "{\"name\":\"COLOMBIA\",\"fmt\":\"%N%n%O%n%A%n%C, %S, %Z\",\"require\":\"AS\",\"state_name_type\":\"department\",\"label_overrides\":[{\"field\":\"LL\",\"label\":\"Vereda\"},{\"field\":\"A3\",\"label\":\"Corregimiento\"},{\"field\":\"A2\",\"label\":\"Municipio\"}]}");
+    map.put("CO", "{\"name\":\"COLOMBIA\",\"fmt\":\"%N%n%O%n%A%n%D%n%C, %S, %Z\",\"require\":\"AS\",\"state_name_type\":\"department\",\"label_overrides\":[{\"field\":\"LL\",\"label\":\"Vereda\"},{\"field\":\"A3\",\"label\":\"Corregimiento\"},{\"field\":\"A2\",\"label\":\"Municipio\"}]}");
     map.put("CR", "{\"name\":\"COSTA RICA\",\"fmt\":\"%N%n%O%n%A%n%S, %C%n%Z\",\"require\":\"ACS\"}");
     map.put("CU", "{\"name\":\"CUBA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%C %S%n%Z\"}");
     map.put("CV", "{\"name\":\"CAPE VERDE\",\"lang\":\"pt\",\"languages\":\"pt\",\"fmt\":\"%N%n%O%n%A%n%Z %C%n%S\",\"state_name_type\":\"island\"}");
@@ -97,7 +97,7 @@ public final class RegionDataConstants {
     map.put("DO", "{\"name\":\"DOMINICAN REP.\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("DZ", "{\"name\":\"ALGERIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("EC", "{\"name\":\"ECUADOR\",\"fmt\":\"%N%n%O%n%A%n%Z%n%C\",\"upper\":\"CZ\"}");
-    map.put("EE", "{\"name\":\"ESTONIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Linn/vald\",\"lang\":\"et\"},{\"field\":\"C\",\"label\":\"City/Parish\",\"lang\":\"en\"}]}");
+    map.put("EE", "{\"name\":\"ESTONIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACZ\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Linn/vald\",\"lang\":\"et\"},{\"field\":\"C\",\"label\":\"City/Parish\",\"lang\":\"en\"},{\"field\":\"S\",\"label\":\"Maakond\",\"lang\":\"et\"},{\"field\":\"S\",\"label\":\"Region\",\"lang\":\"en\"}]}");
     map.put("EG", "{\"name\":\"EGYPT\",\"lang\":\"ar\",\"languages\":\"ar\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\"}");
     map.put("EH", "{\"name\":\"WESTERN SAHARA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("ER", "{\"name\":\"ERITREA\"}");
@@ -166,9 +166,9 @@ public final class RegionDataConstants {
     map.put("LK", "{\"name\":\"SRI LANKA\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\"}");
     map.put("LR", "{\"name\":\"LIBERIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("LS", "{\"name\":\"LESOTHO\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
-    map.put("LT", "{\"name\":\"LITHUANIA\",\"fmt\":\"%O%n%N%n%A%nLT-%Z %C\",\"require\":\"ACZ\",\"postprefix\":\"LT-\"}");
+    map.put("LT", "{\"name\":\"LITHUANIA\",\"fmt\":\"%O%n%N%n%A%nLT-%Z %C %S\",\"require\":\"ACZ\",\"postprefix\":\"LT-\"}");
     map.put("LU", "{\"name\":\"LUXEMBOURG\",\"fmt\":\"%O%n%N%n%A%nL-%Z %C\",\"require\":\"ACZ\",\"postprefix\":\"L-\"}");
-    map.put("LV", "{\"name\":\"LATVIA\",\"fmt\":\"%N%n%O%n%A%n%C, %Z\",\"require\":\"ACZ\"}");
+    map.put("LV", "{\"name\":\"LATVIA\",\"fmt\":\"%N%n%O%n%A%n%S%n%C, %Z\",\"require\":\"ACZ\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Novads\",\"lang\":\"lv\"},{\"field\":\"C\",\"label\":\"Municipality\",\"lang\":\"en\"},{\"field\":\"S\",\"label\":\"Pagasts/pilsēta\",\"lang\":\"lv\"},{\"field\":\"S\",\"label\":\"Parish/town\",\"lang\":\"en\"}]}");
     map.put("LY", "{\"name\":\"LIBYA\"}");
     map.put("MA", "{\"name\":\"MOROCCO\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("MC", "{\"name\":\"MONACO\",\"fmt\":\"%N%n%O%n%A%nMC-%Z %C %X\",\"postprefix\":\"MC-\"}");
@@ -211,7 +211,7 @@ public final class RegionDataConstants {
     map.put("PF", "{\"name\":\"FRENCH POLYNESIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C %S\",\"require\":\"ACSZ\",\"upper\":\"CS\",\"state_name_type\":\"island\"}");
     map.put("PG", "{\"name\":\"PAPUA NEW GUINEA\",\"fmt\":\"%N%n%O%n%A%n%C %Z %S\",\"require\":\"ACS\"}");
     map.put("PH", "{\"name\":\"PHILIPPINES\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D, %C%n%Z %S\"}");
-    map.put("PK", "{\"name\":\"PAKISTAN\",\"fmt\":\"%N%n%O%n%A%n%C-%Z\"}");
+    map.put("PK", "{\"name\":\"PAKISTAN\",\"fmt\":\"%N%n%O%n%A%n%D%n%C-%Z\",\"label_overrides\":[{\"field\":\"D\",\"label\":\"Sector\",\"lang\":\"en\"}]}");
     map.put("PL", "{\"name\":\"POLAND\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\"}");
     map.put("PM", "{\"name\":\"ST. PIERRE AND MIQUELON\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("PN", "{\"name\":\"PITCAIRN\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
@@ -222,7 +222,7 @@ public final class RegionDataConstants {
     map.put("PY", "{\"name\":\"PARAGUAY\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("QA", "{\"name\":\"QATAR\",\"upper\":\"AC\"}");
     map.put("RE", "{\"name\":\"REUNION\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
-    map.put("RO", "{\"name\":\"ROMANIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\",\"require\":\"ACZ\",\"upper\":\"AC\"}");
+    map.put("RO", "{\"name\":\"ROMANIA\",\"fmt\":\"%N%n%O%n%A%n%Z %S %C\",\"require\":\"ACZ\",\"upper\":\"AC\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Județe/sectoare\",\"lang\":\"ro\"},{\"field\":\"C\",\"label\":\"County/sector\",\"lang\":\"en\"},{\"field\":\"S\",\"label\":\"Municipiu/oraș/comună\",\"lang\":\"ro\"},{\"field\":\"S\",\"label\":\"Municipality/city/town/commune\",\"lang\":\"en\"}]}");
     map.put("RS", "{\"name\":\"REPUBLIC OF SERBIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("RU", "{\"name\":\"RUSSIAN FEDERATION\",\"lang\":\"ru\",\"languages\":\"ru\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"require\":\"ACSZ\",\"upper\":\"AC\",\"state_name_type\":\"oblast\",\"label_overrides\":[{\"field\":\"CS\",\"message\":\"MSG_OFFICE_UNIT_NUMBER\"}]}");
     map.put("RW", "{\"name\":\"RWANDA\",\"upper\":\"AC\"}");
@@ -262,7 +262,7 @@ public final class RegionDataConstants {
     map.put("TR", "{\"name\":\"TURKEY\",\"lang\":\"tr\",\"languages\":\"tr\",\"fmt\":\"%N%n%O%n%A%n%Z %C/%S\",\"require\":\"ACZ\",\"locality_name_type\":\"district\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"İlçe\",\"lang\":\"tr\"},{\"field\":\"S\",\"label\":\"İl\",\"lang\":\"tr\"},{\"field\":\"A4\",\"message\":\"MSG_NEIGHBORHOOD\"}]}");
     map.put("TT", "{\"name\":\"TRINIDAD AND TOBAGO\"}");
     map.put("TV", "{\"name\":\"TUVALU\",\"lang\":\"tyv\",\"languages\":\"tyv\",\"fmt\":\"%N%n%O%n%A%n%C%n%S\",\"upper\":\"ACS\",\"state_name_type\":\"island\"}");
-    map.put("TW", "{\"name\":\"TAIWAN\",\"lang\":\"zh-Hant\",\"languages\":\"zh-Hant\",\"lfmt\":\"%N%n%O%n%A%n%C, %S %Z\",\"fmt\":\"%Z%n%S%C%n%A%n%O%n%N\",\"require\":\"ACSZ\",\"state_name_type\":\"county\"}");
+    map.put("TW", "{\"name\":\"TAIWAN\",\"lang\":\"zh-Hant\",\"languages\":\"zh-Hant\",\"lfmt\":\"%N%n%O%n%A%n%C, %S %Z\",\"fmt\":\"%Z%n%S%C%n%A%n%O%n%N\",\"require\":\"ACSZ\",\"locality_name_type\":\"district\",\"state_name_type\":\"county\"}");
     map.put("TZ", "{\"name\":\"TANZANIA (UNITED REP.)\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("UA", "{\"name\":\"UKRAINE\",\"lang\":\"uk\",\"languages\":\"uk\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"require\":\"ACZ\",\"state_name_type\":\"oblast\",\"label_overrides\":[{\"field\":\"CS\",\"message\":\"MSG_OFFICE_UNIT_NUMBER\"}]}");
     map.put("UG", "{\"name\":\"UGANDA\"}");
