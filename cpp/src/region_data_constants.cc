@@ -342,7 +342,7 @@ const RegionData kRegionData[] = {
       R"("require":"ACZ",)"
       R"("zipex":"26133,53225",)"
       R"("posturl":"http://www.postdirekt.de/plzserver/",)"
-      R"("languages":"de")"
+      R"("languages":"de~frr")"
       "}"},
   {"DJ", "{"
       R"("languages":"ar~fr")"
@@ -412,7 +412,7 @@ const RegionData kRegionData[] = {
       R"("require":"ACZ",)"
       R"("zipex":"00550,00011",)"
       R"("posturl":"https://support.posti.fi/fi/tyokalut/postinumerohaku.html",)"
-      R"("languages":"fi~sv")"
+      R"("languages":"fi~sv~sms")"
       "}"},
   {"FJ", "{"
       R"("languages":"en~hif~fj")"
@@ -568,7 +568,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%nHR-%Z %C",)"
       R"("zipex":"10000,21001,10002",)"
       R"("posturl":"http://www.posta.hr/default.aspx?pretpum",)"
-      R"("languages":"hr~it")"
+      R"("languages":"hr~it~vec")"
       "}"},
   {"HT", "{"
       R"("fmt":"%N%n%O%n%A%nHT%Z %C",)"
@@ -1175,7 +1175,7 @@ const RegionData kRegionData[] = {
   {"SI", "{"
       R"("fmt":"%N%n%O%n%A%nSI-%Z %C",)"
       R"("zipex":"4000,1001,2500",)"
-      R"("languages":"sl")"
+      R"("languages":"sl~vec")"
       "}"},
   {"SJ", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
