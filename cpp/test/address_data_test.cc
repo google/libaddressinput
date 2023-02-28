@@ -36,15 +36,16 @@ using i18n::addressinput::ORGANIZATION;
 using i18n::addressinput::RECIPIENT;
 
 TEST(AddressDataTest, GetFieldValue) {
-  AddressData address;
-  address.region_code = "rrr";
-  address.administrative_area = "sss";
-  address.locality = "ccc";
-  address.dependent_locality = "ddd";
-  address.sorting_code = "xxx";
-  address.postal_code = "zzz";
-  address.organization = "ooo";
-  address.recipient = "nnn";
+  const AddressData address{
+      .region_code = "rrr",
+      .administrative_area = "sss",
+      .locality = "ccc",
+      .dependent_locality = "ddd",
+      .postal_code = "zzz",
+      .sorting_code = "xxx",
+      .organization = "ooo",
+      .recipient = "nnn",
+  };
 
   EXPECT_EQ(address.region_code,
             address.GetFieldValue(COUNTRY));
@@ -65,9 +66,10 @@ TEST(AddressDataTest, GetFieldValue) {
 }
 
 TEST(AddressDataTest, GetRepeatedFieldValue) {
-  AddressData address;
-  address.address_line.emplace_back("aaa");
-  address.address_line.emplace_back("222");
+  const AddressData address{.address_line{
+      "aaa",
+      "222",
+  }};
   EXPECT_EQ(address.address_line,
             address.GetRepeatedFieldValue(STREET_ADDRESS));
 }
@@ -85,15 +87,17 @@ TEST(AddressDataTest, IsFieldEmpty) {
   EXPECT_TRUE(address.IsFieldEmpty(ORGANIZATION));
   EXPECT_TRUE(address.IsFieldEmpty(RECIPIENT));
 
-  address.region_code = "rrr";
-  address.administrative_area = "sss";
-  address.locality = "ccc";
-  address.dependent_locality = "ddd";
-  address.sorting_code = "xxx";
-  address.postal_code = "zzz";
-  address.address_line.emplace_back("aaa");
-  address.organization = "ooo";
-  address.recipient = "nnn";
+  address = {
+      .region_code = "rrr",
+      .address_line{"aaa"},
+      .administrative_area = "sss",
+      .locality = "ccc",
+      .dependent_locality = "ddd",
+      .postal_code = "zzz",
+      .sorting_code = "xxx",
+      .organization = "ooo",
+      .recipient = "nnn",
+  };
 
   EXPECT_FALSE(address.IsFieldEmpty(COUNTRY));
   EXPECT_FALSE(address.IsFieldEmpty(ADMIN_AREA));
@@ -128,35 +132,41 @@ TEST(AddressDataTest, IsFieldEmptyVector) {
 }
 
 TEST(AddressDataTest, IsFieldEmptyVectorWhitespace) {
-  AddressData address;
-  address.address_line.emplace_back("   ");
-  address.address_line.emplace_back("   ");
-  address.address_line.emplace_back("   ");
+  AddressData address{.address_line{
+      "   ",
+      "   ",
+      "   ",
+  }};
   EXPECT_TRUE(address.IsFieldEmpty(STREET_ADDRESS));
-  address.address_line.clear();
-  address.address_line.emplace_back("abc");
+  address.address_line = {
+      "abc",
+  };
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
-  address.address_line.clear();
-  address.address_line.emplace_back("   ");
-  address.address_line.emplace_back(" b ");
-  address.address_line.emplace_back("   ");
+  address.address_line = {
+      "   ",
+      " b ",
+      "   ",
+  };
   EXPECT_FALSE(address.IsFieldEmpty(STREET_ADDRESS));
 }
 
 TEST(AddressDataTest, StreamFunction) {
   std::ostringstream oss;
-  AddressData address;
-  address.address_line.emplace_back("Line 1");
-  address.address_line.emplace_back("Line 2");
-  address.recipient = "N";
-  address.region_code = "R";
-  address.postal_code = "Z";
-  address.administrative_area = "S";
-  address.locality = "C";
-  address.dependent_locality = "D";
-  address.sorting_code = "X";
-  address.language_code = "zh-Hant";
-  address.organization = "O";
+  const AddressData address{
+      .region_code = "R",
+      .address_line{
+          "Line 1",
+          "Line 2",
+      },
+      .administrative_area = "S",
+      .locality = "C",
+      .dependent_locality = "D",
+      .postal_code = "Z",
+      .sorting_code = "X",
+      .language_code = "zh-Hant",
+      .organization = "O",
+      .recipient = "N",
+  };
   oss << address;
   EXPECT_EQ("region_code: \"R\"\n"
             "administrative_area: \"S\"\n"
@@ -172,18 +182,21 @@ TEST(AddressDataTest, StreamFunction) {
 }
 
 TEST(AddressDataTest, TestEquals) {
-  AddressData address;
-  address.address_line.emplace_back("Line 1");
-  address.address_line.emplace_back("Line 2");
-  address.recipient = "N";
-  address.region_code = "R";
-  address.postal_code = "Z";
-  address.administrative_area = "S";
-  address.locality = "C";
-  address.dependent_locality = "D";
-  address.sorting_code = "X";
-  address.organization = "O";
-  address.language_code = "zh-Hant";
+  const AddressData address{
+      .region_code = "R",
+      .address_line{
+          "Line 1",
+          "Line 2",
+      },
+      .administrative_area = "S",
+      .locality = "C",
+      .dependent_locality = "D",
+      .postal_code = "Z",
+      .sorting_code = "X",
+      .language_code = "zh-Hant",
+      .organization = "O",
+      .recipient = "N",
+  };
 
   AddressData clone = address;
 
@@ -195,13 +208,13 @@ TEST(AddressDataTest, TestEquals) {
 #ifndef NDEBUG
 
 TEST(AddressDataTest, GetFieldValueInvalid) {
-  AddressData address;
+  const AddressData address;
   ASSERT_DEATH_IF_SUPPORTED(address.GetFieldValue(STREET_ADDRESS),
                             "ssertion.*failed");
 }
 
 TEST(AddressDataTest, GetVectorFieldValueInvalid) {
-  AddressData address;
+  const AddressData address;
   ASSERT_DEATH_IF_SUPPORTED(address.GetRepeatedFieldValue(COUNTRY),
                             "ssertion.*failed");
 }

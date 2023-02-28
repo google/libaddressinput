@@ -33,7 +33,7 @@ namespace addressinput {
 //
 //      MyClass() : source_(),
 //                  data_ready_(BuildCallback(this, &MyClass::OnDataReady)) {
-//        source_.data_.emplace("data/XA", R"({"id":"data/XA"})");
+//        source_.data_ = {{"data/XA", R"({"id":"data/XA"})"}};
 //      }
 //
 //      ~MyClass() {}

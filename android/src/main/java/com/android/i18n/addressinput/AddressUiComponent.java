@@ -65,10 +65,7 @@ class AddressUiComponent {
     this.uiType = UiComponent.EDIT;
   }
 
-  /**
-   * Initializes the candidatesList, and set the uiType and parentId.
-   * @param candidatesList
-   */
+  /** Initializes the candidatesList, and set the uiType and parentId. */
   void initializeCandidatesList(List<RegionData> candidatesList) {
     this.candidatesList = candidatesList;
     if (candidatesList.size() > 1) {

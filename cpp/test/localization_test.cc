@@ -127,8 +127,7 @@ TEST_F(LocalizationTest, InvalidMessageIsEmptyString) {
 
 TEST(LocalizationGetErrorMessageTest, MissingRequiredPostalCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "CH";
+  const AddressData address{.region_code = "CH"};
   EXPECT_EQ("You must provide a postal code, for example 2544."
             " Don't know your postal code? Find it out"
             " <a href=\"http://www.post.ch/db/owa/pv_plz_pack/pr_main\">"
@@ -148,8 +147,7 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredPostalCode) {
 
 TEST(LocalizationGetErrorMessageTest, MissingRequiredZipCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
+  const AddressData address{.region_code = "US"};
   EXPECT_EQ("You must provide a ZIP code, for example 95014."
             " Don't know your ZIP code? Find it out"
             " <a href=\"https://tools.usps.com/go/ZipLookupAction!"
@@ -169,17 +167,17 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredZipCode) {
 
 TEST(LocalizationGetErrorMessageTest, MissingRequiredOtherFields) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
-  std::vector<AddressField> other_fields;
-  other_fields.push_back(COUNTRY);
-  other_fields.push_back(ADMIN_AREA);
-  other_fields.push_back(LOCALITY);
-  other_fields.push_back(DEPENDENT_LOCALITY);
-  other_fields.push_back(SORTING_CODE);
-  other_fields.push_back(STREET_ADDRESS);
-  other_fields.push_back(ORGANIZATION);
-  other_fields.push_back(RECIPIENT);
+  const AddressData address{.region_code = "US"};
+  const std::vector<AddressField> other_fields{
+      COUNTRY,
+      ADMIN_AREA,
+      LOCALITY,
+      DEPENDENT_LOCALITY,
+      SORTING_CODE,
+      STREET_ADDRESS,
+      ORGANIZATION,
+      RECIPIENT,
+  };
   for (AddressField field : other_fields) {
     EXPECT_EQ("You can't leave this empty.",
               localization.GetErrorMessage(
@@ -198,18 +196,19 @@ TEST(LocalizationGetErrorMessageTest, MissingRequiredOtherFields) {
 
 TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
-  address.administrative_area = "bad admin area";
-  address.locality = "bad locality";
-  address.dependent_locality = "bad dependent locality";
-  address.sorting_code = "bad sorting code";
-  std::vector<std::string> address_line;
-  address_line.emplace_back("bad address line 1");
-  address_line.emplace_back("bad address line 2");
-  address.address_line = address_line;
-  address.organization = "bad organization";
-  address.recipient = "bad recipient";
+  const AddressData address{
+      .region_code = "US",
+      .address_line{
+          "bad address line 1",
+          "bad address line 2",
+      },
+      .administrative_area = "bad admin area",
+      .locality = "bad locality",
+      .dependent_locality = "bad dependent locality",
+      .sorting_code = "bad sorting code",
+      .organization = "bad organization",
+      .recipient = "bad recipient",
+  };
   EXPECT_EQ("US "
             "is not recognized as a known value for this field.",
             localization.GetErrorMessage(
@@ -342,8 +341,7 @@ TEST(LocalizationGetErrorMessageTest, UnknownValueOtherFields) {
 
 TEST(LocalizationGetErrorMessageTest, InvalidFormatPostalCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "CH";
+  const AddressData address{.region_code = "CH"};
   EXPECT_EQ("This postal code format is not recognized. Example "
             "of a valid postal code: 2544."
             " Don't know your postal code? Find it out"
@@ -365,8 +363,7 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatPostalCode) {
 
 TEST(LocalizationGetErrorMessageTest, InvalidFormatZipCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
+  const AddressData address{.region_code = "US"};
   EXPECT_EQ("This ZIP code format is not recognized. Example of "
             "a valid ZIP code: 95014."
             " Don't know your ZIP code? Find it out"
@@ -388,8 +385,7 @@ TEST(LocalizationGetErrorMessageTest, InvalidFormatZipCode) {
 
 TEST(LocalizationGetErrorMessageTest, MismatchingValuePostalCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "CH";
+  const AddressData address{.region_code = "CH"};
   EXPECT_EQ("This postal code does not appear to match the rest "
             "of this address."
             " Don't know your postal code? Find it out"
@@ -416,8 +412,7 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValuePostalCode) {
 
 TEST(LocalizationGetErrorMessageTest, MismatchingValueZipCode) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
+  const AddressData address{.region_code = "US"};
   EXPECT_EQ("This ZIP code does not appear to match the rest of "
             "this address."
             " Don't know your ZIP code? Find it out"
@@ -444,17 +439,17 @@ TEST(LocalizationGetErrorMessageTest, MismatchingValueZipCode) {
 
 TEST(LocalizationGetErrorMessageTest, UsesPOBoxOtherFields) {
   Localization localization;
-  AddressData address;
-  address.region_code = "US";
-  std::vector<AddressField> other_fields;
-  other_fields.push_back(COUNTRY);
-  other_fields.push_back(ADMIN_AREA);
-  other_fields.push_back(LOCALITY);
-  other_fields.push_back(DEPENDENT_LOCALITY);
-  other_fields.push_back(SORTING_CODE);
-  other_fields.push_back(STREET_ADDRESS);
-  other_fields.push_back(ORGANIZATION);
-  other_fields.push_back(RECIPIENT);
+  const AddressData address{.region_code = "US"};
+  const std::vector<AddressField> other_fields{
+      COUNTRY,
+      ADMIN_AREA,
+      LOCALITY,
+      DEPENDENT_LOCALITY,
+      SORTING_CODE,
+      STREET_ADDRESS,
+      ORGANIZATION,
+      RECIPIENT,
+  };
   for (AddressField field : other_fields) {
     EXPECT_EQ("This address line appears to contain a post "
               "office box. Please use a street"

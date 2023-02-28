@@ -29,16 +29,17 @@ using i18n::addressinput::GetFormattedNationalAddressLine;
 using i18n::addressinput::GetStreetAddressLinesAsSingleLine;
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_EmptyAddress) {
-  AddressData address;
+  const AddressData address;
   std::string result;
   GetStreetAddressLinesAsSingleLine(address, &result);
   EXPECT_TRUE(result.empty());
 }
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_1Line) {
-  AddressData address;
-  address.region_code = "US";  // Not used.
-  address.address_line.emplace_back("Line 1");
+  AddressData address{
+      .region_code = "US",  // Not used.
+      .address_line{"Line 1"},
+  };
 
   std::string result;
   GetStreetAddressLinesAsSingleLine(address, &result);
@@ -55,10 +56,13 @@ TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_1Line) {
 }
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_2Lines) {
-  AddressData address;
-  address.region_code = "US";  // Not used.
-  address.address_line.emplace_back("Line 1");
-  address.address_line.emplace_back("Line 2");
+  AddressData address{
+      .region_code = "US",  // Not used.
+      .address_line{
+          "Line 1",
+          "Line 2",
+      },
+  };
 
   std::string result;
   GetStreetAddressLinesAsSingleLine(address, &result);
@@ -84,14 +88,17 @@ TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_2Lines) {
 }
 
 TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_5Lines) {
-  AddressData address;
-  address.region_code = "US";  // Not used.
-  address.address_line.emplace_back("Line 1");
-  address.address_line.emplace_back("Line 2");
-  address.address_line.emplace_back("Line 3");
-  address.address_line.emplace_back("Line 4");
-  address.address_line.emplace_back("Line 5");
-  address.language_code = "fr";
+  const AddressData address{
+      .region_code = "US",  // Not used.
+      .address_line{
+          "Line 1",
+          "Line 2",
+          "Line 3",
+          "Line 4",
+          "Line 5",
+      },
+      .language_code = "fr",
+  };
 
   std::string result;
   GetStreetAddressLinesAsSingleLine(address, &result);
@@ -99,17 +106,21 @@ TEST(AddressFormatterTest, GetStreetAddressLinesAsSingleLine_5Lines) {
 }
 
 TEST(AddressFormatterTest, GetFormattedNationalAddressLocalLanguage) {
-  AddressData address;
-  address.region_code = "NZ";
-  address.address_line.emplace_back("Rotopapa");
-  address.address_line.emplace_back("Irwell 3RD");
-  address.postal_code = "8704";
-  address.locality = "Leeston";
+  AddressData address{
+      .region_code = "NZ",
+      .address_line{
+          "Rotopapa",
+          "Irwell 3RD",
+      },
+      .locality = "Leeston",
+      .postal_code = "8704",
+  };
 
-  std::vector<std::string> expected;
-  expected.emplace_back("Rotopapa");
-  expected.emplace_back("Irwell 3RD");
-  expected.emplace_back("Leeston 8704");
+  const std::vector<std::string> expected{
+      "Rotopapa",
+      "Irwell 3RD",
+      "Leeston 8704",
+  };
 
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -134,18 +145,20 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
   static const char kTaiwanStreetLine[] = "台灣信義路三段33號";
   static const char kPostalCode[] = "106";
 
-  AddressData address;
-  address.region_code = "TW";
-  address.address_line.emplace_back(kTaiwanStreetLine);
-  address.postal_code = kPostalCode;
-  address.locality = kTaiwanCity;
-  address.administrative_area = kTaiwanAdmin;
-  address.language_code = "zh-Hant";
+  const AddressData address{
+      .region_code = "TW",
+      .address_line{kTaiwanStreetLine},
+      .administrative_area = kTaiwanAdmin,
+      .locality = kTaiwanCity,
+      .postal_code = kPostalCode,
+      .language_code = "zh-Hant",
+  };
 
-  std::vector<std::string> expected;
-  expected.emplace_back(kPostalCode);
-  expected.push_back(std::string(kTaiwanAdmin).append(kTaiwanCity));
-  expected.emplace_back(kTaiwanStreetLine);
+  const std::vector<std::string> expected{
+      kPostalCode,
+      std::string(kTaiwanAdmin).append(kTaiwanCity),
+      kTaiwanStreetLine,
+  };
 
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -161,17 +174,19 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
             one_line);
 
   // Changing to the Latin variant will change the output.
-  AddressData latin_address;
-  latin_address.region_code = "TW";
-  latin_address.address_line.emplace_back("No. 33, Section 3 Xinyi Rd");
-  latin_address.postal_code = kPostalCode;
-  latin_address.locality = "Da-an District";
-  latin_address.administrative_area = "Taipei City";
-  latin_address.language_code = "zh-Latn";
+  const AddressData latin_address{
+      .region_code = "TW",
+      .address_line{"No. 33, Section 3 Xinyi Rd"},
+      .administrative_area = "Taipei City",
+      .locality = "Da-an District",
+      .postal_code = kPostalCode,
+      .language_code = "zh-Latn",
+  };
 
-  std::vector<std::string> expected_latin;
-  expected_latin.emplace_back("No. 33, Section 3 Xinyi Rd");
-  expected_latin.emplace_back("Da-an District, Taipei City 106");
+  const std::vector<std::string> expected_latin{
+      "No. 33, Section 3 Xinyi Rd",
+      "Da-an District, Taipei City 106",
+  };
 
   lines.clear();
   GetFormattedNationalAddress(latin_address, &lines);
@@ -184,19 +199,23 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressLatinFormat) {
 }
 
 TEST(AddressFormatterTest, GetFormattedNationalAddressMultilingualCountry) {
-  AddressData address;
-  address.region_code = "CA";
-  address.address_line.emplace_back("5 Rue du Tresor");
-  address.address_line.emplace_back("Apt. 4");
-  address.administrative_area = "QC";
-  address.postal_code = "G1R 123";
-  address.locality = "Montmagny";
-  address.language_code = "fr";
+  const AddressData address{
+      .region_code = "CA",
+      .address_line{
+          "5 Rue du Tresor",
+          "Apt. 4",
+      },
+      .administrative_area = "QC",
+      .locality = "Montmagny",
+      .postal_code = "G1R 123",
+      .language_code = "fr",
+  };
 
-  std::vector<std::string> expected;
-  expected.emplace_back("5 Rue du Tresor");
-  expected.emplace_back("Apt. 4");
-  expected.emplace_back("Montmagny QC G1R 123");
+  const std::vector<std::string> expected{
+      "5 Rue du Tresor",
+      "Apt. 4",
+      "Montmagny QC G1R 123",
+  };
 
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -204,14 +223,15 @@ TEST(AddressFormatterTest, GetFormattedNationalAddressMultilingualCountry) {
 }
 
 TEST(AddressFormatterTest, GetFormattedNationalAddress_InlineStreetAddress) {
-  AddressData address;
-  address.region_code = "CI";
-  address.address_line.emplace_back("32 Boulevard Carde");
-  address.locality = "Abidjan";
-  address.sorting_code = "64";
+  const AddressData address{
+      .region_code = "CI",
+      .address_line{"32 Boulevard Carde"},
+      .locality = "Abidjan",
+      .sorting_code = "64",
+      .language_code = "zh-Hant",
+  };
 
-  std::vector<std::string> expected;
-  expected.emplace_back("64 32 Boulevard Carde Abidjan 64");
+  const std::vector<std::string> expected{"64 32 Boulevard Carde Abidjan 64"};
 
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -220,8 +240,7 @@ TEST(AddressFormatterTest, GetFormattedNationalAddress_InlineStreetAddress) {
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_LiteralsAroundField) {
-  AddressData address;
-  address.region_code = "CH";
+  AddressData address{.region_code = "CH"};
   std::vector<std::string> expected;
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -245,8 +264,7 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_LiteralsBetweenFields) {
-  AddressData address;
-  address.region_code = "US";
+  AddressData address{.region_code = "US"};
   std::vector<std::string> expected;
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -281,10 +299,8 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_LiteralOnSeparateLine) {
-  AddressData address;
-  address.region_code = "AX";
-  std::vector<std::string> expected;
-  expected.emplace_back("ÅLAND");
+  AddressData address{.region_code = "AX"};
+  std::vector<std::string> expected{"ÅLAND"};
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
   EXPECT_EQ(expected, lines);
@@ -302,9 +318,10 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_LiteralBeforeField) {
-  AddressData address;
-  address.region_code = "JP";
-  address.language_code = "ja";
+  AddressData address{
+      .region_code = "JP",
+      .language_code = "ja",
+  };
   std::vector<std::string> expected;
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
@@ -328,13 +345,13 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddress_LiteralBeforeOneAddressLine) {
-  AddressData address;
-  address.region_code = "JP";
-  address.language_code = "ja_Latn";
-  address.administrative_area = "Tokyo";
-  address.address_line = {"Roppongi Hills"};
-  std::vector<std::string> expected;
-  expected.emplace_back("Roppongi Hills, Tokyo");
+  const AddressData address{
+      .region_code = "JP",
+      .address_line{"Roppongi Hills"},
+      .administrative_area = "Tokyo",
+      .language_code = "ja_Latn",
+  };
+  const std::vector<std::string> expected{"Roppongi Hills, Tokyo"};
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
   EXPECT_EQ(expected, lines);
@@ -342,14 +359,19 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddress_LiteralBeforeTwoAddressLines) {
-  AddressData address;
-  address.region_code = "JP";
-  address.language_code = "ja_Latn";
-  address.administrative_area = "Tokyo";
-  address.address_line = {"Roppongi Hills", "Mori Tower"};
-  std::vector<std::string> expected;
-  expected.emplace_back("Roppongi Hills");
-  expected.emplace_back("Mori Tower, Tokyo");
+  const AddressData address{
+      .region_code = "JP",
+      .address_line{
+          "Roppongi Hills",
+          "Mori Tower",
+      },
+      .administrative_area = "Tokyo",
+      .language_code = "ja_Latn",
+  };
+  const std::vector<std::string> expected{
+      "Roppongi Hills",
+      "Mori Tower, Tokyo",
+  };
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);
   EXPECT_EQ(expected, lines);
@@ -357,8 +379,7 @@ TEST(AddressFormatterTest,
 
 TEST(AddressFormatterTest,
      GetFormattedNationalAddressMissingFields_DuplicateField) {
-  AddressData address;
-  address.region_code = "CI";
+  AddressData address{.region_code = "CI"};
   std::vector<std::string> expected;
   std::vector<std::string> lines;
   GetFormattedNationalAddress(address, &lines);

@@ -112,7 +112,7 @@ TEST_F(OndemandSupplyTaskTest, Invalid) {
 }
 
 TEST_F(OndemandSupplyTaskTest, Valid) {
-  source_->data_.emplace("data/XA", R"({"id":"data/XA"})");
+  source_->data_ = {{"data/XA", R"({"id":"data/XA"})"}};
 
   Queue("data/XA");
 
@@ -132,10 +132,12 @@ TEST_F(OndemandSupplyTaskTest, Valid) {
 }
 
 TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
-  source_->data_.emplace("data/XA", R"({"id":"data/XA"})");
-  source_->data_.emplace("data/XA/aa", R"({"id":"data/XA/aa"})");
-  source_->data_.emplace("data/XA/aa/bb", R"({"id":"data/XA/aa/bb"})");
-  source_->data_.emplace("data/XA/aa/bb/cc", R"({"id":"data/XA/aa/bb/cc"})");
+  source_->data_ = {
+      {"data/XA", R"({"id":"data/XA"})"},
+      {"data/XA/aa", R"({"id":"data/XA/aa"})"},
+      {"data/XA/aa/bb", R"({"id":"data/XA/aa/bb"})"},
+      {"data/XA/aa/bb/cc", R"({"id":"data/XA/aa/bb/cc"})"},
+  };
 
   Queue("data/XA");
   Queue("data/XA/aa");
@@ -168,7 +170,7 @@ TEST_F(OndemandSupplyTaskTest, ValidHierarchy) {
 }
 
 TEST_F(OndemandSupplyTaskTest, InvalidJson1) {
-  source_->data_.emplace("data/XA", ":");
+  source_->data_ = {{"data/XA", ":"}};
 
   success_ = false;
 
@@ -179,8 +181,10 @@ TEST_F(OndemandSupplyTaskTest, InvalidJson1) {
 }
 
 TEST_F(OndemandSupplyTaskTest, InvalidJson2) {
-  source_->data_.emplace("data/XA", R"({"id":"data/XA"})");
-  source_->data_.emplace("data/XA/aa", ":");
+  source_->data_ = {
+      {"data/XA", R"({"id":"data/XA"})"},
+      {"data/XA/aa", ":"},
+  };
 
   success_ = false;
 
@@ -192,8 +196,10 @@ TEST_F(OndemandSupplyTaskTest, InvalidJson2) {
 }
 
 TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
-  source_->data_.emplace("data/XA", R"({"id":"data/XA"})");
-  source_->data_.emplace("data/XA/aa", "{}");
+  source_->data_ = {
+      {"data/XA", R"({"id":"data/XA"})"},
+      {"data/XA/aa", "{}"},
+  };
 
   Queue("data/XA");
   Queue("data/XA/aa");
@@ -209,7 +215,7 @@ TEST_F(OndemandSupplyTaskTest, EmptyJsonJustMeansServerKnowsNothingAboutKey) {
 }
 
 TEST_F(OndemandSupplyTaskTest, IfCountryFailsAllFails) {
-  source_->data_.emplace("data/XA/aa", R"({"id":"data/XA/aa"})");
+  source_->data_ = {{"data/XA/aa", R"({"id":"data/XA/aa"})"}};
 
   success_ = false;
 

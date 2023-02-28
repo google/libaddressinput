@@ -142,7 +142,7 @@ INSTANTIATE_TEST_SUITE_P(PreloadSupplier, SupplierTest,
                          testing::Values(&PreloadSupplierWrapper::Build));
 
 TEST_P(SupplierTest, Invalid) {
-  address_.region_code = "QZ";
+  address_ = {.region_code = "QZ"};
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -153,7 +153,7 @@ TEST_P(SupplierTest, Invalid) {
 }
 
 TEST_P(SupplierTest, Valid) {
-  address_.region_code = "SE";
+  address_ = {.region_code = "SE"};
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -168,8 +168,10 @@ TEST_P(SupplierTest, Valid) {
 }
 
 TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
-  address_.region_code = "HK";
-  address_.administrative_area = "九龍";
+  address_ = {
+      .region_code = "HK",
+      .administrative_area = "九龍",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -180,9 +182,11 @@ TEST_P(SupplierTest, KeyDepthEqualsMaxDepth) {
 }
 
 TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
-  address_.region_code = "HK";
-  address_.administrative_area = "九龍";
-  address_.locality = "bbb";  // Ignored!
+  address_ = {
+      .region_code = "HK",
+      .administrative_area = "九龍",
+      .locality = "bbb",  // Ignored!
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -193,7 +197,7 @@ TEST_P(SupplierTest, KeyDepthLargerThanMaxDepth) {
 }
 
 TEST_P(SupplierTest, KeyDepthSmallerThanMaxDepth) {
-  address_.region_code = "HK";
+  address_ = {.region_code = "HK"};
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -204,7 +208,7 @@ TEST_P(SupplierTest, KeyDepthSmallerThanMaxDepth) {
 }
 
 TEST_P(SupplierTest, KeyDepth0) {
-  address_.region_code = "CN";
+  address_ = {.region_code = "CN"};
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -215,8 +219,10 @@ TEST_P(SupplierTest, KeyDepth0) {
 }
 
 TEST_P(SupplierTest, KeyDepth1) {
-  address_.region_code = "CN";
-  address_.administrative_area = "新疆维吾尔自治区";
+  address_ = {
+      .region_code = "CN",
+      .administrative_area = "新疆维吾尔自治区",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -227,9 +233,11 @@ TEST_P(SupplierTest, KeyDepth1) {
 }
 
 TEST_P(SupplierTest, KeyDepth2) {
-  address_.region_code = "CN";
-  address_.administrative_area = "新疆维吾尔自治区";
-  address_.locality = "喀什地区";
+  address_ = {
+      .region_code = "CN",
+      .administrative_area = "新疆维吾尔自治区",
+      .locality = "喀什地区",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -240,10 +248,12 @@ TEST_P(SupplierTest, KeyDepth2) {
 }
 
 TEST_P(SupplierTest, KeyDepth3) {
-  address_.region_code = "CN";
-  address_.administrative_area = "新疆维吾尔自治区";
-  address_.locality = "喀什地区";
-  address_.dependent_locality = "喀什市";
+  address_ = {
+      .region_code = "CN",
+      .administrative_area = "新疆维吾尔自治区",
+      .locality = "喀什地区",
+      .dependent_locality = "喀什市",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);
@@ -254,8 +264,10 @@ TEST_P(SupplierTest, KeyDepth3) {
 }
 
 TEST_P(SupplierTest, RuleCache) {
-  address_.region_code = "US";
-  address_.administrative_area = "CA";
+  address_ = {
+      .region_code = "US",
+      .administrative_area = "CA",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Supply());
   ASSERT_TRUE(called_);

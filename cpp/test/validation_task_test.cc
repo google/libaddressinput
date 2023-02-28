@@ -45,7 +45,12 @@ class ValidationTaskTest : public testing::Test {
         address_(),
         allow_postal_(false),
         require_name_(false),
-        filter_(),
+        filter_{
+            {COUNTRY, UNEXPECTED_FIELD},
+            {COUNTRY, MISSING_REQUIRED_FIELD},
+            {RECIPIENT, UNEXPECTED_FIELD},
+            {RECIPIENT, MISSING_REQUIRED_FIELD},
+        },
         problems_(),
         expected_(),
         called_(false),
@@ -78,11 +83,6 @@ class ValidationTaskTest : public testing::Test {
         filter_.emplace(field, problem);
       }
     }
-
-    filter_.emplace(COUNTRY, UNEXPECTED_FIELD);
-    filter_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
-    filter_.emplace(RECIPIENT, UNEXPECTED_FIELD);
-    filter_.emplace(RECIPIENT, MISSING_REQUIRED_FIELD);
   }
 
   void Validate() {
@@ -150,7 +150,7 @@ TEST_F(ValidationTaskTest, FailureCountryRuleEmpty) {
 }
 
 TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameEmpty) {
-  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
+  expected_ = {{COUNTRY, MISSING_REQUIRED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -158,9 +158,9 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameEmpty) {
 }
 
 TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameNotEmpty) {
-  address_.region_code = "rrr";
+  address_ = {.region_code = "rrr"};
 
-  expected_.emplace(COUNTRY, UNKNOWN_VALUE);
+  expected_ = {{COUNTRY, UNKNOWN_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -170,7 +170,7 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleNullNameNotEmpty) {
 TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameEmpty) {
   json_[0] = "{}";
 
-  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
+  expected_ = {{COUNTRY, MISSING_REQUIRED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -180,7 +180,7 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameEmpty) {
 TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameNotEmpty) {
   json_[0] = "{}";
 
-  address_.region_code = "rrr";
+  address_ = {.region_code = "rrr"};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -190,16 +190,20 @@ TEST_F(ValidationTaskTest, SuccessCountryRuleEmptyNameNotEmpty) {
 TEST_F(ValidationTaskTest, MissingRequiredFieldsUS) {
   json_[0] = "{}";
 
-  address_.region_code = "US";
+  address_ = {.region_code = "US"};
 
-  filter_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
-  filter_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
-  filter_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
-  filter_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
-  expected_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
-  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
-  expected_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
-  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  filter_ = {
+      {ADMIN_AREA, MISSING_REQUIRED_FIELD},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+      {POSTAL_CODE, MISSING_REQUIRED_FIELD},
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+  };
+  expected_ = {
+      {ADMIN_AREA, MISSING_REQUIRED_FIELD},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+      {POSTAL_CODE, MISSING_REQUIRED_FIELD},
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -209,19 +213,23 @@ TEST_F(ValidationTaskTest, MissingRequiredFieldsUS) {
 TEST_F(ValidationTaskTest, MissingNoRequiredFieldsUS) {
   json_[0] = "{}";
 
-  address_.region_code = "US";
-  address_.administrative_area = "sss";
-  address_.locality = "ccc";
-  address_.postal_code = "zzz";
-  address_.address_line.emplace_back("aaa");
-  address_.organization = "ooo";
-  address_.recipient = "nnn";
+  address_ = {
+      .region_code = "US",
+      .address_line{"aaa"},
+      .administrative_area = "sss",
+      .locality = "ccc",
+      .postal_code = "zzz",
+      .organization = "ooo",
+      .recipient = "nnn",
+  };
 
-  filter_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
-  filter_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
-  filter_.emplace(POSTAL_CODE, MISSING_REQUIRED_FIELD);
-  filter_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
-  filter_.emplace(ORGANIZATION, MISSING_REQUIRED_FIELD);
+  filter_ = {
+      {ADMIN_AREA, MISSING_REQUIRED_FIELD},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+      {POSTAL_CODE, MISSING_REQUIRED_FIELD},
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+      {ORGANIZATION, MISSING_REQUIRED_FIELD},
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -231,11 +239,13 @@ TEST_F(ValidationTaskTest, MissingNoRequiredFieldsUS) {
 TEST_F(ValidationTaskTest, UnexpectedFieldUS) {
   json_[0] = "{}";
 
-  address_.region_code = "US";
-  address_.dependent_locality = "ddd";
+  address_ = {
+      .region_code = "US",
+      .dependent_locality = "ddd",
+  };
 
-  filter_.emplace(DEPENDENT_LOCALITY, UNEXPECTED_FIELD);
-  expected_.emplace(DEPENDENT_LOCALITY, UNEXPECTED_FIELD);
+  filter_ = {{DEPENDENT_LOCALITY, UNEXPECTED_FIELD}};
+  expected_ = {{DEPENDENT_LOCALITY, UNEXPECTED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -245,11 +255,11 @@ TEST_F(ValidationTaskTest, UnexpectedFieldUS) {
 TEST_F(ValidationTaskTest, MissingRequiredFieldRequireName) {
   json_[0] = "{}";
 
-  address_.region_code = "rrr";
+  address_ = {.region_code = "rrr"};
 
   require_name_ = true;
 
-  expected_.emplace(RECIPIENT, MISSING_REQUIRED_FIELD);
+  expected_ = {{RECIPIENT, MISSING_REQUIRED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -259,10 +269,12 @@ TEST_F(ValidationTaskTest, MissingRequiredFieldRequireName) {
 TEST_F(ValidationTaskTest, UnknownValueRuleNull) {
   json_[0] = R"({"fmt":"%R%S","require":"RS","sub_keys":"aa~bb"})";
 
-  address_.region_code = "rrr";
-  address_.administrative_area = "sss";
+  address_ = {
+      .region_code = "rrr",
+      .administrative_area = "sss",
+  };
 
-  expected_.emplace(ADMIN_AREA, UNKNOWN_VALUE);
+  expected_ = {{ADMIN_AREA, UNKNOWN_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -273,8 +285,10 @@ TEST_F(ValidationTaskTest, NoUnknownValueRuleNotNull) {
   json_[0] = R"({"fmt":"%R%S","require":"RS","sub_keys":"aa~bb"})";
   json_[1] = "{}";
 
-  address_.region_code = "rrr";
-  address_.administrative_area = "sss";
+  address_ = {
+      .region_code = "rrr",
+      .administrative_area = "sss",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -284,10 +298,12 @@ TEST_F(ValidationTaskTest, NoUnknownValueRuleNotNull) {
 TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooShort) {
   json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "12";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "12",
+  };
 
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -297,10 +313,12 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooShort) {
 TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooLong) {
   json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "1234";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "1234",
+  };
 
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -310,8 +328,10 @@ TEST_F(ValidationTaskTest, PostalCodeUnrecognizedFormatTooLong) {
 TEST_F(ValidationTaskTest, PostalCodeRecognizedFormat) {
   json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "123";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "123",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -322,10 +342,12 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue1) {
   json_[0] = R"({"fmt":"%Z","zip":"\\d{3}"})";
   json_[1] = R"({"zip":"1"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "000";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "000",
+  };
 
-  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  expected_ = {{POSTAL_CODE, MISMATCHING_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -337,10 +359,12 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue2) {
   json_[1] = R"({"zip":"1"})";
   json_[2] = R"({"zip":"12"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "100";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "100",
+  };
 
-  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  expected_ = {{POSTAL_CODE, MISMATCHING_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -353,10 +377,12 @@ TEST_F(ValidationTaskTest, PostalCodeMismatchingValue3) {
   json_[2] = R"({"zip":"12"})";
   json_[3] = R"({"zip":"123"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "120";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "120",
+  };
 
-  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  expected_ = {{POSTAL_CODE, MISMATCHING_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -369,8 +395,10 @@ TEST_F(ValidationTaskTest, PostalCodeMatchingValue) {
   json_[2] = R"({"zip":"12"})";
   json_[3] = R"({"zip":"123"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "123";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "123",
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -381,10 +409,12 @@ TEST_F(ValidationTaskTest, PostalCodePrefixMismatchingValue) {
   json_[0] = R"({"fmt":"%Z","zip":"\\d{5}"})";
   json_[1] = R"({"zip":"9[0-5]|96[01]"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "10960";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "10960",
+  };
 
-  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  expected_ = {{POSTAL_CODE, MISMATCHING_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -395,11 +425,12 @@ TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
   json_[0] = R"({"zip":"\\d{3}"})";
   json_[1] = R"({"zip":"1"})";
 
-  address_.region_code = "rrr";
-  address_.postal_code = "000";
+  address_ = {
+      .region_code = "rrr",
+      .postal_code = "000",
+  };
 
-  filter_.erase(POSTAL_CODE);
-  filter_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  filter_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
   // (POSTAL_CODE, MISMATCHING_VALUE) should not be reported.
 
@@ -411,12 +442,16 @@ TEST_F(ValidationTaskTest, PostalCodeFilterIgnoresMismatching) {
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageUnd) {
   json_[0] = R"({"fmt":"%A"})";
 
-  address_.region_code = "rrr";
-  address_.address_line.emplace_back("aaa");
-  address_.address_line.emplace_back("P.O. Box");
-  address_.address_line.emplace_back("aaa");
+  address_ = {
+      .region_code = "rrr",
+      .address_line{
+          "aaa",
+          "P.O. Box",
+          "aaa",
+      },
+  };
 
-  expected_.emplace(STREET_ADDRESS, USES_P_O_BOX);
+  expected_ = {{STREET_ADDRESS, USES_P_O_BOX}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -426,12 +461,16 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageUnd) {
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageDa) {
   json_[0] = R"({"fmt":"%A","languages":"da"})";
 
-  address_.region_code = "rrr";
-  address_.address_line.emplace_back("aaa");
-  address_.address_line.emplace_back("Postboks");
-  address_.address_line.emplace_back("aaa");
+  address_ = {
+      .region_code = "rrr",
+      .address_line{
+          "aaa",
+          "Postboks",
+          "aaa",
+      },
+  };
 
-  expected_.emplace(STREET_ADDRESS, USES_P_O_BOX);
+  expected_ = {{STREET_ADDRESS, USES_P_O_BOX}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -441,10 +480,14 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDa) {
 TEST_F(ValidationTaskTest, UsesPoBoxLanguageDaNotMatchDe) {
   json_[0] = R"({"fmt":"%A","languages":"da"})";
 
-  address_.region_code = "rrr";
-  address_.address_line.emplace_back("aaa");
-  address_.address_line.emplace_back("Postfach");
-  address_.address_line.emplace_back("aaa");
+  address_ = {
+      .region_code = "rrr",
+      .address_line{
+          "aaa",
+          "Postfach",
+          "aaa",
+      },
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -454,10 +497,14 @@ TEST_F(ValidationTaskTest, UsesPoBoxLanguageDaNotMatchDe) {
 TEST_F(ValidationTaskTest, UsesPoBoxAllowPostal) {
   json_[0] = R"({"fmt":"%A"})";
 
-  address_.region_code = "rrr";
-  address_.address_line.emplace_back("aaa");
-  address_.address_line.emplace_back("P.O. Box");
-  address_.address_line.emplace_back("aaa");
+  address_ = {
+      .region_code = "rrr",
+      .address_line{
+          "aaa",
+          "P.O. Box",
+          "aaa",
+      },
+  };
 
   allow_postal_ = true;
 

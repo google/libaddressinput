@@ -69,9 +69,10 @@ class AddressInputHelperTest : public testing::Test {
 };
 
 TEST_F(AddressInputHelperTest, AddressWithMissingPostalCode) {
-  AddressData address;
-  address.region_code = "CX";
-  address.administrative_area = "WA";
+  AddressData address{
+      .region_code = "CX",
+      .administrative_area = "WA",
+  };
 
   // There is only one postal code for Christmas Island
   AddressData expected = address;
@@ -81,11 +82,11 @@ TEST_F(AddressInputHelperTest, AddressWithMissingPostalCode) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingAdmin) {
-  AddressData address;
-  address.region_code = "US";
-  address.postal_code = "58098";
-  // Other data should be left alone.
-  address.address_line.emplace_back("10 High St");
+  AddressData address{
+      .region_code = "US",
+      .address_line{"10 High St"},
+      .postal_code = "58098",
+  };
 
   // North Dakota has post codes starting with 58.
   AddressData expected = address;
@@ -102,9 +103,10 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingAdmin) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevel) {
-  AddressData address;
-  address.region_code = "TW";
-  address.postal_code = "53012";
+  AddressData address{
+      .region_code = "TW",
+      .postal_code = "53012",
+  };
 
   // This matches 二水鄉 - Ershuei Township.
   AddressData expected = address;
@@ -124,10 +126,11 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevel) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevelLatin) {
-  AddressData address;
-  address.region_code = "TW";
-  address.postal_code = "53012";
-  address.language_code = "zh-Latn";
+  AddressData address{
+      .region_code = "TW",
+      .postal_code = "53012",
+      .language_code = "zh-Latn",
+  };
 
   // This matches 二水鄉 - Ershuei Township.
   AddressData expected = address;
@@ -147,10 +150,11 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingLowerLevelLatin) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
-  AddressData address;
-  address.region_code = "KR";
-  // This matches Danwon-gu district.
-  address.postal_code = "425-111";
+  AddressData address{
+      .region_code = "KR",
+      // This matches Danwon-gu district.
+      .postal_code = "425-111",
+  };
 
   AddressData expected = address;
   // The province is Gyeonggi - 경기도.
@@ -163,10 +167,11 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
   FillAddress(&address);
   EXPECT_EQ(expected, address);
 
-  AddressData address_ko_latn;
-  address_ko_latn.region_code = "KR";
-  address_ko_latn.postal_code = "425-111";
-  address_ko_latn.language_code = "ko-Latn";
+  AddressData address_ko_latn{
+      .region_code = "KR",
+      .postal_code = "425-111",
+      .language_code = "ko-Latn",
+  };
 
   expected = address_ko_latn;
   // The province is Gyeonggi - 경기도.
@@ -181,10 +186,11 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingDependentLocality) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingMultipleValues) {
-  AddressData address;
-  address.region_code = "KR";
-  // This matches Wando-gun and Ganjin-gun, both in Jeonnam province.
-  address.postal_code = "527-111";
+  AddressData address{
+      .region_code = "KR",
+      // This matches Wando-gun and Ganjin-gun, both in Jeonnam province.
+      .postal_code = "527-111",
+  };
 
   AddressData expected = address;
   // The province, Jeonnam - 전라남도 - is known, but we have several locality
@@ -195,9 +201,10 @@ TEST_F(AddressInputHelperTest, AddressWithPostalCodeMatchingMultipleValues) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithInvalidPostalCode) {
-  AddressData address;
-  address.postal_code = "970";
-  address.region_code = "US";
+  AddressData address{
+      .region_code = "US",
+      .postal_code = "970",
+  };
 
   // We don't expect any changes, since the postal code couldn't be determined
   // as valid.
@@ -207,9 +214,10 @@ TEST_F(AddressInputHelperTest, AddressWithInvalidPostalCode) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithNoPostalCodeValidation) {
-  AddressData address;
-  address.postal_code = "123";
-  address.region_code = "GA";
+  AddressData address{
+      .region_code = "GA",
+      .postal_code = "123",
+  };
 
   // We don't expect any changes, since the postal code couldn't be determined
   // as valid - we have no information about postal codes in Gabon (or even that
@@ -220,9 +228,10 @@ TEST_F(AddressInputHelperTest, AddressWithNoPostalCodeValidation) {
 }
 
 TEST_F(AddressInputHelperTest, AddressWithInvalidOrMissingRegionCode) {
-  AddressData address;
-  address.postal_code = "XXX";
-  address.administrative_area = "YYY";
+  AddressData address{
+      .administrative_area = "YYY",
+      .postal_code = "XXX",
+  };
 
   // We don't expect any changes, since there was no region code.
   AddressData expected = address;
@@ -237,10 +246,11 @@ TEST_F(AddressInputHelperTest, AddressWithInvalidOrMissingRegionCode) {
 }
 
 TEST_F(AddressInputHelperTest, RegionWithUnusedAdminAreaNames) {
-  AddressData address;
-  address.region_code = "CH";
-  address.postal_code = "1111";
-  address.language_code = "de-CH";
+  AddressData address{
+      .region_code = "CH",
+      .postal_code = "1111",
+      .language_code = "de-CH",
+  };
 
   // Administrative area should not be filled because it's not used. Locality
   // should not be filled because there's no data for it.
@@ -289,27 +299,28 @@ TEST_F(AddressInputHelperMockDataTest,
        PostalCodeSharedAcrossDifferentHierarchies) {
   // Note that this data is in the format of data that would be returned from
   // the aggregate server.
-  source_->data_.emplace(
-      // We use KR since we need a country where we format all fields down to
-      // dependent locality, or the hierarchy won't be loaded.
-      "data/KR",
-      R"({"data/KR": )"
-      // The top-level ZIP expression must be present for sub-key matches to be
-      // evaluated.
-      R"({"id":"data/KR", "sub_keys":"A~B", "zip":"\\d{5}"}, )"
-      R"("data/KR/A": )"
-      R"({"id":"data/KR/A", "sub_keys":"A1"}, )"
-      R"("data/KR/A/A1": )"
-      R"({"id":"data/KR/A/A1", "zip":"1"}, )"
-      R"("data/KR/B": )"
-      R"({"id":"data/KR/B", "sub_keys":"B1"}, )"
-      R"("data/KR/B/B1": )"
-      R"({"id":"data/KR/B/B1", "zip":"12"}})");
+  source_->data_ = {
+      {// We use KR since we need a country where we format all fields down to
+       // dependent locality, or the hierarchy won't be loaded.
+       "data/KR",
+       R"({"data/KR": )"
+       // The top-level ZIP expression must be present for sub-key matches to be
+       // evaluated.
+       R"({"id":"data/KR", "sub_keys":"A~B", "zip":"\\d{5}"}, )"
+       R"("data/KR/A": )"
+       R"({"id":"data/KR/A", "sub_keys":"A1"}, )"
+       R"("data/KR/A/A1": )"
+       R"({"id":"data/KR/A/A1", "zip":"1"}, )"
+       R"("data/KR/B": )"
+       R"({"id":"data/KR/B", "sub_keys":"B1"}, )"
+       R"("data/KR/B/B1": )"
+       R"({"id":"data/KR/B/B1", "zip":"12"}})"}};
 
-  AddressData address;
-  address.region_code = "KR";
-  address.postal_code = "12345";
-  address.administrative_area = "";
+  AddressData address{
+      .region_code = "KR",
+      .administrative_area = "",
+      .postal_code = "12345",
+  };
 
   AddressData expected = address;
   FillAddress(&address);
@@ -323,34 +334,35 @@ TEST_F(AddressInputHelperMockDataTest,
   // Create data where one state matches the ZIP code, but the other doesn't:
   // within the state which does, multiple cities and sub-cities match. The only
   // thing we can be certain of is therefore the state.
-  source_->data_.emplace(
-      // We use KR since we need a country where we format all fields down to
-      // dependent locality, or the hierarchy won't be loaded.
-      "data/KR",
-      R"({"data/KR": )"
-      // The top-level ZIP expression must be present for sub-key matches to be
-      // evaluated.
-      R"({"id":"data/KR", "sub_keys":"A~B", "zip":"\\d{5}"}, )"
-      R"("data/KR/A": )"
-      R"({"id":"data/KR/A", "sub_keys":"A1~A2"}, )"
-      R"("data/KR/A/A1": )"
-      R"({"id":"data/KR/A/A1", "sub_keys":"A1a", "zip":"1"}, )"
-      // This key matches the ZIP code.
-      R"("data/KR/A/A1/A1a": )"
-      R"({"id":"data/KR/A/A1/A1a", "zip":"12"}, )"
-      R"("data/KR/A/A2": )"
-      R"({"id":"data/KR/A/A2", "sub_keys":"A2a", "zip":"1"}, )"
-      // This key, also in state A, but in city A2, matches the ZIP code.
-      R"("data/KR/A/A2/A2a": )"
-      R"({"id":"data/KR/A/A2/A2a", "zip":"123"}, )"
-      // This key, in state B, does not match the ZIP code.
-      R"("data/KR/B": )"
-      R"({"id":"data/KR/B", "zip":"2"}})");
+  source_->data_ = {
+      {// We use KR since we need a country where we format all fields down to
+       // dependent locality, or the hierarchy won't be loaded.
+       "data/KR",
+       R"({"data/KR": )"
+       // The top-level ZIP expression must be present for sub-key matches to be
+       // evaluated.
+       R"({"id":"data/KR", "sub_keys":"A~B", "zip":"\\d{5}"}, )"
+       R"("data/KR/A": )"
+       R"({"id":"data/KR/A", "sub_keys":"A1~A2"}, )"
+       R"("data/KR/A/A1": )"
+       R"({"id":"data/KR/A/A1", "sub_keys":"A1a", "zip":"1"}, )"
+       // This key matches the ZIP code.
+       R"("data/KR/A/A1/A1a": )"
+       R"({"id":"data/KR/A/A1/A1a", "zip":"12"}, )"
+       R"("data/KR/A/A2": )"
+       R"({"id":"data/KR/A/A2", "sub_keys":"A2a", "zip":"1"}, )"
+       // This key, also in state A, but in city A2, matches the ZIP code.
+       R"("data/KR/A/A2/A2a": )"
+       R"({"id":"data/KR/A/A2/A2a", "zip":"123"}, )"
+       // This key, in state B, does not match the ZIP code.
+       R"("data/KR/B": )"
+       R"({"id":"data/KR/B", "zip":"2"}})"}};
 
-  AddressData address;
-  address.region_code = "KR";
-  address.postal_code = "12345";
-  address.administrative_area = "";
+  AddressData address{
+      .region_code = "KR",
+      .administrative_area = "",
+      .postal_code = "12345",
+  };
 
   AddressData expected = address;
   expected.administrative_area = "A";

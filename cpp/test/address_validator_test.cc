@@ -170,7 +170,7 @@ INSTANTIATE_TEST_SUITE_P(PreloadSupplier, AddressValidatorTest,
                          testing::Values(&PreloadValidatorWrapper::Build));
 
 TEST_P(AddressValidatorTest, EmptyAddress) {
-  expected_.emplace(COUNTRY, MISSING_REQUIRED_FIELD);
+  expected_ = {{COUNTRY, MISSING_REQUIRED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -178,9 +178,9 @@ TEST_P(AddressValidatorTest, EmptyAddress) {
 }
 
 TEST_P(AddressValidatorTest, InvalidCountry) {
-  address_.region_code = "QZ";
+  address_ = {.region_code = "QZ"};
 
-  expected_.emplace(COUNTRY, UNKNOWN_VALUE);
+  expected_ = {{COUNTRY, UNKNOWN_VALUE}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -188,16 +188,20 @@ TEST_P(AddressValidatorTest, InvalidCountry) {
 }
 
 TEST_P(AddressValidatorTest, ValidAddressUS) {
-  address_.region_code = "US";
-  address_.administrative_area = "CA";  // California
-  address_.locality = "Mountain View";
-  address_.postal_code = "94043";
-  address_.address_line.emplace_back("1600 Amphitheatre Parkway");
-  address_.language_code = "en";
+  address_ = {
+      .region_code = "US",
+      .address_line{"1600 Amphitheatre Parkway"},
+      .administrative_area = "CA",  // California
+      .locality = "Mountain View",
+      .postal_code = "94043",
+      .language_code = "en",
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
-    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
-    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+    expected_ = {
+        {LOCALITY, UNSUPPORTED_FIELD},
+        {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+    };
   }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -206,13 +210,17 @@ TEST_P(AddressValidatorTest, ValidAddressUS) {
 }
 
 TEST_P(AddressValidatorTest, InvalidAddressUS) {
-  address_.region_code = "US";
-  address_.postal_code = "123";
+  address_ = {
+      .region_code = "US",
+      .postal_code = "123",
+  };
 
-  expected_.emplace(ADMIN_AREA, MISSING_REQUIRED_FIELD);
-  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
-  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_ = {
+      {ADMIN_AREA, MISSING_REQUIRED_FIELD},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+      {POSTAL_CODE, INVALID_FORMAT},
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
     expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
@@ -225,15 +233,19 @@ TEST_P(AddressValidatorTest, InvalidAddressUS) {
 }
 
 TEST_P(AddressValidatorTest, ValidAddressCH) {
-  address_.region_code = "CH";
-  address_.locality = "ZH";  // Zürich
-  address_.postal_code = "8002";
-  address_.address_line.emplace_back("Brandschenkestrasse 110");
-  address_.language_code = "de";
+  address_ = {
+      .region_code = "CH",
+      .address_line{"Brandschenkestrasse 110"},
+      .locality = "ZH",  // Zürich
+      .postal_code = "8002",
+      .language_code = "de",
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
-    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
-    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+    expected_ = {
+        {LOCALITY, UNSUPPORTED_FIELD},
+        {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+    };
   }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -242,12 +254,16 @@ TEST_P(AddressValidatorTest, ValidAddressCH) {
 }
 
 TEST_P(AddressValidatorTest, InvalidAddressCH) {
-  address_.region_code = "CH";
-  address_.postal_code = "123";
+  address_ = {
+      .region_code = "CH",
+      .postal_code = "123",
+  };
 
-  expected_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
-  expected_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
+  expected_ = {
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+      {POSTAL_CODE, INVALID_FORMAT},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
     expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
@@ -260,16 +276,20 @@ TEST_P(AddressValidatorTest, InvalidAddressCH) {
 }
 
 TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
-  address_.region_code = "MX";
-  address_.locality = "Villahermosa";
-  address_.administrative_area = "TAB";  // Tabasco
-  address_.postal_code = "86070";
-  address_.address_line.emplace_back("Av Gregorio Méndez Magaña 1400");
-  address_.language_code = "es";
+  address_ = {
+      .region_code = "MX",
+      .address_line{"Av Gregorio Méndez Magaña 1400"},
+      .administrative_area = "TAB",  // Tabasco
+      .locality = "Villahermosa",
+      .postal_code = "86070",
+      .language_code = "es",
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
-    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
-    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_ = {
+        {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+        {LOCALITY, UNSUPPORTED_FIELD},
+    };
   }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -278,14 +298,17 @@ TEST_P(AddressValidatorTest, ValidPostalCodeMX) {
 }
 
 TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
-  address_.region_code = "MX";
-  address_.locality = "Villahermosa";
-  address_.administrative_area = "TAB";  // Tabasco
-  address_.postal_code = "80000";
-  address_.address_line.emplace_back("Av Gregorio Méndez Magaña 1400");
-  address_.language_code = "es";
+  address_ = {
+      .region_code = "MX",
+      .address_line{"Av Gregorio Méndez Magaña 1400"},
+      .administrative_area = "TAB",  // Tabasco
+      .locality = "Villahermosa",
+      .postal_code = "80000",
+      .language_code = "es",
+  };
 
-  expected_.emplace(POSTAL_CODE, MISMATCHING_VALUE);
+  expected_ = {{POSTAL_CODE, MISMATCHING_VALUE}};
+
   if (GetParam() == &PreloadValidatorWrapper::Build) {
     expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
     expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
@@ -297,12 +320,14 @@ TEST_P(AddressValidatorTest, MismatchingPostalCodeMX) {
 }
 
 TEST_P(AddressValidatorTest, ValidateFilter) {
-  address_.region_code = "CH";
-  address_.postal_code = "123";
+  address_ = {
+      .region_code = "CH",
+      .postal_code = "123",
+  };
 
-  filter_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  filter_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -310,17 +335,21 @@ TEST_P(AddressValidatorTest, ValidateFilter) {
 }
 
 TEST_P(AddressValidatorTest, ValidateClearsProblems) {
-  address_.region_code = "CH";
-  address_.locality = "ZH";  // Zürich
-  address_.postal_code = "123";
-  address_.address_line.emplace_back("Brandschenkestrasse 110");
-  address_.language_code = "de";
+  address_ = {
+      .region_code = "CH",
+      .address_line{"Brandschenkestrasse 110"},
+      .locality = "ZH",  // Zürich
+      .postal_code = "123",
+      .language_code = "de",
+  };
 
-  problems_.emplace(LOCALITY, UNEXPECTED_FIELD);
-  problems_.emplace(LOCALITY, MISSING_REQUIRED_FIELD);
-  problems_.emplace(STREET_ADDRESS, MISSING_REQUIRED_FIELD);
+  problems_ = {
+      {LOCALITY, UNEXPECTED_FIELD},
+      {LOCALITY, MISSING_REQUIRED_FIELD},
+      {STREET_ADDRESS, MISSING_REQUIRED_FIELD},
+  };
 
-  expected_.emplace(POSTAL_CODE, INVALID_FORMAT);
+  expected_ = {{POSTAL_CODE, INVALID_FORMAT}};
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
     expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
@@ -333,15 +362,19 @@ TEST_P(AddressValidatorTest, ValidateClearsProblems) {
 }
 
 TEST_P(AddressValidatorTest, ValidKanjiAddressJP) {
-  address_.region_code = "JP";
-  address_.administrative_area = "徳島県";
-  address_.postal_code = "770-0847";
-  address_.address_line.emplace_back("徳島市...");
-  address_.language_code = "ja";
+  address_ = {
+      .region_code = "JP",
+      .address_line{"徳島市..."},
+      .administrative_area = "徳島県",
+      .postal_code = "770-0847",
+      .language_code = "ja",
+  };
 
   if (GetParam() == &PreloadValidatorWrapper::Build) {
-    expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
-    expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+    expected_ = {
+        {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+        {LOCALITY, UNSUPPORTED_FIELD},
+    };
   }
 
   ASSERT_NO_FATAL_FAILURE(Validate());
@@ -354,14 +387,18 @@ TEST_P(AddressValidatorTest, ValidLatinAddressJP) {
   // address metadata server to map Latin script names to local script names.
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
-  address_.region_code = "JP";
-  address_.administrative_area = "Tokushima";
-  address_.postal_code = "770-0847";
-  address_.address_line.emplace_back("...Tokushima");
-  address_.language_code = "ja-Latn";
+  address_ = {
+      .region_code = "JP",
+      .address_line{"...Tokushima"},
+      .administrative_area = "Tokushima",
+      .postal_code = "770-0847",
+      .language_code = "ja-Latn",
+  };
 
-  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
-  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  expected_ = {
+      {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+      {LOCALITY, UNSUPPORTED_FIELD},
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -373,14 +410,16 @@ TEST_P(AddressValidatorTest, ValidAddressBR) {
   // address metadata server to map natural language names to metadata IDs.
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
-  address_.region_code = "BR";
-  address_.administrative_area = "São Paulo";
-  address_.locality = "Presidente Prudente";
-  address_.postal_code = "19063-008";
-  address_.address_line.emplace_back("Rodovia Raposo Tavares, 6388-6682");
-  address_.language_code = "pt";
+  address_ = {
+      .region_code = "BR",
+      .address_line{"Rodovia Raposo Tavares, 6388-6682"},
+      .administrative_area = "São Paulo",
+      .locality = "Presidente Prudente",
+      .postal_code = "19063-008",
+      .language_code = "pt",
+  };
 
-  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
+  expected_ = {{DEPENDENT_LOCALITY, UNSUPPORTED_FIELD}};
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -392,15 +431,19 @@ TEST_P(AddressValidatorTest, ValidAddressCA_en) {
   // address metadata server to map natural language names to metadata IDs.
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
-  address_.region_code = "CA";
-  address_.administrative_area = "New Brunswick";
-  address_.locality = "Saint John County";
-  address_.postal_code = "E2L 4Z6";
-  address_.address_line.emplace_back("...");
-  address_.language_code = "en";
+  address_ = {
+      .region_code = "CA",
+      .address_line{"..."},
+      .administrative_area = "New Brunswick",
+      .locality = "Saint John County",
+      .postal_code = "E2L 4Z6",
+      .language_code = "en",
+  };
 
-  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
-  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  expected_ = {
+      {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+      {LOCALITY, UNSUPPORTED_FIELD},
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);
@@ -412,15 +455,19 @@ TEST_P(AddressValidatorTest, ValidAddressCA_fr) {
   // address metadata server to map natural language names to metadata IDs.
   if (GetParam() == &OndemandValidatorWrapper::Build) return;
 
-  address_.region_code = "CA";
-  address_.administrative_area = "Nouveau-Brunswick";
-  address_.locality = "Comté de Saint-Jean";
-  address_.postal_code = "E2L 4Z6";
-  address_.address_line.emplace_back("...");
-  address_.language_code = "fr";
+  address_ = {
+      .region_code = "CA",
+      .address_line{"..."},
+      .administrative_area = "Nouveau-Brunswick",
+      .locality = "Comté de Saint-Jean",
+      .postal_code = "E2L 4Z6",
+      .language_code = "fr",
+  };
 
-  expected_.emplace(DEPENDENT_LOCALITY, UNSUPPORTED_FIELD);
-  expected_.emplace(LOCALITY, UNSUPPORTED_FIELD);
+  expected_ = {
+      {DEPENDENT_LOCALITY, UNSUPPORTED_FIELD},
+      {LOCALITY, UNSUPPORTED_FIELD},
+  };
 
   ASSERT_NO_FATAL_FAILURE(Validate());
   ASSERT_TRUE(called_);

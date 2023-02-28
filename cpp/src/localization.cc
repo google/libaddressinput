@@ -35,7 +35,7 @@ void PushBackUrl(const std::string& url, std::vector<std::string>* parameters) {
   assert(parameters != nullptr);
   // TODO: HTML-escape the "url".
   parameters->push_back("<a href=\"" + url + "\">");
-  parameters->push_back("</a>");
+  parameters->emplace_back("</a>");
 }
 
 }  // namespace
