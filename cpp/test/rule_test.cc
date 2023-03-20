@@ -147,9 +147,10 @@ TEST(RuleTest, ParseOverwritesRule) {
 }
 
 TEST(RuleTest, ParsesFormatCorrectly) {
-  std::vector<FormatElement> expected;
-  expected.emplace_back(ADMIN_AREA);
-  expected.emplace_back(LOCALITY);
+  const std::vector<FormatElement> expected{
+      FormatElement{ADMIN_AREA},
+      FormatElement{LOCALITY},
+  };
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"fmt\":\"%S%C\"}"));
   EXPECT_EQ(expected, rule.GetFormat());
@@ -168,38 +169,42 @@ TEST(RuleTest, ParsesLatinNameCorrectly) {
 }
 
 TEST(RuleTest, ParsesLatinFormatCorrectly) {
-  std::vector<FormatElement> expected;
-  expected.emplace_back(LOCALITY);
-  expected.emplace_back(ADMIN_AREA);
+  const std::vector<FormatElement> expected{
+      FormatElement{LOCALITY},
+      FormatElement{ADMIN_AREA},
+  };
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"lfmt\":\"%C%S\"}"));
   EXPECT_EQ(expected, rule.GetLatinFormat());
 }
 
 TEST(RuleTest, ParsesRequiredCorrectly) {
-  std::vector<AddressField> expected;
-  expected.push_back(STREET_ADDRESS);
-  expected.push_back(LOCALITY);
+  const std::vector<AddressField> expected{
+      STREET_ADDRESS,
+      LOCALITY,
+  };
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"require\":\"AC\"}"));
   EXPECT_EQ(expected, rule.GetRequired());
 }
 
 TEST(RuleTest, ParsesSubKeysCorrectly) {
-  std::vector<std::string> expected;
-  expected.emplace_back("aa");
-  expected.emplace_back("bb");
-  expected.emplace_back("cc");
+  const std::vector<std::string> expected{
+      "aa",
+      "bb",
+      "cc",
+  };
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"sub_keys\":\"aa~bb~cc\"}"));
   EXPECT_EQ(expected, rule.GetSubKeys());
 }
 
 TEST(RuleTest, ParsesLanguagesCorrectly) {
-  std::vector<std::string> expected;
-  expected.emplace_back("de");
-  expected.emplace_back("fr");
-  expected.emplace_back("it");
+  const std::vector<std::string> expected{
+      "de",
+      "fr",
+      "it",
+  };
   Rule rule;
   ASSERT_TRUE(rule.ParseSerializedRule("{\"languages\":\"de~fr~it\"}"));
   EXPECT_EQ(expected, rule.GetLanguages());

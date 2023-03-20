@@ -73,7 +73,7 @@ class AddressAutocompleteController {
                 (AddressAutocompletePrediction)
                     adapter.getItem(position).getAutocompletePrediction();
 
-            (new AsyncTask<AddressAutocompletePrediction, Void, AddressData>() {
+             new AsyncTask<AddressAutocompletePrediction, Void, AddressData>() {
                   @Override
                   protected AddressData doInBackground(
                       AddressAutocompletePrediction... predictions) {
@@ -91,7 +91,7 @@ class AddressAutocompleteController {
                     Log.e(TAG, "AddressData: " + addressData.toString());
                     listener.onAddressSelected(addressData);
                   }
-                })
+                }
                 .execute(prediction);
           } else {
             Log.i(TAG, "No onAddressSelected listener.");

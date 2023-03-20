@@ -493,7 +493,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
   }
 
   private String getLocalCountryName(String regionCode) {
-    return (new Locale("", regionCode)).getDisplayCountry(Locale.getDefault());
+    return new Locale("", regionCode).getDisplayCountry(Locale.getDefault());
   }
 
   private AddressSpinnerInfo findSpinnerByView(View view) {

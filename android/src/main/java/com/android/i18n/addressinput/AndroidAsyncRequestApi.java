@@ -99,7 +99,7 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
 
   @Override public void requestObject(String url, AsyncCallback callback, int timeoutMillis) {
     try {
-      (new AsyncHttp(stringToUrl(url), callback, timeoutMillis)).start();
+      new AsyncHttp(stringToUrl(url), callback, timeoutMillis).start();
     } catch (MalformedURLException e) {
       callback.onFailure();
     }

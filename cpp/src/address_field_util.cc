@@ -73,7 +73,7 @@ void ParseFormatRule(const std::string& format,
     }
     if (prev < next) {
       // Push back preceding literal.
-      elements->push_back(FormatElement(std::string(prev, next)));
+      elements->emplace_back(std::string(prev, next));
     }
     if ((prev = ++next) == format.end()) {
       // Move forward and check we haven't reached the end of the string
@@ -83,14 +83,14 @@ void ParseFormatRule(const std::string& format,
     // Process the token after the %.
     AddressField field;
     if (*next == 'n') {
-      elements->push_back(FormatElement());
+      elements->emplace_back();
     } else if (ParseFieldToken(*next, &field)) {
-      elements->push_back(FormatElement(field));
+      elements->emplace_back(field);
     }  // Else it's an unknown token, we ignore it.
   }
   // Push back any trailing literal.
   if (prev != format.end()) {
-    elements->push_back(FormatElement(std::string(prev, format.end())));
+    elements->emplace_back(std::string(prev, format.end()));
   }
 }
 

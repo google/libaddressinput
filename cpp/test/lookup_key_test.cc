@@ -30,15 +30,14 @@ using i18n::addressinput::LookupKey;
 const size_t kMaxDepth = size(LookupKey::kHierarchy) - 1;
 
 TEST(LookupKeyTest, Empty) {
-  AddressData address;
+  const AddressData address;
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/ZZ", lookup_key.ToKeyString(kMaxDepth));
 }
 
 TEST(LookupKeyTest, AddressDepth1) {
-  AddressData address;
-  address.region_code = "111";
+  const AddressData address{.region_code = "111"};
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(0, lookup_key.GetDepth());
@@ -46,9 +45,10 @@ TEST(LookupKeyTest, AddressDepth1) {
 }
 
 TEST(LookupKeyTest, AddressDepth2) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(1, lookup_key.GetDepth());
@@ -56,10 +56,11 @@ TEST(LookupKeyTest, AddressDepth2) {
 }
 
 TEST(LookupKeyTest, AddressDepth3) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
-  address.locality = "333";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+      .locality = "333",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(2, lookup_key.GetDepth());
@@ -67,11 +68,12 @@ TEST(LookupKeyTest, AddressDepth3) {
 }
 
 TEST(LookupKeyTest, AddressDepth4) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
-  address.locality = "333";
-  address.dependent_locality = "444";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+      .locality = "333",
+      .dependent_locality = "444",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(3, lookup_key.GetDepth());
@@ -79,11 +81,12 @@ TEST(LookupKeyTest, AddressDepth4) {
 }
 
 TEST(LookupKeyTest, AddressDepthNonContiguous) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
-  // No LOCALITY specified.
-  address.dependent_locality = "444";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+      // No LOCALITY specified.
+      .dependent_locality = "444",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(1, lookup_key.GetDepth());
@@ -91,11 +94,12 @@ TEST(LookupKeyTest, AddressDepthNonContiguous) {
 }
 
 TEST(LookupKeyTest, AddressDepthTerminateOnSlash) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
-  address.locality = "3/3";  // No data should be requested for this LOCALITY.
-  address.dependent_locality = "444";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+      .locality = "3/3",  // No data should be requested for this LOCALITY.
+      .dependent_locality = "444",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(1, lookup_key.GetDepth());
@@ -103,11 +107,12 @@ TEST(LookupKeyTest, AddressDepthTerminateOnSlash) {
 }
 
 TEST(LookupKeyTest, RequestDepth) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
-  address.locality = "333";
-  address.dependent_locality = "444";
+  const AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+      .locality = "333",
+      .dependent_locality = "444",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/111", lookup_key.ToKeyString(0));
@@ -117,11 +122,12 @@ TEST(LookupKeyTest, RequestDepth) {
 }
 
 TEST(LookupKeyTest, WithLanguageCodeDefaultLanguage) {
-  AddressData address;
   // Use real data here as the choice of adding a language requires metadata.
-  address.region_code = "CA";
-  address.administrative_area = "ON";
-  address.language_code = "en";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "ON",
+      .language_code = "en",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/CA", lookup_key.ToKeyString(0));
@@ -129,11 +135,12 @@ TEST(LookupKeyTest, WithLanguageCodeDefaultLanguage) {
 }
 
 TEST(LookupKeyTest, WithLanguageCodeAlternateLanguage) {
-  AddressData address;
   // Use real data here as the choice of adding a language requires metadata.
-  address.region_code = "CA";
-  address.administrative_area = "ON";
-  address.language_code = "fr";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "ON",
+      .language_code = "fr",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/CA--fr", lookup_key.ToKeyString(0));
@@ -141,11 +148,12 @@ TEST(LookupKeyTest, WithLanguageCodeAlternateLanguage) {
 }
 
 TEST(LookupKeyTest, WithLanguageCodeInvalidLanguage) {
-  AddressData address;
   // Use real data here as the choice of adding a language requires metadata.
-  address.region_code = "CA";
-  address.administrative_area = "ON";
-  address.language_code = "de";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "ON",
+      .language_code = "de",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/CA", lookup_key.ToKeyString(0));
@@ -153,29 +161,30 @@ TEST(LookupKeyTest, WithLanguageCodeInvalidLanguage) {
 }
 
 TEST(LookupKeyTest, WithLanguageCodeAlternateLanguageNoState) {
-  AddressData address;
   // Use real data here as the choice of adding a language requires metadata.
   // Afghanistan has multiple languages (including Pashto as an alternative)
   // but no subregions.
-  address.region_code = "AF";
-  address.language_code = "ps";
+  const AddressData address{
+      .region_code = "AF",
+      .language_code = "ps",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/AF", lookup_key.ToKeyString(0));
 }
 
 TEST(LookupKeyTest, GetRegionCode) {
-  AddressData address;
-  address.region_code = "rrr";
+  const AddressData address{.region_code = "rrr"};
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ(address.region_code, lookup_key.GetRegionCode());
 }
 
 TEST(LookupKeyTest, FromAddressClearsExistingNodes) {
-  AddressData address;
-  address.region_code = "111";
-  address.administrative_area = "222";
+  AddressData address{
+      .region_code = "111",
+      .administrative_area = "222",
+  };
   LookupKey lookup_key;
   lookup_key.FromAddress(address);
   EXPECT_EQ("data/111/222", lookup_key.ToKeyString(kMaxDepth));

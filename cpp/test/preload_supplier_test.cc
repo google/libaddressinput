@@ -75,8 +75,7 @@ class PreloadSupplierTest : public testing::Test {
 TEST_F(PreloadSupplierTest, GetUsRule) {
   supplier_.LoadRules("US", *loaded_callback_);
   LookupKey us_key;
-  AddressData us_address;
-  us_address.region_code = "US";
+  const AddressData us_address{.region_code = "US"};
   us_key.FromAddress(us_address);
   const Rule* rule = supplier_.GetRule(us_key);
   ASSERT_TRUE(rule != nullptr);
@@ -86,9 +85,10 @@ TEST_F(PreloadSupplierTest, GetUsRule) {
 TEST_F(PreloadSupplierTest, GetUsCaRule) {
   supplier_.LoadRules("US", *loaded_callback_);
   LookupKey ca_key;
-  AddressData ca_address;
-  ca_address.region_code = "US";
-  ca_address.administrative_area = "CA";
+  const AddressData ca_address{
+      .region_code = "US",
+      .administrative_area = "CA",
+  };
   ca_key.FromAddress(ca_address);
   const Rule* rule = supplier_.GetRule(ca_key);
   ASSERT_TRUE(rule != nullptr);
@@ -98,9 +98,10 @@ TEST_F(PreloadSupplierTest, GetUsCaRule) {
 TEST_F(PreloadSupplierTest, GetUsCaliforniaRule) {
   supplier_.LoadRules("US", *loaded_callback_);
   LookupKey ca_key;
-  AddressData ca_address;
-  ca_address.region_code = "US";
-  ca_address.administrative_area = "California";
+  const AddressData ca_address{
+      .region_code = "US",
+      .administrative_area = "California",
+  };
   ca_key.FromAddress(ca_address);
   const Rule* rule = supplier_.GetRule(ca_key);
   ASSERT_TRUE(rule != nullptr);
@@ -110,8 +111,7 @@ TEST_F(PreloadSupplierTest, GetUsCaliforniaRule) {
 TEST_F(PreloadSupplierTest, GetZwRule) {
   supplier_.LoadRules("ZW", *loaded_callback_);
   LookupKey zw_key;
-  AddressData zw_address;
-  zw_address.region_code = "ZW";
+  const AddressData zw_address{.region_code = "ZW"};
   zw_key.FromAddress(zw_address);
   const Rule* rule = supplier_.GetRule(zw_key);
   ASSERT_TRUE(rule != nullptr);
@@ -121,9 +121,10 @@ TEST_F(PreloadSupplierTest, GetZwRule) {
 TEST_F(PreloadSupplierTest, GetUnknownRule) {
   supplier_.LoadRules("US", *loaded_callback_);
   LookupKey unknown_key;
-  AddressData unknown_address;
-  unknown_address.region_code = "US";
-  unknown_address.administrative_area = "ZZ";
+  const AddressData unknown_address{
+      .region_code = "US",
+      .administrative_area = "ZZ",
+  };
   unknown_key.FromAddress(unknown_address);
   const Rule* rule = supplier_.GetRule(unknown_key);
   EXPECT_TRUE(rule == nullptr);
@@ -132,10 +133,11 @@ TEST_F(PreloadSupplierTest, GetUnknownRule) {
 TEST_F(PreloadSupplierTest, GetTooPreciseRule) {
   supplier_.LoadRules("US", *loaded_callback_);
   LookupKey precise_key;
-  AddressData precise_address;
-  precise_address.region_code = "US";
-  precise_address.administrative_area = "CA";
-  precise_address.locality = "Mountain View";
+  const AddressData precise_address{
+      .region_code = "US",
+      .administrative_area = "CA",
+      .locality = "Mountain View",
+  };
   precise_key.FromAddress(precise_address);
   const Rule* rule = supplier_.GetRule(precise_key);
   EXPECT_TRUE(rule == nullptr);
@@ -151,9 +153,10 @@ TEST_F(PreloadSupplierTest, GetRulesForRegion) {
 TEST_F(PreloadSupplierTest, SupplyRegionCode) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "NB";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "NB",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -169,9 +172,10 @@ TEST_F(PreloadSupplierTest, SupplyRegionCode) {
 TEST_F(PreloadSupplierTest, SupplyGloballyRegionCode) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "NB";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "NB",
+  };
   key.FromAddress(address);
 
   supplier_.SupplyGlobally(key, *supplied_callback_);
@@ -187,9 +191,10 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionCode) {
 TEST_F(PreloadSupplierTest, SupplyRegionName) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "New Brunswick";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "New Brunswick",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -205,9 +210,10 @@ TEST_F(PreloadSupplierTest, SupplyRegionName) {
 TEST_F(PreloadSupplierTest, SupplyGloballyRegionName) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "New Brunswick";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "New Brunswick",
+  };
   key.FromAddress(address);
 
   supplier_.SupplyGlobally(key, *supplied_callback_);
@@ -223,9 +229,10 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionName) {
 TEST_F(PreloadSupplierTest, SupplyRegionNameLanguage) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "Nouveau-Brunswick";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "Nouveau-Brunswick",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -242,10 +249,11 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameLanguage) {
 TEST_F(PreloadSupplierTest, SupplyRegionNameLanguageSet) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "Nouveau-Brunswick";
-  address.language_code = "fr";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "Nouveau-Brunswick",
+      .language_code = "fr",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -262,9 +270,10 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameLanguageSet) {
 TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameLanguage) {
   supplier_.LoadRules("CA", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CA";
-  address.administrative_area = "Nouveau-Brunswick";
+  const AddressData address{
+      .region_code = "CA",
+      .administrative_area = "Nouveau-Brunswick",
+  };
   key.FromAddress(address);
 
   supplier_.SupplyGlobally(key, *supplied_callback_);
@@ -281,10 +290,11 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameLanguage) {
 TEST_F(PreloadSupplierTest, SupplyRegionNameHK) {
   supplier_.LoadRules("HK", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "HK";
-  address.administrative_area = "新界";
-  address.locality = "大嶼山石壁";
+  const AddressData address{
+      .region_code = "HK",
+      .administrative_area = "新界",
+      .locality = "大嶼山石壁",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
@@ -301,10 +311,11 @@ TEST_F(PreloadSupplierTest, SupplyRegionNameHK) {
 TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameHKEnglish) {
   supplier_.LoadRules("HK", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "HK";
-  address.administrative_area = "New Territories";
-  address.locality = "Tsing Yi";
+  const AddressData address{
+      .region_code = "HK",
+      .administrative_area = "New Territories",
+      .locality = "Tsing Yi",
+  };
   key.FromAddress(address);
 
   supplier_.SupplyGlobally(key, *supplied_callback_);
@@ -323,11 +334,12 @@ TEST_F(PreloadSupplierTest, SupplyGloballyRegionNameHKEnglish) {
 TEST_F(PreloadSupplierTest, SupplyRegionNameAllLevels) {
   supplier_.LoadRules("CN", *loaded_callback_);
   LookupKey key;
-  AddressData address;
-  address.region_code = "CN";
-  address.administrative_area = "云南省";
-  address.locality = "临沧市";
-  address.dependent_locality = "临翔区";
+  const AddressData address{
+      .region_code = "CN",
+      .administrative_area = "云南省",
+      .locality = "临沧市",
+      .dependent_locality = "临翔区",
+  };
   key.FromAddress(address);
 
   supplier_.Supply(key, *supplied_callback_);
