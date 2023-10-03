@@ -138,7 +138,7 @@ public final class RegionDataConstants {
     map.put("IE", "{\"name\":\"IRELAND\",\"lang\":\"en\",\"languages\":\"en\",\"fmt\":\"%N%n%O%n%A%n%D%n%C%n%S%n%Z\",\"sublocality_name_type\":\"townland\",\"state_name_type\":\"county\",\"zip_name_type\":\"eircode\",\"label_overrides\":[{\"field\":\"S\",\"label\":\"郡\",\"lang\":\"zh\"}]}");
     map.put("IL", "{\"name\":\"ISRAEL\",\"fmt\":\"%N%n%O%n%A%n%C %Z\"}");
     map.put("IM", "{\"name\":\"ISLE OF MAN\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
-    map.put("IN", "{\"name\":\"INDIA\",\"lang\":\"en\",\"languages\":\"en~hi\",\"fmt\":\"%N%n%O%n%A%n%C %Z%n%S\",\"require\":\"ACSZ\",\"state_name_type\":\"state\",\"zip_name_type\":\"pin\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Sublocality 1\"},{\"field\":\"S2\",\"label\":\"Sublocality 2\"},{\"field\":\"S3\",\"label\":\"Sublocality 3\"},{\"field\":\"S4\",\"label\":\"Sublocality 4\"}]}");
+    map.put("IN", "{\"name\":\"INDIA\",\"lang\":\"en\",\"languages\":\"en~hi\",\"fmt\":\"%N%n%O%n%A%n%F%n%L%n%C %Z%n%S\",\"require\":\"ACSZ\",\"state_name_type\":\"state\",\"zip_name_type\":\"pin\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Sublocality 1\"},{\"field\":\"S2\",\"label\":\"Sublocality 2\"},{\"field\":\"S3\",\"label\":\"Sublocality 3\"},{\"field\":\"S4\",\"label\":\"Sublocality 4\"}]}");
     map.put("IO", "{\"name\":\"BRITISH INDIAN OCEAN TERRITORY\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"ACZ\",\"upper\":\"CZ\"}");
     map.put("IQ", "{\"name\":\"IRAQ\",\"fmt\":\"%O%n%N%n%A%n%C, %S%n%Z\",\"require\":\"ACS\",\"upper\":\"CS\"}");
     map.put("IR", "{\"name\":\"IRAN\",\"lang\":\"fa\",\"languages\":\"fa\",\"fmt\":\"%O%n%N%n%S%n%C, %D%n%A%n%Z\",\"sublocality_name_type\":\"neighborhood\"}");
@@ -222,7 +222,7 @@ public final class RegionDataConstants {
     map.put("PY", "{\"name\":\"PARAGUAY\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("QA", "{\"name\":\"QATAR\",\"upper\":\"AC\"}");
     map.put("RE", "{\"name\":\"REUNION\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
-    map.put("RO", "{\"name\":\"ROMANIA\",\"fmt\":\"%N%n%O%n%A%n%Z %S %C\",\"require\":\"ACZ\",\"upper\":\"AC\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Județe/sectoare\",\"lang\":\"ro\"},{\"field\":\"C\",\"label\":\"County/sector\",\"lang\":\"en\"},{\"field\":\"S\",\"label\":\"Municipiu/oraș/comună\",\"lang\":\"ro\"},{\"field\":\"S\",\"label\":\"Municipality/city/town/commune\",\"lang\":\"en\"}]}");
+    map.put("RO", "{\"name\":\"ROMANIA\",\"lang\":\"ro\",\"languages\":\"ro\",\"fmt\":\"%N%n%O%n%A%n%Z %S %C\",\"require\":\"ACZ\",\"upper\":\"AC\",\"label_overrides\":[{\"field\":\"C\",\"label\":\"Județe/sectoare\",\"lang\":\"ro\"},{\"field\":\"C\",\"label\":\"County/sector\",\"lang\":\"en\"},{\"field\":\"S\",\"label\":\"Municipiu/oraș/comună\",\"lang\":\"ro\"},{\"field\":\"S\",\"label\":\"Municipality/city/town/commune\",\"lang\":\"en\"}]}");
     map.put("RS", "{\"name\":\"REPUBLIC OF SERBIA\",\"fmt\":\"%N%n%O%n%A%n%Z %C\"}");
     map.put("RU", "{\"name\":\"RUSSIAN FEDERATION\",\"lang\":\"ru\",\"languages\":\"ru\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S%n%Z\",\"require\":\"ACSZ\",\"upper\":\"AC\",\"state_name_type\":\"oblast\",\"label_overrides\":[{\"field\":\"CS\",\"message\":\"MSG_OFFICE_UNIT_NUMBER\"}]}");
     map.put("RW", "{\"name\":\"RWANDA\",\"upper\":\"AC\"}");

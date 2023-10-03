@@ -155,7 +155,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%O%n%N%n%A%n%Z %C",)"
       R"("require":"ACZ",)"
       R"("zipex":"4000,1000",)"
-      R"("posturl":"http://www.post.be/site/nl/residential/customerservice/search/postal_codes.html",)"
+      R"("posturl":"https://www.bpost.be/nl/postcodevalidatie-tool",)"
       R"("languages":"nl~fr~de")"
       "}"},
   {"BF", "{"
@@ -221,7 +221,7 @@ const RegionData kRegionData[] = {
   {"BT", "{"
       R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       R"("zipex":"11001,31101,35003",)"
-      R"("posturl":"http://www.bhutanpost.bt/postcodes/",)"
+      R"("posturl":"https://bhutanpost.bt/postcode/",)"
       R"("languages":"dz")"
       "}"},
   {"BV", "{"
@@ -516,7 +516,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
       R"("require":"ACZ",)"
       R"("zipex":"151 24,151 10,101 88",)"
-      R"("posturl":"http://www.elta.gr/findapostcode.aspx",)"
+      R"("posturl":"https://postalcodes.elta.gr",)"
       R"("languages":"el")"
       "}"},
   {"GS", "{"
@@ -611,7 +611,7 @@ const RegionData kRegionData[] = {
       R"("languages":"en~gv")"
       "}"},
   {"IN", "{"
-      R"("fmt":"%N%n%O%n%A%n%C %Z%n%S",)"
+      R"("fmt":"%N%n%O%n%A%n%F%n%L%n%C %Z%n%S",)"
       R"("require":"ACSZ",)"
       R"("zip_name_type":"pin",)"
       R"("state_name_type":"state",)"
@@ -794,7 +794,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%S%n%C, %Z",)"
       R"("require":"ACZ",)"
       R"("zipex":"LV-1073,LV-1000",)"
-      R"("posturl":"http://www.pasts.lv/lv/uzzinas/nodalas/",)"
+      R"("posturl":"https://pasts.lv/lv/kategorija/pasta_nodalas/",)"
       R"("languages":"lv")"
       "}"},
   {"LY", "{"
@@ -1002,7 +1002,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%D%n%C %Z",)"
       R"("require":"ACZ",)"
       R"("zipex":"6001,6015,6332,8252,1030",)"
-      R"("posturl":"http://www.nzpost.co.nz/Cultures/en-NZ/OnlineTools/PostCodeFinder/",)"
+      R"("posturl":"https://www.nzpost.co.nz/tools/address-postcode-finder",)"
       R"("languages":"en~mi")"
       "}"},
   {"OM", "{"
@@ -1239,7 +1239,7 @@ const RegionData kRegionData[] = {
   {"SZ", "{"
       R"("fmt":"%N%n%O%n%A%n%C%n%Z",)"
       R"("zipex":"H100",)"
-      R"("posturl":"http://www.sptc.co.sz/swazipost/codes/index.php",)"
+      R"("posturl":"https://www.eswatinipost.co.sz/postcode.php",)"
       R"("languages":"en~ss")"
       "}"},
   {"TA", "{"
