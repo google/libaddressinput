@@ -32,6 +32,49 @@ input widget ready for use, but only the UI parts are tied to Android.
 Non-UI code and tests can be run in Java SE, and the rest of the library could
 easily be adapted to run in any Java environment.
 
+### Address validation in general JAVA project.
+
+If you are developing a pure JAVA project, this lib can still be very useful when you want to validate addresses. In this case, the only part we need is the common module. Please following steps below to get started.
+
+* 1. Follow the **readme.md** inside common module to build the common project. After build succeed, you would find common.jar within folder: common/build/libs
+* 2. Import this common.jar into your project. Now, you should be able to start to code.
+* 3. For valiating address, the key class we need is **StandardAddressVerifier.java**
+```java
+// Build address data need to be verified.
+final AddressData addressData =
+                AddressData.builder().
+                        setCountry("US").
+                        setAdminArea("CA").
+                        setPostalCode("94088").
+                        setLocality(Sunnyvale).
+                        setAddress("Dream Ave").
+                        build();
+// address problems, which will be filled by standardAddressVerifier if some data is invalid.
+AddressProblems addressProblems = new AddressProblems();
+
+// Verify the address.
+standardAddressVerifier.verify(addressData, addressProblems);
+
+// Now, you can see the address problems reside inside addressProblems.
+addressProblems.getProblems();
+```
+Of course, StandardAddressVerifier needs some effort to be configured. 
+```java
+StandardAddressVerifier standardAddressVerifier = new StandardAddressVerifier(
+            new FieldVerifier(
+                new ClientData(
+                    new CacheData(
+                        // By default, this lib uses SimpleClientCacheManager
+                        // You can implement your customized cache manager to cache the metadata.
+                        new RedisClientCacheManager(redissonClient, cacheSize), 
+                        // You need to implement AsyncRequestApi to provide internet access capability for this lib.
+                        // If the address meta is not cached in your cache manager, it would go fetch the metadata from the internet: "https://chromium-i18n.appspot.com/ssl-address"
+                        new XXXAsyncRequestApi()
+                    )
+                )
+            ));
+```
+
 ## Mailing List
 
 Using and developing libaddressinput is discussed on this mailing list:
