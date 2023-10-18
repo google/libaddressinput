@@ -18,17 +18,16 @@ package com.google.i18n.addressinput.common;
 
 import com.google.i18n.addressinput.common.AddressField.WidthType;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Address format interpreter. A utility to find address format related info.
@@ -77,8 +76,7 @@ public final class FormatInterpreter {
       AddressField field = getFieldForFormatSubstring(substring);
       // Accept only the first instance for any duplicate fields (which can occur because the
       // string we start with defines format order, which can contain duplicate fields).
-      if (!visibleFields.contains(field)) {
-        visibleFields.add(field);
+      if (visibleFields.add(field)) {
         fieldOrder.add(field);
       }
     }
@@ -189,7 +187,7 @@ public final class FormatInterpreter {
    * Visible for Testing - same as {@link #getWidthOverride(AddressField, String)} but testable with
    * fake data.
    */
-  static WidthType getWidthOverride(
+  static @Nullable WidthType getWidthOverride(
       AddressField field, String regionCode, Map<String, String> regionDataMap) {
     Util.checkNotNull(regionCode);
     String overridesString =
@@ -379,19 +377,27 @@ public final class FormatInterpreter {
     return format;
   }
 
-  private static String getJsonValue(String regionCode, AddressDataKey key) {
+  private static @Nullable String getJsonValue(String regionCode, AddressDataKey key) {
     return getJsonValue(regionCode, key, RegionDataConstants.getCountryFormatMap());
   }
 
-  /**
-   * Visible for testing only.
-   */
-  static String getJsonValue(
+  /** Visible for testing only. */
+  static @Nullable String getJsonValue(
       String regionCode, AddressDataKey key, Map<String, String> regionDataMap) {
     Util.checkNotNull(regionCode);
     String jsonString = regionDataMap.get(regionCode);
-    Util.checkNotNull(jsonString, "no json data for region code " + regionCode);
-
+    if (jsonString == null) {
+      if (regionCode.equals("CQ")) {
+        // TODO: Return data for Guernsey for now for Sark but we should set up some mapping
+        // constants file in the long term.
+        jsonString = regionDataMap.get("GG");
+      }
+      if (jsonString == null) {
+        // TODO: Set up some logging to track region codes we need to account for in the
+        // aforementioned mapping constants file.
+        return null;
+      }
+    }
     try {
       JSONObject jsonObj = new JSONObject(new JSONTokener(jsonString));
       if (!jsonObj.has(Util.toLowerCaseLocaleIndependent(key.name()))) {
