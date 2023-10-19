@@ -274,6 +274,7 @@ public class CacheDataTest {
     assertListenerWasCalled(mockListener);
   }
 
+
   @Test public void testSetUrl() {
     LookupKey key = new LookupKey.Builder(CANADA_KEY).build();
     String url = "http://some-random-url";
