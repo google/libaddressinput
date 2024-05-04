@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-    }
-}
+apply plugin: 'java-library'
 
-apply plugin: 'java'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
-
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -55,13 +45,21 @@ test {
   // }
 }
 
+repositories {
+    google()
+    mavenLocal()
+    mavenCentral()
+}
+
 dependencies {
-  compile 'com.google.guava:guava-gwt:18.0'
+  api 'com.google.errorprone:error_prone_annotations:2.18.0'
+  api 'org.jspecify:jspecify:0.2.0'
+  implementation 'com.google.guava:guava-gwt:18.0'
   /* Note that gradle will warn about this not being the same version as *
    * the Android JSON library (but will not compile if it's removed).    */
-  compile 'org.json:json:20090211'
-  testCompile 'junit:junit:4.11'
-  testCompile 'com.google.truth:truth:0.25'
-  testCompile 'org.mockito:mockito-core:1.9.5'
+  implementation 'org.json:json:20090211'
+  testImplementation 'junit:junit:4.11'
+  testImplementation 'com.google.truth:truth:0.25'
+  testImplementation 'org.mockito:mockito-core:5.11.0'
 }
 
