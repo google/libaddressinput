@@ -97,7 +97,7 @@ public class FormatInterpreterTest {
         .inOrder();
   }
 
-  @Test public void testGetEnvelopeAddress_MissingFields_LiteralsBetweenFields() {
+  @Test public void testGetEnvelopeAddress_missingFields_literalsBetweenFields() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData.Builder addressBuilder = AddressData.builder()
         .setCountry("US");
@@ -126,7 +126,7 @@ public class FormatInterpreterTest {
         .containsExactly("CA 90291");
   }
 
-  @Test public void testGetEnvelopeAddress_MissingFields_LiteralsOnSeparateLine() {
+  @Test public void testGetEnvelopeAddress_missingFields_literalsOnSeparateLine() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData.Builder addressBuilder = AddressData.builder()
         .setCountry("AX");
@@ -143,7 +143,7 @@ public class FormatInterpreterTest {
         .containsExactly("AX-123 City", "ÅLAND").inOrder();
   }
 
-  @Test public void testGetEnvelopeAddress_MissingFields_LiteralBeforeField() {
+  @Test public void testGetEnvelopeAddress_missingFields_literalBeforeField() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData.Builder addressBuilder = AddressData.builder()
         .setCountry("JP")
@@ -164,7 +164,7 @@ public class FormatInterpreterTest {
         .containsExactly("Prefecture");
   }
 
-  @Test public void testGetEnvelopeAddress_MissingFields_DuplicateField() {
+  @Test public void testGetEnvelopeAddress_missingFields_duplicateField() {
     FormatInterpreter formatInterpreter = new FormatInterpreter(new FormOptions().createSnapshot());
     AddressData.Builder addressBuilder = AddressData.builder()
         .setCountry("CI");

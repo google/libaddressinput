@@ -25,13 +25,14 @@ namespace addressinput {
 
 FormatElement::FormatElement(AddressField field) : field_(field), literal_() {}
 
+// Use COUNTRY as the default as this field is not used anyway
 FormatElement::FormatElement(const std::string& literal)
-    : field_(static_cast<AddressField>(-1)), literal_(literal) {
+    : field_(COUNTRY), literal_(literal) {
   assert(!literal.empty());
 }
 
-FormatElement::FormatElement()
-    : field_(static_cast<AddressField>(-1)), literal_("\n") {}
+// Use COUNTRY as the default as this field is not used anyway
+FormatElement::FormatElement() : field_(COUNTRY), literal_("\n") {}
 
 bool FormatElement::operator==(const FormatElement& other) const {
   return field_ == other.field_ && literal_ == other.literal_;

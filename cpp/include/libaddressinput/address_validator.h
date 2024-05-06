@@ -75,7 +75,7 @@ class AddressValidator {
 
   // Does not take ownership of |supplier|.
   AddressValidator(Supplier* supplier);
-  ~AddressValidator();
+  ~AddressValidator() = default;
 
   // Validates the |address| and populates |problems| with the validation
   // problems, filtered according to the |filter| parameter.

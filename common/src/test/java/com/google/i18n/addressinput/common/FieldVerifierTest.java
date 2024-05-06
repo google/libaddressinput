@@ -24,11 +24,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.i18n.addressinput.testing.AddressDataMapLoader;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -37,6 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Spot check the standard dataset for various cases of interest.  This is not an exhaustive test.
@@ -389,13 +387,13 @@ public class FieldVerifierTest {
     AddressProblems problems = new AddressProblems();
     Map<AddressField, List<AddressProblemType>> customChecks =
         new HashMap<AddressField, List<AddressProblemType>>();
-    AddressProblemType countryProblems[] = {
+    AddressProblemType[] countryProblems = {
       AddressProblemType.UNEXPECTED_FIELD,
       AddressProblemType.MISSING_REQUIRED_FIELD,
       AddressProblemType.UNKNOWN_VALUE };
     customChecks.put(AddressField.COUNTRY,
                      Collections.unmodifiableList(Arrays.asList(countryProblems)));
-    AddressProblemType postalCodeProblems[] = {
+    AddressProblemType[] postalCodeProblems = {
       AddressProblemType.UNEXPECTED_FIELD,
       AddressProblemType.MISSING_REQUIRED_FIELD,
       AddressProblemType.INVALID_FORMAT,

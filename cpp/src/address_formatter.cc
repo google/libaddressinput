@@ -50,22 +50,17 @@ const char kLanguagesThatHaveNoSeparator[][3] = {
     "zh",  // All Chinese variants.
 };
 
-// This data is based on CLDR, for languages that are in official use in some
-// country, where Arabic is the most likely script tag.
+// This data is based on CLDR, cross-checked with data provided by Chrome
+// linguists, for languages that are in official use in some country, where
+// Arabic is the most likely script tag.
 // TODO: Consider supporting variants such as tr-Arab by detecting the script
 // code.
 const char kLanguagesThatUseAnArabicComma[][3] = {
     "ar",
-    "az",
     "fa",
-    "kk",
     "ku",
-    "ky",
     "ps",
-    "tg",
-    "tk",
     "ur",
-    "uz",
 };
 
 std::string GetLineSeparatorForLanguage(const std::string& language_tag) {

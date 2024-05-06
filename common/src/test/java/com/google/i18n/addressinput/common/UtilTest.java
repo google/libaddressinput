@@ -20,12 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Locale;
-import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class UtilTest {
@@ -130,9 +129,9 @@ public class UtilTest {
   }
 
   @Test public void testBuildNameToKeyMap() throws Exception {
-    String names[] = {"", "", "", "", "NEW PROVIDENCE"};
+    String[] names = {"", "", "", "", "NEW PROVIDENCE"};
     // We have one more key than name here.
-    String keys[] = {"AB", "AC", "AD", "AE", "NP", "XX"};
+    String[] keys = {"AB", "AC", "AD", "AE", "NP", "XX"};
     Map<String, String> result = Util.buildNameToKeyMap(keys, names, null);
     // We should have the six keys, and the one name, in the end result. No empty-string names
     // should be present.
@@ -144,7 +143,7 @@ public class UtilTest {
     Map<String, String> resultWithLatin = Util.buildNameToKeyMap(keys, null, names);
     // We should have the six keys and the one Latin-script name in the end result.
     assertEquals(keys.length + 1, resultWithLatin.size());
-    String lnames[] = {"Other name"};
+    String[] lnames = {"Other name"};
     resultWithLatin = Util.buildNameToKeyMap(keys, names, lnames);
     // We should have the keys, plus the names in lnames and names.
     assertEquals(keys.length + 2, resultWithLatin.size());

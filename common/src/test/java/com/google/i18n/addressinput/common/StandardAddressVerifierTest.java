@@ -63,11 +63,13 @@ public class StandardAddressVerifierTest {
       .setPostalCode("94025")
       .build();
 
-  @Test public void testUnitedStates_Valid() {
+  @Test
+  public void testUnitedStates_valid() {
     assertThat(verify(VALID_US_ADDRESS).getProblems()).isEmpty();
   }
 
-  @Test public void testUnitedStates_PostalCodeMismatch() {
+  @Test
+  public void testUnitedStates_postalCodeMismatch() {
     AddressData address = AddressData.builder(VALID_US_ADDRESS)
         .setPostalCode("12345")
         .build();
@@ -76,7 +78,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testUnitedStates_MissingStreetAddress() {
+  @Test
+  public void testUnitedStates_missingStreetAddress() {
     // Missing street address
     AddressData address = AddressData.builder(VALID_US_ADDRESS)
         .setAddress("")
@@ -86,7 +89,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testUnitedStates_MultipleProblems() {
+  @Test
+  public void testUnitedStates_multipleProblems() {
     AddressData address = AddressData.builder(VALID_US_ADDRESS)
         .setPostalCode("12345")
         .setLocality(null)
@@ -97,7 +101,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testEmptyProblemMap() {
+  @Test
+  public void testEmptyProblemMap_noProblems() {
     // Create an empty verifier that's not looking for any problems.
     StandardAddressVerifier emptyVerifier =
         verifierFor(ImmutableMap.<AddressField, List<AddressProblemType>>of());
@@ -115,7 +120,8 @@ public class StandardAddressVerifierTest {
     assertThat(problems.getProblems()).isEmpty();
   }
 
-  @Test public void testCustomProblemMap() {
+  @Test
+  public void testCustomProblemMap_onlyPostalCodeProblems() {
     // Create a map that looks only for postal code problems.
     StandardAddressVerifier postalCodeVerifier =
         verifierFor(ImmutableMap.<AddressField, List<AddressProblemType>>of(
@@ -192,7 +198,8 @@ public class StandardAddressVerifierTest {
     assertThat(verify(address).getProblems()).isEmpty();
   }
 
-  @Test public void testChinaAddress() {
+  @Test
+  public void testChinaAddress_valid() {
     AddressData address = AddressData.builder()
         .setCountry("CN")
         .setAdminArea("Beijing Shi")
@@ -209,7 +216,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testChinaTaiwanAddress() {
+  @Test
+  public void testChinaTaiwanAddress_valid() {
     AddressData address = AddressData.builder()
         .setCountry("CN")
         .setAdminArea("Taiwan")
@@ -227,7 +235,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblem(DEPENDENT_LOCALITY));
   }
 
-  @Test public void testGermanAddress() {
+  @Test
+  public void testGermanAddress_valid() {
     AddressData address = AddressData.builder()
         .setCountry("DE")
         .setLocality("Berlin")
@@ -245,7 +254,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testIrishAddress() {
+  @Test
+  public void testIrishAddress_valid() {
     AddressData address = AddressData.builder()
         .setCountry("IE")
         .setLocality("Dublin")
@@ -261,7 +271,8 @@ public class StandardAddressVerifierTest {
     assertThat(verify(address).getProblems()).isEmpty();
   }
 
-  @Test public void testJapanAddress() {
+  @Test
+  public void testJapanAddress_valid() {
     AddressData address = AddressData.builder()
         .setRecipient("\u5BAE\u672C \u8302")  // SHIGERU_MIYAMOTO
         // Kyoto city Kamitoba-hokotate-cho 11
@@ -273,7 +284,8 @@ public class StandardAddressVerifierTest {
     assertThat(verify(address).getProblems()).isEmpty();
   }
 
-  @Test public void testJapanAddress_Latin() {
+  @Test
+  public void testJapanAddress_latin() {
     AddressData address = AddressData.builder()
         .setRecipient("Shigeru Miyamoto")
         .setAddress("11-1 Kamitoba-hokotate-cho\nKyoto")
@@ -286,11 +298,12 @@ public class StandardAddressVerifierTest {
   }
 
   /**
-   * If there is a postal code pattern for a certain country, and the input postal code is empty,
-   * it should not be reported as bad postal code format. Whether empty postal code is ok should
-   * be determined by checks for required fields.
+   * If there is a postal code pattern for a certain country, and the input postal code is empty, it
+   * should not be reported as bad postal code format. Whether empty postal code is ok should be
+   * determined by checks for required fields.
    */
-  @Test public void testEmptyPostalCode_Allowed() {
+  @Test
+  public void testEmptyPostalCode_allowed() {
     // Chilean address has a postal code format pattern, but does not require postal code. The
     // following address is valid.
     AddressData address = AddressData.builder()
@@ -303,7 +316,8 @@ public class StandardAddressVerifierTest {
     assertThat(verify(address).getProblems()).isEmpty();
   }
 
-  @Test public void testEmptyPostalCode_Prohibited() {
+  @Test
+  public void testEmptyPostalCode_prohibited() {
     // Check for US addresses, which requires a postal code. The following address's postal code is
     // wrong because it is missing a required field, not because the postal code doesn't match the
     // administrative area.
@@ -315,7 +329,8 @@ public class StandardAddressVerifierTest {
         verify(address).getProblems());
   }
 
-  @Test public void testVerifyCountryOnly_Valid() {
+  @Test
+  public void testVerifyCountryOnly_valid() {
     AddressData address = AddressData.builder()
         .setCountry("US")
         .setAdminArea("Invalid admin area") // Non-selected field should be ignored
@@ -326,7 +341,8 @@ public class StandardAddressVerifierTest {
     assertThat(problems.getProblems()).isEmpty();
   }
 
-  @Test public void testVerifyCountryOnly_InvalidCountry() {
+  @Test
+  public void testVerifyCountryOnly_invalidCountry() {
     AddressData address = AddressData.builder()
         .setCountry("USA")
         .setAdminArea("Invalid admin area") // Non-selected field should be ignored
@@ -338,7 +354,8 @@ public class StandardAddressVerifierTest {
     assertThat(problems.getProblem(ADMIN_AREA)).isNull();
   }
 
-  @Test public void testVerifyCountryAndPostalCodeOnly_Valid() {
+  @Test
+  public void testVerifyCountryAndPostalCodeOnly_valid() {
     AddressData address = AddressData.builder()
         .setCountry("US")
         .setPostalCode("94043")
@@ -350,7 +367,8 @@ public class StandardAddressVerifierTest {
     assertThat(problems.getProblems()).isEmpty();
   }
 
-  @Test public void testVerifyCountryAndPostalCodeOnly_InvalidPostalCode() {
+  @Test
+  public void testVerifyCountryAndPostalCodeOnly_invalidPostalCode() {
     AddressData address = AddressData.builder()
         .setCountry("US")
         .setPostalCode("094043")

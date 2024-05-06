@@ -43,7 +43,7 @@ class Localization {
 
   // Initializes with English messages by default.
   Localization();
-  ~Localization();
+  ~Localization() = default;
 
   // Returns the localized string for |message_id|. Returns an empty string if
   // there's no message with this identifier.
