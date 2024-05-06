@@ -197,7 +197,7 @@ public final class FieldVerifier {
     Set<String> alternateLanguages = new HashSet<String>();
     // If languages is set, defaultLanguage will be set as well.
     if (languages != null && defaultLanguage != null) {
-      String languagesArray[] = languages.split(LIST_DELIMITER);
+      String[] languagesArray = languages.split(LIST_DELIMITER);
       for (String lang : languagesArray) {
         // The default language is never appended to keys.
         if (!lang.equals(defaultLanguage)) {

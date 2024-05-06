@@ -17,16 +17,15 @@
 package com.google.i18n.addressinput.common;
 
 import com.google.i18n.addressinput.common.LookupKey.KeyType;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Access point for the cached address verification data. The data contained here will mainly be
@@ -49,7 +48,7 @@ public final class ClientData implements DataSource {
   }
 
   @Override
-  public AddressVerificationNodeData get(String key) {
+  public @Nullable AddressVerificationNodeData get(String key) {
     JsoMap jso = cacheData.getObj(key);
     if (jso == null) {  // Not cached.
       fetchDataIfNotAvailable(key);

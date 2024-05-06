@@ -35,7 +35,7 @@ class AddressInputHelper {
   // |supplier|. Since latency is important for these kinds of tasks, we expect
   // the supplier to have the data already.
   AddressInputHelper(PreloadSupplier* supplier);
-  ~AddressInputHelper();
+  ~AddressInputHelper() = default;
 
   // Fill in missing components of an address as best as we can based on
   // existing data. For example, for some countries only one postal code is

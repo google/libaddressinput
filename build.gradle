@@ -17,9 +17,21 @@
 /*
  * Root Gradle file for Java address input widget (under "common" and "android")
  */
+buildscript {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+    google()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:8.2.2'
+  }
+}
+
 allprojects {
   repositories {
     mavenCentral()
     mavenLocal()
+    google()
   }
 }

@@ -56,8 +56,6 @@ std::string GetEnglishString(int message_id) {
 
 Localization::Localization() : get_string_(&GetEnglishString) {}
 
-Localization::~Localization() = default;
-
 std::string Localization::GetString(int message_id) const {
   return get_string_(message_id);
 }

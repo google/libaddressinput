@@ -18,11 +18,11 @@ package com.google.i18n.addressinput.common;
 
 import com.google.i18n.addressinput.common.LookupKey.KeyType;
 import com.google.i18n.addressinput.common.LookupKey.ScriptType;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Responsible for looking up data for address fields. This fetches possible
@@ -262,7 +262,7 @@ public final class FormController {
     return raw.split(TILDE_DELIM);
   }
 
-  private String getSubKey(LookupKey parentKey, String name) {
+  private @Nullable String getSubKey(LookupKey parentKey, String name) {
     for (RegionData subRegion : getRegionData(parentKey)) {
       if (subRegion.isValidName(name)) {
         return subRegion.getKey();
@@ -287,7 +287,7 @@ public final class FormController {
       throw new RuntimeException("Only DATA keyType is supported");
     }
 
-    String subStr[] = key.toString().split(SLASH_DELIM);
+    String[] subStr = key.toString().split(SLASH_DELIM);
 
     // Root key does not need to be normalized.
     if (subStr.length < 2) {

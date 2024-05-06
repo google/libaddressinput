@@ -2,47 +2,42 @@
 
 
 The easiest way to build libaddressinput for Android and run all the tests is
-using the Gradle project automation tool:
+to use Gradle:
 
-http://tools.android.com/tech-docs/new-build-system
+https://developer.android.com/build
 http://www.gradle.org/
 
 
 ## Prerequisite dependencies for using Gradle with Android
 
-Android Studio: https://developer.android.com/sdk/index.html
-or
+Android Studio: https://developer.android.com/sdk/index.html (recommended)
+ - Check Tools > SDK Manager.
+
 Android SDK Tools: https://developer.android.com/sdk/index.html#Other
+- Set the ANDROID_HOME environment variable to the root of the SDK.
 
-Set the ANDROID_HOME environment variable to the root of the SDK.
-
-Install the following packages:
-* Tools/Android SDK Build-tools (Rev. 21.1.2)
-* Android 5.1 (API 22)
-* Extras/Android Support Library
-
-Gradle (latest version):
-  https://services.gradle.org/distributions/gradle-2.3-bin.zip
-
-Note: Additionally you must take care to avoid having multiple versions of
-Gradle on your path, as this can cause problems.
+Ensure the following packages are installed:
+ - Tools/Android SDK Platform-tools (Rev. 35.0.1)
+ - Android 14 (API 34)
+ - Extras/Android Support Library
 
 
 ## Building and Running
 
 After installing all the prerequisites, check that everything is working by
-running:
+building the package and running the tests in Android Studio. Alternatively, the
+following can be run by command line:
 
-$ gradle build
+`gradlew build`
 
 With an Android emulator running or an Android device connected, the following
 command line then builds the library and runs the tests:
 
-$ gradle connectedAndroidTest
+`gradlew connectedAndroidTest`
 
 The test runner logs to the system log, which can be viewed using logcat:
 
-$ adb logcat
+`adb logcat`
 
 # Integrating with Android Apps
 
@@ -54,7 +49,7 @@ $ adb logcat
 
 3. Build the widget and library via gradle:
 
-    `gradle build`
+    `gradlew build`
 
 4. Copy the widget and the common libraries:
 
@@ -72,7 +67,7 @@ $ adb logcat
 
     i. In activity_main.xml add:
 
-    ```
+    ```xml
     <LinearLayout
         android:id="@+id/addresswidget"
         android:layout_width="match_parent"
@@ -82,7 +77,7 @@ $ adb logcat
 
     ii. In MainActivity.java add the following import statements:
 
-    ```
+    ```java
     import android.view.ViewGroup;
 
     import com.android.i18n.addressinput.AddressWidget;
@@ -93,10 +88,12 @@ $ adb logcat
 
     iii. Define the widget on the object scope
 
-        `private AddressWidget addressWidget;`
+    ```java
+    private AddressWidget addressWidget;
+    ```
 
     iv. Add the widget to the ViewGroup
-    ```
+    ```java
     ViewGroup viewGroup = (ViewGroup) findViewById(R.id.addresswidget);
     FormOptions defaultFormOptions = new FormOptions();
     ClientCacheManager cacheManager = new SimpleClientCacheManager();
@@ -105,7 +102,7 @@ $ adb logcat
 
 Example:
 
-```
+```java
 package com.example.google.widgetdemo;
 
 import android.support.v7.app.AppCompatActivity;

@@ -19,6 +19,7 @@ package com.google.i18n.addressinput.common;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import org.jspecify.nullness.Nullable;
 
 /**
  * A builder for creating keys that are used to lookup data in the local cache and fetch data from
@@ -114,11 +115,11 @@ public final class LookupKey {
    *
    * @param field a field in the address hierarchy.
    * @return key of the specified address field. If address field is not in the hierarchy, or is
-   *         more granular than the data present in the current key, returns null. For example,
-   *         if your current key is "data/US" (down to COUNTRY level), and you want to get the key
-   *         for LOCALITY (more granular than COUNTRY), it will return null.
+   *     more granular than the data present in the current key, returns null. For example, if your
+   *     current key is "data/US" (down to COUNTRY level), and you want to get the key for LOCALITY
+   *     (more granular than COUNTRY), it will return null.
    */
-  public LookupKey getKeyForUpperLevelField(AddressField field) {
+  public @Nullable LookupKey getKeyForUpperLevelField(AddressField field) {
     if (keyType != KeyType.DATA) {
       // We only support getting the parent key for the data key type.
       throw new RuntimeException("Only support getting parent keys for the data key type.");
@@ -170,7 +171,7 @@ public final class LookupKey {
    * Gets parent key for data key. For example, parent key for "data/US/CA" is "data/US". This
    * method does not allow key with key type of {@link KeyType#EXAMPLES}.
    */
-  LookupKey getParentKey() {
+  @Nullable LookupKey getParentKey() {
     if (keyType != KeyType.DATA) {
       throw new RuntimeException("Only support getting parent keys for the data key type.");
     }

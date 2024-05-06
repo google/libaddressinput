@@ -103,8 +103,6 @@ AddressInputHelper::AddressInputHelper(PreloadSupplier* supplier)
   assert(supplier_ != nullptr);
 }
 
-AddressInputHelper::~AddressInputHelper() = default;
-
 void AddressInputHelper::FillAddress(AddressData* address) const {
   assert(address != nullptr);
   const std::string& region_code = address->region_code;

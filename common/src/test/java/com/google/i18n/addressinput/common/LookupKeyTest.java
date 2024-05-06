@@ -24,13 +24,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.i18n.addressinput.common.LookupKey.KeyType;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class LookupKeyTest {
@@ -264,7 +262,7 @@ public class LookupKeyTest {
   }
 
   @Test public void testHash() {
-    String keys[] = {ROOT_KEY, ROOT_EXAMPLE_KEY, US_KEY, CALIFORNIA_KEY};
+    String[] keys = {ROOT_KEY, ROOT_EXAMPLE_KEY, US_KEY, CALIFORNIA_KEY};
     Map<LookupKey, String> map = new HashMap<LookupKey, String>();
 
     for (String key : keys) {

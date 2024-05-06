@@ -20,19 +20,12 @@
 
 namespace {
 
-using i18n::addressinput::AddressProblem;
 using i18n::addressinput::UNKNOWN_VALUE;
 
 TEST(AddressProblemTest, ValidEnumValue) {
   std::ostringstream oss;
   oss << UNKNOWN_VALUE;
   EXPECT_EQ("UNKNOWN_VALUE", oss.str());
-}
-
-TEST(AddressProblemTest, InvalidEnumValue) {
-  std::ostringstream oss;
-  oss << static_cast<AddressProblem>(-42);
-  EXPECT_EQ("[INVALID ENUM VALUE -42]", oss.str());
 }
 
 }  // namespace

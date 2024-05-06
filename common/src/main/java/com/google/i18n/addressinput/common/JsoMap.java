@@ -16,13 +16,13 @@
 
 package com.google.i18n.addressinput.common;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Compatibility methods on top of the JSON data.
@@ -80,7 +80,7 @@ public final class JsoMap extends JSONObject {
    * @throws ClassCastException, IllegalArgumentException.
    */
   @Override
-  public String get(String key) {
+  public @Nullable String get(String key) {
     try {
       Object o = super.get(key);
       if (o instanceof String) {
@@ -143,9 +143,8 @@ public final class JsoMap extends JSONObject {
    * @return JsoMap object.
    * @throws ClassCastException, IllegalArgumentException.
    */
-  @SuppressWarnings("unchecked")
   // JSONObject.keys() has no type information.
-  JsoMap getObj(String key) throws ClassCastException, IllegalArgumentException {
+  @Nullable JsoMap getObj(String key) throws ClassCastException, IllegalArgumentException {
     try {
       Object o = super.get(key);
       if (o instanceof JSONObject) {

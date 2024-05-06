@@ -53,7 +53,7 @@ std::map<std::string, std::string> InitData(const std::string& src_path) {
   std::map<std::string, std::string> data;
   std::ifstream file(src_path);
   if (!file.is_open()) {
-    std::cerr << "Error opening \"" << src_path << "\"." << std::endl;
+    std::cerr << "Error opening \"" << src_path << "\"." << '\n';
     std::exit(EXIT_FAILURE);
   }
 
