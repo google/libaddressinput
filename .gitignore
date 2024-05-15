@@ -4,3 +4,5 @@ java/**/build/
 android/build/
 build/
 common/build/
+.idea/
+local.properties

@@ -14,7 +14,7 @@ Android Studio: https://developer.android.com/sdk/index.html (recommended)
  - Check Tools > SDK Manager.
 
 Android SDK Tools: https://developer.android.com/sdk/index.html#Other
-- Set the ANDROID_HOME environment variable to the root of the SDK.
+ - Set the ANDROID_HOME environment variable to the root of the SDK.
 
 Ensure the following packages are installed:
  - Tools/Android SDK Platform-tools (Rev. 35.0.1)
@@ -53,19 +53,19 @@ The test runner logs to the system log, which can be viewed using logcat:
 
 4. Copy the widget and the common libraries:
 
-    `cp android/build/outputs/aar/android-release.aar path/to/project/app/libs/`
+   `cp android/build/outputs/aar/android-release.aar path/to/project/app/libs/`
 
-    `cp common/build/libs/common.jar path/to/project/app/libs/`
+   `cp common/build/libs/common.jar path/to/project/app/libs/`
 
-    Note: Be sure top replace 'path/to/project' with the name of your project.
+   Note: Be sure top replace 'path/to/project' with the name of your project.
 
 5. Import both modules into your app.
 
-    Note: If you use Android Studio, check out the [user guide](https://developer.android.com/studio/projects/android-library.html#AddDependency) and follow the instructions under 'Add your library as a dependency'. Be sure to add *both* modules as dependencies of the app.
+   Note: If you use Android Studio, check out the [user guide](https://developer.android.com/studio/projects/android-library.html#AddDependency) and follow the instructions under 'Add your library as a dependency'. Be sure to add *both* modules as dependencies of the app.
 
 6. Add the widget to your app. Note: This Assumes a default empty project configuration:
 
-    i. In activity_main.xml add:
+   i. In activity_main.xml add:
 
     ```xml
     <LinearLayout
@@ -75,7 +75,7 @@ The test runner logs to the system log, which can be viewed using logcat:
         android:orientation="vertical"/>
      ```
 
-    ii. In MainActivity.java add the following import statements:
+   ii. In MainActivity.java add the following import statements:
 
     ```java
     import android.view.ViewGroup;
