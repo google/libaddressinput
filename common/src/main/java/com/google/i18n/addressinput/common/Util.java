@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Utility functions used by the address widget.
@@ -100,7 +101,7 @@ public final class Util {
    * Trims the string. If the field is empty after trimming, returns null instead. Note that this
    * only trims ASCII white-space.
    */
-  static String trimToNull(String originalStr) {
+  static @Nullable String trimToNull(String originalStr) {
     if (originalStr == null) {
       return null;
     }
@@ -128,7 +129,7 @@ public final class Util {
   /**
    * Joins input string with the given separator. If an input string is null, it will be skipped.
    */
-  static String joinAndSkipNulls(String separator, String... strings) {
+  static @Nullable String joinAndSkipNulls(String separator, String... strings) {
     StringBuilder sb = null;
     for (String s : strings) {
       if (s != null) {
@@ -151,7 +152,8 @@ public final class Util {
    *
    * @throws IllegalStateException if the names or lnames array is greater than the keys array.
    */
-  static Map<String, String> buildNameToKeyMap(String[] keys, String[] names, String[] lnames) {
+  static @Nullable Map<String, String> buildNameToKeyMap(
+      String[] keys, String[] names, String[] lnames) {
     if (keys == null) {
       return null;
     }
@@ -232,7 +234,7 @@ public final class Util {
    * equivalent to calling toLowerCase(Locale.ENGLISH). Thus avoiding locale-sensitive case folding
    * such as the Turkish i, which could mess e.g. with lookup keys and country codes.
    */
-  public static String toLowerCaseLocaleIndependent(String value) {
+  public static @Nullable String toLowerCaseLocaleIndependent(String value) {
     return (value != null) ? value.toLowerCase(Locale.ENGLISH) : null;
   }
 
@@ -241,7 +243,7 @@ public final class Util {
    * equivalent to calling toUpperCase(Locale.ENGLISH). Thus avoiding locale-sensitive case folding
    * such as the Turkish i, which could mess e.g. with lookup keys and country codes.
    */
-  public static String toUpperCaseLocaleIndependent(String value) {
+  public static @Nullable String toUpperCaseLocaleIndependent(String value) {
     return (value != null) ? value.toUpperCase(Locale.ENGLISH) : null;
   }
 }

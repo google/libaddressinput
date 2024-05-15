@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jspecify.nullness.Nullable;
 
 /**
  * Wraps a Map of address property data to provide the AddressVerificationData API.
@@ -61,7 +62,7 @@ public final class AddressVerificationData implements DataSource {
   }
 
   @Override
-  public AddressVerificationNodeData get(String key) {
+  public @Nullable AddressVerificationNodeData get(String key) {
     String json = propertiesMap.get(key);
     if (json != null && isValidDataKey(key)) {
       return createNodeData(json);

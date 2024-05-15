@@ -70,6 +70,8 @@ public enum AddressField {
   /** The input field used to enter a value for {@link AddressData#getOrganization()}. */
   ORGANIZATION('O'),
 
+  /** The input field used to enter a value for {@link AddressData.Landmark}. */
+  LANDMARK_ADDRESS_DESCRIPTOR('T'),
   /** The input field used to enter a value for {@link AddressData.Landmark#getPrefix()}. */
   LANDMARK_AFFIX('F'),
   /** The input field used to enter a value for {@link AddressData.Landmark#getName()}. */

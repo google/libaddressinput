@@ -11,15 +11,15 @@ http://www.gradle.org/
 ## Prerequisite dependencies for using Gradle with Android
 
 Android Studio: https://developer.android.com/sdk/index.html (recommended)
-- Check Tools > SDK Manager.
+ - Check Tools > SDK Manager.
 
 Android SDK Tools: https://developer.android.com/sdk/index.html#Other
-- Set the ANDROID_HOME environment variable to the root of the SDK.
+ - Set the ANDROID_HOME environment variable to the root of the SDK.
 
 Ensure the following packages are installed:
-- Tools/Android SDK Platform-tools (Rev. 35.0.1)
-- Android 14 (API 34)
-- Extras/Android Support Library
+ - Tools/Android SDK Platform-tools (Rev. 35.0.1)
+ - Android 14 (API 34)
+ - Extras/Android Support Library
 
 
 ## Building and Running
@@ -28,16 +28,16 @@ After installing all the prerequisites, check that everything is working by
 building the package and running the tests in Android Studio. Alternatively, the
 following can be run by command line:
 
- `gradlew build`
+`gradlew build`
 
 With an Android emulator running or an Android device connected, the following
 command line then builds the library and runs the tests:
 
- `gradlew connectedAndroidTest`
+`gradlew connectedAndroidTest`
 
 The test runner logs to the system log, which can be viewed using logcat:
 
- `adb logcat`
+`adb logcat`
 
 # Integrating with Android Apps
 
@@ -49,7 +49,7 @@ The test runner logs to the system log, which can be viewed using logcat:
 
 3. Build the widget and library via gradle:
 
-   `gradle build`
+    `gradlew build`
 
 4. Copy the widget and the common libraries:
 
@@ -86,13 +86,13 @@ The test runner logs to the system log, which can be viewed using logcat:
     import com.google.i18n.addressinput.common.SimpleClientCacheManager;
     ```
 
-   iii. Define the widget on the object scope
+    iii. Define the widget on the object scope
 
     ```java
     private AddressWidget addressWidget;
     ```
 
-   iv. Add the widget to the ViewGroup
+    iv. Add the widget to the ViewGroup
     ```java
     ViewGroup viewGroup = (ViewGroup) findViewById(R.id.addresswidget);
     FormOptions defaultFormOptions = new FormOptions();

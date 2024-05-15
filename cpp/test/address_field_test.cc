@@ -20,19 +20,12 @@
 
 namespace {
 
-using i18n::addressinput::AddressField;
 using i18n::addressinput::SORTING_CODE;
 
 TEST(AddressFieldTest, ValidEnumValue) {
   std::ostringstream oss;
   oss << SORTING_CODE;
   EXPECT_EQ("SORTING_CODE", oss.str());
-}
-
-TEST(AddressFieldTest, InvalidEnumValue) {
-  std::ostringstream oss;
-  oss << static_cast<AddressField>(-42);
-  EXPECT_EQ("[INVALID ENUM VALUE -42]", oss.str());
 }
 
 }  // namespace

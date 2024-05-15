@@ -18,6 +18,7 @@ package com.google.i18n.addressinput.common;
 
 import static com.google.i18n.addressinput.common.Util.checkNotNull;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jspecify.nullness.Nullable;
 
 /**
  * An immutable data structure for international postal addresses, built using the nested
@@ -110,6 +112,9 @@ public final class AddressData {
   // part.
   private final List<String> addressLines;
 
+  // The landmark address descriptor.
+  private final String landmarkAddressDescriptor;
+
   // The landmark affix.
   private final String landmarkAffix;
 
@@ -154,6 +159,7 @@ public final class AddressData {
     this.sortingCode = builder.fields.get(AddressField.SORTING_CODE);
     this.organization = builder.fields.get(AddressField.ORGANIZATION);
     this.recipient = builder.fields.get(AddressField.RECIPIENT);
+    this.landmarkAddressDescriptor = builder.fields.get(AddressField.LANDMARK_ADDRESS_DESCRIPTOR);
     this.landmarkAffix = builder.fields.get(AddressField.LANDMARK_AFFIX);
     this.landmarkName = builder.fields.get(AddressField.LANDMARK_NAME);
     this.addressLines = Collections.unmodifiableList(
@@ -220,6 +226,8 @@ public final class AddressData {
         .append(organization)
         .append("; " + "RECIPIENT=")
         .append(recipient)
+        .append("; " + "LANDMARK_ADDRESS_DESCRIPTOR=")
+        .append(landmarkAddressDescriptor)
         .append("; " + "LANDMARK_AFFIX=")
         .append(landmarkAffix)
         .append("; " + "LANDMARK_NAME=")
@@ -268,6 +276,9 @@ public final class AddressData {
         && (languageCode == null
             ? addressData.getLanguageCode() == null
             : languageCode.equals(addressData.getLanguageCode()))
+        && (landmarkAddressDescriptor == null
+            ? addressData.getLandmarkAddressDescriptor() == null
+            : landmarkAddressDescriptor.equals(addressData.getLandmarkAddressDescriptor()))
         && (landmarkAffix == null
             ? addressData.getLandmarkAffix() == null
             : landmarkAffix.equals(addressData.getLandmarkAffix()))
@@ -292,6 +303,7 @@ public final class AddressData {
           organization,
           recipient,
           languageCode,
+          landmarkAddressDescriptor,
           landmarkAffix,
           landmarkName
         };
@@ -366,7 +378,7 @@ public final class AddressData {
 
   // Helper for returning the Nth address line. This is split out here so that it's easily to
   // change the maximum number of address lines we support.
-  private String getAddressLine(int lineNumber) {
+  private @Nullable String getAddressLine(int lineNumber) {
     // If not the last available line, OR if we're the last line but there are no extra lines...
     if (lineNumber < ADDRESS_LINE_COUNT || lineNumber >= addressLines.size()) {
       return (lineNumber <= addressLines.size()) ? addressLines.get(lineNumber - 1) : null;
@@ -464,6 +476,11 @@ public final class AddressData {
     return recipient;
   }
 
+  /** Returns the landmark address descriptor. */
+  public String getLandmarkAddressDescriptor() {
+    return landmarkAddressDescriptor;
+  }
+
   /** Returns the landmark affix. */
   public String getLandmarkAffix() {
     return landmarkAffix;
@@ -510,6 +527,8 @@ public final class AddressData {
         return organization;
       case RECIPIENT:
         return recipient;
+      case LANDMARK_ADDRESS_DESCRIPTOR:
+        return landmarkAddressDescriptor;
       case LANDMARK_AFFIX:
         return landmarkAffix;
       case LANDMARK_NAME:
@@ -753,6 +772,18 @@ public final class AddressData {
      */
     public Builder setRecipient(String recipient) {
       return set(AddressField.RECIPIENT, recipient);
+    }
+
+    /**
+     * Sets or clears the landmark address descriptor of the address; see {@link
+     * AddressData.Landmark#getPrefix()} and {@link AddressData.Landmark#getName()}.
+     *
+     * @param landmarkAddressDescriptor the landmark address descriptor, or null to clear an
+     *     existing value.
+     */
+    @CanIgnoreReturnValue
+    public Builder setLandmarkAddressDescriptor(String landmarkAddressDescriptor) {
+      return set(AddressField.LANDMARK_ADDRESS_DESCRIPTOR, landmarkAddressDescriptor);
     }
 
     /**
