@@ -242,7 +242,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%C %S %Z",)"
       R"("require":"ACSZ",)"
       R"("zipex":"H3Z 2Y7,V8X 3X4,T0L 1K0,T0H 1A0,K1A 0B1",)"
-      R"("posturl":"https://www.canadapost.ca/cpo/mc/personal/postalcode/fpc.jsf",)"
+      R"("posturl":"https://www.canadapost-postescanada.ca/cpo/mc/personal/postalcode/fpc.jsf",)"
       R"("languages":"en~fr")"
       "}"},
   {"CC", "{"
@@ -971,7 +971,7 @@ const RegionData kRegionData[] = {
       R"("fmt":"%O%n%N%n%A%n%Z %C",)"
       R"("require":"ACZ",)"
       R"("zipex":"1234 AB,2490 AA",)"
-      R"("posturl":"http://www.postnl.nl/voorthuis/",)"
+      R"("posturl":"https://www.postnl.nl/en/find-a-postcode/",)"
       R"("languages":"nl~fy")"
       "}"},
   {"NO", "{"
@@ -1375,7 +1375,6 @@ const RegionData kRegionData[] = {
   {"VC", "{"
       R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       R"("zipex":"VC0100,VC0110,VC0400",)"
-      R"("posturl":"http://www.svgpost.gov.vc/?option=com_content&view=article&id=3&Itemid=16",)"
       R"("languages":"en")"
       "}"},
   {"VE", "{"
@@ -1383,7 +1382,6 @@ const RegionData kRegionData[] = {
       R"("require":"ACS",)"
       R"("state_name_type":"state",)"
       R"("zipex":"1010,3001,8011,1020",)"
-      R"("posturl":"http://postcode.vnpost.vn/services/search.aspx",)"
       R"("languages":"es")"
       "}"},
   {"VG", "{"
@@ -1405,7 +1403,6 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%C%n%S %Z",)"
       R"("lfmt":"%N%n%O%n%A%n%C%n%S %Z",)"
       R"("zipex":"70010,55999",)"
-      R"("posturl":"http://postcode.vnpost.vn/services/search.aspx",)"
       R"("languages":"vi")"
       "}"},
   {"VU", "{"

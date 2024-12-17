@@ -98,7 +98,7 @@ class PreloadSupplier : public Supplier {
 
  private:
   bool GetRuleHierarchy(const LookupKey& lookup_key, RuleHierarchy* hierarchy,
-                        const bool search_globally) const;
+                        bool search_globally) const;
   bool IsLoadedKey(const std::string& key) const;
   bool IsPendingKey(const std::string& key) const;
 

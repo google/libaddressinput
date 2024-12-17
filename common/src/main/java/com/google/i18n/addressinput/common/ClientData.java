@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.jspecify.nullness.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Access point for the cached address verification data. The data contained here will mainly be
