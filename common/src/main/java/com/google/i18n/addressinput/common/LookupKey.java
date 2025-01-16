@@ -19,7 +19,7 @@ package com.google.i18n.addressinput.common;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
-import org.jspecify.nullness.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A builder for creating keys that are used to lookup data in the local cache and fetch data from

@@ -53,7 +53,7 @@ repositories {
 
 dependencies {
   api 'com.google.errorprone:error_prone_annotations:2.18.0'
-  api 'org.jspecify:jspecify:0.2.0'
+  api 'org.jspecify:jspecify:0.3.0'
   implementation 'com.google.guava:guava-gwt:18.0'
   /* Note that gradle will warn about this not being the same version as *
    * the Android JSON library (but will not compile if it's removed).    */
