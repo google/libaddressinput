@@ -275,7 +275,7 @@ public final class RegionDataConstants {
     map.put("VE", "{\"name\":\"VENEZUELA\",\"lang\":\"es\",\"languages\":\"es\",\"fmt\":\"%N%n%O%n%A%n%C %Z, %S\",\"require\":\"ACS\",\"upper\":\"CS\",\"state_name_type\":\"state\"}");
     map.put("VG", "{\"name\":\"VIRGIN ISLANDS (BRITISH)\",\"fmt\":\"%N%n%O%n%A%n%C%n%Z\",\"require\":\"A\"}");
     map.put("VI", "{\"name\":\"VIRGIN ISLANDS (U.S.)\",\"fmt\":\"%N%n%O%n%A%n%C %S %Z\",\"require\":\"ACSZ\",\"upper\":\"ACNOS\",\"state_name_type\":\"state\",\"zip_name_type\":\"zip\"}");
-    map.put("VN", "{\"name\":\"VIET NAM\",\"lang\":\"vi\",\"languages\":\"vi\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Ward/Township/Commune\"},{\"field\":\"S1\",\"label\":\"Phường/Thị trấn/Xã\",\"lang\":\"vi\"}]}");
+    map.put("VN", "{\"name\":\"VIET NAM\",\"lang\":\"vi\",\"languages\":\"vi\",\"lfmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"fmt\":\"%N%n%O%n%A%n%C%n%S %Z\",\"require\":\"AS\",\"label_overrides\":[{\"field\":\"S1\",\"label\":\"Ward/Township/Commune\"},{\"field\":\"S1\",\"label\":\"Phường/Thị trấn/Xã\",\"lang\":\"vi\"}]}");
     map.put("VU", "{\"name\":\"VANUATU\"}");
     map.put("WF", "{\"name\":\"WALLIS AND FUTUNA ISLANDS\",\"fmt\":\"%O%n%N%n%A%n%Z %C %X\",\"require\":\"ACZ\",\"upper\":\"ACX\"}");
     map.put("WS", "{\"name\":\"SAMOA\"}");
