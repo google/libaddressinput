@@ -134,13 +134,11 @@ class StaleStorage : public Storage {
 
   // Storage implementation.
   void Get(const std::string& key, const Callback& data_ready) const override {
-    data_ready(true, key, new std::string(kStaleWrappedData));
+    data_ready(true, key, kStaleWrappedData);
   }
 
-  void Put(const std::string& key, std::string* value) override {
-    ASSERT_TRUE(value != nullptr);
+  void Put(const std::string& key, std::string data) override {
     data_updated_ = true;
-    delete value;
   }
 
   bool data_updated_;

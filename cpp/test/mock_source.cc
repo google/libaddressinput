@@ -26,7 +26,7 @@ MockSource::~MockSource() = default;
 void MockSource::Get(const std::string& key, const Callback& data_ready) const {
   auto it = data_.find(key);
   bool success = it != data_.end();
-  data_ready(success, key, success ? new std::string(it->second) : nullptr);
+  data_ready(success, key, success ? it->second : std::optional<std::string>());
 }
 
 }  // namespace addressinput

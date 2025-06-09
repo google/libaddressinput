@@ -21,6 +21,7 @@
 #include <libaddressinput/callback.h>
 
 #include <string>
+#include <optional>
 
 namespace i18n {
 namespace addressinput {
@@ -45,13 +46,13 @@ namespace addressinput {
 class Storage {
  public:
   using Callback =
-      i18n::addressinput::Callback<const std::string&, std::string*>;
+      i18n::addressinput::Callback<const std::string&, std::optional<std::string>>;
 
   virtual ~Storage() = default;
 
   // Stores |data| for |key|, where |data| is an object allocated on the heap,
   // which Storage takes ownership of.
-  virtual void Put(const std::string& key, std::string* data) = 0;
+  virtual void Put(const std::string& key, std::string data) = 0;
 
   // Retrieves the data for |key| and invokes the |data_ready| callback.
   virtual void Get(const std::string& key,

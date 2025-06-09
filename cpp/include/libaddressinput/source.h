@@ -21,6 +21,7 @@
 
 #include <libaddressinput/callback.h>
 
+#include <optional>
 #include <string>
 
 namespace i18n {
@@ -41,7 +42,7 @@ namespace addressinput {
 class Source {
  public:
   using Callback =
-      i18n::addressinput::Callback<const std::string&, std::string*>;
+      i18n::addressinput::Callback<const std::string&, std::optional<std::string>>;
 
   virtual ~Source() = default;
 

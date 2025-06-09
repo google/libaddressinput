@@ -65,11 +65,11 @@ class FakeStorage : public Storage {
   ~FakeStorage() override;
 
   // Storage implementation.
-  void Put(const std::string& key, std::string* data) override;
+  void Put(const std::string& key, std::string data) override;
   void Get(const std::string& key, const Callback& data_ready) const override;
 
  private:
-  std::map<std::string, std::string*> data_;
+  std::map<std::string, std::string> data_;
 };
 
 }  // namespace addressinput

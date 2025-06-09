@@ -44,7 +44,7 @@ class ValidatingStorage : public Storage {
   ~ValidatingStorage() override;
 
   // Storage implementation.
-  void Put(const std::string& key, std::string* data) override;
+  void Put(const std::string& key, std::string data) override;
 
   // Storage implementation.
   // If the data is invalid, then |data_ready| will be called with (false, key,
