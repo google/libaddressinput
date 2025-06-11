@@ -155,16 +155,16 @@ void TestdataSource::Get(const std::string& key,
   prefixed_key += key;
   auto data_it = GetData(src_path_).find(prefixed_key);
   bool success = data_it != GetData(src_path_).end();
-  std::string* data = nullptr;
+  std::optional<std::string> data;
   if (success) {
-    data = new std::string(data_it->second);
+    data = data_it->second;
   } else {
     // URLs that start with "https://chromium-i18n.appspot.com/ssl-address/" or
     // "https://chromium-i18n.appspot.com/ssl-aggregate-address/" prefix, but do
     // not have associated data will always return "{}" with status code 200.
     // TestdataSource imitates this behavior.
     success = true;
-    data = new std::string("{}");
+    data = "{}";
   }
   data_ready(success, key, data);
 }

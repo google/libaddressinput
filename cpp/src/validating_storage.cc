@@ -51,20 +51,18 @@ class Helper {
 
   void OnWrappedDataReady(bool success,
                           const std::string& key,
-                          std::string* data) {
+                          std::optional<std::string> data) {
     if (success) {
-      assert(data != nullptr);
+      assert(data != std::nullopt);
       bool is_stale =
-          !ValidatingUtil::UnwrapTimestamp(data, std::time(nullptr));
-      bool is_corrupted = !ValidatingUtil::UnwrapChecksum(data);
+          !ValidatingUtil::UnwrapTimestamp(&*data, std::time(nullptr));
+      bool is_corrupted = !ValidatingUtil::UnwrapChecksum(&*data);
       success = !is_corrupted && !is_stale;
       if (is_corrupted) {
-        delete data;
-        data = nullptr;
+        data = std::nullopt;
       }
     } else {
-      delete data;
-      data = nullptr;
+      data = std::nullopt;
     }
     data_ready_(success, key, data);
     delete this;
@@ -83,10 +81,9 @@ ValidatingStorage::ValidatingStorage(Storage* storage)
 
 ValidatingStorage::~ValidatingStorage() = default;
 
-void ValidatingStorage::Put(const std::string& key, std::string* data) {
-  assert(data != nullptr);
-  ValidatingUtil::Wrap(std::time(nullptr), data);
-  wrapped_storage_->Put(key, data);
+void ValidatingStorage::Put(const std::string& key, std::string data) {
+  ValidatingUtil::Wrap(std::time(nullptr), &data);
+  wrapped_storage_->Put(key, std::move(data));
 }
 
 void ValidatingStorage::Get(const std::string& key,

@@ -50,13 +50,12 @@ class FakeStorageTest : public testing::Test {
   const std::unique_ptr<const Storage::Callback> data_ready_;
 
  private:
-  void OnDataReady(bool success, const std::string& key, std::string* data) {
-    ASSERT_FALSE(success && data == nullptr);
+  void OnDataReady(bool success, const std::string& key, std::optional<std::string> data) {
+    ASSERT_FALSE(success && !data.has_value());
     success_ = success;
     key_ = key;
-    if (data != nullptr) {
-      data_ = *data;
-      delete data;
+    if (data.has_value()) {
+      data_ = std::move(data).value();
     }
   }
 };
@@ -70,7 +69,7 @@ TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
 }
 
 TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
-  storage_.Put("key", new std::string("value"));
+  storage_.Put("key", std::string("value"));
   storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);
@@ -79,8 +78,8 @@ TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
 }
 
 TEST_F(FakeStorageTest, SecondPutOverwritesData) {
-  storage_.Put("key", new std::string("bad-value"));
-  storage_.Put("key", new std::string("good-value"));
+  storage_.Put("key", std::string("bad-value"));
+  storage_.Put("key", std::string("good-value"));
   storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);

@@ -66,19 +66,18 @@ class ValidatingStorageTest : public testing::Test {
   const std::unique_ptr<const ValidatingStorage::Callback> data_ready_;
 
  private:
-  void OnDataReady(bool success, const std::string& key, std::string* data) {
-    ASSERT_FALSE(success && data == nullptr);
+  void OnDataReady(bool success, const std::string& key, std::optional<std::string> data) {
+    ASSERT_FALSE(success && !data.has_value());
     success_ = success;
     key_ = key;
-    if (data != nullptr) {
-      data_ = *data;
-      delete data;
+    if (data.has_value()) {
+      data_ = std::move(data).value();
     }
   }
 };
 
 TEST_F(ValidatingStorageTest, GoodData) {
-  storage_.Put(kKey, new std::string(kValidatedData));
+  storage_.Put(kKey, kValidatedData);
   storage_.Get(kKey, *data_ready_);
 
   EXPECT_TRUE(success_);
@@ -87,7 +86,7 @@ TEST_F(ValidatingStorageTest, GoodData) {
 }
 
 TEST_F(ValidatingStorageTest, EmptyData) {
-  storage_.Put(kKey, new std::string(kEmptyData));
+  storage_.Put(kKey, kEmptyData);
   storage_.Get(kKey, *data_ready_);
 
   EXPECT_TRUE(success_);
@@ -104,8 +103,8 @@ TEST_F(ValidatingStorageTest, MissingKey) {
 }
 
 TEST_F(ValidatingStorageTest, GarbageData) {
-  storage_.Put(kKey, new std::string(kValidatedData));
-  wrapped_storage_->Put(kKey, new std::string("garbage"));
+  storage_.Put(kKey, kValidatedData);
+  wrapped_storage_->Put(kKey, "garbage");
   storage_.Get(kKey, *data_ready_);
 
   EXPECT_FALSE(success_);
@@ -114,8 +113,8 @@ TEST_F(ValidatingStorageTest, GarbageData) {
 }
 
 TEST_F(ValidatingStorageTest, StaleData) {
-  storage_.Put(kKey, new std::string(kValidatedData));
-  wrapped_storage_->Put(kKey, new std::string(kStaleWrappedData));
+  storage_.Put(kKey, kValidatedData);
+  wrapped_storage_->Put(kKey, kStaleWrappedData);
   storage_.Get(kKey, *data_ready_);
 
   EXPECT_FALSE(success_);

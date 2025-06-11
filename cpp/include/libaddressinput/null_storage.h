@@ -35,7 +35,7 @@ class NullStorage : public Storage {
   ~NullStorage() override;
 
   // No-op.
-  void Put(const std::string& key, std::string* data) override;
+  void Put(const std::string& key, std::string data) override;
 
   // Always calls the |data_ready| callback function signaling failure.
   void Get(const std::string& key, const Callback& data_ready) const override;
