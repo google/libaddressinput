@@ -20,6 +20,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <optional>
 #include <string>
 
 namespace i18n {

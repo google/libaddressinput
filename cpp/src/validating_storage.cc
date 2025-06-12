@@ -21,10 +21,11 @@
 #include <libaddressinput/storage.h>
 
 #include <cassert>
-#include <cstddef>
 #include <ctime>
 #include <memory>
+#include <optional>
 #include <string>
+#include <utility>
 
 #include "validating_util.h"
 
@@ -49,8 +50,7 @@ class Helper {
  private:
   ~Helper() = default;
 
-  void OnWrappedDataReady(bool success,
-                          const std::string& key,
+  void OnWrappedDataReady(bool success, const std::string& key,
                           std::optional<std::string> data) {
     if (success) {
       assert(data != std::nullopt);

@@ -20,8 +20,8 @@
 
 #include <libaddressinput/callback.h>
 
-#include <string>
 #include <optional>
+#include <string>
 
 namespace i18n {
 namespace addressinput {
@@ -45,8 +45,8 @@ namespace addressinput {
 //    };
 class Storage {
  public:
-  using Callback =
-      i18n::addressinput::Callback<const std::string&, std::optional<std::string>>;
+  using Callback = i18n::addressinput::Callback<const std::string&,
+                                                std::optional<std::string>>;
 
   virtual ~Storage() = default;
 
