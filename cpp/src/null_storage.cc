@@ -15,7 +15,7 @@
 #include <libaddressinput/null_storage.h>
 
 #include <cassert>
-#include <cstddef>
+#include <optional>
 #include <string>
 
 namespace i18n {

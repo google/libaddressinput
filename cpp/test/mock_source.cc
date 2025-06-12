@@ -15,6 +15,7 @@
 #include "mock_source.h"
 
 #include <cstddef>
+#include <optional>
 #include <string>
 
 namespace i18n {

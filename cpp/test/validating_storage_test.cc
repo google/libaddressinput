@@ -19,7 +19,9 @@
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <string>
+#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -66,7 +68,8 @@ class ValidatingStorageTest : public testing::Test {
   const std::unique_ptr<const ValidatingStorage::Callback> data_ready_;
 
  private:
-  void OnDataReady(bool success, const std::string& key, std::optional<std::string> data) {
+  void OnDataReady(bool success, const std::string& key,
+                   std::optional<std::string> data) {
     ASSERT_FALSE(success && !data.has_value());
     success_ = success;
     key_ = key;

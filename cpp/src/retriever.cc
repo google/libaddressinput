@@ -19,9 +19,10 @@
 #include <libaddressinput/storage.h>
 
 #include <cassert>
-#include <cstddef>
 #include <memory>
+#include <optional>
 #include <string>
+#include <utility>
 
 #include "validating_storage.h"
 
@@ -54,8 +55,7 @@ class Helper {
  private:
   ~Helper() = default;
 
-  void OnValidatedDataReady(bool success,
-                            const std::string& key,
+  void OnValidatedDataReady(bool success, const std::string& key,
                             std::optional<std::string> data) {
     if (success) {
       assert(data != std::nullopt);
@@ -71,8 +71,7 @@ class Helper {
     }
   }
 
-  void OnFreshDataReady(bool success,
-                        const std::string& key,
+  void OnFreshDataReady(bool success, const std::string& key,
                         std::optional<std::string> data) {
     if (success) {
       assert(data.has_value());

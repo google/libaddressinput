@@ -41,8 +41,8 @@ namespace addressinput {
 //    };
 class Source {
  public:
-  using Callback =
-      i18n::addressinput::Callback<const std::string&, std::optional<std::string>>;
+  using Callback = i18n::addressinput::Callback<const std::string&,
+                                                std::optional<std::string>>;
 
   virtual ~Source() = default;
 
