@@ -594,24 +594,26 @@ public final class AddressData {
     }
 
     /**
-     * Sets the 2-letter CLDR region code of the address; see
-     * {@link AddressData#getPostalCountry()}. Unlike other values passed to the builder, the
-     * region code can never be null.
+     * Sets the 2-letter CLDR region code of the address; see {@link
+     * AddressData#getPostalCountry()}. Unlike other values passed to the builder, the region code
+     * can never be null.
      *
      * @param regionCode the CLDR region code of the address.
      */
     // TODO: Rename to setRegionCode.
+    @CanIgnoreReturnValue
     public Builder setCountry(String regionCode) {
       return set(AddressField.COUNTRY, checkNotNull(regionCode));
     }
 
     /**
-     * Sets or clears the administrative area of the address; see
-     * {@link AddressData#getAdministrativeArea()}.
+     * Sets or clears the administrative area of the address; see {@link
+     * AddressData#getAdministrativeArea()}.
      *
      * @param adminAreaName the administrative area name, or null to clear an existing value.
      */
     // TODO: Rename to setAdministrativeArea.
+    @CanIgnoreReturnValue
     public Builder setAdminArea(String adminAreaName) {
       return set(AddressField.ADMIN_AREA, adminAreaName);
     }
@@ -621,16 +623,18 @@ public final class AddressData {
      *
      * @param locality the locality name, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setLocality(String locality) {
       return set(AddressField.LOCALITY, locality);
     }
 
     /**
-     * Sets or clears the dependent locality of the address; see
-     * {@link AddressData#getDependentLocality()}.
+     * Sets or clears the dependent locality of the address; see {@link
+     * AddressData#getDependentLocality()}.
      *
      * @param dependentLocality the dependent locality name, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setDependentLocality(String dependentLocality) {
       return set(AddressField.DEPENDENT_LOCALITY, dependentLocality);
     }
@@ -640,6 +644,7 @@ public final class AddressData {
      *
      * @param postalCode the postal code, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setPostalCode(String postalCode) {
       return set(AddressField.POSTAL_CODE, postalCode);
     }
@@ -649,6 +654,7 @@ public final class AddressData {
      *
      * @param sortingCode the sorting code, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setSortingCode(String sortingCode) {
       return set(AddressField.SORTING_CODE, sortingCode);
     }
@@ -661,28 +667,31 @@ public final class AddressData {
      *
      * @param languageCode the BCP-47 language code, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setLanguageCode(String languageCode) {
       this.language = languageCode;
       return this;
     }
 
     /**
-     * Sets multiple unstructured street level lines in the address. Calling this method will
-     * always discard any existing address lines before adding new ones.
-     * <p>
-     * Note that the number of lines set by this method is preserved in the builder's state but a
+     * Sets multiple unstructured street level lines in the address. Calling this method will always
+     * discard any existing address lines before adding new ones.
+     *
+     * <p>Note that the number of lines set by this method is preserved in the builder's state but a
      * single line set here may result in multiple lines in the resulting {@code AddressData}
      * instance if it contains embedded newline characters.
-     * <p>
-     * For example:
+     *
+     * <p>For example:
+     *
      * <pre>{@code
-     *   data = AddressData.builder()
-     *       .setAddressLines(Arrays.asList("First line\nSecond line"))
-     *       .setAddressLine2("Last line");
-     *       .build();
-     *   // data.getAddressLines() == [ "First line", "Second line", "Last line" ]
+     * data = AddressData.builder()
+     *     .setAddressLines(Arrays.asList("First line\nSecond line"))
+     *     .setAddressLine2("Last line");
+     *     .build();
+     * // data.getAddressLines() == [ "First line", "Second line", "Last line" ]
      * }</pre>
      */
+    @CanIgnoreReturnValue
     public Builder setAddressLines(Iterable<String> lines) {
       addressLines.clear();
       for (String line : lines) {
@@ -691,10 +700,9 @@ public final class AddressData {
       return this;
     }
 
-    /**
-     * Adds another address line. Embedded newlines will be normalized when "build()" is called.
-     */
+    /** Adds another address line. Embedded newlines will be normalized when "build()" is called. */
     // TODO: Consider removing this method if nobody is using it to simplify the API.
+    @CanIgnoreReturnValue
     public Builder addAddressLine(String value) {
       addressLines.add(value);
       return this;
@@ -702,18 +710,20 @@ public final class AddressData {
 
     /**
      * Sets multiple street lines from a single street string, clearing any existing address lines
-     * first. The input string may contain new lines which will result in multiple separate lines
-     * in the resulting {@code AddressData} instance. After splitting, each line is trimmed and
-     * empty lines are ignored.
-     * <p>
-     * Example: {@code "  \n   \n1600 Amphitheatre Ave\n\nRoom 122"} will set the lines:
+     * first. The input string may contain new lines which will result in multiple separate lines in
+     * the resulting {@code AddressData} instance. After splitting, each line is trimmed and empty
+     * lines are ignored.
+     *
+     * <p>Example: {@code " \n \n1600 Amphitheatre Ave\n\nRoom 122"} will set the lines:
+     *
      * <ol>
-     * <li>"1600 Amphitheatre Ave"
-     * <li>"Room 122"
+     *   <li>"1600 Amphitheatre Ave"
+     *   <li>"Room 122"
      * </ol>
      *
      * @param value a string containing one or more address lines, separated by {@code "\n"}.
      */
+    @CanIgnoreReturnValue
     public Builder setAddress(String value) {
       addressLines.clear();
       addressLines.add(value);
@@ -725,6 +735,7 @@ public final class AddressData {
      * Copies all the data of the given address into the builder. Any existing data in the builder
      * is discarded.
      */
+    @CanIgnoreReturnValue
     public Builder set(AddressData data) {
       fields.clear();
       for (AddressField addressField : SINGLE_VALUE_FIELDS) {
@@ -742,6 +753,7 @@ public final class AddressData {
      * @deprecated Use {@link #setAddressLines} instead.
      */
     @Deprecated
+    @CanIgnoreReturnValue
     public Builder setAddressLine1(String value) {
       return setAddressLine(1, value);
     }
@@ -752,6 +764,7 @@ public final class AddressData {
      * @deprecated Use {@link #setAddressLines} instead.
      */
     @Deprecated
+    @CanIgnoreReturnValue
     public Builder setAddressLine2(String value) {
       return setAddressLine(2, value);
     }
@@ -761,6 +774,7 @@ public final class AddressData {
      *
      * @param organization the organization, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setOrganization(String organization) {
       return set(AddressField.ORGANIZATION, organization);
     }
@@ -770,6 +784,7 @@ public final class AddressData {
      *
      * @param recipient the recipient, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setRecipient(String recipient) {
       return set(AddressField.RECIPIENT, recipient);
     }
@@ -792,6 +807,7 @@ public final class AddressData {
      *
      * @param landmarkAffix the landmark affix, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setLandmarkAffix(String landmarkAffix) {
       return set(AddressField.LANDMARK_AFFIX, landmarkAffix);
     }
@@ -801,6 +817,7 @@ public final class AddressData {
      *
      * @param landmarkName the landmark name, or null to clear an existing value.
      */
+    @CanIgnoreReturnValue
     public Builder setLandmarkName(String landmarkName) {
       return set(AddressField.LANDMARK_NAME, landmarkName);
     }
@@ -813,6 +830,7 @@ public final class AddressData {
      */
     @Deprecated
     @SuppressWarnings("deprecation")
+    @CanIgnoreReturnValue
     // TODO: Reimplement using public API as a utility function in AddressWidget (the only caller).
     public Builder set(AddressField field, String value) {
       if (SINGLE_VALUE_FIELDS.contains(field)) {
@@ -839,6 +857,7 @@ public final class AddressData {
 
     // This may preserve whitespace at the ends of lines, but this gets normalized when we build
     // the data instance.
+    @CanIgnoreReturnValue
     private Builder setAddressLine(int lineNum, String value) {
       if (Util.trimToNull(value) == null) {
         if (lineNum < addressLines.size()) {
