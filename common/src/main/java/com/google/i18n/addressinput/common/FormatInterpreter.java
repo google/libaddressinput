@@ -29,24 +29,20 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Address format interpreter. A utility to find address format related info.
- */
+/** Address format interpreter. A utility to find address format related info. */
 public final class FormatInterpreter {
   private static final String NEW_LINE = "%n";
 
   private final FormOptions.Snapshot formOptions;
 
-  /**
-   * Creates a new instance of {@link FormatInterpreter}.
-   */
+  /** Creates a new instance of {@link FormatInterpreter}. */
   public FormatInterpreter(FormOptions.Snapshot options) {
     Util.checkNotNull(
         RegionDataConstants.getCountryFormatMap(), "null country name map not allowed");
     Util.checkNotNull(options);
     this.formOptions = options;
-    Util.checkNotNull(getJsonValue("ZZ", AddressDataKey.FMT),
-        "Could not obtain a default address field order.");
+    Util.checkNotNull(
+        getJsonValue("ZZ", AddressDataKey.FMT), "Could not obtain a default address field order.");
   }
 
   /**
@@ -56,7 +52,7 @@ public final class FormatInterpreter {
    * @param scriptType if {@link ScriptType#LOCAL}, use local format; else use Latin format.
    */
   // TODO: Consider not re-doing this work every time the widget is re-rendered.
-  @SuppressWarnings("deprecation")  // For legacy address fields.
+  @SuppressWarnings("deprecation") // For legacy address fields.
   public List<AddressField> getAddressFieldOrder(ScriptType scriptType, String regionCode) {
     Util.checkNotNull(scriptType);
     Util.checkNotNull(regionCode);
@@ -109,9 +105,7 @@ public final class FormatInterpreter {
     return AddressField.of(formatSubstring.charAt(1));
   }
 
-  /**
-   * Returns true if the address has any data for this address field.
-   */
+  /** Returns true if the address has any data for this address field. */
   private static boolean addressHasValueForField(AddressData address, AddressField field) {
     if (field == AddressField.STREET_ADDRESS) {
       return address.getAddressLines().size() > 0;
@@ -150,8 +144,8 @@ public final class FormatInterpreter {
 
   /**
    * Returns the fields that are required to be filled in for this country. This is based upon the
-   * "required" field in RegionDataConstants for {@code regionCode}, and handles falling back to
-   * the default data if necessary.
+   * "required" field in RegionDataConstants for {@code regionCode}, and handles falling back to the
+   * default data if necessary.
    */
   static Set<AddressField> getRequiredFields(String regionCode) {
     Util.checkNotNull(regionCode);
@@ -199,7 +193,7 @@ public final class FormatInterpreter {
     // The field width overrides string starts with a %, so we skip the first one.
     // Example string: "%C:L%S:S" which is a repeated string of
     // '<%> field_character <:> width_character'.
-    for (int pos = 0; pos != -1;) {
+    for (int pos = 0; pos != -1; ) {
       int keyStartIndex = pos + 1;
       int valueStartIndex = overridesString.indexOf(':', keyStartIndex + 1) + 1;
       if (valueStartIndex == 0 || valueStartIndex == overridesString.length()) {
@@ -208,8 +202,8 @@ public final class FormatInterpreter {
       }
       // Prepare for next iteration.
       pos = overridesString.indexOf('%', valueStartIndex + 1);
-      if (valueStartIndex != keyStartIndex + 2 ||
-          overridesString.charAt(keyStartIndex) != field.getChar()) {
+      if (valueStartIndex != keyStartIndex + 2
+          || overridesString.charAt(keyStartIndex) != field.getChar()) {
         // Key is not a high level field (unhandled by this code) or does not match.
         // Also catches malformed string where key is of zero length (skip, not error).
         continue;
@@ -228,13 +222,9 @@ public final class FormatInterpreter {
   /**
    * Gets formatted address. For example,
    *
-   * <p> John Doe</br>
-   * Dnar Corp</br>
-   * 5th St</br>
-   * Santa Monica CA 90123 </p>
-   *
-   * This method does not validate addresses. Also, it will "normalize" the result strings by
-   * removing redundant spaces and empty lines.
+   * <p>John Doe</br> Dnar Corp</br> 5th St</br> Santa Monica CA 90123 This method does not validate
+   * addresses. Also, it will "normalize" the result strings by removing redundant spaces and empty
+   * lines.
    */
   public List<String> getEnvelopeAddress(AddressData address) {
     Util.checkNotNull(address, "null input address not allowed");
@@ -260,13 +250,15 @@ public final class FormatInterpreter {
           prunedFormat.add(formatSubstring);
         }
       } else if (
-          // Only keep literals that satisfy these 2 conditions:
-          // (1) Not preceding an empty field.
-          (i == formatSubstrings.size() - 1 || formatSubstrings.get(i + 1).equals(NEW_LINE)
-           || addressHasValueForField(address, getFieldForFormatSubstring(
-               formatSubstrings.get(i + 1))))
+      // Only keep literals that satisfy these 2 conditions:
+      // (1) Not preceding an empty field.
+      (i == formatSubstrings.size() - 1
+              || formatSubstrings.get(i + 1).equals(NEW_LINE)
+              || addressHasValueForField(
+                  address, getFieldForFormatSubstring(formatSubstrings.get(i + 1))))
           // (2) Not following a removed field.
-          && (i == 0 || !formatSubstringRepresentsField(formatSubstrings.get(i - 1))
+          && (i == 0
+              || !formatSubstringRepresentsField(formatSubstrings.get(i - 1))
               || (!prunedFormat.isEmpty()
                   && formatSubstringRepresentsField(prunedFormat.get(prunedFormat.size() - 1))))) {
         prunedFormat.add(formatSubstring);
@@ -335,10 +327,21 @@ public final class FormatInterpreter {
   }
 
   /**
+   * Returns default width of this address field. Takes per-country heuristics into account for text
+   * input fields. This may be overridden for a specific country when we have data for the possible
+   * inputs in that field and use a drop-down, rather than a text field, in the UI.
+   */
+  public static WidthType getWidthTypeForRegion(AddressField field, String regionCode) {
+    Util.checkNotNull(regionCode);
+    WidthType width = getWidthOverride(field, regionCode);
+    return width != null ? width : field.getDefaultWidthType();
+  }
+
+  /**
    * Tokenizes the format string and returns the token string list. "%" is treated as an escape
-   * character. For example, "%n%a%nxyz" will be split into "%n", "%a", "%n", "xyz".
-   * Escaped tokens correspond to either new line or address fields. The output of this method
-   * may contain duplicates.
+   * character. For example, "%n%a%nxyz" will be split into "%n", "%a", "%n", "xyz". Escaped tokens
+   * correspond to either new line or address fields. The output of this method may contain
+   * duplicates.
    */
   // TODO: Create a common method which does field parsing in one place (there are about 4 other
   // places in this library where format strings are parsed).
@@ -368,9 +371,10 @@ public final class FormatInterpreter {
   }
 
   private static String getFormatString(ScriptType scriptType, String regionCode) {
-    String format = (scriptType == ScriptType.LOCAL)
-        ? getJsonValue(regionCode, AddressDataKey.FMT)
-        : getJsonValue(regionCode, AddressDataKey.LFMT);
+    String format =
+        (scriptType == ScriptType.LOCAL)
+            ? getJsonValue(regionCode, AddressDataKey.FMT)
+            : getJsonValue(regionCode, AddressDataKey.LFMT);
     if (format == null) {
       format = getJsonValue("ZZ", AddressDataKey.FMT);
     }

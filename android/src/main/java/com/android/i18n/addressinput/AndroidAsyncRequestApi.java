@@ -48,6 +48,7 @@ public class AndroidAsyncRequestApi implements AsyncRequestApi {
     private final int timeoutMillis;
 
     protected AsyncHttp(URL requestUrl, AsyncCallback callback, int timeoutMillis) {
+      super("AddressInputAsyncHttp");
       this.requestUrl = requestUrl;
       this.callback = callback;
       this.timeoutMillis = timeoutMillis;

@@ -150,18 +150,7 @@ public enum AddressField {
    * field, in the UI.
    */
   // TODO: We'd probably be better off just having a widthType field in the enum.
-  private WidthType getDefaultWidthType() {
+  WidthType getDefaultWidthType() {
     return this.equals(POSTAL_CODE) || this.equals(SORTING_CODE) ? WidthType.SHORT : WidthType.LONG;
-  }
-
-  /**
-   * Returns default width of this address field. Takes per-country heuristics into account for
-   * text input fields. This may be overridden for a specific country when we have data for the
-   * possible inputs in that field and use a drop-down, rather than a text field, in the UI.
-   */
-  public WidthType getWidthTypeForRegion(String regionCode) {
-    Util.checkNotNull(regionCode);
-    WidthType width = FormatInterpreter.getWidthOverride(this, regionCode);
-    return width != null ? width : getDefaultWidthType();
   }
 }

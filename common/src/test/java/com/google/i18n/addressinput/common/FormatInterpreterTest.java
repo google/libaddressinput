@@ -321,4 +321,32 @@ public class FormatInterpreterTest {
           .isNull();
     }
   }
+
+  @Test
+  public void testGetWidthTypeForPostalCode() throws Exception {
+    // Postal (& sorting) code always have SHORT width.
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.POSTAL_CODE, "US"))
+        .isEqualTo(WidthType.SHORT);
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.SORTING_CODE, "DE"))
+        .isEqualTo(WidthType.SHORT);
+  }
+
+  @Test
+  public void testGetWidthTypeForCountry() throws Exception {
+    // No overrides for country, so we use the default, LONG.
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.COUNTRY, "US"))
+        .isEqualTo(WidthType.LONG);
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.COUNTRY, "CH"))
+        .isEqualTo(WidthType.LONG);
+  }
+
+  @Test
+  public void testGetWidthTypeWithOverride() throws Exception {
+    // With an override.
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.LOCALITY, "CN"))
+        .isEqualTo(WidthType.SHORT);
+    // Without an override.
+    assertThat(FormatInterpreter.getWidthTypeForRegion(AddressField.LOCALITY, "US"))
+        .isEqualTo(WidthType.LONG);
+  }
 }

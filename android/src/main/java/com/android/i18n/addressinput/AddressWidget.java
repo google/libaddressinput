@@ -257,7 +257,7 @@ public class AddressWidget implements AdapterView.OnItemSelectedListener {
 
   private WidthType getFieldWidthType(AddressUiComponent field) {
     // TODO(user): For drop-downs (spinners), derive the width-type from the list of values.
-    return field.getId().getWidthTypeForRegion(currentRegion);
+    return FormatInterpreter.getWidthTypeForRegion(field.getId(), currentRegion);
   }
 
   private void createView(

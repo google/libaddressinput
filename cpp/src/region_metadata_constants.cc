@@ -53,9 +53,9 @@ const RegionData kRegionData[] = {
       "}"},
   {"AE", "{"
       R"("fmt":"%N%n%O%n%A%n%S",)"
-      R"("lfmt":"%N%n%O%n%A%n%S",)"
       R"("require":"AS",)"
       R"("state_name_type":"emirate",)"
+      R"("lfmt":"%N%n%O%n%A%n%S",)"
       R"("languages":"ar")"
       "}"},
   {"AF", "{"
@@ -148,7 +148,7 @@ const RegionData kRegionData[] = {
   {"BD", "{"
       R"("fmt":"%N%n%O%n%A%n%C - %Z",)"
       R"("zipex":"1340,1000",)"
-      R"("posturl":"https://bdpost.portal.gov.bd/site/page/f41a42bd-2540-4afa-8568-af56443c3df8/-",)"
+      R"("posturl":"https://ekdak.com/thikana/postcode/",)"
       R"("languages":"bn")"
       "}"},
   {"BE", "{"
@@ -284,9 +284,9 @@ const RegionData kRegionData[] = {
       "}"},
   {"CN", "{"
       R"("fmt":"%Z%n%S%C%D%n%A%n%O%n%N",)"
-      R"("lfmt":"%N%n%O%n%A%n%D%n%C%n%S, %Z",)"
       R"("require":"ACSZ",)"
       R"("sublocality_name_type":"district",)"
+      R"("lfmt":"%N%n%O%n%A%n%D%n%C%n%S, %Z",)"
       R"("zipex":"266033,317204,100096,100808",)"
       R"("posturl":"http://cpdc.chinapost.com.cn/web/",)"
       R"("languages":"zh")"
@@ -462,7 +462,7 @@ const RegionData kRegionData[] = {
   {"GE", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
       R"("zipex":"0101",)"
-      R"("posturl":"http://www.georgianpost.ge/index.php?page=10",)"
+      R"("posturl":"https://www.gpost.ge/help/postal-codes",)"
       R"("languages":"ka~ab~os")"
       "}"},
   {"GF", "{"
@@ -528,7 +528,7 @@ const RegionData kRegionData[] = {
   {"GT", "{"
       R"("fmt":"%N%n%O%n%A%n%Z- %C",)"
       R"("zipex":"09001,01501",)"
-      R"("languages":"es~quc")"
+      R"("languages":"es~cak~quc~ixl~caa~quv~usp~xin")"
       "}"},
   {"GU", "{"
       R"("fmt":"%N%n%O%n%A%n%C %Z",)"
@@ -548,10 +548,10 @@ const RegionData kRegionData[] = {
       "}"},
   {"HK", "{"
       R"("fmt":"%S%n%C%n%A%n%O%n%N",)"
-      R"("lfmt":"%N%n%O%n%A%n%C%n%S",)"
       R"("require":"AS",)"
       R"("state_name_type":"area",)"
       R"("locality_name_type":"district",)"
+      R"("lfmt":"%N%n%O%n%A%n%C%n%S",)"
       R"("languages":"zh-Hant~en")"
       "}"},
   {"HM", "{"
@@ -617,7 +617,7 @@ const RegionData kRegionData[] = {
       R"("zip_name_type":"pin",)"
       R"("state_name_type":"state",)"
       R"("zipex":"110034,110001",)"
-      R"("posturl":"https://www.indiapost.gov.in/vas/pages/FindPinCode.aspx",)"
+      R"("posturl":"https://dac.indiapost.gov.in/",)"
       R"("languages":"en~hi")"
       "}"},
   {"IO", "{"
@@ -671,9 +671,9 @@ const RegionData kRegionData[] = {
       "}"},
   {"JP", "{"
       R"("fmt":"〒%Z%n%S%n%A%n%O%n%N",)"
-      R"("lfmt":"%N%n%O%n%A, %S%n%Z",)"
       R"("require":"ASZ",)"
       R"("state_name_type":"prefecture",)"
+      R"("lfmt":"%N%n%O%n%A, %S%n%Z",)"
       R"("zipex":"154-0023,350-1106,951-8073,112-0001,208-0032,231-0012",)"
       R"("posturl":"http://www.post.japanpost.jp/zipcode/",)"
       R"("languages":"ja")"
@@ -715,10 +715,10 @@ const RegionData kRegionData[] = {
       "}"},
   {"KR", "{"
       R"("fmt":"%S %C%D%n%A%n%O%n%N%n%Z",)"
-      R"("lfmt":"%N%n%O%n%A%n%D%n%C%n%S%n%Z",)"
       R"("require":"ACSZ",)"
       R"("state_name_type":"do_si",)"
       R"("sublocality_name_type":"district",)"
+      R"("lfmt":"%N%n%O%n%A%n%D%n%C%n%S%n%Z",)"
       R"("zipex":"03051",)"
       R"("posturl":"http://www.epost.go.kr/search/zipcode/search5.jsp",)"
       R"("languages":"ko")"
@@ -863,8 +863,8 @@ const RegionData kRegionData[] = {
       "}"},
   {"MO", "{"
       R"("fmt":"%A%n%O%n%N",)"
-      R"("lfmt":"%N%n%O%n%A",)"
       R"("require":"A",)"
+      R"("lfmt":"%N%n%O%n%A",)"
       R"("languages":"zh-Hant~yue~pt")"
       "}"},
   {"MP", "{"
@@ -987,7 +987,7 @@ const RegionData kRegionData[] = {
   {"NP", "{"
       R"("fmt":"%N%n%O%n%A%n%C %Z",)"
       R"("zipex":"44601",)"
-      R"("posturl":"http://www.gpo.gov.np/Home/Postalcode",)"
+      R"("posturl":"https://gpo.gov.np/pages/postal-code-1259614658/",)"
       R"("languages":"ne")"
       "}"},
   {"NR", "{"
@@ -1001,7 +1001,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"NZ", "{"
       R"("fmt":"%N%n%O%n%A%n%D%n%C %Z",)"
-      R"("require":"ACZ",)"
+      R"("require":"ACDZ",)"
       R"("zipex":"6001,6015,6332,8252,1030",)"
       R"("posturl":"https://www.nzpost.co.nz/tools/address-postcode-finder",)"
       R"("languages":"en~mi")"
@@ -1038,13 +1038,13 @@ const RegionData kRegionData[] = {
   {"PH", "{"
       R"("fmt":"%N%n%O%n%A%n%D, %C%n%Z %S",)"
       R"("zipex":"1008,1050,1135,1207,2000,1000",)"
-      R"("posturl":"http://www.philpost.gov.ph/",)"
+      R"("posturl":"https://phlpost.gov.ph/zip-code-locator/",)"
       R"("languages":"en")"
       "}"},
   {"PK", "{"
       R"("fmt":"%N%n%O%n%A%n%D%n%C-%Z",)"
       R"("zipex":"44000",)"
-      R"("posturl":"http://www.pakpost.gov.pk/postcode.php",)"
+      R"("posturl":"http://www.pakpost.gov.pk/postcodes.php",)"
       R"("languages":"ur~en")"
       "}"},
   {"PL", "{"
@@ -1095,7 +1095,7 @@ const RegionData kRegionData[] = {
       "}"},
   {"PY", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
-      R"("zipex":"1536,1538,1209",)"
+      R"("zipex":"001001,051103,110407",)"
       R"("languages":"gn~es")"
       "}"},
   {"QA", "{"
@@ -1123,9 +1123,9 @@ const RegionData kRegionData[] = {
       "}"},
   {"RU", "{"
       R"("fmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
-      R"("lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
       R"("require":"ACSZ",)"
       R"("state_name_type":"oblast",)"
+      R"("lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
       R"("zipex":"247112,103375,188300",)"
       R"("posturl":"https://www.pochta.ru/post-index",)"
       R"("languages":"ru")"
@@ -1157,7 +1157,7 @@ const RegionData kRegionData[] = {
       R"("require":"ACZ",)"
       R"("locality_name_type":"post_town",)"
       R"("zipex":"11455,12345,10500",)"
-      R"("posturl":"https://www.postnord.se/online-verktyg/verktyg/sok/sok-postnummer-och-adress",)"
+      R"("posturl":"https://www.postnord.se/en/our-tools/search-postcode-and-address/",)"
       R"("languages":"sv~fi")"
       "}"},
   {"SG", "{"
@@ -1206,7 +1206,7 @@ const RegionData kRegionData[] = {
   {"SN", "{"
       R"("fmt":"%N%n%O%n%A%n%Z %C",)"
       R"("zipex":"12500,46024,16556,10000",)"
-      R"("languages":"wo~fr~ff~srr~dyo~sav~mfv~bjt~snf~knf~bsc~mey~tnr")"
+      R"("languages":"wo~fr~ff~srr~dyo~sav~mfv~bjt~snf~knf~bsc~mey-Latn~tnr")"
       "}"},
   {"SO", "{"
       R"("fmt":"%N%n%O%n%A%n%C, %S %Z",)"
@@ -1314,10 +1314,10 @@ const RegionData kRegionData[] = {
       "}"},
   {"TW", "{"
       R"("fmt":"%Z%n%S%C%n%A%n%O%n%N",)"
-      R"("lfmt":"%N%n%O%n%A%n%C, %S %Z",)"
       R"("require":"ACSZ",)"
       R"("state_name_type":"county",)"
       R"("locality_name_type":"district",)"
+      R"("lfmt":"%N%n%O%n%A%n%C, %S %Z",)"
       R"("zipex":"104,106,10603,40867",)"
       R"("posturl":"http://www.post.gov.tw/post/internet/f_searchzone/index.jsp?ID=190102",)"
       R"("languages":"zh-Hant")"
@@ -1329,9 +1329,9 @@ const RegionData kRegionData[] = {
       "}"},
   {"UA", "{"
       R"("fmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
-      R"("lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
       R"("require":"ACZ",)"
       R"("state_name_type":"oblast",)"
+      R"("lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",)"
       R"("zipex":"15432,01055,01001",)"
       R"("posturl":"http://services.ukrposhta.com/postindex_new/",)"
       R"("languages":"uk")"
@@ -1403,8 +1403,8 @@ const RegionData kRegionData[] = {
       "}"},
   {"VN", "{"
       R"("fmt":"%N%n%O%n%A%n%C%n%S %Z",)"
-      R"("lfmt":"%N%n%O%n%A%n%C%n%S %Z",)"
       R"("require":"AS",)"
+      R"("lfmt":"%N%n%O%n%A%n%C%n%S %Z",)"
       R"("zipex":"70010,55999",)"
       R"("languages":"vi")"
       "}"},
@@ -1438,7 +1438,6 @@ const RegionData kRegionData[] = {
       R"("fmt":"%N%n%O%n%A%n%D%n%C%n%Z",)"
       R"("require":"ACZ",)"
       R"("zipex":"0083,1451,0001",)"
-      R"("posturl":"https://www.postoffice.co.za/Questions/postalcode.html",)"
       R"("languages":"en~zu~xh~af~nso~tn~st~ts~ss~ve~nr")"
       "}"},
   {"ZM", "{"

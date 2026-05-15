@@ -72,7 +72,7 @@ TEST_F(FakeStorageTest, GetWithoutPutReturnsEmptyData) {
 }
 
 TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
-  storage_.Put("key", std::string("value"));
+  storage_.Put("key", "value");
   storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);
@@ -81,8 +81,8 @@ TEST_F(FakeStorageTest, GetReturnsWhatWasPut) {
 }
 
 TEST_F(FakeStorageTest, SecondPutOverwritesData) {
-  storage_.Put("key", std::string("bad-value"));
-  storage_.Put("key", std::string("good-value"));
+  storage_.Put("key", "bad-value");
+  storage_.Put("key", "good-value");
   storage_.Get("key", *data_ready_);
 
   EXPECT_TRUE(success_);
