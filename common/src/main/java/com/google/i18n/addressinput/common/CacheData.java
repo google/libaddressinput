@@ -338,7 +338,11 @@ public final class CacheData {
         key.getValueForUpperLevelField(AddressField.COUNTRY));
     if (data != null) {
       try {
-        cache.putObj(key.toString(), JsoMap.buildJsoMap(data));
+        JsoMap obj = JsoMap.buildJsoMap(data);
+        String id = Util.toLowerCaseLocaleIndependent(AddressDataKey.ID.toString());
+        String keyString = key.toString();
+        obj.put(id, keyString);
+        cache.putObj(keyString, obj);
       } catch (JSONException e) {
         logger.warning("Failed to parse data for key " + key + " from RegionDataConstants");
       }
