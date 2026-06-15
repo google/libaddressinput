@@ -49,22 +49,6 @@ class Localization {
   // there's no message with this identifier.
   std::string GetString(int message_id) const;
 
-  // Returns the error message. If |enable_examples| is false, then the error
-  // message will not contain examples of valid input. If |enable_links| is
-  // false, then the error message will not contain HTML links. (Some error
-  // messages contain postal code examples or link to post office websites to
-  // look up the postal code for an address). Vector field values (e.g. for
-  // street address) should not be empty if problem is UNKNOWN_VALUE. The
-  // POSTAL_CODE field should only be used with MISSING_REQUIRED_FIELD,
-  // INVALID_FORMAT, and MISMATCHING_VALUE problem codes. All other fields
-  // should only be used with MISSING_REQUIRED_FIELD, UNKNOWN_VALUE, and
-  // USES_P_O_BOX problem codes.
-  std::string GetErrorMessage(const AddressData& address,
-                              AddressField field,
-                              AddressProblem problem,
-                              bool enable_examples,
-                              bool enable_links) const;
-
   // Sets the string getter that takes a message identifier and returns the
   // corresponding localized string. For example, in Chromium there is
   // l10n_util::GetStringUTF8 which always returns strings in the current
@@ -72,18 +56,6 @@ class Localization {
   void SetGetter(std::string (*getter)(int));
 
  private:
-  // Returns the error message where the address field is a postal code. Helper
-  // to |GetErrorMessage|. If |postal_code_example| is empty, then the error
-  // message will not contain examples of valid postal codes. If
-  // |post_service_url| is empty, then the error message will not contain a post
-  // service URL. The problem should only be one of MISSING_REQUIRED_FIELD,
-  // INVALID_FORMAT, or MISMATCHING_VALUE.
-  std::string GetErrorMessageForPostalCode(
-      AddressProblem problem,
-      bool uses_postal_code_as_label,
-      const std::string& postal_code_example,
-      const std::string& post_service_url) const;
-
   // The string getter.
   std::string (*get_string_)(int);
 };
